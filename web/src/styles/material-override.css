@@ -1,0 +1,28 @@
+/* --------------------------------------------------------------------------
+   Utility Classes
+   -------------------------------------------------------------------------- */
+
+/* Compact Form Fields - Reduced vertical spacing */
+.compact-field .mat-mdc-form-field-infix {
+  padding-top: 12px !important;
+  padding-bottom: 12px !important;
+  min-height: 48px !important;
+}
+
+.compact-field .mat-mdc-text-field-wrapper {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.compact-field .mat-mdc-form-field-subscript-wrapper {
+  margin-top: 4px !important;
+}
+
+.compact-field input.mat-mdc-input-element {
+  height: 24px !important;
+  line-height: 24px !important;
+}
+
+.compact-field .mat-mdc-floating-label {
+  top: 24px !important;
+}
