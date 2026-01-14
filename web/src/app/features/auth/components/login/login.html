@@ -1,1 +1,71 @@
-<p>login works!</p>
+<div>
+  <div class="text-center mb-6">
+    <h2 class="text-2xl text-gray-900 font-semibold mb-2">Welcome Back</h2>
+    <p class="text-sm text-gray-500">Sign in to continue</p>
+  </div>
+
+  <form [formGroup]="loginForm" class="space-y-2">
+    <mat-form-field appearance="outline" class="w-full compact-field">
+      <mat-label>Email</mat-label>
+      <input matInput type="email" placeholder="janedoe@gmail.com" formControlName="email">
+      <mat-icon matSuffix>mail</mat-icon>
+
+      @if(loginForm.get('email')?.hasError('required')) {
+        <mat-error>Email is required</mat-error>
+      }
+
+      @if(loginForm.get('email')?.hasError('email')) {
+        <mat-error>Enter a valid email</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-full compact-field">
+      <mat-label>Password</mat-label>
+      <input matInput [type]="hidePassword() ? 'password' : 'text'" formControlName="password">
+      <button
+        matIconButton
+        matSuffix
+        (click)="togglePasswordVisibility($event)"
+        type="button"
+      >
+        <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+
+      @if(loginForm.get('password')?.hasError('required')) {
+        <mat-error>Password is required</mat-error>
+      }
+    </mat-form-field>
+
+    <div class="text-right -mt-4">
+      <a class="text-sm text-primary hover:underline cursor-pointer">
+        Forgot password?
+      </a>
+    </div>
+
+    <button
+      mat-flat-button
+      class="w-full h-11 !rounded-lg"
+      type="submit"
+      (click)="login()"
+    >
+      @if (isLoading()) {
+        <div class="flex items-center justify-center gap-2">
+          <mat-progress-spinner
+            diameter="18"
+            mode="indeterminate"
+          ></mat-progress-spinner>
+          <span>Signing in...</span>
+        </div>
+      } @else {
+        <span>Sign In</span>
+      }
+    </button>
+  </form>
+
+  <div class="text-center mt-6">
+    <p class="text-sm">
+      Don't have an account?
+      <a [routerLink]="['/auth/register']" class="text-yellow-600 hover:underline cursor-pointer ml-1">Create one</a>
+    </p>
+  </div>
+</div>
