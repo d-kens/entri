@@ -1,1 +1,96 @@
-<p>register works!</p>
+<div>
+  <div class="text-center mb-6">
+    <h2 class="text-2xl text-gray-900 font-semibold mb-2">Create an Account</h2>
+    <p class="text-sm text-gray-500">Sign up to get started</p>
+  </div>
+
+  <form [formGroup]="registerForm" class="space-y-2">
+    <mat-form-field appearance="outline" class="w-full compact-field">
+      <mat-label>Username</mat-label>
+      <input matInput type="text" placeholder="janedoe" formControlName="userName">
+      <mat-icon matSuffix>account_circle</mat-icon>
+
+      @if(registerForm.get('userName')?.hasError('required')) {
+        <mat-error>Username is required</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-full compact-field">
+      <mat-label>Email</mat-label>
+      <input matInput type="email" placeholder="janedoe@gmail.com" formControlName="email">
+      <mat-icon matSuffix>mail</mat-icon>
+
+      @if(registerForm.get('email')?.hasError('required')) {
+        <mat-error>Email is required</mat-error>
+      }
+
+      @if(registerForm.get('email')?.hasError('email')) {
+        <mat-error>Enter a valid email</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-full compact-field">
+      <mat-label>Password</mat-label>
+      <input matInput [type]="visibility().password ? 'password' : 'text'" formControlName="password">
+      <button
+        matIconButton
+        matSuffix
+        (click)="toggleVisibility('password', $event)"
+        type="button"
+      >
+        <mat-icon>{{ visibility().password ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+
+      @if(registerForm.get('password')?.hasError('required')) {
+        <mat-error>Password is required</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-full compact-field">
+      <mat-label>Confirm Password</mat-label>
+      <input matInput [type]="visibility().confirmPassword ? 'password' : 'text'" formControlName="confirmPassword">
+      <button
+        matIconButton
+        matSuffix
+        (click)="toggleVisibility('confirmPassword', $event)"
+        type="button"
+      >
+        <mat-icon>{{ visibility().confirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+
+      @if(registerForm.get('confirmPassword')?.hasError('required')) {
+        <mat-error>Password confirmation is required</mat-error>
+      }
+      @if(registerForm.get('confirmPassword')?.hasError('passwordMismatch')) {
+        <mat-error>Passwords do not match</mat-error>
+      }
+    </mat-form-field>
+
+    <button
+      mat-flat-button
+      class="w-full h-11 !rounded-lg"
+      type="submit"
+      (click)="createAccount()"
+      [disabled]="isLoading()"
+    >
+      @if (isLoading()) {
+        <div class="flex items-center justify-center gap-2">
+          <mat-progress-spinner
+            diameter="18"
+            mode="indeterminate"
+          ></mat-progress-spinner>
+          <span>Creating account...</span>
+        </div>
+      } @else {
+        <span>Create Account</span>
+      }
+    </button>
+  </form>
+
+  <div class="text-center mt-6">
+    <p class="text-sm text-gray-500">
+      Already have an account?
+      <a [routerLink]="['/auth/login']" class="text-yellow-500 hover:underline cursor-pointer ml-1">Login</a>
+    </p>
+  </div>
+</div>
