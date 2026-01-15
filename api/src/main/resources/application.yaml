@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: peid
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/parrcel_db?createDatabaseIfNotExist=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: p@RRc3L@@dm!n#2170
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+
+  liquibase:
+    change-log: classpath:/db/changelog/changelog.xml
+    enabled: true
+
+jwt:
+  secret: ${JWT_SECRET}
+  accessTokenExpiration: 900 # 15 minutes
+  refreshTokenExpiration: 604800 # 7 days
