@@ -1,14 +1,15 @@
 package com.parrcel.api.modules.user.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.parrcel.api.modules.user.enums.Role;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Getter
 @Setter
@@ -29,18 +30,21 @@ public class User {
     @Column(name = "password_hash")
     private String passwordHash;
 
-    private String phone;
+    @Column(name = "phone_number")
+    private String phoneNumber;
 
     @Enumerated(EnumType.STRING)
     private Role role = Role.MERCHANT;
 
-    @CreationTimestamp
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
+    @CreatedDate
+    @Column(name = "date_created", columnDefinition = "DATETIME", nullable = false, updatable = false)
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private Instant dateCreated = Instant.now();
 
-    @UpdateTimestamp
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    @LastModifiedDate
+    @Column(name = "date_modified")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private Instant dateModified = Instant.now();
 
     @Override
     public String toString() {
@@ -48,7 +52,7 @@ public class User {
                 "id = " + id + ", " +
                 "userName = " + userName + ", " +
                 "email = " + email + ", " +
-                "phone = " + phone + ", " +
+                "phone = " + phoneNumber + ", " +
                 "role = " + role + ")";
     }
 }
