@@ -8,6 +8,8 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators} from '@angular/forms';
 import {Router, RouterLink} from '@angular/router';
 import {SnackbarService} from '../../../../core/services/snackbar-service';
+import {CreateUserRequest} from '../../../../core/models/user.models';
+import {UserService} from '../../../../core/services/user-service';
 
 @Component({
   selector: 'app-register',
@@ -35,6 +37,7 @@ export class Register {
   constructor(
     private router: Router,
     private fb: FormBuilder,
+    private userService: UserService,
     private snackbarService: SnackbarService
   ) {
     this.registerForm = fb.group({
@@ -97,5 +100,28 @@ export class Register {
       this.registerForm.markAllAsTouched();
       return;
     }
+
+    this.isLoading.set(true);
+
+    const payload: CreateUserRequest = {
+      role: 'MERCHANT',
+      email: this.registerForm.get('email')!.value,
+      userName: this.registerForm.get('userName')!.value,
+      password: this.registerForm.get('password')!.value,
+      phoneNumber: this.registerForm.get('phoneNumber')!.value
+    }
+
+    this.userService.createUser(payload).subscribe({
+      next: () => {
+        this.isLoading.set(false);
+        this.snackbarService.showSuccess('Account Created Succesfully!!');
+        this.router.navigateByUrl('/auth/login')
+      },
+      error: (err) => {
+        console.log('This is the error: ', err);
+        const errorMessage = err?.error?.message || 'Login failed. Please check your credentials.';
+        this.isLoading.set(false);
+      }
+    })
   }
 }
