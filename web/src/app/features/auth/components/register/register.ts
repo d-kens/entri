@@ -13,6 +13,7 @@ import {UserService} from '../../../../core/services/user-service';
 
 @Component({
   selector: 'app-register',
+  standalone: true,
   imports: [
     CommonModule,
     MatIconModule,
@@ -119,7 +120,8 @@ export class Register {
       },
       error: (err) => {
         console.log('This is the error: ', err);
-        const errorMessage = err?.error?.message || 'Login failed. Please check your credentials.';
+        const errorMessage = err?.error?.message || 'Account creation failed. Please try again.';
+        this.snackbarService.showError(errorMessage);
         this.isLoading.set(false);
       }
     })

@@ -39,4 +39,11 @@ public class GlobalExceptionHandler {
                 new ErrorDto(exception.getMessage())
         );
     }
+
+    @ExceptionHandler(EmailAlreadyExistException.class)
+    public ResponseEntity<ErrorDto> handleEmailAlreadyExist(EmailAlreadyExistException exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                new ErrorDto(exception.getMessage())
+        );
+    }
 }
