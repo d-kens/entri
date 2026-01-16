@@ -39,6 +39,7 @@ export class Register {
   ) {
     this.registerForm = fb.group({
       userName: ['', Validators.required],
+      phoneNumber: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
       confirmPassword: ['', Validators.required]
