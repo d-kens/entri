@@ -25,6 +25,12 @@ public class UserService {
         );
     }
 
+    public User getUserById(Long userId) {
+        return userRepository.findById(userId).orElseThrow(
+                () -> new NotFoundException("user with id " + userId + "not found")
+        );
+    }
+
     public User createUser(CreateUserDto dto) {
         if (userRepository.existsByEmail(dto.getEmail()))
             throw new EmailAlreadyExistException();

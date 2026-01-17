@@ -1,9 +1,9 @@
-export interface AuthRequest {
+export type AuthRequest = {
   email: string,
   password: string
 }
 
-export interface AccessToken {
+export type AccessToken = {
   accessToken: string
 }
 

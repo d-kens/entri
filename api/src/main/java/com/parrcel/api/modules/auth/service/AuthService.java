@@ -1,8 +1,11 @@
 package com.parrcel.api.modules.auth.service;
 
 
+import com.parrcel.api.common.exception.InvalidTokenException;
+import com.parrcel.api.common.exception.NotFoundException;
 import com.parrcel.api.modules.auth.dto.AuthRequest;
-import com.parrcel.api.modules.auth.dto.AuthResponse;
+import com.parrcel.api.modules.auth.dto.TokenPair;
+import com.parrcel.api.modules.user.entity.User;
 import com.parrcel.api.modules.user.service.UserService;
 import com.parrcel.api.security.service.JwtService;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +21,7 @@ public class AuthService {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
 
-    public AuthResponse login(AuthRequest authRequest) {
+    public TokenPair login(AuthRequest authRequest) {
 
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -31,10 +34,29 @@ public class AuthService {
         var accessToken = jwtService.generateAccessToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
 
-        return new AuthResponse(
+        return new TokenPair(
                 accessToken.toString(),
                 refreshToken.toString()
         );
     }
 
+    public String refreshToken(String refreshToken) {
+        var refreshTokenObject = jwtService.parseToken(refreshToken);
+
+        if (refreshTokenObject == null)
+            throw new InvalidTokenException("token is invalid or has expired");
+
+        var userId = refreshTokenObject.getUserId();
+
+        User user;
+
+        try {
+            user = userService.getUserById(userId);
+        } catch (NotFoundException exception) {
+            throw new InvalidTokenException("user associated with the token not found");
+        }
+
+        var accessTokenObject = jwtService.generateAccessToken(user);
+        return accessTokenObject.toString();
+    }
 }
