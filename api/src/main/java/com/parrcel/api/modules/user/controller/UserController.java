@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,10 +20,12 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<UserResponse> createUser(
+            UriComponentsBuilder uriComponentsBuilder,
             @Valid @RequestBody CreateUserDto createUserDto
     ) {
         var user = userService.createUser(createUserDto);
         var response = userMapper.toResponse(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        var uri = uriComponentsBuilder.path("/users/{userId}").buildAndExpand(response.getId()).toUri();
+        return ResponseEntity.created(uri).body(response);
     }
 }
