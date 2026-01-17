@@ -79,6 +79,7 @@ export class Login {
       error: (err) => {
         console.log('This is the error: ', err);
         const errorMessage = err?.error?.message || 'Login failed. Please check your credentials.';
+        this.snackbarService.showError(errorMessage)
         this.isLoading.set(false);
       }
     });

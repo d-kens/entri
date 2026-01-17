@@ -2,7 +2,7 @@
    Utility Classes
    -------------------------------------------------------------------------- */
 
-/* Compact Form Fields - Reduced vertical spacing */
+/* Compact Form Fields */
 .compact-field .mat-mdc-form-field-infix {
   padding-top: 12px !important;
   padding-bottom: 12px !important;
@@ -25,4 +25,71 @@
 
 .compact-field .mat-mdc-floating-label {
   top: 24px !important;
+}
+
+/* --------------------------------------------------------------------------
+   Snackbars
+   -------------------------------------------------------------------------- */
+
+/* ===== Success Snackbar ===== */
+.success-snackbar {
+  --mdc-snackbar-container-color: var(--app-success) !important;
+  --mdc-snackbar-supporting-text-color: var(--app-on-success) !important;
+}
+
+.success-snackbar .mdc-snackbar__surface {
+  background-color: var(--app-success) !important;
+}
+
+.success-snackbar .mat-mdc-snack-bar-label {
+  color: var(--app-on-success) !important;
+}
+
+/* ===== Error Snackbar ===== */
+.error-snackbar {
+  --mdc-snackbar-container-color: var(--mat-sys-error) !important;
+  --mdc-snackbar-supporting-text-color: var(--mat-sys-on-error) !important;
+}
+
+.error-snackbar .mdc-snackbar__surface {
+  background-color: var(--mat-sys-error) !important;
+}
+
+.error-snackbar .mat-mdc-snack-bar-label {
+  color: var(--mat-sys-on-error) !important;
+}
+
+/* ===== Warning Snackbar ===== */
+.warning-snackbar {
+  --mdc-snackbar-container-color: var(--app-warning) !important;
+  --mdc-snackbar-supporting-text-color: var(--app-on-warning) !important;
+}
+
+.warning-snackbar .mdc-snackbar__surface {
+  background-color: var(--app-warning) !important;
+}
+
+.warning-snackbar .mat-mdc-snack-bar-label {
+  color: var(--app-on-warning) !important;
+}
+
+/* ===== Info Snackbar ===== */
+.info-snackbar {
+  --mdc-snackbar-container-color: var(--app-info) !important;
+  --mdc-snackbar-supporting-text-color: var(--app-on-info) !important;
+}
+
+.info-snackbar .mdc-snackbar__surface {
+  background-color: var(--app-info) !important;
+}
+
+.info-snackbar .mat-mdc-snack-bar-label {
+  color: var(--app-on-info) !important;
+}
+
+.info-snackbar .mat-mdc-snack-bar-action .mdc-button__label,
+.warning-snackbar .mat-mdc-snack-bar-action .mdc-button__label,
+.error-snackbar .mat-mdc-snack-bar-action .mdc-button__label,
+.success-snackbar .mat-mdc-snack-bar-action .mdc-button__label{
+  color: #fff !important;
 }
