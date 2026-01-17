@@ -49,8 +49,8 @@ export class AuthService {
       .post<AccessToken>(`${environment.apiBaseUrl}/auth/login`, authRequest)
       .pipe(
         tap({
-          next: (res) => {
-            localStorage.setItem(this.ACCESS_TOKEN_KEY, res.accessToken);
+          next: (response) => {
+            localStorage.setItem(this.ACCESS_TOKEN_KEY, response.accessToken);
             this.authStatusSignal.set(true);
           },
         }),
@@ -59,6 +59,17 @@ export class AuthService {
           return throwError(() => error);
         })
       );
+  }
+
+  refreshToken(): Observable<AccessToken> {
+    return this.http
+      .post<AccessToken>(`${environment.apiBaseUrl}/auth/refresh-token`, {}, {withCredentials: true})
+      .pipe(
+        tap(response => {
+          localStorage.setItem(this.ACCESS_TOKEN_KEY, response.accessToken);
+          this.authStatusSignal.set(true);
+        })
+      )
   }
 
   logout(): void {
