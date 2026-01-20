@@ -7,8 +7,8 @@ import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {RouterLink} from '@angular/router';
 import {MatIconModule} from '@angular/material/icon';
-import {AuthService} from '../../../../core/services/auth-service';
-import {SnackbarService} from '../../../../core/services/snackbar-service';
+import {AuthService} from '@core/services/auth-service';
+import {SnackbarService} from '@core/services/snackbar-service';
 
 @Component({
   selector: 'app-forgot-password',
