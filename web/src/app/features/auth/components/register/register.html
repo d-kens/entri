@@ -20,7 +20,7 @@
       <input matInput type="text" placeholder="07071273097" formControlName="phoneNumber">
       <mat-icon matSuffix>phone</mat-icon>
 
-      @if(registerForm.get('phone')?.hasError('required')) {
+      @if(registerForm.get('phoneNumber')?.hasError('required')) {
         <mat-error>Phone Number is required</mat-error>
       }
     </mat-form-field>
