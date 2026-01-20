@@ -7,9 +7,9 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators} from '@angular/forms';
 import {Router, RouterLink} from '@angular/router';
-import {SnackbarService} from '../../../../core/services/snackbar-service';
-import {CreateUserRequest} from '../../../../core/models/user.models';
-import {UserService} from '../../../../core/services/user-service';
+import {SnackbarService} from '@core/services/snackbar-service';
+import {CreateUserRequest} from '@core/models/user.models';
+import {UserService} from '@core/services/user-service';
 
 @Component({
   selector: 'app-register',
