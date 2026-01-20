@@ -4,6 +4,7 @@ package com.parrcel.api.modules.auth.service;
 import com.parrcel.api.common.exception.InvalidTokenException;
 import com.parrcel.api.common.exception.NotFoundException;
 import com.parrcel.api.modules.auth.dto.AuthRequest;
+import com.parrcel.api.modules.auth.dto.ForgotPasswordRequest;
 import com.parrcel.api.modules.auth.dto.TokenPair;
 import com.parrcel.api.modules.user.entity.User;
 import com.parrcel.api.modules.user.service.UserService;
@@ -58,5 +59,15 @@ public class AuthService {
 
         var accessTokenObject = jwtService.generateAccessToken(user);
         return accessTokenObject.toString();
+    }
+
+    public String forgotPassword(ForgotPasswordRequest request) {
+
+        try {
+            var user = userService.getUserByEmail(request.getEmail());
+            return "If email exists, a reset link has been sent";
+        } catch (NotFoundException exception) {
+            return "If email exists, a reset link has been sent";
+        }
     }
 }
