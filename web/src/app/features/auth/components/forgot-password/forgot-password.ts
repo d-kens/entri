@@ -29,7 +29,7 @@ import {SnackbarService} from '../../../../core/services/snackbar-service';
 export class ForgotPassword {
   forgotPasswordForm: FormGroup;
   isLoading = signal(false);
-  emailSent = signal(true);
+  emailSent = signal(false);
 
   constructor(
     private fb: FormBuilder,
