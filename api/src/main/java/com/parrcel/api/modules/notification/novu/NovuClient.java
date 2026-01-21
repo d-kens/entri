@@ -5,9 +5,9 @@ import co.novu.api.events.requests.TriggerEventRequest;
 import co.novu.common.base.Novu;
 import co.novu.common.rest.NovuNetworkException;
 import com.parrcel.api.common.exception.NotificationDeliveryException;
+import com.parrcel.api.modules.notification.config.NovuProperties;
 import com.parrcel.api.modules.notification.dto.NotificationDto;
 import com.parrcel.api.modules.notification.dto.SubscriberDto;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -16,9 +16,11 @@ import java.util.UUID;
 @Component
 public class NovuClient {
     private final Novu novu;
+    private final NovuProperties novuProperties;
 
-    public NovuClient(@Value("${novu.api-key}") String apiKey) {
-        this.novu = new Novu(apiKey);
+    public NovuClient(NovuProperties novuProperties) {
+        this.novuProperties = novuProperties;
+        this.novu = new Novu(novuProperties.getApiKey());
     }
 
     public void triggerNotification(NotificationDto dto) {
@@ -29,11 +31,10 @@ public class NovuClient {
         request.setTransactionId(UUID.randomUUID().toString());
 
         try {
-            var response = novu.triggerEvent(request);
+            novu.triggerEvent(request);
         } catch (NovuNetworkException | IOException exception) {
             throw new NotificationDeliveryException("Failed to send notification", exception);
         }
-
     }
 
     public void createSubscriber(SubscriberDto dto) {

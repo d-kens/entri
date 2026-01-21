@@ -73,7 +73,7 @@ public class NotificationService {
         dto.setId(user.getId());
         dto.setEmail(user.getEmail());
         dto.setFirstName(user.getUserName());
-        dto.setLastName(null);
+        dto.setLastName("");
         dto.setPhoneNumber(user.getPhoneNumber());
         return dto;
     }
