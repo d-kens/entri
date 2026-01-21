@@ -1,5 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { environment } from '../../../environments/environment';
+import { environment } from 'environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, tap, throwError } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
@@ -69,11 +69,18 @@ export class AuthService {
           localStorage.setItem(this.ACCESS_TOKEN_KEY, response.accessToken);
           this.authStatusSignal.set(true);
         })
-      )
+      );
   }
 
   logout(): void {
     localStorage.removeItem(this.ACCESS_TOKEN_KEY);
     this.authStatusSignal.set(false);
   }
+
+  sendPasswordResetInstructions(email: string): Observable<null> {
+    return this.http.post<null>(
+      `${environment.apiBaseUrl}/auth/forgot-password`, email
+    );
+  }
+
 }

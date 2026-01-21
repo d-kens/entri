@@ -4,6 +4,7 @@ import com.parrcel.api.common.dto.ErrorDto;
 import com.parrcel.api.common.exception.InvalidTokenException;
 import com.parrcel.api.modules.auth.dto.AuthResponse;
 import com.parrcel.api.modules.auth.dto.AuthRequest;
+import com.parrcel.api.modules.auth.dto.ForgotPasswordRequest;
 import com.parrcel.api.modules.auth.service.AuthService;
 import com.parrcel.api.security.config.JwtConfig;
 import jakarta.servlet.http.Cookie;
@@ -47,6 +48,16 @@ public class AuthController {
         var accessToken = authService.refreshToken(refreshToken);
 
         return ResponseEntity.ok().body(new AuthResponse(accessToken));
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<String> forgotPassword(
+            @Valid @RequestBody ForgotPasswordRequest request
+    ) {
+        var response = authService.forgotPassword(request);
+        return ResponseEntity.ok().body(
+                response
+        );
     }
 
     @ExceptionHandler(InvalidTokenException.class)
