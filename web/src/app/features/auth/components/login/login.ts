@@ -7,9 +7,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import {CommonModule} from '@angular/common';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
-import {SnackbarService} from '../../../../core/services/snackbar-service';
-import {AuthService} from '../../../../core/services/auth-service';
-import {AuthRequest} from '../../../../core/models/auth.models';
+import {SnackbarService} from '@core/services/snackbar-service';
+import {AuthService} from '@core/services/auth-service';
+import {AuthRequest} from '@core/models/auth.models';
 
 @Component({
   selector: 'app-login',
