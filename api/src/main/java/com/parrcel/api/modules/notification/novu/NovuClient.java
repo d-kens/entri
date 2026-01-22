@@ -20,7 +20,7 @@ public class NovuClient {
 
     public NovuClient(NovuProperties novuProperties) {
         this.novuProperties = novuProperties;
-        this.novu = new Novu(novuProperties.getApiKey());
+        this.novu = new Novu(novuProperties.getSecret());
     }
 
     public void triggerNotification(NotificationDto dto) {

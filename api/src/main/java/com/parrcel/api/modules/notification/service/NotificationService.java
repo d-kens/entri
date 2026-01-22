@@ -45,6 +45,7 @@ public class NotificationService {
                     user.getId(),
                     exception
             );
+            throw exception;
         }
     }
 
@@ -64,6 +65,7 @@ public class NotificationService {
                     user.getId(),
                     exception
             );
+            throw exception;
         }
     }
 
