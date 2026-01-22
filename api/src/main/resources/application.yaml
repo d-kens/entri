@@ -23,10 +23,13 @@ jwt:
   refreshTokenExpiration: 604800 # 7 days
 
 novu:
-  api-key: ${NOVU_API_KEY}
+  secret: ${NOVU_SECRET}
 
 token:
   length: 64
   passwordResetExpirationSeconds: 3600
   emailVerificationExpirationSeconds: 86400
   twoFactorAuthExpirationSeconds: 300
+
+app:
+  base-url: http://localhost:4200

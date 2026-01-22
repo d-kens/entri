@@ -46,4 +46,11 @@ public class GlobalExceptionHandler {
                 new ErrorDto(exception.getMessage())
         );
     }
+
+    @ExceptionHandler(NotificationDeliveryException.class)
+    public ResponseEntity<ErrorDto> handleNotificationDeliveryException(NotificationDeliveryException exception) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                new ErrorDto(exception.getMessage())
+        );
+    }
 }

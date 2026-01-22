@@ -3,6 +3,7 @@ package com.parrcel.api.modules.auth.service;
 
 import com.parrcel.api.common.exception.InvalidTokenException;
 import com.parrcel.api.common.exception.NotFoundException;
+import com.parrcel.api.common.exception.NotificationDeliveryException;
 import com.parrcel.api.modules.auth.dto.AuthRequest;
 import com.parrcel.api.modules.auth.dto.ForgotPasswordRequest;
 import com.parrcel.api.modules.auth.dto.TokenPair;
@@ -14,6 +15,7 @@ import com.parrcel.api.modules.user.entity.User;
 import com.parrcel.api.modules.user.service.UserService;
 import com.parrcel.api.security.service.JwtService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AuthService {
 
+    @Value("${app.base-url}")
+    private String baseUrl;
     private final JwtService jwtService;
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
@@ -76,17 +80,24 @@ public class AuthService {
 
             var tokenResponse = tokenService.generateToken(user, TokenPurpose.PASSWORD_RESET, null);
 
-            var payload = (Map<String, Object>) (Map<?, ?>) Map.of(
-                    "resetToken", tokenResponse.getRawToken(),
+            String resetUrl = buildResetPasswordUrl(tokenResponse.getRawToken());
+
+            Map<String, Object> payload = Map.of(
+                    "resetUrl", resetUrl,
                     "expiresAt", tokenResponse.getExpiresAt().toString(),
                     "userName", user.getUserName()
             );
-            
+
             notificationService.sendNotification(user, NotificationType.RESET_PASSWORD, payload);
-            
+
             return "If email exists, a reset link has been sent";
         } catch (NotFoundException exception) {
+            System.out.println("User not found");
             return "If email exists, a reset link has been sent";
         }
+    }
+
+    private String buildResetPasswordUrl(String token) {
+        return String.format("%s/reset-password?token=%s", baseUrl, token);
     }
 }

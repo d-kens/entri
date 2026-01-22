@@ -9,5 +9,5 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties(prefix = "novu")
 public class NovuProperties {
-    private String apiKey;
+    private String secret;
 }
