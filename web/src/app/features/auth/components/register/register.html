@@ -7,7 +7,7 @@
   <form [formGroup]="registerForm" class="space-y-2">
     <mat-form-field appearance="outline" class="w-full compact-field">
       <mat-label>Username</mat-label>
-      <input matInput type="text" placeholder="janedoe" formControlName="userName">
+      <input matInput type="text" placeholder="Enter username" formControlName="userName">
       <mat-icon matSuffix>account_circle</mat-icon>
 
       @if(registerForm.get('userName')?.hasError('required')) {
@@ -17,7 +17,7 @@
 
     <mat-form-field appearance="outline" class="w-full compact-field">
       <mat-label>Phone Number</mat-label>
-      <input matInput type="text" placeholder="07071273097" formControlName="phoneNumber">
+      <input matInput type="text" placeholder="Enter phone number (e.g 254707123567)" formControlName="phoneNumber">
       <mat-icon matSuffix>phone</mat-icon>
 
       @if(registerForm.get('phoneNumber')?.hasError('required')) {
@@ -27,7 +27,7 @@
 
     <mat-form-field appearance="outline" class="w-full compact-field">
       <mat-label>Email</mat-label>
-      <input matInput type="email" placeholder="janedoe@gmail.com" formControlName="email">
+      <input matInput type="email" placeholder="Enter email" formControlName="email">
       <mat-icon matSuffix>mail</mat-icon>
 
       @if(registerForm.get('email')?.hasError('required')) {

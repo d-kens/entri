@@ -1,14 +1,13 @@
 package com.parrcel.api.modules.auth.service;
 
-
 import com.parrcel.api.common.exception.InvalidTokenException;
 import com.parrcel.api.common.exception.NotFoundException;
-import com.parrcel.api.common.exception.NotificationDeliveryException;
 import com.parrcel.api.modules.auth.dto.AuthRequest;
 import com.parrcel.api.modules.auth.dto.ForgotPasswordRequest;
 import com.parrcel.api.modules.auth.dto.TokenPair;
 import com.parrcel.api.modules.notification.enums.NotificationType;
 import com.parrcel.api.modules.notification.service.NotificationService;
+import com.parrcel.api.modules.token.config.TokenConfig;
 import com.parrcel.api.modules.token.enums.TokenPurpose;
 import com.parrcel.api.modules.token.service.TokenService;
 import com.parrcel.api.modules.user.entity.User;
@@ -30,9 +29,10 @@ public class AuthService {
     private String baseUrl;
     private final JwtService jwtService;
     private final UserService userService;
-    private final AuthenticationManager authenticationManager;
+    private final TokenConfig tokenConfig;
     private final TokenService tokenService;
     private final NotificationService notificationService;
+    private final AuthenticationManager authenticationManager;
 
     public TokenPair login(AuthRequest authRequest) {
 
@@ -84,7 +84,7 @@ public class AuthService {
 
             Map<String, Object> payload = Map.of(
                     "resetUrl", resetUrl,
-                    "expiresAt", tokenResponse.getExpiresAt().toString(),
+                    "expiresIn", tokenConfig.getEmailVerificationExpirationSeconds() / 60,
                     "userName", user.getUserName()
             );
 

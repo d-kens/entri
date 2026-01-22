@@ -82,5 +82,4 @@ export class AuthService {
       `${environment.apiBaseUrl}/auth/forgot-password`, email
     );
   }
-
 }
