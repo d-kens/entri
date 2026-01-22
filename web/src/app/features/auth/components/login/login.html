@@ -7,7 +7,7 @@
   <form [formGroup]="loginForm" class="space-y-2">
     <mat-form-field appearance="outline" class="w-full compact-field">
       <mat-label>Email</mat-label>
-      <input matInput type="email" placeholder="janedoe@gmail.com" formControlName="email">
+      <input matInput type="email" placeholder="Enter email" formControlName="email">
       <mat-icon matSuffix>mail</mat-icon>
 
       @if(loginForm.get('email')?.hasError('required')) {
