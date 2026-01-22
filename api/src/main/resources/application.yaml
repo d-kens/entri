@@ -16,7 +16,6 @@ spring:
   liquibase:
     change-log: classpath:/db/changelog/changelog.xml
     enabled: true
-
 jwt:
   secret: ${JWT_SECRET}
   accessTokenExpiration: 900 # 15 minutes
@@ -28,8 +27,12 @@ novu:
 token:
   length: 64
   passwordResetExpirationSeconds: 3600
-  emailVerificationExpirationSeconds: 86400
+  emailVerificationExpirationSeconds: 900
   twoFactorAuthExpirationSeconds: 300
 
 app:
   base-url: http://localhost:4200
+
+
+server:
+  port: 8081
