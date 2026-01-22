@@ -84,7 +84,7 @@ public class AuthService {
 
             Map<String, Object> payload = Map.of(
                     "resetUrl", resetUrl,
-                    "expiresIn", tokenConfig.getEmailVerificationExpirationSeconds() / 60,
+                    "expiresIn", String.valueOf(tokenConfig.getEmailVerificationExpirationSeconds() / 60) + " minutes",
                     "userName", user.getUserName()
             );
 

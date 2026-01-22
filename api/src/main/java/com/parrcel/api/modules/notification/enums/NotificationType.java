@@ -4,8 +4,8 @@ import lombok.Getter;
 
 @Getter
 public enum NotificationType {
-    RESET_PASSWORD("reset_password"),
-    WELCOME_EMAIL("welcome_email");
+    RESET_PASSWORD("RESET_PASSWORD"),
+    WELCOME_EMAIL("WELCOME_EMAIL");
 
     private final String notificationType;
 
