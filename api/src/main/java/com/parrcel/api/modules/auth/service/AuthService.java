@@ -4,10 +4,12 @@ import com.parrcel.api.common.exception.InvalidTokenException;
 import com.parrcel.api.common.exception.NotFoundException;
 import com.parrcel.api.modules.auth.dto.AuthRequest;
 import com.parrcel.api.modules.auth.dto.ForgotPasswordRequest;
+import com.parrcel.api.modules.auth.dto.ResetPasswordRequest;
 import com.parrcel.api.modules.auth.dto.TokenPair;
 import com.parrcel.api.modules.notification.enums.NotificationType;
 import com.parrcel.api.modules.notification.service.NotificationService;
 import com.parrcel.api.modules.token.config.TokenConfig;
+import com.parrcel.api.modules.token.entity.Token;
 import com.parrcel.api.modules.token.enums.TokenPurpose;
 import com.parrcel.api.modules.token.service.TokenService;
 import com.parrcel.api.modules.user.entity.User;
@@ -97,6 +99,20 @@ public class AuthService {
         }
     }
 
+
+    public String resetPassword(ResetPasswordRequest request) {
+        Token token = tokenService.validateToken(request.getToken());
+
+        if (token.getPurpose() != TokenPurpose.PASSWORD_RESET) {
+            throw new InvalidTokenException("Token is not valid for password reset");
+        }
+
+        User user = token.getUser();
+        userService.updatePassword(user, request.getNewPassword());
+        tokenService.invalidateToken(token);
+
+        return "Password has been successfully reset";
+    }
 
     private String buildResetPasswordUrl(String token) {
         return String.format("%s/reset-password?token=%s", baseUrl, token);

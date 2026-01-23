@@ -59,10 +59,11 @@ public class AuthController {
     }
 
     @PostMapping("/reset-password")
-    public String resetPassword(
+    public ResponseEntity<String> resetPassword(
             @Valid @RequestBody ResetPasswordRequest request
     ) {
-        return "";
+        var response = authService.resetPassword(request);
+        return ResponseEntity.ok().body(response);
     }
 
     @ExceptionHandler(InvalidTokenException.class)
