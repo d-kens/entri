@@ -65,11 +65,4 @@ public class AuthController {
         var response = authService.resetPassword(request);
         return ResponseEntity.ok().body(response);
     }
-
-    @ExceptionHandler(InvalidTokenException.class)
-    public ResponseEntity<ErrorDto> handleInvalidTokenException(InvalidTokenException exception) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
-            new ErrorDto(exception.getMessage())
-        );
-    }
 }
