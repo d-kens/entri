@@ -26,6 +26,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(errors);
     }
 
+    @ExceptionHandler(InvalidTokenException.class)
+    public ResponseEntity<ErrorDto> handleInvalidTokenException(InvalidTokenException e) {
+        return ResponseEntity.badRequest().body(
+                new ErrorDto(e.getMessage())
+        );
+    }
+
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorDto> handleUnreadableMessage() {
         return ResponseEntity.badRequest().body(

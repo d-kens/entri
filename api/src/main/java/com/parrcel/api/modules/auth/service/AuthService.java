@@ -97,6 +97,7 @@ public class AuthService {
         }
     }
 
+
     private String buildResetPasswordUrl(String token) {
         return String.format("%s/reset-password?token=%s", baseUrl, token);
     }
