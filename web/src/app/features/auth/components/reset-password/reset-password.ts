@@ -1,6 +1,6 @@
-import {Component, signal} from '@angular/core';
+import {Component, OnInit, signal} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {Router, RouterLink} from '@angular/router';
+import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -10,6 +10,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {AuthService} from '@core/services/auth-service';
 import {SnackbarService} from '@core/services/snackbar-service';
 import {passwordsMatchValidator} from '@core/utils/validators';
+import {ResetPasswordPayload} from '@core/models/auth.models';
 
 @Component({
   selector: 'app-reset-password',
@@ -26,7 +27,8 @@ import {passwordsMatchValidator} from '@core/utils/validators';
   templateUrl: './reset-password.html',
   styleUrl: './reset-password.css',
 })
-export class ResetPassword {
+export class ResetPassword implements OnInit {
+  resetPasswordToken!: string
   resetPasswordForm: FormGroup;
   isLoading = signal(false);
   visibility = signal({
@@ -37,6 +39,7 @@ export class ResetPassword {
   constructor(
     private router: Router,
     private fb: FormBuilder,
+    private route: ActivatedRoute,
     private authService: AuthService,
     private snackbarService: SnackbarService
   ) {
@@ -44,6 +47,14 @@ export class ResetPassword {
       password: ['', Validators.required],
       confirmPassword: ['', Validators.required]
     }, { validators: passwordsMatchValidator })
+  }
+
+  ngOnInit(): void {
+    this.route.queryParamMap.subscribe(params => {
+      const token = params.get('token');
+      if (token)
+        this.resetPasswordToken = token
+    })
   }
 
   toggleVisibility(field: 'password' | 'confirmPassword', event: MouseEvent) {
@@ -55,19 +66,17 @@ export class ResetPassword {
   }
 
   resetPassword() {
+    if(this.resetPasswordForm.invalid) {
+      this.resetPasswordForm.markAllAsTouched()
+      return;
+    }
 
+    this.isLoading.set(true);
+
+    const payload: ResetPasswordPayload = {
+      token: this.resetPasswordToken,
+      newPassword: this.resetPasswordForm.get('password')!.value
+    }
   }
 
 }
-
-/**
- [User clicks link]
- ↓
- [Frontend extracts token → POST to /validate-reset-token]
- ↓
- [Backend validates token]
- ├─ Valid → Show Reset Password form
- └─ Invalid → Show error message ("Link expired/invalid")
- ↓
- [User submits new password → POST /reset-password]
- */
