@@ -3,7 +3,7 @@ import { environment } from 'environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, tap, throwError } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
-import {AccessToken, AuthRequest, JWTPayload} from '../models/auth.models';
+import {AccessToken, AuthRequest, JWTPayload, ResetPasswordPayload} from '../models/auth.models';
 
 @Injectable({
   providedIn: 'root',
@@ -81,5 +81,12 @@ export class AuthService {
     return this.http.post<null>(
       `${environment.apiBaseUrl}/auth/forgot-password`, email
     );
+  }
+
+  resetPassword(payload: ResetPasswordPayload): Observable<string> {
+    return this.http.post<string>(
+      `${environment.apiBaseUrl}/auth/reset-password`,
+      payload
+    )
   }
 }

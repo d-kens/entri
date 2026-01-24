@@ -2,9 +2,7 @@ package com.parrcel.api.modules.auth.controller;
 
 import com.parrcel.api.common.dto.ErrorDto;
 import com.parrcel.api.common.exception.InvalidTokenException;
-import com.parrcel.api.modules.auth.dto.AuthResponse;
-import com.parrcel.api.modules.auth.dto.AuthRequest;
-import com.parrcel.api.modules.auth.dto.ForgotPasswordRequest;
+import com.parrcel.api.modules.auth.dto.*;
 import com.parrcel.api.modules.auth.service.AuthService;
 import com.parrcel.api.security.config.JwtConfig;
 import jakarta.servlet.http.Cookie;
@@ -60,10 +58,11 @@ public class AuthController {
         );
     }
 
-    @ExceptionHandler(InvalidTokenException.class)
-    public ResponseEntity<ErrorDto> handleInvalidTokenException(InvalidTokenException exception) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
-            new ErrorDto(exception.getMessage())
-        );
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(
+            @Valid @RequestBody ResetPasswordRequest request
+    ) {
+        var response = authService.resetPassword(request);
+        return ResponseEntity.ok().body(response);
     }
 }
