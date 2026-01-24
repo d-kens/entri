@@ -82,7 +82,7 @@ public class AuthService {
 
             var tokenResponse = tokenService.generateToken(user, TokenPurpose.PASSWORD_RESET, null);
 
-            String resetUrl = buildResetPasswordUrl(tokenResponse.getRawToken());
+            String resetUrl = String.format("%s/auth/reset-password?token=%s", baseUrl, tokenResponse.getRawToken());
 
             Map<String, Object> payload = Map.of(
                     "resetUrl", resetUrl,
@@ -103,10 +103,6 @@ public class AuthService {
     public String resetPassword(ResetPasswordRequest request) {
         Token token = tokenService.validateToken(request.getToken());
 
-        System.out.println("================================================================");
-        System.out.println(token);
-        System.out.println("================================================================");
-
         if (token.getPurpose() != TokenPurpose.PASSWORD_RESET) {
             throw new InvalidTokenException("Token is not valid for password reset");
         }
@@ -115,10 +111,15 @@ public class AuthService {
         userService.updatePassword(user, request.getNewPassword());
         tokenService.invalidateToken(token);
 
-        return "Password has been successfully reset";
-    }
+        var loginUrl = String.format("%s/auth/login", baseUrl);
 
-    private String buildResetPasswordUrl(String token) {
-        return String.format("%s/auth/reset-password?token=%s", baseUrl, token);
+        Map<String, Object> payload = Map.of(
+                "loginUrl", loginUrl,
+                "userName", user.getUserName()
+        );
+
+        notificationService.sendNotification(user, NotificationType.PASSWORD_RESET_CONFIRMATION, payload);
+
+        return "Password has been successfully reset";
     }
 }
