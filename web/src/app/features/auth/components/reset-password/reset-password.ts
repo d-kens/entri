@@ -66,8 +66,13 @@ export class ResetPassword implements OnInit {
   }
 
   resetPassword() {
-    if(this.resetPasswordForm.invalid) {
-      this.resetPasswordForm.markAllAsTouched()
+    if (this.resetPasswordForm.invalid) {
+      this.resetPasswordForm.markAllAsTouched();
+      return;
+    }
+
+    if (!this.resetPasswordToken) {
+      this.snackbarService.showError('Invalid or missing reset token.');
       return;
     }
 
@@ -76,7 +81,29 @@ export class ResetPassword implements OnInit {
     const payload: ResetPasswordPayload = {
       token: this.resetPasswordToken,
       newPassword: this.resetPasswordForm.get('password')!.value
-    }
+    };
+
+    this.authService.resetPassword(payload).subscribe({
+      next: () => {
+        this.isLoading.set(false);
+        this.snackbarService.showSuccess('Password Reset Successful');
+        this.router.navigateByUrl('/auth/login');
+      },
+      error: (err) => {
+        this.isLoading.set(false);
+
+        if (err.status === 404) {
+          this.snackbarService.showError('Invalid or expired reset token.');
+          this.router.navigateByUrl('/auth/login');
+          return;
+        }
+
+        const errorMessage =
+          err.error?.error || 'Password reset failed. Please try again later.';
+
+        this.snackbarService.showError(errorMessage);
+      }
+    });
   }
 
 }
