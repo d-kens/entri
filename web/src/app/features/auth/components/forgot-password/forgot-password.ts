@@ -9,6 +9,7 @@ import {RouterLink} from '@angular/router';
 import {MatIconModule} from '@angular/material/icon';
 import {AuthService} from '@core/services/auth-service';
 import {SnackbarService} from '@core/services/snackbar-service';
+import {ForgotPasswordPayload} from '@core/models/auth.models';
 
 @Component({
   selector: 'app-forgot-password',
@@ -49,13 +50,15 @@ export class ForgotPassword {
 
     this.isLoading.set(true);
 
-    const email = this.forgotPasswordForm.get('email')!.value;
+    const payload: ForgotPasswordPayload = {
+      email: this.forgotPasswordForm.get('email')!.value
+    }
 
-    this.authService.sendPasswordResetInstructions(email).subscribe({
+    this.authService.sendPasswordResetInstructions(payload).subscribe({
       next: () => {
         this.isLoading.set(false);
         this.emailSent.set(true);
-        this.snackbarService.showError('Password Reset Instruction sent to the provided email.');
+        this.snackbarService.showSuccess('Password Reset Instruction sent to the provided email.');
       },
       error: (err) => {
         console.log('This is the error: ', err);

@@ -12,6 +12,10 @@ export type JWTPayload = {
   [key: string]: any;
 };
 
+export type ForgotPasswordPayload = {
+  email: string
+}
+
 export type ResetPasswordPayload = {
   token: string,
   newPassword: string

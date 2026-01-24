@@ -55,11 +55,22 @@ public class TokenService {
         String tokenHash = hashToken(rawToken);
 
         var token = tokenRepository.findByTokenHash(tokenHash).orElseThrow(
-                () -> new NotFoundException("Token not found")
+                () -> new InvalidTokenException("Password Reset Token is invalid")
         );
 
-        if(!token.isValid())
+        System.out.println("================================================================");
+        System.out.println(token.getId());
+        System.out.println(token.getTokenHash());
+        System.out.println(token.getTokenHash());
+        System.out.println(token.isExpired());
+        System.out.println(token.isUsed());
+        System.out.println(token.isInvalidated());
+        System.out.println("================================================================");
+
+        if(!token.isValid()) {
+            System.out.println("Password Reset Token is invalid");
             throw new InvalidTokenException("Invalid token");
+        }
 
         return token;
     }

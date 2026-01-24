@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
@@ -49,20 +51,22 @@ public class AuthController {
     }
 
     @PostMapping("/forgot-password")
-    public ResponseEntity<String> forgotPassword(
+    public ResponseEntity<?> forgotPassword(
             @Valid @RequestBody ForgotPasswordRequest request
     ) {
         var response = authService.forgotPassword(request);
-        return ResponseEntity.ok().body(
-                response
+        return ResponseEntity.ok(
+                Map.of("message", response)
         );
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity<String> resetPassword(
+    public ResponseEntity<?> resetPassword(
             @Valid @RequestBody ResetPasswordRequest request
     ) {
         var response = authService.resetPassword(request);
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok(
+                Map.of("message", response)
+        );
     }
 }
