@@ -103,6 +103,10 @@ public class AuthService {
     public String resetPassword(ResetPasswordRequest request) {
         Token token = tokenService.validateToken(request.getToken());
 
+        System.out.println("================================================================");
+        System.out.println(token);
+        System.out.println("================================================================");
+
         if (token.getPurpose() != TokenPurpose.PASSWORD_RESET) {
             throw new InvalidTokenException("Token is not valid for password reset");
         }
@@ -115,6 +119,6 @@ public class AuthService {
     }
 
     private String buildResetPasswordUrl(String token) {
-        return String.format("%s/reset-password?token=%s", baseUrl, token);
+        return String.format("%s/auth/reset-password?token=%s", baseUrl, token);
     }
 }

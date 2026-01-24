@@ -28,7 +28,7 @@ novu:
 token:
   length: 64
   passwordResetExpirationSeconds: 3600
-  emailVerificationExpirationSeconds: 86400
+  emailVerificationExpirationSeconds: 900
   twoFactorAuthExpirationSeconds: 300
 
 app:

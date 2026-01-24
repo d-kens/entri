@@ -1,4 +1,4 @@
-import {Component, OnInit, signal} from '@angular/core';
+import {Component, OnInit, OnDestroy, signal} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {MatInputModule} from '@angular/material/input';
@@ -11,9 +11,11 @@ import {AuthService} from '@core/services/auth-service';
 import {SnackbarService} from '@core/services/snackbar-service';
 import {passwordsMatchValidator} from '@core/utils/validators';
 import {ResetPasswordPayload} from '@core/models/auth.models';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-reset-password',
+  standalone: true,
   imports: [
     CommonModule,
     RouterLink,
@@ -25,16 +27,19 @@ import {ResetPasswordPayload} from '@core/models/auth.models';
     MatProgressSpinnerModule
   ],
   templateUrl: './reset-password.html',
-  styleUrl: './reset-password.css',
+  styleUrls: ['./reset-password.css'],
 })
-export class ResetPassword implements OnInit {
-  resetPasswordToken!: string
+export class ResetPassword implements OnInit, OnDestroy {
+  resetPasswordToken!: string;
   resetPasswordForm: FormGroup;
   isLoading = signal(false);
+  showSuccessMessage = signal(false);
   visibility = signal({
     password: true,
     confirmPassword: true,
   });
+
+  private subscriptions = new Subscription();
 
   constructor(
     private router: Router,
@@ -46,15 +51,25 @@ export class ResetPassword implements OnInit {
     this.resetPasswordForm = fb.group({
       password: ['', Validators.required],
       confirmPassword: ['', Validators.required]
-    }, { validators: passwordsMatchValidator })
+    }, { validators: passwordsMatchValidator });
   }
 
   ngOnInit(): void {
-    this.route.queryParamMap.subscribe(params => {
+    const sub = this.route.queryParamMap.subscribe(params => {
       const token = params.get('token');
-      if (token)
-        this.resetPasswordToken = token
-    })
+      if (token) {
+        this.resetPasswordToken = token;
+      } else {
+        this.snackbarService.showError('Invalid or missing reset token.');
+        this.router.navigateByUrl('/auth/login');
+      }
+    });
+
+    this.subscriptions.add(sub);
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   toggleVisibility(field: 'password' | 'confirmPassword', event: MouseEvent) {
@@ -86,24 +101,24 @@ export class ResetPassword implements OnInit {
     this.authService.resetPassword(payload).subscribe({
       next: () => {
         this.isLoading.set(false);
-        this.snackbarService.showSuccess('Password Reset Successful');
-        this.router.navigateByUrl('/auth/login');
+        this.showSuccessMessage.set(true);
+
+        setTimeout(() => {
+          this.router.navigateByUrl('/auth/login');
+        }, 3000);
       },
       error: (err) => {
         this.isLoading.set(false);
-
-        if (err.status === 404) {
-          this.snackbarService.showError('Invalid or expired reset token.');
-          this.router.navigateByUrl('/auth/login');
-          return;
-        }
 
         const errorMessage =
           err.error?.error || 'Password reset failed. Please try again later.';
 
         this.snackbarService.showError(errorMessage);
+
+        setTimeout(() => {
+          this.router.navigateByUrl('/auth/login');
+        }, 2500);
       }
     });
   }
-
 }
