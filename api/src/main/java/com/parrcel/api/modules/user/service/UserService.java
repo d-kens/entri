@@ -42,4 +42,9 @@ public class UserService {
 
        return user;
     }
+
+    public void updatePassword(User user, String newPassword) {
+        user.setPasswordHash(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
 }

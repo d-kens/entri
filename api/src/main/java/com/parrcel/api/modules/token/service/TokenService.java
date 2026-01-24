@@ -1,5 +1,7 @@
 package com.parrcel.api.modules.token.service;
 
+import com.parrcel.api.common.exception.InvalidTokenException;
+import com.parrcel.api.common.exception.NotFoundException;
 import com.parrcel.api.modules.token.config.TokenConfig;
 import com.parrcel.api.modules.token.dto.TokenResponseDto;
 import com.parrcel.api.modules.token.entity.Token;
@@ -49,12 +51,17 @@ public class TokenService {
         return new TokenResponseDto(rawToken, purpose, expiresAt);
     }
 
-    public Optional<Token> validateToken(String rawToken) {
+    public Token validateToken(String rawToken) {
         String tokenHash = hashToken(rawToken);
 
-        Optional<Token> tokenOptional = tokenRepository.findByTokenHash(tokenHash);
+        var token = tokenRepository.findByTokenHash(tokenHash).orElseThrow(
+                () -> new NotFoundException("Token not found")
+        );
 
-        return tokenOptional.filter(Token::isValid);
+        if(!token.isValid())
+            throw new InvalidTokenException("Invalid token");
+
+        return token;
     }
 
     public void invalidateToken(Token token) {
