@@ -4,10 +4,13 @@ import com.parrcel.api.common.exception.NotificationDeliveryException;
 import com.parrcel.api.modules.notification.dto.NotificationDto;
 import com.parrcel.api.modules.notification.dto.SubscriberDto;
 import com.parrcel.api.modules.notification.enums.NotificationType;
+import com.parrcel.api.modules.notification.events.NotificationEvent;
 import com.parrcel.api.modules.notification.novu.NovuClient;
 import com.parrcel.api.modules.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -18,6 +21,22 @@ import java.util.Map;
 public class NotificationService {
 
     private final NovuClient novuClient;
+
+    @Async
+    @EventListener
+    public void handleNotificationEvent(NotificationEvent event) {
+        try {
+            sendNotification(event.getUser(), event.getNotificationType(), event.getPayload());
+        } catch (Exception e) {
+            log.error(
+                    "Failed to handle notification event. type={}, userId={}",
+                    event.getNotificationType(),
+                    event.getUser().getId(),
+                    e
+            );
+            // Swallow exception - notification failure shouldn't break the main flow
+        }
+    }
 
     public void sendNotification(
             User user,
