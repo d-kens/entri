@@ -2,12 +2,9 @@ package com.parrcel.api.modules.auth.service;
 
 import com.parrcel.api.common.exception.InvalidTokenException;
 import com.parrcel.api.common.exception.NotFoundException;
-import com.parrcel.api.modules.auth.dto.AuthRequest;
-import com.parrcel.api.modules.auth.dto.ForgotPasswordRequest;
-import com.parrcel.api.modules.auth.dto.ResetPasswordRequest;
-import com.parrcel.api.modules.auth.dto.TokenPair;
+import com.parrcel.api.modules.auth.dto.*;
 import com.parrcel.api.modules.notification.enums.NotificationType;
-import com.parrcel.api.modules.notification.events.NotificationEvent;
+import com.parrcel.api.modules.notification.events.SendNotificationEvent;
 import com.parrcel.api.modules.token.config.TokenConfig;
 import com.parrcel.api.modules.token.entity.Token;
 import com.parrcel.api.modules.token.enums.TokenPurpose;
@@ -91,7 +88,7 @@ public class AuthService {
             );
 
             eventPublisher.publishEvent(
-                    new NotificationEvent(user, payload, NotificationType.RESET_PASSWORD)
+                    new SendNotificationEvent(user, payload, NotificationType.RESET_PASSWORD)
             );
 
             return "If email exists, a reset link has been sent";
@@ -121,7 +118,7 @@ public class AuthService {
         );
 
         eventPublisher.publishEvent(
-                new NotificationEvent(user, payload, NotificationType.PASSWORD_RESET_CONFIRMATION)
+                new SendNotificationEvent(user, payload, NotificationType.PASSWORD_RESET_CONFIRMATION)
         );
 
         return "Password has been successfully reset";
