@@ -7,7 +7,7 @@ import com.parrcel.api.modules.auth.dto.ForgotPasswordRequest;
 import com.parrcel.api.modules.auth.dto.ResetPasswordRequest;
 import com.parrcel.api.modules.auth.dto.TokenPair;
 import com.parrcel.api.modules.notification.enums.NotificationType;
-import com.parrcel.api.modules.notification.service.NotificationService;
+import com.parrcel.api.modules.notification.events.NotificationEvent;
 import com.parrcel.api.modules.token.config.TokenConfig;
 import com.parrcel.api.modules.token.entity.Token;
 import com.parrcel.api.modules.token.enums.TokenPurpose;
@@ -17,6 +17,7 @@ import com.parrcel.api.modules.user.service.UserService;
 import com.parrcel.api.security.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
@@ -33,7 +34,7 @@ public class AuthService {
     private final UserService userService;
     private final TokenConfig tokenConfig;
     private final TokenService tokenService;
-    private final NotificationService notificationService;
+    private final ApplicationEventPublisher eventPublisher;
     private final AuthenticationManager authenticationManager;
 
     public TokenPair login(AuthRequest authRequest) {
@@ -76,7 +77,6 @@ public class AuthService {
     }
 
     public String forgotPassword(ForgotPasswordRequest request) {
-
         try {
             var user = userService.getUserByEmail(request.getEmail());
 
@@ -90,7 +90,9 @@ public class AuthService {
                     "userName", user.getUserName()
             );
 
-            notificationService.sendNotification(user, NotificationType.RESET_PASSWORD, payload);
+            eventPublisher.publishEvent(
+                    new NotificationEvent(user, payload, NotificationType.RESET_PASSWORD)
+            );
 
             return "If email exists, a reset link has been sent";
         } catch (NotFoundException exception) {
@@ -118,7 +120,9 @@ public class AuthService {
                 "userName", user.getUserName()
         );
 
-        notificationService.sendNotification(user, NotificationType.PASSWORD_RESET_CONFIRMATION, payload);
+        eventPublisher.publishEvent(
+                new NotificationEvent(user, payload, NotificationType.PASSWORD_RESET_CONFIRMATION)
+        );
 
         return "Password has been successfully reset";
     }
