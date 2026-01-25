@@ -1,7 +1,5 @@
 package com.parrcel.api.modules.auth.controller;
 
-import com.parrcel.api.common.dto.ErrorDto;
-import com.parrcel.api.common.exception.InvalidTokenException;
 import com.parrcel.api.modules.auth.dto.*;
 import com.parrcel.api.modules.auth.service.AuthService;
 import com.parrcel.api.security.config.JwtConfig;
@@ -9,7 +7,6 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
