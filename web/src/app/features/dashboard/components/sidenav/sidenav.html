@@ -1,1 +1,15 @@
-<p>sidenav works!</p>
+<div>
+  <div class="flex items-center gap-3 p-4">
+    <img src="parrcel-logo.png" alt="Parrcel Logo" class="h-10 w-10">
+    <span class="text-lg font-semibold">Parrcel</span>
+  </div>
+
+  <mat-nav-list class="!p-0">
+    @for (item of menuItem(); track item) {
+      <a mat-list-item class="!rounded-none">
+        <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+        <span matListItemTitle>{{ item.label }}</span>
+      </a>
+    }
+  </mat-nav-list>
+</div>
