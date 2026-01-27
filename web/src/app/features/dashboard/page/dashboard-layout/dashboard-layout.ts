@@ -5,6 +5,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSidenavModule} from '@angular/material/sidenav';
+import {Sidenav} from '@features/dashboard/components/sidenav/sidenav';
 
 @Component({
   selector: 'app-dashboard-layout',
@@ -14,11 +15,18 @@ import {MatSidenavModule} from '@angular/material/sidenav';
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,
-    MatSidenavModule
+    MatSidenavModule,
+    Sidenav
   ],
   templateUrl: './dashboard-layout.html',
   styleUrl: './dashboard-layout.css',
 })
 export class DashboardLayout {
+
+  isOpen = true;
+
+  toggleSidenav() {
+    this.isOpen = !this.isOpen;
+  }
 
 }

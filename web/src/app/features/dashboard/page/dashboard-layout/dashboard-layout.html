@@ -1,12 +1,20 @@
 <mat-toolbar class="shadow-md">
-  <button mat-icon-button>
+  <button mat-icon-button (click)="toggleSidenav()">
     <mat-icon>menu</mat-icon>
   </button>
 </mat-toolbar>
 <mat-sidenav-container>
-  <mat-sidenav opened>Hello</mat-sidenav>
+  <mat-sidenav
+    [(opened)]="isOpen"
+    mode="side"
+    class="!rounded-none"
+    [style.width]="'250px'"
+  >
+    <app-sidenav />
+  </mat-sidenav>
 
   <mat-sidenav-content class="content">
     <router-outlet />
+    Wewe
   </mat-sidenav-content>
 </mat-sidenav-container>
