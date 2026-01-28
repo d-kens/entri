@@ -1,1 +1,41 @@
-<p>sidenav works!</p>
+<div class="flex flex-col h-full">
+  <!-- Logo & Brand Section with Close Button -->
+  <div class="h-16 px-4 border-b border-gray-200 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="flex-shrink-0">
+        <img src="parrcel-logo.png" alt="Parrcel Logo" class="h-10 w-10 object-contain">
+      </div>
+      <p class="text-xl font-bold text-gray-900">Parrcel</p>
+    </div>
+
+    <!-- Close button - only visible on mobile -->
+    @if (isMobile()) {
+      <button
+        mat-icon-button
+        (click)="onCloseSidenav()"
+        class="!ml-2"
+        aria-label="Close menu"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    }
+  </div>
+
+  <!-- Navigation Menu -->
+  <nav class="flex-1 overflow-y-auto py-0">
+    <mat-nav-list class="!p-0">
+      @for (item of menuItem(); track item.label) {
+        <a
+          mat-list-item
+          [routerLink]="item.route"
+          routerLinkActive="active-route"
+          class="!rounded-none hover:bg-gray-50 transition-colors nav-item"
+          (click)="isMobile() ? onCloseSidenav() : null"
+        >
+          <mat-icon matListItemIcon class="nav-icon">{{ item.icon }}</mat-icon>
+          <span matListItemTitle class="nav-label">{{ item.label }}</span>
+        </a>
+      }
+    </mat-nav-list>
+  </nav>
+</div>

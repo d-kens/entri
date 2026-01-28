@@ -7,7 +7,7 @@ import {Observable} from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class UserService {
+export class User {
   private http: HttpClient = inject(HttpClient);
 
   createUser(payload: CreateUserRequest): Observable<UserResponse> {

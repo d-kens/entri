@@ -7,8 +7,8 @@ import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {RouterLink} from '@angular/router';
 import {MatIconModule} from '@angular/material/icon';
-import {AuthService} from '@core/services/auth-service';
-import {SnackbarService} from '@core/services/snackbar-service';
+import {Auth} from '@core/services/auth';
+import {Snackbar} from '@core/services/snackbar';
 import {ForgotPasswordPayload} from '@core/models/auth.models';
 
 @Component({
@@ -34,8 +34,8 @@ export class ForgotPassword {
 
   constructor(
     private fb: FormBuilder,
-    private authService: AuthService,
-    private snackbarService: SnackbarService
+    private authService: Auth,
+    private snackbarService: Snackbar
   ) {
     this.forgotPasswordForm = fb.group({
       email: ['', [Validators.email, Validators.required]]
