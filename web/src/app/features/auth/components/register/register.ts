@@ -7,9 +7,9 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Router, RouterLink} from '@angular/router';
-import {SnackbarService} from '@core/services/snackbar-service';
+import {Snackbar} from '@core/services/snackbar';
 import {CreateUserRequest} from '@core/models/user.models';
-import {UserService} from '@core/services/user-service';
+import {User} from '@core/services/user';
 import {passwordsMatchValidator} from '@core/utils/validators';
 
 @Component({
@@ -39,8 +39,8 @@ export class Register {
   constructor(
     private router: Router,
     private fb: FormBuilder,
-    private userService: UserService,
-    private snackbarService: SnackbarService
+    private userService: User,
+    private snackbarService: Snackbar
   ) {
     this.registerForm = fb.group({
       userName: ['', Validators.required],

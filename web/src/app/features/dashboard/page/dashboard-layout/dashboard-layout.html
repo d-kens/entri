@@ -1,1 +1,72 @@
-<p>dashboard-layout works!</p>
+<mat-sidenav-container class="h-screen">
+  <mat-sidenav
+    #sidenav
+    [opened]="isOpen"
+    [mode]="sidenavMode"
+    [disableClose]="!isMobile()"
+    [position]="'start'"
+    class="!rounded-none !border-r !border-gray-200"
+    [style.width]="'280px'"
+  >
+    <app-sidenav [isMobile]="isMobile()" (closeSidenav)="sidenav.close()" />
+  </mat-sidenav>
+
+  <mat-sidenav-content class="content">
+    <mat-toolbar class="border-b border-gray-200 !h-16 flex items-center justify-between px-4">
+      <div class="flex items-center gap-3">
+        @if (isMobile()) {
+          <button mat-icon-button (click)="toggleSidenav()" class="hamburger-btn">
+            <mat-icon class="hamburger-icon">menu</mat-icon>
+          </button>
+        }
+      </div>
+
+      <div class="flex items-center">
+        <!-- Wallet Card with Dropdown -->
+        <button
+          mat-button
+          [matMenuTriggerFor]="walletMenu"
+          class="wallet-card-btn"
+        >
+          <div class="wallet-card">
+            <div class="wallet-content">
+              <div class="user-info-compact">
+                <mat-icon class="user-icon-small">account_circle</mat-icon>
+                <span class="user-name-compact">{{ userName() }}</span>
+              </div>
+              <div class="wallet-balance">
+                <mat-icon class="wallet-icon-small">wallet</mat-icon>
+                <span class="balance-amount">KSh {{ walletBalance() | number:'1.2-2' }}</span>
+              </div>
+            </div>
+            <mat-icon class="dropdown-icon">arrow_drop_down</mat-icon>
+          </div>
+        </button>
+
+        <mat-menu #walletMenu="matMenu" xPosition="before" class="wallet-dropdown-menu">
+
+          <!-- Action Items -->
+          <button mat-menu-item (click)="navigateToPayout()" class="menu-action-item">
+            <mat-icon class="menu-action-icon primary-icon">payment</mat-icon>
+            <div class="menu-action-content">
+              <span class="menu-action-title">Request Payout</span>
+              <span class="menu-action-subtitle">Withdraw funds</span>
+            </div>
+          </button>
+
+          <button mat-menu-item (click)="logout()" class="menu-action-item logout-item">
+            <mat-icon class="menu-action-icon">logout</mat-icon>
+            <div class="menu-action-content">
+              <span class="menu-action-title">Logout</span>
+              <span class="menu-action-subtitle">Sign out of account</span>
+            </div>
+          </button>
+        </mat-menu>
+      </div>
+    </mat-toolbar>
+
+    <div class="p-6">
+      <router-outlet />
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
