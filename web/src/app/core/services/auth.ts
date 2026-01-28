@@ -8,7 +8,7 @@ import {AccessToken, AuthRequest, ForgotPasswordPayload, JWTPayload, ResetPasswo
 @Injectable({
   providedIn: 'root',
 })
-export class AuthService {
+export class Auth {
   private http: HttpClient = inject(HttpClient);
   private readonly ACCESS_TOKEN_KEY = 'access_token';
 

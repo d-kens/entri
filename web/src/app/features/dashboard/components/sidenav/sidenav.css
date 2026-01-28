@@ -1,0 +1,44 @@
+.nav-item {
+  color: var(--mat-sys-on-surface);
+  font-weight: 400 !important;
+}
+
+.nav-icon {
+  color: var(--mat-sys-on-surface-variant);
+  font-weight: 400 !important;
+}
+
+.nav-label {
+  color: var(--mat-sys-on-surface-variant);
+  font-weight: 400 !important;
+  font-size: 0.9375rem;
+}
+
+/* Active route styling */
+.active-route {
+  background-color: color-mix(in srgb, var(--mat-sys-primary) 17%, transparent) !important;
+  border-left: 3px solid var(--mat-sys-primary);
+}
+
+.active-route .nav-icon {
+  color: var(--mat-sys-primary);
+  font-weight: 400 !important;
+}
+
+.active-route .nav-label {
+  color: var(--mat-sys-on-surface);
+  font-weight: 500 !important;
+}
+
+/* Hover state */
+.nav-item:not(.active-route):hover {
+  background-color: color-mix(in srgb, var(--mat-sys-primary) 8%, transparent);
+}
+
+.nav-item:not(.active-route):hover .nav-icon {
+  color: var(--mat-sys-primary);
+}
+
+.nav-item:not(.active-route):hover .nav-label {
+  color: var(--mat-sys-on-surface);
+}

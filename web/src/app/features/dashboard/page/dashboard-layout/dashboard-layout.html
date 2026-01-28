@@ -1,20 +1,25 @@
-<mat-toolbar class="shadow-md">
-  <button mat-icon-button (click)="toggleSidenav()">
-    <mat-icon>menu</mat-icon>
-  </button>
-</mat-toolbar>
-<mat-sidenav-container>
+<mat-sidenav-container class="h-screen">
   <mat-sidenav
-    [(opened)]="isOpen"
-    mode="side"
-    class="!rounded-none"
-    [style.width]="'250px'"
+    #sidenav
+    [opened]="isOpen"
+    [mode]="sidenavMode"
+    [disableClose]="!isMobile()"
+    [position]="'start'"
+    class="!rounded-none !border-r !border-gray-200"
+    [style.width]="'280px'"
   >
-    <app-sidenav />
+    <app-sidenav [isMobile]="isMobile()" (closeSidenav)="sidenav.close()" />
   </mat-sidenav>
 
   <mat-sidenav-content class="content">
+    <mat-toolbar class="border-b border-gray-200 !h-16 flex items-center">
+      @if (isMobile()) {
+        <button mat-icon-button (click)="toggleSidenav()">
+          <mat-icon>menu</mat-icon>
+        </button>
+      }
+    </mat-toolbar>
+
     <router-outlet />
-    Wewe
   </mat-sidenav-content>
 </mat-sidenav-container>
