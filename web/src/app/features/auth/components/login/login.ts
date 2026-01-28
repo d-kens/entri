@@ -7,8 +7,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import {CommonModule} from '@angular/common';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
-import {SnackbarService} from '@core/services/snackbar-service';
-import {AuthService} from '@core/services/auth-service';
+import {Snackbar} from '@core/services/snackbar';
+import {Auth} from '@core/services/auth';
 import {AuthRequest} from '@core/models/auth.models';
 
 @Component({
@@ -38,8 +38,8 @@ export class Login {
     private router: Router,
     private fb: FormBuilder,
     private route: ActivatedRoute,
-    private authService: AuthService,
-    private snackbarService: SnackbarService,
+    private authService: Auth,
+    private snackbarService: Snackbar,
   ) {
     this.loginForm = fb.group({
       email: ['', [Validators.required, Validators.email]],
