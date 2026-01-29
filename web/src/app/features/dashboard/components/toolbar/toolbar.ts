@@ -1,11 +1,8 @@
-import { Component, input, output, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Component, input, output } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatDividerModule } from '@angular/material/divider';
+import {UserProfile} from '@features/dashboard/components/user-profile/user-profile';
 
 type UserRole = 'ADMIN' | 'MERCHANT' | 'AGENT' | 'CUSTOMER';
 
@@ -13,12 +10,10 @@ type UserRole = 'ADMIN' | 'MERCHANT' | 'AGENT' | 'CUSTOMER';
   selector: 'app-toolbar',
   standalone: true,
   imports: [
-    CommonModule,
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,
-    MatMenuModule,
-    MatDividerModule
+    UserProfile
   ],
   templateUrl: './toolbar.html',
   styleUrl: './toolbar.css',
@@ -31,18 +26,7 @@ export class Toolbar {
 
   toggleSidenav = output<void>();
 
-  constructor(private router: Router) {}
-
   onToggleSidenav() {
     this.toggleSidenav.emit();
-  }
-
-  navigateToPayout() {
-    this.router.navigate(['/payout']);
-  }
-
-  logout() {
-    console.log('Logging out...');
-    this.router.navigate(['/login']);
   }
 }

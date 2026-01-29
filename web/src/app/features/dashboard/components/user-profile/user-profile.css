@@ -1,0 +1,183 @@
+/* User Profile Button */
+.user-profile-btn {
+  padding: 0 !important;
+  min-width: auto !important;
+  height: auto !important;
+  border-radius: 10px !important;
+}
+
+.user-profile-btn:hover .user-profile-card {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.user-profile-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px 6px 12px;
+  background-color: var(--mat-sys-surface-container-high);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 10px;
+  transition: all 0.2s ease;
+}
+
+.user-profile-content {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  align-items: flex-start;
+}
+
+/* User Info Compact */
+.user-info-compact {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.user-icon-small {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.user-name-compact {
+  font-size: 0.75rem;
+  color: var(--mat-sys-on-surface);
+  font-weight: 500;
+  line-height: 1;
+}
+
+/* Wallet Balance */
+.wallet-balance {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.wallet-icon-small {
+  font-size: 14px;
+  width: 14px;
+  height: 14px;
+  color: var(--mat-sys-primary);
+}
+
+.balance-amount {
+  font-size: 0.875rem;
+  color: var(--mat-sys-on-surface);
+  font-weight: 600;
+}
+
+/* Dropdown Icon */
+.dropdown-icon {
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+/* ============================================
+   DROPDOWN MENU STYLES
+   ============================================ */
+
+.user-profile-menu {
+  min-width: 280px !important;
+  margin-top: 8px;
+}
+
+/* Action Items */
+.menu-action-item {
+  padding: 12px 16px !important;
+  height: auto !important;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.menu-action-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  color: var(--mat-sys-on-surface-variant);
+  flex-shrink: 0;
+}
+
+.menu-action-icon.primary-icon {
+  color: var(--mat-sys-primary);
+}
+
+.menu-action-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: flex-start;
+}
+
+.menu-action-title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--mat-sys-on-surface);
+  line-height: 1.2;
+}
+
+.menu-action-subtitle {
+  font-size: 0.75rem;
+  color: var(--mat-sys-on-surface-variant);
+  line-height: 1.2;
+}
+
+.menu-action-item:hover .menu-action-icon {
+  color: var(--mat-sys-primary);
+}
+
+.logout-item:hover .menu-action-icon {
+  color: var(--mat-sys-error);
+}
+
+.logout-item:hover .menu-action-title {
+  color: var(--mat-sys-error);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .user-profile-card {
+    padding: 5px 6px 5px 10px;
+    gap: 6px;
+  }
+
+  .user-name-compact {
+    max-width: 70px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 0.7rem;
+  }
+
+  .balance-amount {
+    font-size: 0.8125rem;
+  }
+
+  .user-icon-small {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+  }
+
+  .wallet-icon-small {
+    font-size: 12px;
+    width: 12px;
+    height: 12px;
+  }
+
+  .dropdown-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  .user-profile-menu {
+    min-width: 260px !important;
+  }
+}
