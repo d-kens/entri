@@ -25,9 +25,6 @@ export class DashboardLayout implements OnInit, OnDestroy {
   @ViewChild('sidenav') sidenav!: MatSidenav;
 
   isMobile = signal(false);
-  userName = signal('John Doe');
-  walletBalance = signal(12450.50);
-  userRole = signal<UserRole>('MERCHANT');
 
   private destroy$ = new Subject<void>();
 

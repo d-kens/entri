@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, tap, throwError } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
 import {AccessToken, AuthRequest, ForgotPasswordPayload, JWTPayload, ResetPasswordPayload} from '../models/auth.models';
+import {UserResponse} from '@core/models/user.models';
 
 @Injectable({
   providedIn: 'root',
@@ -88,5 +89,9 @@ export class Auth {
       `${environment.apiBaseUrl}/auth/reset-password`,
       payload
     )
+  }
+
+  getCurrentUser(): Observable<UserResponse> {
+    return this.http.get<UserResponse>(`${environment.apiBaseUrl}/auth/me`)
   }
 }
