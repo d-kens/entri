@@ -7,9 +7,9 @@
     <div class="user-profile-content">
       <div class="user-info-compact">
         <mat-icon class="user-icon-small">account_circle</mat-icon>
-        <span class="user-name-compact">{{ userName() }}</span>
+        <span class="user-name-compact">{{ user()?.userName }}</span>
       </div>
-      @if (userRole() !== 'ADMIN') {
+      @if (user()?.role !== 'ADMIN') {
         <div class="wallet-balance">
           <mat-icon class="wallet-icon-small">wallet</mat-icon>
           <span class="balance-amount">KSh {{ walletBalance() | number:'1.2-2' }}</span>
@@ -22,7 +22,7 @@
 
 <mat-menu #userMenu="matMenu" xPosition="before" class="user-profile-menu">
   <!-- Action Items -->
-  @if (userRole() !== 'ADMIN') {
+  @if (user()?.role !== 'ADMIN') {
     <button mat-menu-item (click)="navigateToPayout()" class="menu-action-item">
       <mat-icon class="menu-action-icon primary-icon">payment</mat-icon>
       <div class="menu-action-content">

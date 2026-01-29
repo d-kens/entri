@@ -5,8 +5,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDividerModule } from '@angular/material/divider';
+import {UserResponse} from '@core/models/user.models';
 
-type UserRole = 'ADMIN' | 'MERCHANT' | 'AGENT' | 'CUSTOMER';
 
 @Component({
   selector: 'app-user-profile',
@@ -22,9 +22,9 @@ type UserRole = 'ADMIN' | 'MERCHANT' | 'AGENT' | 'CUSTOMER';
   styleUrl: './user-profile.css',
 })
 export class UserProfile {
-  userName = input<string>('');
+
+  user = input<UserResponse>();
   walletBalance = input<number>(0);
-  userRole = input<UserRole>('MERCHANT');
 
   constructor(private router: Router) {}
 
@@ -35,15 +35,5 @@ export class UserProfile {
   logout() {
     console.log('Logging out...');
     this.router.navigate(['/login']);
-  }
-
-  getRoleDisplayName(): string {
-    const roleMap: Record<UserRole, string> = {
-      'ADMIN': 'Administrator',
-      'MERCHANT': 'Merchant Account',
-      'AGENT': 'Agent Account',
-      'CUSTOMER': 'Customer Account'
-    };
-    return roleMap[this.userRole()];
   }
 }
