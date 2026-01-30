@@ -55,6 +55,3 @@ E-commerce in Kenya is booming, but high delivery fees and unreliable last-mile 
 - Track via ID or link
 - Locate nearest pickup agent
 - COD confirmation
-
-
-
