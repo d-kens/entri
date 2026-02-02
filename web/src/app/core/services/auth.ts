@@ -73,9 +73,15 @@ export class Auth {
       );
   }
 
-  logout(): void {
-    localStorage.removeItem(this.ACCESS_TOKEN_KEY);
-    this.authStatusSignal.set(false);
+  logout() {
+    this.http.post<void>(
+      `${environment.apiBaseUrl}/auth/logout`, {}
+    ).pipe(
+      tap(() => {
+        localStorage.removeItem(this.ACCESS_TOKEN_KEY);
+        this.authStatusSignal.set(false);
+      })
+    )
   }
 
   sendPasswordResetInstructions(payload: ForgotPasswordPayload): Observable<string> {
