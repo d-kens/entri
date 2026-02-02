@@ -19,11 +19,11 @@ It uses a **consolidation model** with neighborhood agents (local dukas/shops) s
 - **Notifications** via SMS/WhatsApp (Twilio/AfricasTalking compatible)
 - **Reporting** – volumes, costs per parcel, agent performance, revenue
 
-## 🚀 Why This Project?
+## Why This Project?
 
 E-commerce in Kenya is booming, but high delivery fees and unreliable last-mile service hurt small sellers. Parrcel solves this by dropping costs to KSh 100–150 per parcel via batching and leveraging local agents (parrcel points) for convenience and trust.
 
-## 🏗️ Tech Stack (MVP)
+## Tech Stack (MVP)
 
 - **Backend**: SpringBoot
 - **Frontend**: Angular
@@ -34,7 +34,7 @@ E-commerce in Kenya is booming, but high delivery fees and unreliable last-mile 
 - **Notifications**: AfricasTalking / Twilio SMS/WhatsApp, Novu
 - **Deployment**: GCP
 
-## 📋 System Roles & Key Functionalities
+## System Roles & Key Functionalities
 
 ### Admin
 - Full dashboard: orders, agents, riders, analytics, batching approval
@@ -55,6 +55,3 @@ E-commerce in Kenya is booming, but high delivery fees and unreliable last-mile 
 - Track via ID or link
 - Locate nearest pickup agent
 - COD confirmation
-
-
-
