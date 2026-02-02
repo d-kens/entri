@@ -35,7 +35,9 @@ export class UserProfile {
   }
 
   logout() {
-    this.authService.logout();
-    this.router.navigateByUrl('/auth/login');
+    this.authService.logout().subscribe({
+      next: () => this.router.navigateByUrl('/auth/login'),
+      error: err => console.error('Logout failed', err)
+    });
   }
 }
