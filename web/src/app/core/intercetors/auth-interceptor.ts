@@ -1,10 +1,10 @@
 import {HttpErrorResponse, HttpInterceptorFn} from '@angular/common/http';
 import {inject} from '@angular/core';
-import {Auth} from '../services/auth';
+import {AuthService} from '../services/auth-service';
 import {catchError, switchMap, throwError} from 'rxjs';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const authService = inject(Auth);
+  const authService = inject(AuthService);
   const accessToken = authService.getToken();
 
   console.log("----------------------------------------------------------")
