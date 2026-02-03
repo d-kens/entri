@@ -9,7 +9,7 @@ import com.parrcel.api.security.config.JwtConfig;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -18,22 +18,13 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class AuthController {
 
+    private UserMapper userMapper;
+    private UserService userService;
     private final JwtConfig jwtConfig;
-    private final UserMapper userMapper;
     private final AuthService authService;
-    private final UserService userService;
-
-    @GetMapping("/me")
-    public UserResponse getCurrentUser(
-        @AuthenticationPrincipal Long userId
-    ) {
-        var user = userService.getUserById(userId);
-
-        return userMapper.toResponse(user);
-    }
 
     @PostMapping("/login")
     public AuthResponse login(
@@ -46,11 +37,35 @@ public class AuthController {
         cookie.setSecure(true);
         cookie.setHttpOnly(true);
         cookie.setPath("/auth/refresh-token");
-        cookie.setMaxAge(jwtConfig.getRefreshTokenExpiration());
+        cookie.setMaxAge(jwtConfig.getAccessTokenExpiration());
 
         response.addCookie(cookie);
 
         return new AuthResponse(tokenPair.getAccessToken());
+    }
+
+    @GetMapping("/me")
+    public UserResponse getCurrentUser(
+            @AuthenticationPrincipal Long userId
+    ) {
+        var user = userService.getUserById(userId);
+
+        return userMapper.toResponse(user);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(
+            HttpServletResponse response
+    ) {
+        var cookie = new Cookie("refreshToken", null);
+        cookie.setSecure(true);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/auth/refresh-token");
+        cookie.setMaxAge(0);
+
+        response.addCookie(cookie);
+
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/refresh-token")
