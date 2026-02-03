@@ -9,7 +9,7 @@ import {UserResponse} from '@core/models/user.models';
 @Injectable({
   providedIn: 'root',
 })
-export class Auth {
+export class AuthService {
   private http: HttpClient = inject(HttpClient);
   private readonly ACCESS_TOKEN_KEY = 'access_token';
 

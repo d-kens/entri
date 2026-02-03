@@ -7,8 +7,8 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatIconModule} from '@angular/material/icon';
-import {Auth} from '@core/services/auth';
-import {Snackbar} from '@core/services/snackbar';
+import {AuthService} from '@core/services/auth-service';
+import {SnackbarService} from '@core/services/snackbar-service';
 import {passwordsMatchValidator} from '@core/utils/validators';
 import {ResetPasswordPayload} from '@core/models/auth.models';
 import {Subscription} from 'rxjs';
@@ -45,8 +45,8 @@ export class ResetPassword implements OnInit, OnDestroy {
     private router: Router,
     private fb: FormBuilder,
     private route: ActivatedRoute,
-    private authService: Auth,
-    private snackbarService: Snackbar
+    private authService: AuthService,
+    private snackbarService: SnackbarService
   ) {
     this.resetPasswordForm = fb.group({
       password: ['', Validators.required],

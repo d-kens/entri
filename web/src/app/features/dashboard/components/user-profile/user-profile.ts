@@ -6,7 +6,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDividerModule } from '@angular/material/divider';
 import {UserResponse} from '@core/models/user.models';
-import {Auth} from '@core/services/auth';
+import {AuthService} from '@core/services/auth-service';
+import {SnackbarService} from '@core/services/snackbar-service';
 
 
 @Component({
@@ -25,7 +26,8 @@ import {Auth} from '@core/services/auth';
 export class UserProfile {
 
   private router = inject(Router);
-  private authService = inject(Auth)
+  private authService = inject(AuthService);
+  private snackbarService = inject(SnackbarService)
 
   user = input<UserResponse>();
   walletBalance = input<number>(0);
@@ -37,7 +39,9 @@ export class UserProfile {
   logout() {
     this.authService.logout().subscribe({
       next: () => this.router.navigateByUrl('/auth/login'),
-      error: err => console.error('Logout failed', err)
+      error: err => {
+        this.snackbarService.showError('An error occurred trying to log you out. try again later')
+      }
     });
   }
 }

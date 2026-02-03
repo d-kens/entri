@@ -1,4 +1,4 @@
-/* User Profile Button */
+/* UserService Profile Button */
 .user-profile-btn {
   padding: 0 !important;
   min-width: auto !important;
@@ -29,7 +29,7 @@
   align-items: flex-start;
 }
 
-/* User Info Compact */
+/* UserService Info Compact */
 .user-info-compact {
   display: flex;
   align-items: center;
