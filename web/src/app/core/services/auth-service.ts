@@ -9,7 +9,7 @@ import {UserResponse} from '@core/models/user.models';
 @Injectable({
   providedIn: 'root',
 })
-export class Auth {
+export class AuthService {
   private http: HttpClient = inject(HttpClient);
   private readonly ACCESS_TOKEN_KEY = 'access_token';
 
@@ -73,9 +73,14 @@ export class Auth {
       );
   }
 
-  logout(): void {
-    localStorage.removeItem(this.ACCESS_TOKEN_KEY);
-    this.authStatusSignal.set(false);
+  logout(): Observable<void> {
+    return this.http.post<void>(`${environment.apiBaseUrl}/auth/logout`, {})
+      .pipe(
+        tap(() => {
+          localStorage.removeItem(this.ACCESS_TOKEN_KEY);
+          this.authStatusSignal.set(false);
+        })
+      );
   }
 
   sendPasswordResetInstructions(payload: ForgotPasswordPayload): Observable<string> {

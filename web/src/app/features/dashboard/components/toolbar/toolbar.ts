@@ -4,7 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import {UserProfile} from '@features/dashboard/components/user-profile/user-profile';
 import {UserResponse} from '@core/models/user.models';
-import {Auth} from '@core/services/auth';
+import {AuthService} from '@core/services/auth-service';
 
 @Component({
   selector: 'app-toolbar',
@@ -20,7 +20,7 @@ import {Auth} from '@core/services/auth';
 })
 export class Toolbar implements OnInit {
 
-  private authService = inject(Auth);
+  private authService = inject(AuthService);
 
   isMobile = input<boolean>(false);
   walletBalance = signal(12450.50);

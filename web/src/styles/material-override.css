@@ -31,7 +31,7 @@
    Snackbars
    -------------------------------------------------------------------------- */
 
-/* ===== Success Snackbar ===== */
+/* ===== Success SnackbarService ===== */
 .success-snackbar {
   --mdc-snackbar-container-color: var(--app-success) !important;
   --mdc-snackbar-supporting-text-color: var(--app-on-success) !important;
@@ -45,7 +45,7 @@
   color: var(--app-on-success) !important;
 }
 
-/* ===== Error Snackbar ===== */
+/* ===== Error SnackbarService ===== */
 .error-snackbar {
   --mdc-snackbar-container-color: var(--mat-sys-error) !important;
   --mdc-snackbar-supporting-text-color: var(--mat-sys-on-error) !important;
@@ -59,7 +59,7 @@
   color: var(--mat-sys-on-error) !important;
 }
 
-/* ===== Warning Snackbar ===== */
+/* ===== Warning SnackbarService ===== */
 .warning-snackbar {
   --mdc-snackbar-container-color: var(--app-warning) !important;
   --mdc-snackbar-supporting-text-color: var(--app-on-warning) !important;
@@ -73,7 +73,7 @@
   color: var(--app-on-warning) !important;
 }
 
-/* ===== Info Snackbar ===== */
+/* ===== Info SnackbarService ===== */
 .info-snackbar {
   --mdc-snackbar-container-color: var(--app-info) !important;
   --mdc-snackbar-supporting-text-color: var(--app-on-info) !important;
