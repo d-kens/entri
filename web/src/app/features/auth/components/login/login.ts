@@ -28,7 +28,7 @@ import {AuthRequest} from '@core/models/auth.models';
   styleUrl: './login.css',
 })
 export class Login {
-  loginForm: FormGroup;
+  loginForm!: FormGroup;
   isLoading = signal(false);
   hidePassword = signal(true);
 

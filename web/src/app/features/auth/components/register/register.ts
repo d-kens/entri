@@ -29,7 +29,7 @@ import {passwordsMatchValidator} from '@core/utils/validators';
   styleUrl: './register.css',
 })
 export class Register {
-  registerForm: FormGroup;
+  registerForm!: FormGroup;
   isLoading = signal(false);
   visibility = signal({
     password: true,

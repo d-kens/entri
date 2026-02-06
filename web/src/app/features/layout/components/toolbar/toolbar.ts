@@ -2,7 +2,7 @@ import {Component, inject, input, output, signal, OnInit} from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import {UserProfile} from '@features/dashboard/components/user-profile/user-profile';
+import {UserProfile} from '@features/layout/components/user-profile/user-profile';
 import {UserResponse} from '@core/models/user.models';
 import {AuthService} from '@core/services/auth-service';
 
