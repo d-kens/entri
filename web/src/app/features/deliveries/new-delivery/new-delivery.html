@@ -1,0 +1,265 @@
+<div class="new-order-container">
+  <mat-card class="order-card">
+    <mat-card-header>
+      <mat-card-title>
+        <div class="header-content">
+          <mat-icon class="header-icon">add_shopping_cart</mat-icon>
+          <h2>Create New Delivery Order</h2>
+        </div>
+      </mat-card-title>
+      <mat-card-subtitle>Fill in the details below to create your delivery order</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="deliveryForm" class="order-form">
+
+        <!-- 1. Recipient Details -->
+        <section class="form-section">
+          <h3 class="section-title">
+            <mat-icon>person</mat-icon>
+            Recipient Details
+          </h3>
+
+          <div formGroupName="recipient" class="form-group">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Recipient Name</mat-label>
+              <input matInput formControlName="name" placeholder="e.g., John Doe">
+              <mat-icon matPrefix>badge</mat-icon>
+              @if (deliveryForm.get('recipient.name')?.hasError('required')) {
+                <mat-error>
+                  Name is required
+                </mat-error>
+              }
+              @if (deliveryForm.get('recipient.name')?.hasError('minlength')) {
+                <mat-error>
+                  Name must be at least 3 characters
+                </mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Phone Number</mat-label>
+              <input matInput formControlName="phoneNumber" placeholder="0712345678 or 254712345678">
+              <mat-icon matPrefix>phone</mat-icon>
+              @if (deliveryForm.get('recipient.phoneNumber')?.hasError('required')) {
+                <mat-error>
+                  Phone number is required
+                </mat-error>
+              }
+
+              @if (deliveryForm.get('recipient.phoneNumber')?.hasError('pattern')) {
+                <mat-error>
+                  Invalid phone number format
+                </mat-error>
+              }
+            </mat-form-field>
+          </div>
+        </section>
+
+        <!-- 2. Pickup Location -->
+        <section class="form-section">
+          <h3 class="section-title">
+            <mat-icon>location_on</mat-icon>
+            Pickup Location (Where you're sending from)
+          </h3>
+
+          <div formGroupName="from" class="form-group location-group">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Select Zone/Area</mat-label>
+              <mat-select formControlName="zone" placeholder="Choose a zone">
+                @for (zone of zones(); track zone.id) {
+                  <mat-option [value]="zone">
+                    {{ zone.zoneName }}, {{ zone.city }}
+                  </mat-option>
+                }
+              </mat-select>
+              <mat-icon matPrefix>map</mat-icon>
+              <mat-error>Zone is required</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Select Pickup Point</mat-label>
+              <mat-select formControlName="parcelPoint"
+                          [disabled]="!deliveryForm.get('from.zone')?.value"
+                          placeholder="Choose a parcel point">
+                @for (point of fromPoints(); track point.id) {
+                  <mat-option [value]="point">
+                    <div class="point-option">
+                      <span class="point-name">{{ point.name }}</span>
+                      <span class="point-address">{{ point.addressDescription }}</span>
+                    </div>
+                  </mat-option>
+                }
+              </mat-select>
+              <mat-icon matPrefix>store</mat-icon>
+
+              @if (!deliveryForm.get('from.zone')?.value) {
+                <mat-hint>
+                  Select a zone first
+                </mat-hint>
+              }
+              <mat-error>Pickup point is required</mat-error>
+            </mat-form-field>
+          </div>
+        </section>
+
+        <!-- 3. Delivery Location -->
+        <section class="form-section">
+          <h3 class="section-title">
+            <mat-icon>place</mat-icon>
+            Delivery Location (Where you're sending to)
+          </h3>
+
+          <div formGroupName="to" class="form-group location-group">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Select Zone/Area</mat-label>
+              <mat-select formControlName="zone" placeholder="Choose a zone">
+                @for (zone of zones(); track zone.id) {
+                  <mat-option [value]="zone">
+                    {{ zone.zoneName }}, {{ zone.city }}
+                  </mat-option>
+                }
+              </mat-select>
+              <mat-icon matPrefix>map</mat-icon>
+              <mat-error>Zone is required</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Select Delivery Point</mat-label>
+              <mat-select formControlName="parcelPoint"
+                          [disabled]="!deliveryForm.get('to.zone')?.value"
+                          placeholder="Choose a parcel point">
+                @for (point of toPoints(); track point.id) {
+                  <mat-option [value]="point">
+                    <div class="point-option">
+                      <span class="point-name">{{ point.name }}</span>
+                      <span class="point-address">{{ point.addressDescription }}</span>
+                    </div>
+                  </mat-option>
+                }
+              </mat-select>
+              <mat-icon matPrefix>store</mat-icon>
+
+              @if (!deliveryForm.get('to.zone')?.value) {
+                <mat-hint>
+                  Select a zone first
+                </mat-hint>
+              }
+              <mat-error>Delivery point is required</mat-error>
+            </mat-form-field>
+          </div>
+        </section>
+
+        <!-- 4. Parcel Details -->
+        <section class="form-section">
+          <h3 class="section-title">
+            <mat-icon>inventory_2</mat-icon>
+            Parcel/Package Details
+          </h3>
+
+          <div formGroupName="parcelDetails" class="form-group">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Item Name</mat-label>
+              <input matInput formControlName="name" placeholder="e.g., Electronics, Clothes, Documents">
+              <mat-icon matPrefix>label</mat-icon>
+              @if (deliveryForm.get('parcelDetails.name')?.hasError('required')) {
+                <mat-error>
+                  Item name is required
+                </mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Item Value (KSh)</mat-label>
+              <input matInput type="number" formControlName="price" placeholder="0">
+              <mat-icon matPrefix>attach_money</mat-icon>
+              <mat-hint>Declared value for insurance purposes</mat-hint>
+              <mat-error>Price must be 0 or greater</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Description (Optional)</mat-label>
+              <textarea matInput formControlName="description"
+                        rows="3"
+                        placeholder="Any special handling instructions or additional details"></textarea>
+              <mat-icon matPrefix>description</mat-icon>
+              <mat-hint align="end">
+                {{ deliveryForm.get('parcelDetails.description')?.value?.length || 0 }}/500
+              </mat-hint>
+            </mat-form-field>
+          </div>
+        </section>
+
+        <!-- 5. Cash on Delivery -->
+        <section class="form-section cod-section">
+          <h3 class="section-title">
+            <mat-icon>payments</mat-icon>
+            Cash on Delivery (COD)
+          </h3>
+
+          <div formGroupName="cashOnDelivery" class="form-group">
+            <mat-checkbox formControlName="enabled" class="cod-checkbox">
+              Do you want us to collect payment from the recipient?
+            </mat-checkbox>
+
+            @if (deliveryForm.get('cashOnDelivery.enabled')?.value) {
+              <mat-form-field appearance="outline" class="full-width cod-amount">
+                <mat-label>Amount to Collect (KSh)</mat-label>
+                <input matInput type="number" formControlName="amount" placeholder="0">
+                <mat-icon matPrefix>money</mat-icon>
+                <mat-hint>Amount to collect from recipient on delivery</mat-hint>
+
+                @if (deliveryForm.get('cashOnDelivery.amount')?.hasError('required')) {
+                  <mat-error>
+                    Amount is required when COD is enabled
+                  </mat-error>
+                }
+
+                @if (deliveryForm.get('cashOnDelivery.amount')?.hasError('min')) {
+                  <mat-error>
+                    Amount must be greater than 0
+                  </mat-error>
+                }
+              </mat-form-field>
+            }
+          </div>
+        </section>
+
+        <!-- Delivery Fee Summary -->
+        <section class="fee-summary">
+          <div class="fee-card">
+            <div class="fee-content">
+              <div class="fee-label">
+                <mat-icon>local_shipping</mat-icon>
+                <span>Delivery Fee</span>
+              </div>
+              <div class="fee-amount">
+                @if (deliveryFee() > 0) {
+                  <span class="amount">KSh {{ deliveryFee() | number:'1.2-2' }}</span>
+                } @else {
+                  <span class="amount-placeholder">Select locations to calculate</span>
+                }
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </form>
+    </mat-card-content>
+
+    <mat-card-actions class="card-actions">
+      <button mat-button type="button" class="cancel-btn">
+        <mat-icon>close</mat-icon>
+        Cancel
+      </button>
+      <button mat-raised-button
+              color="primary"
+              (click)="proceedToPayment()"
+              [disabled]="!deliveryForm.valid || deliveryFee() === 0"
+              class="proceed-btn">
+        <mat-icon>arrow_forward</mat-icon>
+        Proceed to Payment
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>
