@@ -2,7 +2,6 @@
 - **Merchant-friendly delivery order placement**
 - **Agent network management** – onboarding, location mapping, commission tracking
 - **Smart consolidation & batching** at hub – auto-group parcels by destination/neighborhood/time
-- **Optimized routing** suggestions for riders (Google Maps API compatible)
 - **Real-time tracking** with status updates (Dropped → At Hub → Out for Delivery → Delivered)
 - **Multi-user roles**:
   - Admin (owner/manager dashboard)
