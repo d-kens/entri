@@ -5,11 +5,6 @@ import {FEATURE_ROUTES} from '@features/feature.routes';
 
 export const routes: Routes = [
   {
-    path: '',
-    redirectTo: 'auth',
-    pathMatch: 'full'
-  },
-  {
     path: 'auth',
     canActivate: [preventAuthenticatedGuard],
     loadChildren: () => import('./features/auth/auth.routes').then(m => m.AUTH_ROUTES)
