@@ -1,0 +1,41 @@
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd">
+
+    <changeSet id="seed-users-for-parcel-points" author="d.onyango">
+        <insert tableName="users">
+            <column name="id" valueNumeric="1"/>
+            <column name="user_name" value="default_agent"/>
+            <column name="password_hash" value="password123"/>
+            <column name="email" value="agent@example.com"/>
+            <column name="phone_number" value="0712345678"/>
+            <column name="role" value="AGENT"/>
+            <column name="is_active" valueBoolean="true"/>
+            <column name="created_at" valueDate="2026-02-06 00:00:00"/>
+            <column name="updated_at" valueDate="2026-02-06 00:00:00"/>
+        </insert>
+
+        <insert tableName="users">
+            <column name="id" valueNumeric="2"/>
+            <column name="user_name" value="default_agent 2"/>
+            <column name="password_hash" value="password123"/>
+            <column name="email" value="agent2@example.com"/>
+            <column name="phone_number" value="0712345656"/>
+            <column name="role" value="AGENT"/>
+            <column name="is_active" valueBoolean="true"/>
+            <column name="created_at" valueDate="2026-02-06 00:00:00"/>
+            <column name="updated_at" valueDate="2026-02-06 00:00:00"/>
+        </insert>
+
+
+
+        <rollback>
+            <delete tableName="users">
+                <where>id IN (1, 2)</where>
+            </delete>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>
