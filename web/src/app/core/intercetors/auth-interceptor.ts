@@ -1,47 +1,42 @@
-import {HttpErrorResponse, HttpInterceptorFn} from '@angular/common/http';
-import {inject} from '@angular/core';
-import {AuthService} from '../services/auth-service';
-import {catchError, switchMap, throwError} from 'rxjs';
+import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { AuthService } from '../services/auth-service';
+import { catchError, switchMap, throwError } from 'rxjs';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const accessToken = authService.getToken();
 
-  console.log("----------------------------------------------------------")
-  console.log("Request Intercepted");
-  console.log(req.url)
-  console.log("----------------------------------------------------------")
+  const isRefreshCall = req.url.includes('/refresh-token');
 
-  // Add access token to the request
-  const requestWithAuth = accessToken
+  const authReq = accessToken && !isRefreshCall
     ? req.clone({
         setHeaders: {
-          Authorization: `Bearer ${accessToken}`
-        }
+          Authorization: `Bearer ${accessToken}`,
+        },
       })
-    : req
+    : req;
 
-  return next(requestWithAuth).pipe(
+  return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
-      if (error.status === 401 && req.url.includes("/refresh-token")) {
+      if (error.status === 401 && !isRefreshCall) {
         return authService.refreshToken().pipe(
-          switchMap(() => {
-            const newAccessToken = authService.getToken();
+          switchMap((response) => {
             const retryReq = req.clone({
               setHeaders: {
-                Authorization: `Bearer ${newAccessToken}`
-              }
+                Authorization: `Bearer ${response.accessToken}`,
+              },
             });
             return next(retryReq);
           }),
-          catchError(() => {
+          catchError((refreshError) => {
             authService.logout();
-            return throwError(() => error)
+            return throwError(() => refreshError);
           })
-        )
+        );
       }
 
       return throwError(() => error);
     })
-  )
+  );
 };

@@ -31,7 +31,7 @@ import {Subscription} from 'rxjs';
 })
 export class ResetPassword implements OnInit, OnDestroy {
   resetPasswordToken!: string;
-  resetPasswordForm: FormGroup;
+  resetPasswordForm!: FormGroup;
   isLoading = signal(false);
   showSuccessMessage = signal(false);
   visibility = signal({

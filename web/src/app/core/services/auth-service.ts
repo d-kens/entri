@@ -2,8 +2,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { environment } from 'environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, tap, throwError } from 'rxjs';
-import { jwtDecode } from 'jwt-decode';
-import {AccessToken, AuthRequest, ForgotPasswordPayload, JWTPayload, ResetPasswordPayload} from '../models/auth.models';
+import {AccessToken, AuthRequest, ForgotPasswordPayload, ResetPasswordPayload} from '../models/auth.models';
 import {UserResponse} from '@core/models/user.models';
 
 @Injectable({
@@ -13,32 +12,14 @@ export class AuthService {
   private http: HttpClient = inject(HttpClient);
   private readonly ACCESS_TOKEN_KEY = 'access_token';
 
-  private authStatusSignal = signal(this.hasValidToken());
+  private authStatusSignal = signal(!!this.getToken());
 
   constructor() {}
 
   isAuthenticated(): boolean {
-    const valid = this.hasValidToken();
-    if (this.authStatusSignal() !== valid) {
-      this.authStatusSignal.set(valid);
-    }
-    return valid;
-  }
-
-  private hasValidToken(): boolean {
-    const token = this.getToken();
-    if (!token) return false;
-    return !this.isTokenExpired(token);
-  }
-
-  private isTokenExpired(token: string): boolean {
-    try {
-      const decoded = jwtDecode<JWTPayload>(token);
-      if (!decoded.exp) return true;
-      return Date.now() >= decoded.exp * 1000;
-    } catch (error) {
-      return true;
-    }
+    const authenticated = !!this.getToken();
+    this.authStatusSignal.set(authenticated);
+    return authenticated;
   }
 
   getToken(): string | null {
@@ -47,7 +28,9 @@ export class AuthService {
 
   login(authRequest: AuthRequest): Observable<AccessToken> {
     return this.http
-      .post<AccessToken>(`${environment.apiBaseUrl}/auth/login`, authRequest)
+      .post<AccessToken>(`${environment.apiBaseUrl}/auth/login`, authRequest, {
+        withCredentials: true
+      })
       .pipe(
         tap({
           next: (response) => {
@@ -74,7 +57,9 @@ export class AuthService {
   }
 
   logout(): Observable<void> {
-    return this.http.post<void>(`${environment.apiBaseUrl}/auth/logout`, {})
+    return this.http.post<void>(`${environment.apiBaseUrl}/auth/logout`, {}, {
+      withCredentials: true
+    })
       .pipe(
         tap(() => {
           localStorage.removeItem(this.ACCESS_TOKEN_KEY);

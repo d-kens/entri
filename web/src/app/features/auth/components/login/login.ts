@@ -28,11 +28,11 @@ import {AuthRequest} from '@core/models/auth.models';
   styleUrl: './login.css',
 })
 export class Login {
-  loginForm: FormGroup;
+  loginForm!: FormGroup;
   isLoading = signal(false);
   hidePassword = signal(true);
 
-  returnUrl: string = '/dashboard';
+  returnUrl: string = '/';
 
   constructor(
     private router: Router,

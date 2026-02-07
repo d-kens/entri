@@ -4,8 +4,8 @@ import { RouterOutlet } from '@angular/router';
 import { MatSidenavModule, MatSidenav } from '@angular/material/sidenav';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Subject, takeUntil } from 'rxjs';
-import { Sidenav } from '@features/dashboard/components/sidenav/sidenav';
-import {Toolbar} from '@features/dashboard/components/toolbar/toolbar';
+import { Sidenav } from '@features/layout/components/sidenav/sidenav';
+import {Toolbar} from '@features/layout/components/toolbar/toolbar';
 
 type UserRole = 'ADMIN' | 'MERCHANT' | 'AGENT';
 
@@ -18,10 +18,10 @@ type UserRole = 'ADMIN' | 'MERCHANT' | 'AGENT';
     Sidenav,
     Toolbar
   ],
-  templateUrl: './dashboard-layout.html',
-  styleUrl: './dashboard-layout.css',
+  templateUrl: './layout.html',
+  styleUrl: './layout.css',
 })
-export class DashboardLayout implements OnInit, OnDestroy {
+export class Layout implements OnInit, OnDestroy {
   @ViewChild('sidenav') sidenav!: MatSidenav;
 
   isMobile = signal(false);

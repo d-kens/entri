@@ -5,5 +5,10 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd"
 >
-    <include file="database-changeset.xml" relativeToChangelogFile="true" />
+    <include file="setup/202602061036-create_users_table.xml" relativeToChangelogFile="true" />
+    <include file="setup/202602061037-create_tokens_table.xml" relativeToChangelogFile="true" />
+    <include file="setup/202602061048-create_zones_table.xml" relativeToChangelogFile="true" />
+    <include file="setup/202602061058-create_parrcel_points_table.xml" relativeToChangelogFile="true" />
+    <include file="setup/202602061130-seed_users_for_parcel_points.xml" relativeToChangelogFile="true" />
+    <include file="setup/202602061125-seed_zones_and_parcel_points.xml" relativeToChangelogFile="true" />
 </databaseChangeLog>

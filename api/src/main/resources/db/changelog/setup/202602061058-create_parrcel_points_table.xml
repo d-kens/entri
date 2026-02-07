@@ -1,0 +1,77 @@
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd">
+    <changeSet id="create-parcel-points-table" author="d.onyango">
+        <createTable tableName="parcel_points">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="zone_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="agent_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="latitude" type="DECIMAL(9,6)"/>
+            <column name="longitude" type="DECIMAL(9,6)"/>
+
+            <column name="address_description" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="is_active" type="BOOLEAN" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="phone" type="VARCHAR(15)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="opening_time" type="TIME">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="closing_time" type="TIME">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- Foreign keys -->
+        <addForeignKeyConstraint
+                baseTableName="parcel_points"
+                baseColumnNames="zone_id"
+                referencedTableName="zones"
+                referencedColumnNames="id"
+                constraintName="fk_parcel_points_zone"/>
+
+        <addForeignKeyConstraint
+                baseTableName="parcel_points"
+                baseColumnNames="agent_id"
+                referencedTableName="users"
+                referencedColumnNames="id"
+                constraintName="fk_parcel_points_agent"/>
+
+        <!-- Rollback -->
+        <rollback>
+            <dropTable tableName="parcel_points"/>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>
