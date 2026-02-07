@@ -1,0 +1,12 @@
+/* Custom colors from Material Design 3 theme */
+.text-on-surface {
+  color: var(--mat-sys-on-surface);
+}
+
+.text-on-surface-variant {
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.text-primary {
+  color: var(--mat-sys-primary);
+}
