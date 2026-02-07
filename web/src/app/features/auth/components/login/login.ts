@@ -32,7 +32,7 @@ export class Login {
   isLoading = signal(false);
   hidePassword = signal(true);
 
-  returnUrl: string = '/dashboard';
+  returnUrl: string = '/';
 
   constructor(
     private router: Router,
