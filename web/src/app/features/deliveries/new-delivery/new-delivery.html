@@ -5,10 +5,10 @@
     <p class="text-sm text-gray-500">Fill in the details below to request delivery</p>
   </div>
 
-  <form class="space-y-4" [formGroup]="deliveryForm">
+  <form [formGroup]="deliveryForm">
     <!-- Recipient Information -->
     <div>
-      <h2 class="text-lg font-normal text-on-surface mb-4">Recipient Information</h2>
+      <h2 class="text-lg font-normal text-on-surface mb-3">Recipient Information</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
         <mat-form-field appearance="outline" class="w-full compact-field">
           <mat-label>Recipient Name</mat-label>
@@ -32,14 +32,17 @@
 
     <!-- Pickup Location -->
     <div>
-      <h2 class="text-lg font-normal text-on-surface mb-4">Where are you sending from?</h2>
+      <h2 class="text-lg font-normal text-on-surface mb-3">Where are you sending from?</h2>
       <div class="flex flex-col md:flex-row gap-3">
         <mat-form-field appearance="outline" class="w-full md:flex-1 compact-field">
           <mat-label>Pickup Zone</mat-label>
           <mat-icon matPrefix>location_on</mat-icon>
+          @if (loadingZones()) {
+            <mat-spinner diameter="20" class="absolute right-2"></mat-spinner>
+          }
           <mat-select formControlName="fromZone" placeholder="Select zone">
             @for (zone of zones(); track zone.id) {
-              <mat-option [value]="zone.id">{{ zone.zone_name }}</mat-option>
+              <mat-option [value]="zone.id">{{ zone.zoneName }}</mat-option>
             }
           </mat-select>
           @if (deliveryForm.get('fromZone')?.invalid && deliveryForm.get('fromZone')?.touched) {
@@ -51,10 +54,13 @@
           <mat-form-field appearance="outline" class="w-full md:flex-1 compact-field">
             <mat-label>Pickup Point</mat-label>
             <mat-icon matPrefix>store</mat-icon>
+            @if (loadingFromPoints()) {
+              <mat-spinner diameter="20" class="absolute right-2"></mat-spinner>
+            }
             <mat-select formControlName="fromPoint" placeholder="Select pickup point">
               @for (point of fromPoints(); track point.id) {
                 <mat-option [value]="point.id">
-                  {{ point.name }} - {{ point.address_description }}
+                  {{ point.name }} - {{ point.addressDescription }}
                 </mat-option>
               }
             </mat-select>
@@ -68,14 +74,17 @@
 
     <!-- Delivery Location -->
     <div>
-      <h2 class="text-lg font-normal text-on-surface mb-4">Where are you sending to?</h2>
+      <h2 class="text-lg font-normal text-on-surface mb-3">Where are you sending to?</h2>
       <div class="flex flex-col md:flex-row gap-3">
         <mat-form-field appearance="outline" class="w-full md:flex-1 compact-field">
           <mat-label>Delivery Zone</mat-label>
           <mat-icon matPrefix>location_on</mat-icon>
+          @if (loadingZones()) {
+            <mat-spinner diameter="20" class="absolute right-2"></mat-spinner>
+          }
           <mat-select formControlName="toZone" placeholder="Select zone">
             @for (zone of zones(); track zone.id) {
-              <mat-option [value]="zone.id">{{ zone.zone_name }}</mat-option>
+              <mat-option [value]="zone.id">{{ zone.zoneName }}</mat-option>
             }
           </mat-select>
           @if (deliveryForm.get('toZone')?.invalid && deliveryForm.get('toZone')?.touched) {
@@ -87,10 +96,13 @@
           <mat-form-field appearance="outline" class="w-full md:flex-1 compact-field">
             <mat-label>Delivery Point</mat-label>
             <mat-icon matPrefix>store</mat-icon>
+            @if (loadingToPoints()) {
+              <mat-spinner diameter="20" class="absolute right-2"></mat-spinner>
+            }
             <mat-select formControlName="toPoint" placeholder="Select delivery point">
               @for (point of toPoints(); track point.id) {
                 <mat-option [value]="point.id">
-                  {{ point.name }} - {{ point.address_description }}
+                  {{ point.name }} - {{ point.addressDescription }}
                 </mat-option>
               }
             </mat-select>
@@ -104,7 +116,7 @@
 
     <!-- Package Details -->
     <div>
-      <h2 class="text-lg font-normal text-on-surface mb-4">Package Details</h2>
+      <h2 class="text-lg font-normal text-on-surface mb-3">Package Details</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
         <mat-form-field appearance="outline" class="w-full compact-field">
           <mat-label>Package Name</mat-label>
@@ -140,7 +152,7 @@
 
     <!-- Cash on Delivery -->
     <div>
-      <h2 class="text-lg font-normal text-on-surface mb-4">Cash on Delivery</h2>
+      <h2 class="text-lg font-normal text-on-surface mb-3">Cash on Delivery</h2>
       <div class="space-y-4">
         <div class="flex items-start gap-3 p-4 rounded-lg border border-outline-variant">
           <mat-checkbox formControlName="collectCash" class="!mt-0.5"></mat-checkbox>

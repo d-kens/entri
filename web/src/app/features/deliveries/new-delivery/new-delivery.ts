@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
+import { Component, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -10,25 +10,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
-
-interface Zone {
-  id: number;
-  zone_name: string;
-  city: string;
-  is_active: boolean;
-}
-
-interface ParcelPoint {
-  id: number;
-  name: string;
-  zone_id: number;
-  agent_id: number;
-  address_description: string;
-  phone: string;
-  is_active: boolean;
-  opening_time: string;
-  closing_time: string;
-}
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ZonesService, Zone, ParcelPoint } from '@core/services/zones-service';
 
 @Component({
   selector: 'app-new-delivery',
@@ -43,48 +26,38 @@ interface ParcelPoint {
     MatButtonModule,
     MatCardModule,
     MatIconModule,
-    MatDividerModule
+    MatDividerModule,
+    MatProgressSpinnerModule
   ],
   templateUrl: './new-delivery.html',
   styleUrl: './new-delivery.css',
 })
 export class NewDelivery implements OnInit {
+  private fb = inject(FormBuilder);
+  private router = inject(Router);
+  private zonesService = inject(ZonesService);
+
   deliveryForm!: FormGroup;
 
-  // Mock data - Replace with API calls
-  zones = signal<Zone[]>([
-    { id: 1, zone_name: 'Westlands', city: 'Nairobi', is_active: true },
-    { id: 2, zone_name: 'Eastleigh', city: 'Nairobi', is_active: true },
-    { id: 3, zone_name: 'CBD', city: 'Nairobi', is_active: true },
-    { id: 4, zone_name: 'Kasarani', city: 'Nairobi', is_active: true },
-  ]);
+  zones = signal<Zone[]>([]);
+  parcelPoints = signal<ParcelPoint[]>([]);
 
-  parcelPoints = signal<ParcelPoint[]>([
-    { id: 1, name: 'Sarit Center Duka', zone_id: 1, agent_id: 1, address_description: 'Next to Sarit Center', phone: '0712345678', is_active: true, opening_time: '08:00', closing_time: '20:00' },
-    { id: 2, name: 'Westgate Mall Point', zone_id: 1, agent_id: 2, address_description: 'Westgate Shopping Mall', phone: '0723456789', is_active: true, opening_time: '09:00', closing_time: '21:00' },
-    { id: 3, name: 'Eastleigh 1st Avenue', zone_id: 2, agent_id: 3, address_description: '1st Avenue, Section 1', phone: '0734567890', is_active: true, opening_time: '07:00', closing_time: '22:00' },
-    { id: 4, name: 'CBD Koja Point', zone_id: 3, agent_id: 4, address_description: 'River Road', phone: '0745678901', is_active: true, opening_time: '08:00', closing_time: '19:00' },
-    { id: 5, name: 'Kasarani Mwiki', zone_id: 4, agent_id: 5, address_description: 'Mwiki Road', phone: '0756789012', is_active: true, opening_time: '08:00', closing_time: '20:00' },
-  ]);
+  loadingZones = signal(true);
+  loadingFromPoints = signal(false);
+  loadingToPoints = signal(false);
 
-  // Signals for tracking selected zones to trigger computed updates
-  private fromZoneSignal = signal<number | null>(null);
-  private toZoneSignal = signal<number | null>(null);
-
-  // Filtered points based on selected zones
   fromPoints = computed(() => {
     const zoneId = this.fromZoneSignal();
     if (!zoneId) return [];
-    return this.parcelPoints().filter(point => point.zone_id === zoneId && point.is_active);
+    return this.parcelPoints().filter(point => point.zoneId === zoneId && point.isActive);
   });
 
   toPoints = computed(() => {
     const zoneId = this.toZoneSignal();
     if (!zoneId) return [];
-    return this.parcelPoints().filter(point => point.zone_id === zoneId && point.is_active);
+    return this.parcelPoints().filter(point => point.zoneId === zoneId && point.isActive);
   });
 
-  // Delivery fee calculation (dummy for now)
   deliveryFee = computed(() => {
     const fromZone = this.fromZoneSignal();
     const toZone = this.toZoneSignal();
@@ -98,13 +71,55 @@ export class NewDelivery implements OnInit {
     return 150;
   });
 
-  constructor(
-    private fb: FormBuilder,
-    private router: Router
-  ) {}
+  // Signals for tracking selected zones to trigger computed updates
+  private fromZoneSignal = signal<number | null>(null);
+  private toZoneSignal = signal<number | null>(null);
 
   ngOnInit() {
+    this.loadZones();
     this.initializeForm();
+  }
+
+  loadZones() {
+    this.loadingZones.set(true);
+    this.zonesService.getAllZones(0, 100).subscribe({
+      next: (response) => {
+        this.zones.set(response.content);
+        this.loadingZones.set(false);
+      },
+      error: (error) => {
+        console.error('Error loading zones:', error);
+        this.loadingZones.set(false);
+      }
+    });
+  }
+
+  loadParcelPointsForZone(zoneId: number, isFromZone: boolean) {
+    if (isFromZone) {
+      this.loadingFromPoints.set(true);
+    } else {
+      this.loadingToPoints.set(true);
+    }
+
+    this.zonesService.getParcelPointsByZone(zoneId, 0, 100).subscribe({
+      next: (response) => {
+        this.parcelPoints.set(response.content);
+
+        if (isFromZone) {
+          this.loadingFromPoints.set(false);
+        } else {
+          this.loadingToPoints.set(false);
+        }
+      },
+      error: (error) => {
+        console.error('Error loading parcel points:', error);
+        if (isFromZone) {
+          this.loadingFromPoints.set(false);
+        } else {
+          this.loadingToPoints.set(false);
+        }
+      }
+    });
   }
 
   initializeForm() {
@@ -149,12 +164,14 @@ export class NewDelivery implements OnInit {
     this.deliveryForm.get('fromZone')?.valueChanges.subscribe((value) => {
       this.fromZoneSignal.set(value);
       this.deliveryForm.get('fromPoint')?.setValue('');
+      this.loadParcelPointsForZone(value, true);
     });
 
     // Update toZoneSignal when toZone changes to trigger computed signal
     this.deliveryForm.get('toZone')?.valueChanges.subscribe((value) => {
       this.toZoneSignal.set(value);
       this.deliveryForm.get('toPoint')?.setValue('');
+      this.loadParcelPointsForZone(value, false);
     });
   }
 
@@ -167,8 +184,6 @@ export class NewDelivery implements OnInit {
 
       console.log('Delivery Order:', deliveryData);
 
-      // Navigate to payment page with delivery data
-      // You'll commit the order AFTER successful payment
       this.router.navigate(['/payment'], {
         state: { deliveryOrder: deliveryData }
       });

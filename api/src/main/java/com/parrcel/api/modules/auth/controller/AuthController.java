@@ -2,9 +2,9 @@ package com.parrcel.api.modules.auth.controller;
 
 import com.parrcel.api.modules.auth.dto.*;
 import com.parrcel.api.modules.auth.service.AuthService;
-import com.parrcel.api.modules.user.dto.UserResponse;
-import com.parrcel.api.modules.user.mapper.UserMapper;
-import com.parrcel.api.modules.user.service.UserService;
+import com.parrcel.api.modules.users.dto.UserResponse;
+import com.parrcel.api.modules.users.mapper.UserMapper;
+import com.parrcel.api.modules.users.service.UserService;
 import com.parrcel.api.security.config.JwtConfig;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,12 +17,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/auth")
 @AllArgsConstructor
+@RequestMapping("/auth")
 public class AuthController {
 
-    private UserMapper userMapper;
     private UserService userService;
+    private UserMapper userMapper;
     private final JwtConfig jwtConfig;
     private final AuthService authService;
 
@@ -54,20 +54,6 @@ public class AuthController {
         return userMapper.toResponse(user);
     }
 
-    @PostMapping("/logout")
-    public ResponseEntity<Void> logout(
-            HttpServletResponse response
-    ) {
-        var cookie = new Cookie("refreshToken", null);
-        cookie.setSecure(false);
-        cookie.setHttpOnly(true);
-        cookie.setPath("/auth/refresh-token");
-        cookie.setMaxAge(0);
-
-        response.addCookie(cookie);
-
-        return ResponseEntity.ok().build();
-    }
 
     @PostMapping("/refresh-token")
     public ResponseEntity<AuthResponse> refreshToken(
@@ -95,6 +81,24 @@ public class AuthController {
         var response = authService.resetPassword(request);
         return ResponseEntity.ok(
                 Map.of("message", response)
+        );
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(
+            @CookieValue(value = "refreshToken", required = false) String refreshToken,
+            HttpServletResponse response
+    ) {
+        var cookie = new Cookie("refreshToken", null);
+        cookie.setSecure(false);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/auth/refresh-token");
+        cookie.setMaxAge(0);
+
+        response.addCookie(cookie);
+
+        return ResponseEntity.ok(
+                Map.of("message", "Logout successful")
         );
     }
 }
