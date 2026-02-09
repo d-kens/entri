@@ -1,6 +1,6 @@
 package com.parrcel.api.modules.token.repository;
 
-import com.parrcel.api.modules.token.entity.Token;
+import com.parrcel.api.modules.token.model.Token;
 import com.parrcel.api.modules.token.enums.TokenPurpose;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

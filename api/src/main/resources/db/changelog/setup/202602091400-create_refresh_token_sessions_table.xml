@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="202602091400-create_refresh_token_sessions_table" author="dickenson">
+        <createTable tableName="refresh_token_sessions">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_rts_user_id" references="users(id)"/>
+            </column>
+            <column name="refresh_token_hash" type="VARCHAR(500)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uc_rts_token_hash"/>
+            </column>
+            <column name="issued_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="expires_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_revoked" type="BOOLEAN" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createIndex tableName="refresh_token_sessions" indexName="idx_rts_user_id">
+            <column name="user_id"/>
+        </createIndex>
+
+        <createIndex tableName="refresh_token_sessions" indexName="idx_rts_expires_at">
+            <column name="expires_at"/>
+        </createIndex>
+
+        <createIndex tableName="refresh_token_sessions" indexName="idx_rts_is_revoked">
+            <column name="is_revoked"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

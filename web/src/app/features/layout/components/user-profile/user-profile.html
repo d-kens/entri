@@ -1,42 +1,46 @@
 <button
   mat-button
   [matMenuTriggerFor]="userMenu"
-  class="user-profile-btn"
+  class="!p-0 !min-w-0 !h-auto hover:!bg-transparent"
 >
-  <div class="user-profile-card">
-    <div class="user-profile-content">
-      <div class="user-info-compact">
-        <mat-icon class="user-icon-small">account_circle</mat-icon>
-        <span class="user-name-compact">{{ user()?.userName }}</span>
+  <div class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-surface-container transition-colors">
+    <!-- User Icon & Name -->
+    <div class="flex items-center gap-2">
+      <div class="flex flex-col items-start">
+        <span class="text-sm font-medium text-on-surface leading-none">{{ user()?.userName }}</span>
+        @if (user()?.role !== 'ADMIN') {
+          <span class="text-xs text-on-surface-variant leading-none mt-1">
+            KSh {{ walletBalance() | number:'1.2-2' }}
+          </span>
+        }
       </div>
-      @if (user()?.role !== 'ADMIN') {
-        <div class="wallet-balance">
-          <mat-icon class="wallet-icon-small">wallet</mat-icon>
-          <span class="balance-amount">KSh {{ walletBalance() | number:'1.2-2' }}</span>
-        </div>
-      }
     </div>
-    <mat-icon class="dropdown-icon">arrow_drop_down</mat-icon>
+
+    <!-- Dropdown Arrow -->
+    <mat-icon class="!w-5 !h-5 !text-[20px] text-on-surface-variant">arrow_drop_down</mat-icon>
   </div>
 </button>
 
 <mat-menu #userMenu="matMenu" xPosition="before" class="user-profile-menu">
-  <!-- Action Items -->
   @if (user()?.role !== 'ADMIN') {
-    <button mat-menu-item (click)="navigateToPayout()" class="menu-action-item">
-      <mat-icon class="menu-action-icon primary-icon">payment</mat-icon>
-      <div class="menu-action-content">
-        <span class="menu-action-title">Request Payout</span>
-        <span class="menu-action-subtitle">Withdraw funds</span>
+    <button mat-menu-item (click)="navigateToPayout()" class="!py-3 !px-4">
+      <div class="flex items-center gap-3">
+        <mat-icon class="!w-5 !h-5 !text-[20px] text-primary">payment</mat-icon>
+        <div class="flex flex-col items-start">
+          <span class="text-sm font-medium text-on-surface">Request Payout</span>
+          <span class="text-xs text-on-surface-variant">Withdraw funds</span>
+        </div>
       </div>
     </button>
   }
 
-  <button mat-menu-item (click)="logout()" class="menu-action-item logout-item">
-    <mat-icon class="menu-action-icon">logout</mat-icon>
-    <div class="menu-action-content">
-      <span class="menu-action-title">Logout</span>
-      <span class="menu-action-subtitle">Sign out of account</span>
+  <button mat-menu-item (click)="logout()" class="!py-3 !px-4 logout-item">
+    <div class="flex items-center gap-3">
+      <mat-icon class="!w-5 !h-5 !text-[20px] logout-icon">logout</mat-icon>
+      <div class="flex flex-col items-start">
+        <span class="text-sm font-medium logout-text">Logout</span>
+        <span class="text-xs text-on-surface-variant">Sign out of account</span>
+      </div>
     </div>
   </button>
 </mat-menu>

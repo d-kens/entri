@@ -6,11 +6,14 @@ import com.parrcel.api.modules.auth.dto.*;
 import com.parrcel.api.modules.notification.enums.NotificationType;
 import com.parrcel.api.modules.notification.events.SendNotificationEvent;
 import com.parrcel.api.modules.token.config.TokenConfig;
-import com.parrcel.api.modules.token.entity.Token;
 import com.parrcel.api.modules.token.enums.TokenPurpose;
+import com.parrcel.api.modules.token.model.Token;
+import com.parrcel.api.modules.token.model.RefreshTokenSession;
+import com.parrcel.api.modules.token.repository.RefreshTokenSessionRepository;
 import com.parrcel.api.modules.token.service.TokenService;
-import com.parrcel.api.modules.user.entity.User;
-import com.parrcel.api.modules.user.service.UserService;
+import com.parrcel.api.modules.users.model.User;
+import com.parrcel.api.modules.users.service.UserService;
+import com.parrcel.api.security.config.JwtConfig;
 import com.parrcel.api.security.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,6 +22,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.Map;
 
 @Service
@@ -30,7 +38,9 @@ public class AuthService {
     private final JwtService jwtService;
     private final UserService userService;
     private final TokenConfig tokenConfig;
+    private final JwtConfig jwtConfig;
     private final TokenService tokenService;
+    private final RefreshTokenSessionRepository refreshTokenSessionRepository;
     private final ApplicationEventPublisher eventPublisher;
     private final AuthenticationManager authenticationManager;
 
@@ -47,10 +57,25 @@ public class AuthService {
         var accessToken = jwtService.generateAccessToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
 
+        createRefreshTokenSession(user, refreshToken.toString());
+
         return new TokenPair(
                 accessToken.toString(),
                 refreshToken.toString()
         );
+    }
+
+    public void logout(String refreshToken) {
+        if (refreshToken == null || refreshToken.isEmpty()) {
+            throw new InvalidTokenException("refresh token is required for logout");
+        }
+
+        var tokenHash = hashToken(refreshToken);
+        var session = refreshTokenSessionRepository.findByRefreshTokenHashAndIsRevokedFalse(tokenHash)
+                .orElseThrow(() -> new InvalidTokenException("refresh token session not found or already revoked"));
+
+        session.setIsRevoked(true);
+        refreshTokenSessionRepository.save(session);
     }
 
     public String refreshToken(String refreshToken) {
@@ -58,6 +83,14 @@ public class AuthService {
 
         if (refreshTokenObject == null)
             throw new InvalidTokenException("token is invalid or has expired");
+
+        var tokenHash = hashToken(refreshToken);
+        var session = refreshTokenSessionRepository.findByRefreshTokenHashAndIsRevokedFalse(tokenHash)
+                .orElseThrow(() -> new InvalidTokenException("refresh token session not found or has been revoked"));
+
+        if (LocalDateTime.now().isAfter(session.getExpiresAt())) {
+            throw new InvalidTokenException("refresh token has expired");
+        }
 
         var userId = refreshTokenObject.getUserId();
 
@@ -68,6 +101,8 @@ public class AuthService {
         } catch (NotFoundException exception) {
             throw new InvalidTokenException("user associated with the token not found");
         }
+
+        refreshTokenSessionRepository.save(session);
 
         var accessTokenObject = jwtService.generateAccessToken(user);
         return accessTokenObject.toString();
@@ -122,5 +157,26 @@ public class AuthService {
         );
 
         return "Password has been successfully reset";
+    }
+
+    private void createRefreshTokenSession(User user, String refreshToken) {
+        var session = new RefreshTokenSession();
+        session.setUser(user);
+        session.setRefreshTokenHash(hashToken(refreshToken));
+        session.setIssuedAt(LocalDateTime.now());
+        session.setExpiresAt(LocalDateTime.now().plusSeconds(jwtConfig.getRefreshTokenExpiration()));
+        session.setIsRevoked(false);
+
+        refreshTokenSessionRepository.save(session);
+    }
+
+    private String hashToken(String token) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(token.getBytes(StandardCharsets.UTF_8));
+            return Base64.getEncoder().encodeToString(hash);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("SHA-256 algorithm not available", e);
+        }
     }
 }
