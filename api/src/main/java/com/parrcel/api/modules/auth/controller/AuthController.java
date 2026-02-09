@@ -2,21 +2,27 @@ package com.parrcel.api.modules.auth.controller;
 
 import com.parrcel.api.modules.auth.dto.*;
 import com.parrcel.api.modules.auth.service.AuthService;
+import com.parrcel.api.modules.users.dto.UserResponse;
+import com.parrcel.api.modules.users.mapper.UserMapper;
+import com.parrcel.api.modules.users.service.UserService;
 import com.parrcel.api.security.config.JwtConfig;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
 @RestController
+@AllArgsConstructor
 @RequestMapping("/auth")
-@RequiredArgsConstructor
 public class AuthController {
 
+    private UserService userService;
+    private UserMapper userMapper;
     private final JwtConfig jwtConfig;
     private final AuthService authService;
 
@@ -37,6 +43,16 @@ public class AuthController {
 
         return new AuthResponse(tokenPair.getAccessToken());
     }
+
+    @GetMapping("/me")
+    public UserResponse getCurrentUser(
+            @AuthenticationPrincipal Long userId
+    ) {
+        var user = userService.getUserById(userId);
+
+        return userMapper.toResponse(user);
+    }
+
 
     @PostMapping("/refresh-token")
     public ResponseEntity<AuthResponse> refreshToken(
