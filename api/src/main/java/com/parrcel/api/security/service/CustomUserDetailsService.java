@@ -1,7 +1,7 @@
 package com.parrcel.api.security.service;
 
 import com.parrcel.api.common.exception.NotFoundException;
-import com.parrcel.api.modules.user.service.UserService;
+import com.parrcel.api.modules.users.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -30,7 +30,7 @@ public class CustomUserDetailsService implements UserDetailsService  {
                     authorities
             );
         } catch (NotFoundException exception) {
-            throw new UsernameNotFoundException("user not found");
+            throw new UsernameNotFoundException("users not found");
         }
     }
 }

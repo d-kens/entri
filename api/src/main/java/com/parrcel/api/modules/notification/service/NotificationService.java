@@ -6,7 +6,7 @@ import com.parrcel.api.modules.notification.dto.SubscriberDto;
 import com.parrcel.api.modules.notification.events.CreateSubscriberEvent;
 import com.parrcel.api.modules.notification.events.SendNotificationEvent;
 import com.parrcel.api.modules.notification.novu.NovuClient;
-import com.parrcel.api.modules.user.entity.User;
+import com.parrcel.api.modules.users.model.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;

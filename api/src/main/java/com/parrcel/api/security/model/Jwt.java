@@ -1,6 +1,6 @@
 package com.parrcel.api.security.model;
 
-import com.parrcel.api.modules.user.enums.Role;
+import com.parrcel.api.modules.users.enums.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 

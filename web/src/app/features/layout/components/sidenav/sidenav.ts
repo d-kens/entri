@@ -71,12 +71,9 @@ export class Sidenav implements OnInit {
 
   private getMerchantMenu(): MenuItem[] {
     return [
-      { icon: 'dashboard', label: 'Dashboard', route: '/dashboard' },
+      { icon: 'inventory_2', label: 'My Deliveries', route: '/deliveries' },
       { icon: 'add_circle', label: 'New Delivery', route: '/deliveries/new' },
-      { icon: 'inventory_2', label: 'My Orders', route: '/orders' },
       { icon: 'location_on', label: 'Drop-off Points', route: '/drop-off-points' },
-      { icon: 'history', label: 'Order History', route: '/history' },
-      { icon: 'receipt_long', label: 'Invoices', route: '/invoices' },
       { icon: 'account_circle', label: 'Profile', route: '/profile' },
       { icon: 'help', label: 'Support', route: '/support' },
     ];

@@ -29,6 +29,7 @@
           mat-list-item
           [routerLink]="item.route"
           routerLinkActive="active-route"
+          [routerLinkActiveOptions]="{ exact: true }"
           class="!rounded-none hover:bg-gray-50 transition-colors nav-item"
           (click)="isMobile() ? onCloseSidenav() : null"
         >
