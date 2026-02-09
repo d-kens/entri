@@ -34,10 +34,11 @@ public class AuthController {
         var tokenPair = authService.login(authRequest);
 
         var cookie = new Cookie("refreshToken", tokenPair.getRefreshToken());
-        cookie.setSecure(true);
+        cookie.setSecure(false);
         cookie.setHttpOnly(true);
         cookie.setPath("/auth/refresh-token");
-        cookie.setMaxAge(jwtConfig.getAccessTokenExpiration());
+        cookie.setMaxAge(jwtConfig.getRefreshTokenExpiration());
+
 
         response.addCookie(cookie);
 
@@ -88,10 +89,8 @@ public class AuthController {
             @CookieValue(value = "refreshToken", required = false) String refreshToken,
             HttpServletResponse response
     ) {
-        authService.logout(refreshToken);
-
         var cookie = new Cookie("refreshToken", null);
-        cookie.setSecure(true);
+        cookie.setSecure(false);
         cookie.setHttpOnly(true);
         cookie.setPath("/auth/refresh-token");
         cookie.setMaxAge(0);
