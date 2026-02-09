@@ -1,6 +1,6 @@
 package com.parrcel.api.security.config;
 
-import com.parrcel.api.modules.user.enums.Role;
+import com.parrcel.api.modules.users.enums.Role;
 import com.parrcel.api.security.filter.JwtAuthenticationFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
