@@ -15,7 +15,7 @@ import java.time.LocalTime;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ParcelPoint {
+public class ParrcelPoint {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
