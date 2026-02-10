@@ -9,7 +9,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ParcelPointService {
+public class ParrcelPointService {
     private final ParcelPointRepository parcelPointRepository;
 
     public List<ParrcelPoint> getAllParcelPoints() {
