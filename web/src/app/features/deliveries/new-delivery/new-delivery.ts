@@ -11,7 +11,10 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ZonesService, Zone, ParcelPoint } from '@core/services/zones-service';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'app-new-delivery',
@@ -27,7 +30,8 @@ import { ZonesService, Zone, ParcelPoint } from '@core/services/zones-service';
     MatCardModule,
     MatIconModule,
     MatDividerModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatAutocompleteModule
   ],
   templateUrl: './new-delivery.html',
   styleUrl: './new-delivery.css',
@@ -41,6 +45,14 @@ export class NewDelivery implements OnInit {
 
   zones = signal<Zone[]>([]);
   parcelPoints = signal<ParcelPoint[]>([]);
+
+  // Filtered zones for autocomplete
+  filteredFromZones = signal<Zone[]>([]);
+  filteredToZones = signal<Zone[]>([]);
+
+  // Search subjects for client-side filtering
+  fromZoneSearch$ = new Subject<string>();
+  toZoneSearch$ = new Subject<string>();
 
   loadingZones = signal(true);
   loadingFromPoints = signal(false);
@@ -78,13 +90,16 @@ export class NewDelivery implements OnInit {
   ngOnInit() {
     this.loadZones();
     this.initializeForm();
+    this.setupZoneSearch();
   }
 
   loadZones() {
     this.loadingZones.set(true);
-    this.zonesService.getAllZones(0, 100).subscribe({
-      next: (response) => {
-        this.zones.set(response.content);
+    this.zonesService.getAllZones().subscribe({
+      next: (zones) => {
+        this.zones.set(zones);
+        this.filteredFromZones.set(zones);
+        this.filteredToZones.set(zones);
         this.loadingZones.set(false);
       },
       error: (error) => {
@@ -94,16 +109,80 @@ export class NewDelivery implements OnInit {
     });
   }
 
+  setupZoneSearch() {
+    this.fromZoneSearch$.pipe(
+      debounceTime(300),
+      distinctUntilChanged()
+    ).subscribe(searchTerm => {
+      this.filterFromZones(searchTerm);
+    });
+
+    this.toZoneSearch$.pipe(
+      debounceTime(300),
+      distinctUntilChanged()
+    ).subscribe(searchTerm => {
+      this.filterToZones(searchTerm);
+    });
+  }
+
+  private filterFromZones(searchTerm: string) {
+    if (!searchTerm || searchTerm.trim() === '') {
+      this.filteredFromZones.set(this.zones());
+      return;
+    }
+
+    const search = searchTerm.toLowerCase().trim();
+    const filtered = this.zones().filter(zone =>
+      zone.zoneName.toLowerCase().includes(search) ||
+      zone.city.toLowerCase().includes(search)
+    );
+
+    this.filteredFromZones.set(filtered);
+  }
+
+  private filterToZones(searchTerm: string) {
+    if (!searchTerm || searchTerm.trim() === '') {
+      this.filteredToZones.set(this.zones());
+      return;
+    }
+
+    const search = searchTerm.toLowerCase().trim();
+    const filtered = this.zones().filter(zone =>
+      zone.zoneName.toLowerCase().includes(search) ||
+      zone.city.toLowerCase().includes(search)
+    );
+
+    this.filteredToZones.set(filtered);
+  }
+
+  onFromZoneSearch(event: Event) {
+    const value = (event.target as HTMLInputElement).value;
+    this.fromZoneSearch$.next(value);
+  }
+
+  onToZoneSearch(event: Event) {
+    const value = (event.target as HTMLInputElement).value;
+    this.toZoneSearch$.next(value);
+  }
+
+  displayZone = (zoneId: number): string => {
+    if (!zoneId) return '';
+    const zone = this.zones().find(z => z.id === zoneId);
+    return zone ? `${zone.zoneName} - ${zone.city}` : '';
+  };
+
   loadParcelPointsForZone(zoneId: number, isFromZone: boolean) {
+    if (!zoneId) return;
+
     if (isFromZone) {
       this.loadingFromPoints.set(true);
     } else {
       this.loadingToPoints.set(true);
     }
 
-    this.zonesService.getParcelPointsByZone(zoneId, 0, 100).subscribe({
-      next: (response) => {
-        this.parcelPoints.set(response.content);
+    this.zonesService.getParcelPointsByZone(zoneId).subscribe({
+      next: (parrcelPoints) => {
+        this.parcelPoints.set(parrcelPoints);
 
         if (isFromZone) {
           this.loadingFromPoints.set(false);
@@ -124,29 +203,23 @@ export class NewDelivery implements OnInit {
 
   initializeForm() {
     this.deliveryForm = this.fb.group({
-      // Recipient details
       recipientName: ['', [Validators.required, Validators.minLength(2)]],
       recipientPhone: ['', [Validators.required, Validators.pattern(/^(07|01)\d{8}$/)]],
 
-      // From location
       fromZone: ['', Validators.required],
       fromPoint: ['', Validators.required],
 
-      // To location
       toZone: ['', Validators.required],
       toPoint: ['', Validators.required],
 
-      // Package details
       packageName: ['', [Validators.required, Validators.minLength(2)]],
       packagePrice: ['', [Validators.required, Validators.min(0)]],
       packageDescription: ['', [Validators.maxLength(500)]],
 
-      // Cash on Delivery
       collectCash: [false],
       cashAmount: [{ value: '', disabled: true }]
     });
 
-    // Enable/disable cash amount field based on checkbox
     this.deliveryForm.get('collectCash')?.valueChanges.subscribe(checked => {
       const cashAmountControl = this.deliveryForm.get('cashAmount');
       if (checked) {
@@ -160,18 +233,20 @@ export class NewDelivery implements OnInit {
       cashAmountControl?.updateValueAndValidity();
     });
 
-    // Update fromZoneSignal when fromZone changes to trigger computed signal
     this.deliveryForm.get('fromZone')?.valueChanges.subscribe((value) => {
-      this.fromZoneSignal.set(value);
-      this.deliveryForm.get('fromPoint')?.setValue('');
-      this.loadParcelPointsForZone(value, true);
+      if (typeof value === 'number') {
+        this.fromZoneSignal.set(value);
+        this.deliveryForm.get('fromPoint')?.setValue('');
+        this.loadParcelPointsForZone(value, true);
+      }
     });
 
-    // Update toZoneSignal when toZone changes to trigger computed signal
     this.deliveryForm.get('toZone')?.valueChanges.subscribe((value) => {
-      this.toZoneSignal.set(value);
-      this.deliveryForm.get('toPoint')?.setValue('');
-      this.loadParcelPointsForZone(value, false);
+      if (typeof value === 'number') {
+        this.toZoneSignal.set(value);
+        this.deliveryForm.get('toPoint')?.setValue('');
+        this.loadParcelPointsForZone(value, false);
+      }
     });
   }
 
@@ -188,7 +263,6 @@ export class NewDelivery implements OnInit {
         state: { deliveryOrder: deliveryData }
       });
     } else {
-      // Mark all fields as touched to show validation errors
       Object.keys(this.deliveryForm.controls).forEach(key => {
         this.deliveryForm.get(key)?.markAsTouched();
       });
@@ -205,7 +279,7 @@ export class NewDelivery implements OnInit {
       return `Minimum ${control.errors?.['minlength'].requiredLength} characters required`;
     }
     if (control?.hasError('pattern')) {
-      return 'Invalid phone number format (07XXXXXXXX or 01XXXXXXXX)';
+      return 'Invalid phone number format';
     }
     if (control?.hasError('min')) {
       return 'Value must be greater than 0';
