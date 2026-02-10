@@ -4,7 +4,7 @@ import com.parrcel.api.modules.zones.dto.ParcelPointResponse;
 import com.parrcel.api.modules.zones.dto.ZoneResponse;
 import com.parrcel.api.modules.zones.mapper.ParrcelPointMapper;
 import com.parrcel.api.modules.zones.mapper.ZoneMapper;
-import com.parrcel.api.modules.zones.service.ParcelPointService;
+import com.parrcel.api.modules.zones.service.ParrcelPointService;
 import com.parrcel.api.modules.zones.service.ZoneService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +17,7 @@ import java.util.List;
 public class ZoneController {
     private final ZoneService zoneService;
     private final ZoneMapper zoneMapper;
-    private final ParcelPointService parcelPointService;
+    private final ParrcelPointService parrcelPointService;
     private final ParrcelPointMapper parrcelPointMapper;
 
     @GetMapping
@@ -32,7 +32,7 @@ public class ZoneController {
     public List<ParcelPointResponse> getParcelPointsByZone(
             @PathVariable Long id
     ) {
-        return parcelPointService.getParcelPointsByZoneId(id)
+        return parrcelPointService.getParcelPointsByZoneId(id)
                 .stream()
                 .map(parrcelPointMapper::toResponse)
                 .toList();
