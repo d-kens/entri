@@ -69,7 +69,7 @@
           <mat-form-field appearance="outline" class="w-full md:flex-1 compact-field">
             <mat-label>Pickup Point</mat-label>
             <mat-icon matPrefix>store</mat-icon>
-            @if (loadingFromPoints()) {
+            @if (loadingFromAgents()) {
               <mat-spinner diameter="20" class="absolute right-2"></mat-spinner>
             }
             <mat-select formControlName="fromPoint" placeholder="Select pickup point">
@@ -126,7 +126,7 @@
           <mat-form-field appearance="outline" class="w-full md:flex-1 compact-field">
             <mat-label>Delivery Point</mat-label>
             <mat-icon matPrefix>store</mat-icon>
-            @if (loadingToPoints()) {
+            @if (loadingToAgents()) {
               <mat-spinner diameter="20" class="absolute right-2"></mat-spinner>
             }
             <mat-select formControlName="toPoint" placeholder="Select delivery point">

@@ -13,13 +13,10 @@ export interface Zone {
   updatedAt: string;
 }
 
-export interface ParcelPoint {
+export interface Agent {
   id: number;
   name: string;
   zoneId: number;
-  zoneName: string;
-  agentId: number;
-  agentName: string;
   latitude: number;
   longitude: number;
   addressDescription: string;
@@ -43,17 +40,17 @@ export class ZonesService {
     );
   }
 
-  getParcelPointsByZone(
+  getAgentsByZone(
     zoneId: number
-  ): Observable<ParcelPoint[]> {
-    return this.http.get<ParcelPoint[]>(
-      `${environment.apiBaseUrl}/zones/${zoneId}/parcel-points`
+  ): Observable<Agent[]> {
+    return this.http.get<Agent[]>(
+      `${environment.apiBaseUrl}/zones/${zoneId}/agents`
     );
   }
 
-  getAllParcelPoints(): Observable<ParcelPoint[]> {
-    return this.http.get<ParcelPoint[]>(
-      `${environment.apiBaseUrl}/parcel-points`
+  getAllAgents(): Observable<Agent[]> {
+    return this.http.get<Agent[]>(
+      `${environment.apiBaseUrl}/agents`
     );
   }
 }

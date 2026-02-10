@@ -3,8 +3,8 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd">
-    <changeSet id="create-parcel-points-table" author="d.onyango">
-        <createTable tableName="parcel_points">
+    <changeSet id="create-agents-table" author="d.onyango">
+        <createTable tableName="agents">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true"/>
             </column>
@@ -55,22 +55,22 @@
 
         <!-- Foreign keys -->
         <addForeignKeyConstraint
-                baseTableName="parcel_points"
+                baseTableName="agents"
                 baseColumnNames="zone_id"
                 referencedTableName="zones"
                 referencedColumnNames="id"
-                constraintName="fk_parcel_points_zone"/>
+                constraintName="fk_agents_zone"/>
 
         <addForeignKeyConstraint
-                baseTableName="parcel_points"
+                baseTableName="agents"
                 baseColumnNames="agent_id"
                 referencedTableName="users"
                 referencedColumnNames="id"
-                constraintName="fk_parcel_points_agent"/>
+                constraintName="fk_agents_user"/>
 
         <!-- Rollback -->
         <rollback>
-            <dropTable tableName="parcel_points"/>
+            <dropTable tableName="agents"/>
         </rollback>
     </changeSet>
 

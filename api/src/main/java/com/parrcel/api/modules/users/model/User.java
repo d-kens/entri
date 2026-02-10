@@ -42,7 +42,7 @@ public class User {
     private Role role;
 
     @Column(name = "is_active", nullable = false)
-    private Boolean isActive;
+    private Boolean isActive = true;
 
     @Column(name = "created_at", insertable = false, updatable = false)
     private LocalDateTime createdAt;

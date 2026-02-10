@@ -1,8 +1,8 @@
 package com.parrcel.api.modules.zones.controller;
 
-import com.parrcel.api.modules.zones.dto.ParcelPointResponse;
+import com.parrcel.api.modules.zones.dto.AgentResponse;
 import com.parrcel.api.modules.zones.mapper.ParrcelPointMapper;
-import com.parrcel.api.modules.zones.service.ParrcelPointService;
+import com.parrcel.api.modules.zones.service.AgentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,14 +10,14 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/parcel-points")
-public class ParcelPointController {
+@RequestMapping("/agents")
+public class AgentController {
     private final ParrcelPointMapper parrcelPointMapper;
-    private final ParrcelPointService parrcelPointService;
+    private final AgentService agentService;
 
     @GetMapping
-    public List<ParcelPointResponse> getAllParcelPoints() {
-        return parrcelPointService.getAllParcelPoints()
+    public List<AgentResponse> getAllParcelPoints() {
+        return agentService.getAllAgents()
                 .stream()
                 .map(parrcelPointMapper::toResponse)
                 .toList();
