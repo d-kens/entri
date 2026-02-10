@@ -11,11 +11,11 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
-@Table(name = "parcel_points")
+@Table(name = "agents")
 @Getter
 @Setter
 @NoArgsConstructor
-public class ParrcelPoint {
+public class Agent {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

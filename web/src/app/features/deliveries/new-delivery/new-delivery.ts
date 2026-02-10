@@ -12,7 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { ZonesService, Zone, ParcelPoint } from '@core/services/zones-service';
+import { ZonesService, Zone, Agent } from '@core/services/zones-service';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
@@ -44,7 +44,7 @@ export class NewDelivery implements OnInit {
   deliveryForm!: FormGroup;
 
   zones = signal<Zone[]>([]);
-  parcelPoints = signal<ParcelPoint[]>([]);
+  agents = signal<Agent[]>([]);
 
   // Filtered zones for autocomplete
   filteredFromZones = signal<Zone[]>([]);
@@ -55,19 +55,19 @@ export class NewDelivery implements OnInit {
   toZoneSearch$ = new Subject<string>();
 
   loadingZones = signal(true);
-  loadingFromPoints = signal(false);
-  loadingToPoints = signal(false);
+  loadingFromAgents = signal(false);
+  loadingToAgents = signal(false);
 
   fromPoints = computed(() => {
     const zoneId = this.fromZoneSignal();
     if (!zoneId) return [];
-    return this.parcelPoints().filter(point => point.zoneId === zoneId && point.isActive);
+    return this.agents().filter(agent => agent.zoneId === zoneId && agent.isActive);
   });
 
   toPoints = computed(() => {
     const zoneId = this.toZoneSignal();
     if (!zoneId) return [];
-    return this.parcelPoints().filter(point => point.zoneId === zoneId && point.isActive);
+    return this.agents().filter(agent => agent.zoneId === zoneId && agent.isActive);
   });
 
   deliveryFee = computed(() => {
@@ -175,27 +175,27 @@ export class NewDelivery implements OnInit {
     if (!zoneId) return;
 
     if (isFromZone) {
-      this.loadingFromPoints.set(true);
+      this.loadingFromAgents.set(true);
     } else {
-      this.loadingToPoints.set(true);
+      this.loadingToAgents.set(true);
     }
 
-    this.zonesService.getParcelPointsByZone(zoneId).subscribe({
-      next: (parrcelPoints) => {
-        this.parcelPoints.set(parrcelPoints);
+    this.zonesService.getAgentsByZone(zoneId).subscribe({
+      next: (agents) => {
+        this.agents.set(agents);
 
         if (isFromZone) {
-          this.loadingFromPoints.set(false);
+          this.loadingFromAgents.set(false);
         } else {
-          this.loadingToPoints.set(false);
+          this.loadingToAgents.set(false);
         }
       },
       error: (error) => {
         console.error('Error loading parcel points:', error);
         if (isFromZone) {
-          this.loadingFromPoints.set(false);
+          this.loadingFromAgents.set(false);
         } else {
-          this.loadingToPoints.set(false);
+          this.loadingToAgents.set(false);
         }
       }
     });

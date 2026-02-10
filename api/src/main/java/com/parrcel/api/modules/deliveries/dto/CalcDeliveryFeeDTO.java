@@ -4,8 +4,8 @@ import jakarta.validation.constraints.NotNull;
 
 public record CalcDeliveryFeeDTO(
         @NotNull(message = "fromPoint is required")
-        Long fromPoint,
+        Long fromAgent,
 
         @NotNull(message = "toPoint is required")
-        Long toPoint
+        Long toAgent
 ) {}
