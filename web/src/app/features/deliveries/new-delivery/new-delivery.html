@@ -37,14 +37,29 @@
         <mat-form-field appearance="outline" class="w-full md:flex-1 compact-field">
           <mat-label>Pickup Zone</mat-label>
           <mat-icon matPrefix>location_on</mat-icon>
-          @if (loadingZones()) {
-            <mat-spinner diameter="20" class="absolute right-2"></mat-spinner>
-          }
-          <mat-select formControlName="fromZone" placeholder="Select zone">
-            @for (zone of zones(); track zone.id) {
-              <mat-option [value]="zone.id">{{ zone.zoneName }}</mat-option>
+          <input
+            matInput
+            type="text"
+            formControlName="fromZone"
+            [matAutocomplete]="fromZoneAuto"
+            (input)="onFromZoneSearch($event)"
+            placeholder="Search zone...">
+          <mat-autocomplete
+            #fromZoneAuto="matAutocomplete"
+            [displayWith]="displayZone"
+            (optionSelected)="loadParcelPointsForZone($event.option.value, true)">
+            @for (zone of filteredFromZones(); track zone.id) {
+              <mat-option [value]="zone.id">
+                <div class="flex flex-col">
+                  <span class="font-medium">{{ zone.zoneName }}</span>
+                  <span class="text-xs text-gray-500">{{ zone.city }}</span>
+                </div>
+              </mat-option>
             }
-          </mat-select>
+            @if (filteredFromZones().length === 0) {
+              <mat-option disabled>No zones found</mat-option>
+            }
+          </mat-autocomplete>
           @if (deliveryForm.get('fromZone')?.invalid && deliveryForm.get('fromZone')?.touched) {
             <mat-error>{{ getErrorMessage('fromZone') }}</mat-error>
           }
@@ -79,14 +94,29 @@
         <mat-form-field appearance="outline" class="w-full md:flex-1 compact-field">
           <mat-label>Delivery Zone</mat-label>
           <mat-icon matPrefix>location_on</mat-icon>
-          @if (loadingZones()) {
-            <mat-spinner diameter="20" class="absolute right-2"></mat-spinner>
-          }
-          <mat-select formControlName="toZone" placeholder="Select zone">
-            @for (zone of zones(); track zone.id) {
-              <mat-option [value]="zone.id">{{ zone.zoneName }}</mat-option>
+          <input
+            matInput
+            type="text"
+            formControlName="toZone"
+            [matAutocomplete]="toZoneAuto"
+            (input)="onToZoneSearch($event)"
+            placeholder="Search zone...">
+          <mat-autocomplete
+            #toZoneAuto="matAutocomplete"
+            [displayWith]="displayZone"
+            (optionSelected)="loadParcelPointsForZone($event.option.value, false)">
+            @for (zone of filteredToZones(); track zone.id) {
+              <mat-option [value]="zone.id">
+                <div class="flex flex-col">
+                  <span class="font-medium">{{ zone.zoneName }}</span>
+                  <span class="text-xs text-gray-500">{{ zone.city }}</span>
+                </div>
+              </mat-option>
             }
-          </mat-select>
+            @if (filteredToZones().length === 0) {
+              <mat-option disabled>No zones found</mat-option>
+            }
+          </mat-autocomplete>
           @if (deliveryForm.get('toZone')?.invalid && deliveryForm.get('toZone')?.touched) {
             <mat-error>{{ getErrorMessage('toZone') }}</mat-error>
           }

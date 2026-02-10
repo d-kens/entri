@@ -1,43 +1,40 @@
 package com.parrcel.api.modules.zones.controller;
 
-import com.parrcel.api.common.dto.PaginationResponse;
 import com.parrcel.api.modules.zones.dto.ParcelPointResponse;
 import com.parrcel.api.modules.zones.dto.ZoneResponse;
+import com.parrcel.api.modules.zones.mapper.ParrcelPointMapper;
+import com.parrcel.api.modules.zones.mapper.ZoneMapper;
 import com.parrcel.api.modules.zones.service.ParcelPointService;
 import com.parrcel.api.modules.zones.service.ZoneService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/zones")
 public class ZoneController {
     private final ZoneService zoneService;
+    private final ZoneMapper zoneMapper;
     private final ParcelPointService parcelPointService;
+    private final ParrcelPointMapper parrcelPointMapper;
 
     @GetMapping
-    public ResponseEntity<PaginationResponse<ZoneResponse>> getAllZones(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size
-    ) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
-        return ResponseEntity.ok(zoneService.getAllZones(pageable));
+    public List<ZoneResponse> getAllZones() {
+        return zoneService.getAllZones()
+                .stream()
+                .map(zoneMapper::toResponse)
+                .toList();
     }
 
     @GetMapping("/{id}/parcel-points")
-    public ResponseEntity<PaginationResponse<ParcelPointResponse>> getParcelPointsByZone(
-            @PathVariable Long id,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size
+    public List<ParcelPointResponse> getParcelPointsByZone(
+            @PathVariable Long id
     ) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
-        return ResponseEntity.ok(parcelPointService.getParcelPointsByZoneId(id, pageable));
+        return parcelPointService.getParcelPointsByZoneId(id)
+                .stream()
+                .map(parrcelPointMapper::toResponse)
+                .toList();
     }
 }
-
-
-
