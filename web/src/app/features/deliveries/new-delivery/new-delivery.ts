@@ -12,9 +12,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { ZonesService, Zone, Agent } from '@core/services/zones-service';
+import { ZonesService } from '@features/zones/services/zones-service';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import {Agent, Zone} from '@features/zones/models/zones.model';
 
 @Component({
   selector: 'app-new-delivery',
@@ -212,7 +213,7 @@ export class NewDelivery implements OnInit {
 
       packageName: ['', [Validators.required, Validators.minLength(2)]],
       packagePrice: ['', [Validators.required, Validators.min(0)]],
-      packageDescription: ['', [Validators.maxLength(500)]],
+      packageDescription: ['', [Validators.required, Validators.maxLength(500)]],
 
       collectCash: [false],
       cashAmount: [{ value: '', disabled: true }]

@@ -1,32 +1,9 @@
 import { inject, Injectable } from '@angular/core';
-import { environment } from 'environments/environment';
+import { environment } from '../../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
 import { Observable } from 'rxjs';
+import {Agent, Zone} from '@features/zones/models/zones.model';
 
-export interface Zone {
-  id: number;
-  zoneName: string;
-  city: string;
-  isActive: boolean;
-  isCbd: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface Agent {
-  id: number;
-  name: string;
-  zoneId: number;
-  latitude: number;
-  longitude: number;
-  addressDescription: string;
-  isActive: boolean;
-  phone: string;
-  openingTime: string;
-  closingTime: string;
-  createdAt: string;
-  updatedAt: string;
-}
 
 @Injectable({
   providedIn: 'root',
