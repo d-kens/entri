@@ -59,33 +59,32 @@ export class NewDelivery implements OnInit {
   loadingToAgents = signal(false);
 
   fromPoints = computed(() => {
-    const zoneId = this.fromZoneSignal();
-    if (!zoneId) return [];
-    return this.agents().filter(agent => agent.zoneId === zoneId && agent.isActive);
+    const zone = this.fromZoneSignal();
+    if (!zone) return [];
+    return this.agents().filter(agent => agent.zoneId === zone.id && agent.isActive);
   });
 
   toPoints = computed(() => {
-    const zoneId = this.toZoneSignal();
-    if (!zoneId) return [];
-    return this.agents().filter(agent => agent.zoneId === zoneId && agent.isActive);
+    const zone = this.toZoneSignal();
+    if (!zone) return [];
+    return this.agents().filter(agent => agent.zoneId === zone.id && agent.isActive);
   });
 
   deliveryFee = computed(() => {
     const fromZone = this.fromZoneSignal();
     const toZone = this.toZoneSignal();
 
-    if (!fromZone || !toZone) return 0;
+    if (!fromZone || !toZone)
+      return 0
 
-    // Same zone
-    if (fromZone === toZone) return 100;
-
-    // Different zones - dummy pricing
-    return 150;
+    if (fromZone?.isCbd || toZone?.isCbd)
+      return 150
+    else
+      return 200;
   });
 
-  // Signals for tracking selected zones to trigger computed updates
-  private fromZoneSignal = signal<number | null>(null);
-  private toZoneSignal = signal<number | null>(null);
+  private fromZoneSignal = signal<Zone | null>(null);
+  private toZoneSignal = signal<Zone | null>(null);
 
   ngOnInit() {
     this.loadZones();
@@ -165,14 +164,13 @@ export class NewDelivery implements OnInit {
     this.toZoneSearch$.next(value);
   }
 
-  displayZone = (zoneId: number): string => {
-    if (!zoneId) return '';
-    const zone = this.zones().find(z => z.id === zoneId);
+  displayZone = (zone: Zone): string => {
+    if (!zone) return '';
     return zone ? `${zone.zoneName} - ${zone.city}` : '';
   };
 
-  loadParcelPointsForZone(zoneId: number, isFromZone: boolean) {
-    if (!zoneId) return;
+  loadParcelPointsForZone(zone: Zone, isFromZone: boolean) {
+    if (!zone) return;
 
     if (isFromZone) {
       this.loadingFromAgents.set(true);
@@ -180,7 +178,7 @@ export class NewDelivery implements OnInit {
       this.loadingToAgents.set(true);
     }
 
-    this.zonesService.getAgentsByZone(zoneId).subscribe({
+    this.zonesService.getAgentsByZone(zone.id).subscribe({
       next: (agents) => {
         this.agents.set(agents);
 
@@ -234,19 +232,15 @@ export class NewDelivery implements OnInit {
     });
 
     this.deliveryForm.get('fromZone')?.valueChanges.subscribe((value) => {
-      if (typeof value === 'number') {
         this.fromZoneSignal.set(value);
         this.deliveryForm.get('fromPoint')?.setValue('');
         this.loadParcelPointsForZone(value, true);
-      }
     });
 
     this.deliveryForm.get('toZone')?.valueChanges.subscribe((value) => {
-      if (typeof value === 'number') {
         this.toZoneSignal.set(value);
         this.deliveryForm.get('toPoint')?.setValue('');
         this.loadParcelPointsForZone(value, false);
-      }
     });
   }
 
