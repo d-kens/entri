@@ -1,0 +1,156 @@
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd">
+    <changeSet id="create-deliveries_table" author="d.onyango">
+        
+        <createTable tableName="deliveries">
+
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="tracking_number" type="VARCHAR(20)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="customer_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="recipient_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="recipient_phone" type="VARCHAR(15)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="from_point_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="to_point_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="package_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="package_price" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="package_description" type="VARCHAR(500)"/>
+
+            <column name="collect_cash" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="cash_amount" type="DECIMAL(10,2)"/>
+
+            <column name="cash_collected" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="cash_collected_at" type="TIMESTAMP"/>
+
+            <column name="delivery_fee" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="payment_status" type="VARCHAR(50)" defaultValue="PENDING">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="payment_method" type="VARCHAR(50)"/>
+
+            <column name="payment_reference" type="VARCHAR(100)"/>
+
+            <column name="paid_at" type="TIMESTAMP"/>
+
+            <column name="delivery_status" type="VARCHAR(50)" defaultValue="PENDING">
+                <constraints nullable="false"/>
+            </column>
+
+            <!-- Status Timestamps -->
+            <column name="dropped_at_pickup_point_at" type="TIMESTAMP"/>
+
+            <column name="arrived_at_hub_at" type="TIMESTAMP"/>
+
+            <column name="out_for_delivery_at" type="TIMESTAMP"/>
+
+            <column name="delivered_at" type="TIMESTAMP"/>
+
+            <column name="cancelled_at" type="TIMESTAMP"/>
+
+            <column name="cancellation_reason" type="VARCHAR(500)"/>
+
+            <!-- Audit Fields -->
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_by" type="BIGINT"/>
+
+            <column name="updated_by" type="BIGINT"/>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="deliveries"
+                baseColumnNames="customer_id"
+                referencedTableName="users"
+                referencedColumnNames="id"
+                constraintName="fk_deliveries_user"
+                onDelete="RESTRICT"/>
+
+        <addForeignKeyConstraint
+                baseTableName="deliveries"
+                baseColumnNames="from_point_id"
+                referencedTableName="agents"
+                referencedColumnNames="id"
+                constraintName="fk_deliveries_from_agent"
+                onDelete="RESTRICT"/>
+
+        <addForeignKeyConstraint
+                baseTableName="deliveries"
+                baseColumnNames="to_point_id"
+                referencedTableName="agents"
+                referencedColumnNames="id"
+                constraintName="fk_deliveries_to_agent"
+                onDelete="RESTRICT"/>
+
+        <!-- Indexes for Performance -->
+        <createIndex indexName="idx_deliveries_tracking_number" tableName="deliveries">
+            <column name="tracking_number"/>
+        </createIndex>
+
+        <createIndex indexName="idx_deliveries_user" tableName="deliveries">
+            <column name="customer_id"/>
+        </createIndex>
+
+        <createIndex indexName="idx_deliveries_status" tableName="deliveries">
+            <column name="delivery_status"/>
+        </createIndex>
+
+        <createIndex indexName="idx_deliveries_payment_status" tableName="deliveries">
+            <column name="payment_status"/>
+        </createIndex>
+
+        <createIndex indexName="idx_deliveries_created_at" tableName="deliveries">
+            <column name="created_at"/>
+        </createIndex>
+
+        <!-- Rollback -->
+        <rollback>
+            <dropTable tableName="deliveries"/>
+        </rollback>
+
+    </changeSet>
+</databaseChangeLog>

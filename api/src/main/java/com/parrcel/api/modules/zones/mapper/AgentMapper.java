@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
-public interface ParrcelPointMapper {
+public interface AgentMapper {
     @Mapping(target = "zoneId", source = "zone.id")
     AgentResponse toResponse(Agent agent);
 }
