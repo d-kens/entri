@@ -9,8 +9,8 @@
     <include file="setup/202602061037-create_tokens_table.xml" relativeToChangelogFile="true" />
     <include file="setup/202602091400-create_refresh_token_sessions_table.xml" relativeToChangelogFile="true" />
     <include file="setup/202602061048-create_zones_table.xml" relativeToChangelogFile="true" />
-    <include file="setup/202602061058-create_parrcel_points_table.xml" relativeToChangelogFile="true" />
-    <include file="setup/202602061130-seed_users_for_parcel_points.xml" relativeToChangelogFile="true" />
-    <include file="setup/202602061125-seed_zones_and_parcel_points.xml" relativeToChangelogFile="true" />
+    <include file="setup/202602061058-create_agents_table.xml" relativeToChangelogFile="true" />
+    <include file="setup/202602061130-seed_users_for_agents.xml" relativeToChangelogFile="true" />
+    <include file="setup/202602061125-seed_zones_and_agents.xml" relativeToChangelogFile="true" />
     <include file="setup/202602090642-add_zone_type_to_zones.xml" relativeToChangelogFile="true" />
 </databaseChangeLog>

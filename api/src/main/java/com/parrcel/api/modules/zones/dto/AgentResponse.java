@@ -9,13 +9,10 @@ import java.time.LocalTime;
 
 @Data
 @AllArgsConstructor
-public class ParcelPointResponse {
+public class AgentResponse {
     private Long id;
     private String name;
     private Long zoneId;
-    private String zoneName;
-    private Long agentId;
-    private String agentName;
     private BigDecimal latitude;
     private BigDecimal longitude;
     private String addressDescription;
