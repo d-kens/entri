@@ -55,14 +55,16 @@ public class Delivery {
     @Column(name = "package_description", length = 500)
     private String packageDescription;
 
+    @Builder.Default
     @Column(name = "collect_cash", nullable = false)
-    private Boolean collectCash = false;
+    private boolean collectCash = false;
 
     @Column(name = "cash_amount", precision = 10, scale = 2)
     private BigDecimal cashAmount;
 
+    @Builder.Default
     @Column(name = "cash_collected", nullable = false)
-    private Boolean cashCollected = false;
+    private boolean cashCollected = false;
 
     @Column(name = "cash_collected_at")
     private LocalDateTime cashCollectedAt;
@@ -70,6 +72,7 @@ public class Delivery {
     @Column(name = "delivery_fee", nullable = false, precision = 10, scale = 2)
     private BigDecimal deliveryFee;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(name = "payment_status", nullable = false, length = 50)
     private PaymentStatus paymentStatus = PaymentStatus.PENDING;
@@ -84,6 +87,7 @@ public class Delivery {
     @Column(name = "paid_at")
     private LocalDateTime paidAt;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(name = "delivery_status", nullable = false, length = 50)
     private DeliveryStatus deliveryStatus = DeliveryStatus.PENDING;
