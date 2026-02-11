@@ -49,7 +49,7 @@
             [displayWith]="displayZone"
             (optionSelected)="loadParcelPointsForZone($event.option.value, true)">
             @for (zone of filteredFromZones(); track zone.id) {
-              <mat-option [value]="zone.id">
+              <mat-option [value]="zone">
                 <div class="flex flex-col">
                   <span class="font-medium">{{ zone.zoneName }}</span>
                   <span class="text-xs text-gray-500">{{ zone.city }}</span>
@@ -106,7 +106,7 @@
             [displayWith]="displayZone"
             (optionSelected)="loadParcelPointsForZone($event.option.value, false)">
             @for (zone of filteredToZones(); track zone.id) {
-              <mat-option [value]="zone.id">
+              <mat-option [value]="zone">
                 <div class="flex flex-col">
                   <span class="font-medium">{{ zone.zoneName }}</span>
                   <span class="text-xs text-gray-500">{{ zone.city }}</span>
