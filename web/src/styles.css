@@ -43,14 +43,6 @@
   --font-sans: var(--mat-sys-plain-font-family);
   --font-display: var(--mat-sys-brand-font-family);
 
-  /* ---------- RADIUS (match Material shapes) ---------- */
-
-  --radius-sm: var(--mat-sys-corner-small);
-  --radius-md: var(--mat-sys-corner-medium);
-  --radius-lg: var(--mat-sys-corner-large);
-  --radius-xl: var(--mat-sys-corner-extra-large);
-  --radius-full: var(--mat-sys-corner-full);
-
   /* ---------- SHADOW (match Material elevation) ---------- */
 
   --shadow-elevation:
