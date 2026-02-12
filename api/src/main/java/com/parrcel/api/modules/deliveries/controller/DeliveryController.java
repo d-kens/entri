@@ -2,6 +2,7 @@ package com.parrcel.api.modules.deliveries.controller;
 
 import com.parrcel.api.modules.deliveries.dto.CreateDeliveryDto;
 import com.parrcel.api.modules.deliveries.dto.DeliveryResponseDto;
+import com.parrcel.api.modules.deliveries.model.Delivery;
 import com.parrcel.api.modules.deliveries.service.DeliveryService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -21,10 +22,15 @@ public class DeliveryController {
     private final DeliveryService deliveryService;
 
     @PostMapping
-    private ResponseEntity<DeliveryResponseDto> create(
-            UriComponentsBuilder componentsBuilder,
+    private ResponseEntity<Delivery> create(
+            UriComponentsBuilder uriComponentsBuilder,
             @Valid @RequestBody CreateDeliveryDto createDeliveryDto
     ) {
-        return ResponseEntity.ok(new DeliveryResponseDto());
+        var delivery = deliveryService.create(createDeliveryDto);
+        var uri = uriComponentsBuilder.path("/deliveries/{deliveryId}")
+                .buildAndExpand(delivery.getId())
+                .toUri();
+
+        return ResponseEntity.created(uri).body(delivery);
     }
 }
