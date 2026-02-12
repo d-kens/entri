@@ -6,12 +6,14 @@ import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 
-public record CreateDeliveryDto(
-        @NotNull(message = "toPoint is required")
-        Long toPoint,
+// TODO: Add validation for cash amount if collect cash is true
 
-        @NotNull(message = "fromPoint is required")
-        Long fromPoint,
+public record CreateDeliveryDto(
+        @NotNull(message = "toAgent is required")
+        Long toAgent,
+
+        @NotNull(message = "fromAgent is required")
+        Long fromAgent,
 
         @NotNull(message = "collectCash is required")
         Boolean collectCash,

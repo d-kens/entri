@@ -14,11 +14,10 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Getter
-@Setter
 @Entity
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "deliveries")
 public class Delivery {
     @Id
@@ -39,12 +38,12 @@ public class Delivery {
     private String recipientPhone;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "from_point_id", nullable = false)
-    private Agent fromPoint;
+    @JoinColumn(name = "from_agent_id", nullable = false)
+    private Agent fromAgent;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "to_point_id", nullable = false)
-    private Agent toPoint;
+    @JoinColumn(name = "to_agent_id", nullable = false)
+    private Agent toAgent;
 
     @Column(name = "package_name", nullable = false)
     private String packageName;
@@ -92,8 +91,8 @@ public class Delivery {
     @Column(name = "delivery_status", nullable = false, length = 50)
     private DeliveryStatus deliveryStatus = DeliveryStatus.PENDING;
 
-    @Column(name = "dropped_at_pickup_point_at")
-    private LocalDateTime droppedAtPickupPointAt;
+    @Column(name = "dropped_at_pickup_agent_at")
+    private LocalDateTime droppedAtPickupAgentAt;
 
     @Column(name = "arrived_at_hub_at")
     private LocalDateTime arrivedAtHubAt;
@@ -124,6 +123,36 @@ public class Delivery {
     @Column(name = "updated_by")
     private Long updatedBy;
 
+    public static Delivery create(
+            Agent fromAgent,
+            Agent toAgent,
+            Boolean collectCash,
+            BigDecimal cashAmount,
+            String packageName,
+            BigDecimal packagePrice,
+            String packageDescription,
+            String recipientName,
+            String recipientPhone,
+            BigDecimal deliveryFee
+    ) {
+
+        if (collectCash && (cashAmount == null || cashAmount.compareTo(BigDecimal.ZERO) <= 0))
+            throw new IllegalArgumentException("cashAmount id required for collect cash");
+
+        return Delivery.builder()
+                .fromAgent(fromAgent)
+                .toAgent(toAgent)
+                .collectCash(collectCash)
+                .cashAmount(cashAmount)
+                .packageName(packageName)
+                .packagePrice(packagePrice)
+                .packageDescription(packageDescription)
+                .recipientName(recipientName)
+                .recipientPhone(recipientPhone)
+                .deliveryFee(deliveryFee)
+                .build();
+    }
+
     public boolean isPaid() {
         return paymentStatus == PaymentStatus.PAID;
     }
@@ -138,6 +167,6 @@ public class Delivery {
 
     public boolean canBeCancelled() {
         return deliveryStatus == DeliveryStatus.PENDING ||
-                deliveryStatus == DeliveryStatus.DROPPED_AT_PICKUP_POINT;
+                deliveryStatus == DeliveryStatus.DROPPED_AT_PICKUP_AGENT;
     }
 }

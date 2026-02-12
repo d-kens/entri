@@ -2,7 +2,7 @@ package com.parrcel.api.modules.deliveries.enums;
 
 public enum DeliveryStatus {
     PENDING,
-    DROPPED_AT_PICKUP_POINT,
+    DROPPED_AT_PICKUP_AGENT,
     AT_HUB,
     OUT_FOR_DELIVERY,
     DELIVERED,
@@ -14,8 +14,8 @@ public enum DeliveryStatus {
 
     public boolean canTransitionTo(DeliveryStatus newStatus) {
         return switch (this) {
-            case PENDING -> newStatus == DROPPED_AT_PICKUP_POINT || newStatus == CANCELLED;
-            case DROPPED_AT_PICKUP_POINT -> newStatus == AT_HUB || newStatus == CANCELLED;
+            case PENDING -> newStatus == DROPPED_AT_PICKUP_AGENT || newStatus == CANCELLED;
+            case DROPPED_AT_PICKUP_AGENT -> newStatus == AT_HUB || newStatus == CANCELLED;
             case AT_HUB -> newStatus == OUT_FOR_DELIVERY;
             case OUT_FOR_DELIVERY -> newStatus == DELIVERED;
             case DELIVERED, CANCELLED -> false;
