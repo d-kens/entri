@@ -7,7 +7,6 @@ import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 
-
 @ValidCashAmount
 public record CreateDeliveryDto(
         @NotNull(message = "toAgent is required")
