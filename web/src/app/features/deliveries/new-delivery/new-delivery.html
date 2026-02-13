@@ -47,7 +47,7 @@
           <mat-autocomplete
             #fromZoneAuto="matAutocomplete"
             [displayWith]="displayZone"
-            (optionSelected)="loadParcelPointsForZone($event.option.value, true)">
+            (optionSelected)="loadAgentsForZone($event.option.value, true)">
             @for (zone of filteredFromZones(); track zone.id) {
               <mat-option [value]="zone">
                 <div class="flex flex-col">
@@ -72,15 +72,15 @@
             @if (loadingFromAgents()) {
               <mat-spinner diameter="20" class="absolute right-2"></mat-spinner>
             }
-            <mat-select formControlName="fromPoint" placeholder="Select pickup point">
-              @for (point of fromPoints(); track point.id) {
+            <mat-select formControlName="fromAgent" placeholder="Select pickup point">
+              @for (point of fromAgents(); track point.id) {
                 <mat-option [value]="point.id">
                   {{ point.name }} - {{ point.addressDescription }}
                 </mat-option>
               }
             </mat-select>
-            @if (deliveryForm.get('fromPoint')?.invalid && deliveryForm.get('fromPoint')?.touched) {
-              <mat-error>{{ getErrorMessage('fromPoint') }}</mat-error>
+            @if (deliveryForm.get('fromAgent')?.invalid && deliveryForm.get('fromAgent')?.touched) {
+              <mat-error>{{ getErrorMessage('fromAgent') }}</mat-error>
             }
           </mat-form-field>
         }
@@ -104,7 +104,7 @@
           <mat-autocomplete
             #toZoneAuto="matAutocomplete"
             [displayWith]="displayZone"
-            (optionSelected)="loadParcelPointsForZone($event.option.value, false)">
+            (optionSelected)="loadAgentsForZone($event.option.value, false)">
             @for (zone of filteredToZones(); track zone.id) {
               <mat-option [value]="zone">
                 <div class="flex flex-col">
@@ -129,15 +129,15 @@
             @if (loadingToAgents()) {
               <mat-spinner diameter="20" class="absolute right-2"></mat-spinner>
             }
-            <mat-select formControlName="toPoint" placeholder="Select delivery point">
-              @for (point of toPoints(); track point.id) {
+            <mat-select formControlName="toAgent" placeholder="Select delivery point">
+              @for (point of toAgents(); track point.id) {
                 <mat-option [value]="point.id">
                   {{ point.name }} - {{ point.addressDescription }}
                 </mat-option>
               }
             </mat-select>
-            @if (deliveryForm.get('toPoint')?.invalid && deliveryForm.get('toPoint')?.touched) {
-              <mat-error>{{ getErrorMessage('toPoint') }}</mat-error>
+            @if (deliveryForm.get('toAgent')?.invalid && deliveryForm.get('toAgent')?.touched) {
+              <mat-error>{{ getErrorMessage('toAgent') }}</mat-error>
             }
           </mat-form-field>
         }
@@ -167,7 +167,7 @@
       </div>
 
       <mat-form-field appearance="outline" class="w-full compact-field">
-        <mat-label>Description (Optional)</mat-label>
+        <mat-label>Description</mat-label>
         <textarea
           matInput
           formControlName="packageDescription"
