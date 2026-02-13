@@ -54,7 +54,6 @@ public class AuthController {
         return userMapper.toResponse(user);
     }
 
-
     @PostMapping("/refresh-token")
     public ResponseEntity<AuthResponse> refreshToken(
             @CookieValue("refreshToken") String refreshToken
@@ -89,6 +88,9 @@ public class AuthController {
             @CookieValue(value = "refreshToken", required = false) String refreshToken,
             HttpServletResponse response
     ) {
+
+        authService.logout(refreshToken);
+
         var cookie = new Cookie("refreshToken", null);
         cookie.setSecure(false);
         cookie.setHttpOnly(true);
