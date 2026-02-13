@@ -1,13 +1,14 @@
 package com.parrcel.api.modules.deliveries.dto;
 
+import com.parrcel.api.modules.deliveries.validation.ValidCashAmount;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 
-// TODO: Add validation for cash amount if collect cash is true
 
+@ValidCashAmount
 public record CreateDeliveryDto(
         @NotNull(message = "toAgent is required")
         Long toAgent,

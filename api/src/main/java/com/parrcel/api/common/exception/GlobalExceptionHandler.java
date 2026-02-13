@@ -13,6 +13,17 @@ import java.util.Map;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(InvalidDeliveryException.class)
+    public ResponseEntity<ErrorDto> handleInvalidDeliveryException(
+            IllegalArgumentException exception
+    ) {
+        return ResponseEntity.badRequest().body(
+                new ErrorDto(exception.getMessage())
+        );
+    }
+
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationErrors(
             MethodArgumentNotValidException exception
