@@ -12,9 +12,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { ZonesService, Zone, Agent } from '@core/services/zones-service';
+import { ZonesService } from '@features/zones/services/zones-service';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import {Agent, Zone} from '@features/zones/models/zones.model';
+import {DeliveryService} from '@features/deliveries/services/delivery.service';
+import {CreateDeliveryDto} from '@features/deliveries/models/delivery.model';
+import {SnackbarService} from '@core/services/snackbar-service';
 
 @Component({
   selector: 'app-new-delivery',
@@ -40,8 +44,11 @@ export class NewDelivery implements OnInit {
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private zonesService = inject(ZonesService);
+  private deliveryService = inject(DeliveryService);
+  private snackbarService = inject(SnackbarService);
 
   deliveryForm!: FormGroup;
+  isLoading = signal(false);
 
   zones = signal<Zone[]>([]);
   agents = signal<Agent[]>([]);
@@ -58,13 +65,13 @@ export class NewDelivery implements OnInit {
   loadingFromAgents = signal(false);
   loadingToAgents = signal(false);
 
-  fromPoints = computed(() => {
+  fromAgents = computed(() => {
     const zone = this.fromZoneSignal();
     if (!zone) return [];
     return this.agents().filter(agent => agent.zoneId === zone.id && agent.isActive);
   });
 
-  toPoints = computed(() => {
+  toAgents = computed(() => {
     const zone = this.toZoneSignal();
     if (!zone) return [];
     return this.agents().filter(agent => agent.zoneId === zone.id && agent.isActive);
@@ -169,7 +176,7 @@ export class NewDelivery implements OnInit {
     return zone ? `${zone.zoneName} - ${zone.city}` : '';
   };
 
-  loadParcelPointsForZone(zone: Zone, isFromZone: boolean) {
+  loadAgentsForZone(zone: Zone, isFromZone: boolean) {
     if (!zone) return;
 
     if (isFromZone) {
@@ -189,7 +196,7 @@ export class NewDelivery implements OnInit {
         }
       },
       error: (error) => {
-        console.error('Error loading parcel points:', error);
+        console.error('Error loading agents:', error);
         if (isFromZone) {
           this.loadingFromAgents.set(false);
         } else {
@@ -205,14 +212,14 @@ export class NewDelivery implements OnInit {
       recipientPhone: ['', [Validators.required, Validators.pattern(/^(07|01)\d{8}$/)]],
 
       fromZone: ['', Validators.required],
-      fromPoint: ['', Validators.required],
+      fromAgent: ['', Validators.required],
 
       toZone: ['', Validators.required],
-      toPoint: ['', Validators.required],
+      toAgent: ['', Validators.required],
 
       packageName: ['', [Validators.required, Validators.minLength(2)]],
       packagePrice: ['', [Validators.required, Validators.min(0)]],
-      packageDescription: ['', [Validators.maxLength(500)]],
+      packageDescription: ['', [Validators.required, Validators.maxLength(500)]],
 
       collectCash: [false],
       cashAmount: [{ value: '', disabled: true }]
@@ -233,34 +240,61 @@ export class NewDelivery implements OnInit {
 
     this.deliveryForm.get('fromZone')?.valueChanges.subscribe((value) => {
         this.fromZoneSignal.set(value);
-        this.deliveryForm.get('fromPoint')?.setValue('');
-        this.loadParcelPointsForZone(value, true);
+        this.deliveryForm.get('fromAgent')?.setValue('');
+        this.loadAgentsForZone(value, true);
     });
 
     this.deliveryForm.get('toZone')?.valueChanges.subscribe((value) => {
         this.toZoneSignal.set(value);
-        this.deliveryForm.get('toPoint')?.setValue('');
-        this.loadParcelPointsForZone(value, false);
+        this.deliveryForm.get('toAgent')?.setValue('');
+        this.loadAgentsForZone(value, false);
     });
   }
 
   onSubmit() {
-    if (this.deliveryForm.valid) {
-      const deliveryData = {
-        ...this.deliveryForm.value,
-        deliveryFee: this.deliveryFee()
-      };
-
-      console.log('Delivery Order:', deliveryData);
-
-      this.router.navigate(['/payment'], {
-        state: { deliveryOrder: deliveryData }
-      });
-    } else {
+    if (this.deliveryForm.invalid) {
       Object.keys(this.deliveryForm.controls).forEach(key => {
         this.deliveryForm.get(key)?.markAsTouched();
       });
+      return;
     }
+
+    this.isLoading.set(true);
+
+    const formValue = this.deliveryForm.getRawValue();
+
+    const payload: CreateDeliveryDto = {
+      fromAgent: formValue.fromAgent,
+      toAgent: formValue.toAgent,
+      recipientName: formValue.recipientName,
+      recipientPhone: formValue.recipientPhone,
+      packageName: formValue.packageName,
+      packagePrice: Number(formValue.packagePrice),
+      packageDescription: formValue.packageDescription,
+      collectCash: formValue.collectCash,
+      cashAmount: formValue.collectCash
+        ? Number(formValue.cashAmount)
+        : undefined,
+      deliveryFee: this.deliveryFee()
+    };
+
+    console.log('Create Delivery: ', payload);
+
+    this.deliveryService.createDelivery(payload).subscribe({
+      next: (delivery) => {
+        this.isLoading.set(false);
+        this.snackbarService.showSuccess('Delivery request successful. Proceeding to payment');
+        this.router.navigate(['/deliveries', delivery.externalId, 'payment']);
+      },
+      error: (err) => {
+        console.log('This is the error: ', err);
+        const errorMessage = err?.error?.message || 'Delivery request failed. Try again later';
+        this.snackbarService.showError(errorMessage)
+        this.isLoading.set(false);
+      }
+    })
+
+
   }
 
   getErrorMessage(fieldName: string): string {

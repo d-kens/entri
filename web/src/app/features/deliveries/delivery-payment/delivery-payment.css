@@ -1,0 +1,45 @@
+/* Payment Method Cards */
+.payment-method-card {
+  display: block;
+  padding: 0.875rem;
+  border: 1.5px solid var(--color-outline-variant);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.payment-method-card:hover {
+  border-color: var(--color-primary);
+  background-color: color-mix(in srgb, var(--color-primary) 3%, transparent);
+}
+
+.payment-method-card.selected {
+  border-color: var(--color-primary);
+  background-color: color-mix(in srgb, var(--color-primary) 6%, transparent);
+}
+
+.payment-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--color-surface-container);
+  transition: all 0.15s ease;
+}
+
+.payment-method-card.selected .payment-icon {
+  background-color: var(--color-primary);
+  background-color: color-mix(in srgb, var(--color-primary) 15%, transparent);
+  color: var(--color-primary);
+}
+
+.check-icon {
+  color: var(--color-outline-variant);
+  transition: color 0.15s ease;
+}
+
+.payment-method-card.selected .check-icon {
+  color: var(--color-primary);
+}
