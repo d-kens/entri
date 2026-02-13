@@ -26,8 +26,8 @@ public class Delivery {
     private Long id;
 
     @Builder.Default
-    @Column(name = "external_id", nullable = false, unique = true)
-    private UUID externalId = UUID.randomUUID();
+    @Column(name = "external_id", nullable = false, unique = true, length = 36)
+    private String externalId = UUID.randomUUID().toString();
 
     @Column(name = "tracking_number", nullable = false, unique = true, length = 30)
     private String trackingNumber;
