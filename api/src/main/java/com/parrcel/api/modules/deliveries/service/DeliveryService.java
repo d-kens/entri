@@ -15,7 +15,6 @@ public class DeliveryService {
     private final DeliveryRepository deliveryRepository;
 
     // TODO: Fetching the currently logged in user and saving them with the delivery
-    // TODO Catching legal argument exceptio
 
     public Delivery create(CreateDeliveryDto dto){
 

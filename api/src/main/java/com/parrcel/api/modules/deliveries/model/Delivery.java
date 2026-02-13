@@ -1,5 +1,6 @@
 package com.parrcel.api.modules.deliveries.model;
 
+import com.parrcel.api.common.exception.InvalidDeliveryException;
 import com.parrcel.api.modules.deliveries.enums.DeliveryStatus;
 import com.parrcel.api.modules.deliveries.enums.PaymentMethod;
 import com.parrcel.api.modules.deliveries.enums.PaymentStatus;
@@ -137,7 +138,7 @@ public class Delivery {
     ) {
 
         if (collectCash && (cashAmount == null || cashAmount.compareTo(BigDecimal.ZERO) <= 0))
-            throw new IllegalArgumentException("cashAmount id required for collect cash");
+            throw new InvalidDeliveryException("cashAmount id required for collect cash");
 
         return Delivery.builder()
                 .fromAgent(fromAgent)
