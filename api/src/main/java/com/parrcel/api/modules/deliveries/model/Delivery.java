@@ -1,6 +1,5 @@
 package com.parrcel.api.modules.deliveries.model;
 
-import com.parrcel.api.common.exception.InvalidDeliveryException;
 import com.parrcel.api.modules.deliveries.enums.DeliveryStatus;
 import com.parrcel.api.modules.deliveries.enums.PaymentMethod;
 import com.parrcel.api.modules.deliveries.enums.PaymentStatus;
@@ -13,6 +12,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Entity
@@ -25,12 +25,16 @@ public class Delivery {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "tracking_number", nullable = false, unique = true, length = 20)
+    @Builder.Default
+    @Column(name = "external_id", nullable = false, unique = true)
+    private UUID externalId = UUID.randomUUID();
+
+    @Column(name = "tracking_number", nullable = false, unique = true, length = 30)
     private String trackingNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id", nullable = false)
-    private User customer;
+    private User user;
 
     @Column(name = "recipient_name", nullable = false)
     private String recipientName;
@@ -123,36 +127,6 @@ public class Delivery {
 
     @Column(name = "updated_by")
     private Long updatedBy;
-
-    public static Delivery create(
-            Agent fromAgent,
-            Agent toAgent,
-            Boolean collectCash,
-            BigDecimal cashAmount,
-            String packageName,
-            BigDecimal packagePrice,
-            String packageDescription,
-            String recipientName,
-            String recipientPhone,
-            BigDecimal deliveryFee
-    ) {
-
-        if (collectCash && (cashAmount == null || cashAmount.compareTo(BigDecimal.ZERO) <= 0))
-            throw new InvalidDeliveryException("cashAmount id required for collect cash");
-
-        return Delivery.builder()
-                .fromAgent(fromAgent)
-                .toAgent(toAgent)
-                .collectCash(collectCash)
-                .cashAmount(cashAmount)
-                .packageName(packageName)
-                .packagePrice(packagePrice)
-                .packageDescription(packageDescription)
-                .recipientName(recipientName)
-                .recipientPhone(recipientPhone)
-                .deliveryFee(deliveryFee)
-                .build();
-    }
 
     public boolean isPaid() {
         return paymentStatus == PaymentStatus.PAID;
