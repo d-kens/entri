@@ -53,7 +53,7 @@
           @if (paymentForm.get('paymentMethod')?.value === 'MPESA') {
             <div class="mb-8">
               <h2 class="text-base font-semibold text-foreground mb-4">Phone Number</h2>
-              <mat-form-field appearance="outline" class="w-full">
+              <mat-form-field appearance="outline" class="w-full compact-field">
                 <mat-label>M-Pesa Number</mat-label>
                 <input matInput formControlName="phoneNumber" placeholder="0712345678">
                 <mat-icon matPrefix>phone</mat-icon>
