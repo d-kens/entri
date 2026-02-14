@@ -78,7 +78,7 @@
             </button>
             <button
               mat-flat-button
-              class="w-full h-11 !rounded-lg"
+              class="w-full h-11 !rounded-lg !bg-primary !text-primary-foreground"
               type="submit"
               [disabled]="isProcessingPayment()"
             >
@@ -95,10 +95,10 @@
         </form>
       </div>
 
-      <!-- Order Summary (Right/Bottom) -->
+      <!-- Summary (Right/Bottom) -->
       <div class="lg:col-span-2">
         <div class="border border-outline-variant rounded-2xl p-5 lg:sticky lg:top-6">
-          <h2 class="text-base font-semibold text-foreground mb-5">Order Summary</h2>
+          <h2 class="text-base font-semibold text-foreground mb-5">Summary</h2>
 
           <div class="space-y-5">
             <!-- Tracking Number -->
@@ -125,15 +125,30 @@
 
             <!-- Route -->
             <div>
-              <p class="text-xs text-foreground/60 mb-2 uppercase tracking-wide">Route</p>
-              <div class="space-y-1.5">
-                <div class="flex items-center gap-2">
-                  <div class="w-1.5 h-1.5 rounded-full bg-foreground/40"></div>
-                  <p class="text-xs text-foreground">{{ delivery()?.fromAgent }}</p>
+              <p class="text-xs text-foreground/60 mb-2 uppercase tracking-wide">Delivery Route</p>
+              <div class="space-y-2">
+                <!-- From -->
+                <div class="flex items-start gap-2">
+                  <div class="flex items-center justify-center w-5 h-5 rounded-full bg-foreground/10 flex-shrink-0 mt-0.5">
+                    <div class="w-2 h-2 rounded-full bg-foreground/60"></div>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <p class="text-xs font-medium text-foreground/80">From</p>
+                    <p class="text-xs text-foreground break-words">{{ delivery()?.fromAgent }}</p>
+                    <p class="text-xs text-foreground/50">{{ delivery()?.fromZone }}</p>
+                  </div>
                 </div>
-                <div class="flex items-center gap-2">
-                  <div class="w-1.5 h-1.5 rounded-full bg-primary"></div>
-                  <p class="text-xs text-foreground">{{ delivery()?.toAgent }}</p>
+
+                <!-- To -->
+                <div class="flex items-start gap-2">
+                  <div class="flex items-center justify-center w-5 h-5 rounded-full bg-primary/20 flex-shrink-0 mt-0.5">
+                    <div class="w-2 h-2 rounded-full bg-primary"></div>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <p class="text-xs font-medium text-foreground/80">To</p>
+                    <p class="text-xs text-foreground break-words">{{ delivery()?.toAgent }}</p>
+                    <p class="text-xs text-foreground/50">{{ delivery()?.toZone }}</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -141,9 +156,11 @@
             @if (delivery()?.collectCash) {
               <!-- COD -->
               <div class="p-3 bg-warning/10 rounded-xl border border-warning/20">
-                <p class="text-xs font-semibold text-foreground mb-1">Cash on Delivery</p>
-                <p class="text-sm font-bold text-warning">
-                  KSh {{ delivery()?.cashAmount | number:'1.2-2' }}
+                <div class="flex items-start gap-2 mb-2">
+                  <p class="text-xs font-semibold text-foreground">Cash on Delivery</p>
+                </div>
+                <p class="text-xs text-foreground/70 leading-relaxed">
+                  We will collect <span class="font-semibold">KSh {{ delivery()?.cashAmount | number:'1.2-2' }}</span> from the recipient and add it to your wallet for withdrawal
                 </p>
               </div>
             }

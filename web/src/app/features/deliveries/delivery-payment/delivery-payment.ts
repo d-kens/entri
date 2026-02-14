@@ -50,7 +50,6 @@ export class DeliveryPayment implements OnInit {
 
   paymentMethods = [
     { value: 'MPESA', label: 'M-Pesa', icon: 'phone_android', description: 'Pay via M-Pesa STK Push' },
-    { value: 'WALLET', label: 'Wallet', icon: 'account_balance_wallet', description: 'Pay from wallet balance' }
   ];
 
   totalAmount = computed(() => {

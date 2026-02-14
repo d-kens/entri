@@ -9,6 +9,8 @@ import java.math.BigDecimal;
 public record DeliveryResponseDto(
         String toAgent,
         String fromAgent,
+        String toZone,
+        String fromZone,
         String externalId,
         String packageName,
         Boolean collectCash,
