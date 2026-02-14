@@ -11,14 +11,19 @@
     <app-sidenav [isMobile]="isMobile()" (closeSidenav)="sidenav.close()" />
   </mat-sidenav>
 
-  <mat-sidenav-content class="content">
+  <mat-sidenav-content class="flex flex-col h-full overflow-hidden">
+    <!-- Sticky Toolbar -->
     <app-toolbar
       [isMobile]="isMobile()"
       (toggleSidenav)="toggleSidenav()"
+      class="flex-shrink-0"
     />
 
-    <div class="p-6">
-      <router-outlet />
+    <!-- Scrollable Content -->
+    <div class="flex-1 overflow-y-auto">
+      <div class="p-6">
+        <router-outlet />
+      </div>
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>

@@ -14,6 +14,8 @@ export type CreateDeliveryDto = {
 export type DeliveryResponse = {
   toAgent: string;
   fromAgent: string;
+  toZone: string;
+  fromZone: string;
   externalId: string;
   packageName: string;
   collectCash: boolean;
