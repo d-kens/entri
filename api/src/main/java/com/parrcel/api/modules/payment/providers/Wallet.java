@@ -10,6 +10,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class Wallet implements PaymentProvider{
     @Override
+    public String authenticate() {
+        return null;
+    }
+
+    @Override
     public PaymentResponse initiatePayment(InitiatePaymentDto dto) {
         return null;
     }
