@@ -36,3 +36,8 @@ app:
 
 server:
   port: 8080
+
+mpesa:
+  base-url: https://sandbox.safaricom.co.ke
+  consumer-key: SECRET_HERE
+  consumer-secret: SECRET_HERE
