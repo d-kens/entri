@@ -1,4 +1,4 @@
-package com.parrcel.api.modules.payment.providers.config;
+package com.parrcel.api.modules.payment.providers.config.mpesa;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
