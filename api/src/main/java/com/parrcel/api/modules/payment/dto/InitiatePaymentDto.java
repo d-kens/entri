@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @ValidInitiatePaymentDto
 public record InitiatePaymentDto(
         @NotBlank(message = "referenceId is required")
-        String referenceId,
+        String reference,
 
         @ValidPaymentMethod
         @NotBlank(message = "paymentMethod is required")
