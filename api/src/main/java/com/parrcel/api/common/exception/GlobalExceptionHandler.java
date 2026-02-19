@@ -23,6 +23,11 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler(PaymentProviderException.class)
+    public ResponseEntity<ErrorDto> handlePaymentProviderException(PaymentProviderException e) {
+        return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
+                .body(new ErrorDto(e.getMessage()));
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationErrors(

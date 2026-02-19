@@ -1,5 +1,6 @@
 package com.parrcel.api.modules.payment.providers.client;
 
+import com.parrcel.api.modules.payment.providers.config.mpesa.MpesaFeignConfig;
 import com.parrcel.api.modules.payment.providers.dto.mpesa.MpesaAuthResponse;
 import com.parrcel.api.modules.payment.providers.dto.mpesa.MpesaStkRequestBody;
 import com.parrcel.api.modules.payment.providers.dto.mpesa.MpesaStkResponse;
@@ -11,7 +12,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 
 @FeignClient(
         name = "mpesa-client",
-        url = "${mpesa.base-url}"
+        url = "${mpesa.base-url}",
+        configuration = MpesaFeignConfig.class
 )
 public interface MpesaClient {
     @GetMapping("${mpesa.endpoints.auth}")
