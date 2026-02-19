@@ -39,5 +39,11 @@ server:
 
 mpesa:
   base-url: https://sandbox.safaricom.co.ke
-  consumer-key: SECRET_HERE
-  consumer-secret: SECRET_HERE
+  consumer-key: qzROez3sSwArAT8ANYVdxAmHtHGiXxRvANhW4YzPc9vdSXuN
+  consumer-secret: WEtuwTb3SNnCnkaYVSANx2ZSUPitnbKiivlKmgQvQO3WZKLp4QDEhlKsCCPdydiE
+  shortcode: 174379
+  passkey: bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919
+  callback-url: https://oro.com/api/payment/mpesa/callback
+  endpoints:
+    auth: /oauth/v1/generate?grant_type=client_credentials
+    stk-push: /mpesa/stkpush/v1/processrequest
