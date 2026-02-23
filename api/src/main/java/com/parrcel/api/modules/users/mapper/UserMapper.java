@@ -12,6 +12,6 @@ public interface UserMapper {
     UserResponse toResponse(User user);
 
     @Mapping(target = "passwordHash", ignore = true)
-    @Mapping(target = "role", expression = "java(Role.from(createUserDto.getRole()))")
+    @Mapping(target = "role", expression = "java(Role.from(createUserDto.role()))")
     User toEntity(CreateUserDto createUserDto);
 }
