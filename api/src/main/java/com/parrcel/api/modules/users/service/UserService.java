@@ -42,11 +42,11 @@ public class UserService {
     }
 
     public User createUser(CreateUserDto dto) {
-        if (userRepository.existsByEmail(dto.getEmail()))
+        if (userRepository.existsByEmail(dto.email()))
             throw new EmailAlreadyExistException();
 
         var user = userMapper.toEntity(dto);
-        user.setPasswordHash(passwordEncoder.encode(dto.getPassword()));
+        user.setPasswordHash(passwordEncoder.encode(dto.password()));
 
         userRepository.save(user);
 

@@ -1,12 +1,9 @@
 package com.parrcel.api.modules.notification.dto;
 
-import lombok.Data;
-
 import java.util.Map;
 
-@Data
-public class NotificationDto {
-    private SubscriberDto subscriber;
-    private String workflowIdentifier;
-    private Map<String, Object> payload;
-}
+public record NotificationDto(
+        SubscriberDto subscriber,
+        String workflowIdentifier,
+        Map<String, Object> payload
+) {}

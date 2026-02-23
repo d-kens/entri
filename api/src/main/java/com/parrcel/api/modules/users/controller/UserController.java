@@ -24,7 +24,7 @@ public class UserController {
     ) {
         var user = userService.createUser(createUserDto);
         var response = userMapper.toResponse(user);
-        var uri = uriComponentsBuilder.path("/users/{userId}").buildAndExpand(response.getId()).toUri();
+        var uri = uriComponentsBuilder.path("/users/{userId}").buildAndExpand(response.id()).toUri();
         return ResponseEntity.created(uri).body(response);
     }
 }

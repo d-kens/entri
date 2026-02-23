@@ -25,9 +25,9 @@ public class NovuClient {
 
     public void triggerNotification(NotificationDto dto) {
         var request = new TriggerEventRequest();
-        request.setName(dto.getWorkflowIdentifier());
-        request.setTo(buildSubscriber(dto.getSubscriber()));
-        request.setPayload(dto.getPayload());
+        request.setName(dto.workflowIdentifier());
+        request.setTo(buildSubscriber(dto.subscriber()));
+        request.setPayload(dto.payload());
         request.setTransactionId(UUID.randomUUID().toString());
 
         try {
@@ -49,11 +49,11 @@ public class NovuClient {
 
     private SubscriberRequest buildSubscriber(SubscriberDto dto) {
         SubscriberRequest subscriber = new SubscriberRequest();
-        subscriber.setEmail(dto.getEmail());
-        subscriber.setPhone(dto.getPhoneNumber());
-        subscriber.setFirstName(dto.getFirstName());
-        subscriber.setLastName(dto.getLastName());
-        subscriber.setSubscriberId(dto.getId().toString());
+        subscriber.setEmail(dto.email());
+        subscriber.setPhone(dto.phoneNumber());
+        subscriber.setFirstName(dto.firstName());
+        subscriber.setLastName(dto.lastName());
+        subscriber.setSubscriberId(dto.id().toString());
         return subscriber;
     }
 }
