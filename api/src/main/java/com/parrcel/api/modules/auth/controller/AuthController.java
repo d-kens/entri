@@ -33,7 +33,7 @@ public class AuthController {
     ) {
         var tokenPair = authService.login(authRequest);
 
-        var cookie = new Cookie("refreshToken", tokenPair.getRefreshToken());
+        var cookie = new Cookie("refreshToken", tokenPair.refreshToken());
         cookie.setSecure(false);
         cookie.setHttpOnly(true);
         cookie.setPath("/auth/refresh-token");
@@ -42,7 +42,7 @@ public class AuthController {
 
         response.addCookie(cookie);
 
-        return new AuthResponse(tokenPair.getAccessToken());
+        return new AuthResponse(tokenPair.accessToken());
     }
 
     @GetMapping("/me")
