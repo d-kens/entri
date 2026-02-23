@@ -48,12 +48,12 @@ public class AuthService {
 
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        authRequest.getEmail(),
-                        authRequest.getPassword()
+                        authRequest.email(),
+                        authRequest.password()
                 )
         );
 
-        var user = userService.getUserByEmail(authRequest.getEmail());
+        var user = userService.getUserByEmail(authRequest.email());
         var accessToken = jwtService.generateAccessToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
 
@@ -110,7 +110,7 @@ public class AuthService {
 
     public String forgotPassword(ForgotPasswordRequest request) {
         try {
-            var user = userService.getUserByEmail(request.getEmail());
+            var user = userService.getUserByEmail(request.email());
 
             var tokenResponse = tokenService.generateToken(user, TokenPurpose.PASSWORD_RESET, null);
 
@@ -135,14 +135,14 @@ public class AuthService {
 
 
     public String resetPassword(ResetPasswordRequest request) {
-        Token token = tokenService.validateToken(request.getToken());
+        Token token = tokenService.validateToken(request.token());
 
         if (token.getPurpose() != TokenPurpose.PASSWORD_RESET) {
             throw new InvalidTokenException("Token is not valid for password reset");
         }
 
         User user = token.getUser();
-        userService.updatePassword(user, request.getNewPassword());
+        userService.updatePassword(user, request.newPassword());
         tokenService.invalidateToken(token);
 
         var loginUrl = String.format("%s/auth/login", baseUrl);

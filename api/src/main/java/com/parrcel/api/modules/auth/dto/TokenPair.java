@@ -1,11 +1,7 @@
 package com.parrcel.api.modules.auth.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+public record TokenPair (
+        String accessToken,
+        String refreshToken
 
-@Data
-@AllArgsConstructor
-public class TokenPair {
-    private String accessToken;
-    private String refreshToken;
-}
+) {}
