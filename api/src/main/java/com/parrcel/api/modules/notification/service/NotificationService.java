@@ -23,11 +23,11 @@ public class NotificationService {
     @Async
     @EventListener
     public void sendNotification(SendNotificationEvent sendNotificationEvent) {
-        NotificationDto notification = new NotificationDto();
-
-        notification.setPayload(sendNotificationEvent.payload());
-        notification.setSubscriber(toSubscriber(sendNotificationEvent.user()));
-        notification.setWorkflowIdentifier(sendNotificationEvent.notificationType().toString());
+        NotificationDto notification = new NotificationDto(
+                toSubscriber(sendNotificationEvent.user()),
+                sendNotificationEvent.notificationType().toString(),
+                sendNotificationEvent.payload()
+        );
 
         try {
             novuClient.triggerNotification(notification);
@@ -72,12 +72,12 @@ public class NotificationService {
 
 
     private SubscriberDto toSubscriber(User user) {
-        SubscriberDto dto = new SubscriberDto();
-        dto.setId(user.getId());
-        dto.setEmail(user.getEmail());
-        dto.setFirstName(user.getUserName());
-        dto.setLastName("");
-        dto.setPhoneNumber(user.getPhoneNumber());
-        return dto;
+        return new SubscriberDto(
+                user.getId(),
+                user.getEmail(),
+                user.getUserName(),
+                "",
+                user.getPhoneNumber()
+        );
     }
 }

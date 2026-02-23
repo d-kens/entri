@@ -114,7 +114,7 @@ public class AuthService {
 
             var tokenResponse = tokenService.generateToken(user, TokenPurpose.PASSWORD_RESET, null);
 
-            String resetUrl = String.format("%s/auth/reset-password?token=%s", baseUrl, tokenResponse.getRawToken());
+            String resetUrl = String.format("%s/auth/reset-password?token=%s", baseUrl, tokenResponse.rawToken());
 
             Map<String, Object> payload = Map.of(
                     "resetUrl", resetUrl,
