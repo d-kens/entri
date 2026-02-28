@@ -1,12 +1,12 @@
 spring:
   application:
-    name: peid
+    name: oro
 
   datasource:
-    url: jdbc:mysql://localhost:3306/parrcel_db?createDatabaseIfNotExist=true
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root
-    password: p@RRc3L@@dm!n#2170
 
   jpa:
     show-sql: true
@@ -17,33 +17,24 @@ spring:
     change-log: classpath:/db/changelog/changelog.xml
     enabled: true
 
+app:
+  base-url: ${APP_BASE_URL}
+
 jwt:
   secret: ${JWT_SECRET}
-  accessTokenExpiration: 900 # 15 minutes
-  refreshTokenExpiration: 604800 # 7 days
+  accessTokenExpiration: 900
+  refreshTokenExpiration: 604800
 
 novu:
   secret: ${NOVU_SECRET}
 
-token:
-  length: 64
-  passwordResetExpirationSeconds: 3600
-  emailVerificationExpirationSeconds: 900
-  twoFactorAuthExpirationSeconds: 300
-
-app:
-  base-url: http://localhost:4200
-
-server:
-  port: 8080
-
 mpesa:
-  base-url: https://sandbox.safaricom.co.ke
-  consumer-key: qzROez3sSwArAT8ANYVdxAmHtHGiXxRvANhW4YzPc9vdSXuN
-  consumer-secret: WEtuwTb3SNnCnkaYVSANx2ZSUPitnbKiivlKmgQvQO3WZKLp4QDEhlKsCCPdydiE
-  shortcode: 174379
-  passkey: bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919
-  callback-url: https://oro.com/api/payment/mpesa/callback
+  base-url: ${MPESA_BASE_URL}
+  consumer-key: ${MPESA_CONSUMER_KEY}
+  consumer-secret: ${MPESA_CONSUMER_SECRET}
+  shortcode: ${MPESA_SHORTCODE}
+  passkey: ${MPESA_PASSKEY}
+  callback-url: ${MPESA_CALLBACK_URL}
   endpoints:
-    auth: /oauth/v1/generate?grant_type=client_credentials
-    stk-push: /mpesa/stkpush/v1/processrequest
+    auth: ${MPESA_AUTH_ENDPOINT}
+    stk-push: ${MPESA_STK_PUSH_ENDPOINT}

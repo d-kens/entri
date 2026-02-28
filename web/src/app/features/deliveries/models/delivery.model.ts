@@ -11,6 +11,25 @@ export type CreateDeliveryDto = {
   packageDescription: string;
 }
 
+export enum DeliveryStatus {
+  PENDING = 'PENDING',
+  DROPPED_AT_PICKUP_AGENT = 'DROPPED_AT_PICKUP_AGENT',
+  AT_HUB = 'AT_HUB',
+  OUT_FOR_DELIVERY = 'OUT_FOR_DELIVERY',
+  DELIVERED = 'DELIVERED',
+  CANCELLED = 'CANCELLED'
+}
+
+export interface PageResponse<T> {
+  content: T[];
+  pageNumber: number;
+  pageSize: number;
+  totalElements: number;
+  totalPages: number;
+  last: boolean;
+  first: boolean;
+}
+
 export type DeliveryResponse = {
   toAgent: string;
   fromAgent: string;
@@ -29,12 +48,22 @@ export type DeliveryResponse = {
   packagePrice: number;
   paymentReference?: string;
   packageDescription?: string;
-  paymentStatus: string;
+  paymentStatus: PaymentStatus;
   paymentMethod?: string;
-  deliveryStatus: string;
+  deliveryStatus: DeliveryStatus;
+  createdAt: string
 };
 
+export interface DeliveryFilters {
+  page?: number;
+  size?: number;
+  status?: string;
+  search?: string;
+}
 
-
-
-
+export enum PaymentStatus {
+  PENDING = 'PENDING',
+  PAID = 'PAID',
+  FAILED = 'FAILED',
+  REFUNDED = 'REFUNDED'
+}

@@ -3,12 +3,20 @@ package com.parrcel.api.modules.deliveries.service;
 import com.parrcel.api.common.exception.InvalidDeliveryException;
 import com.parrcel.api.common.exception.NotFoundException;
 import com.parrcel.api.modules.deliveries.dto.CreateDeliveryDto;
+import com.parrcel.api.modules.deliveries.dto.DeliveryResponseDto;
+import com.parrcel.api.modules.deliveries.enums.DeliveryStatus;
 import com.parrcel.api.modules.deliveries.model.Delivery;
 import com.parrcel.api.modules.deliveries.repository.DeliveryRepository;
+import com.parrcel.api.modules.deliveries.repository.DeliverySpecification;
+import com.parrcel.api.modules.users.enums.Role;
+import com.parrcel.api.modules.users.model.User;
 import com.parrcel.api.modules.users.service.UserService;
 import com.parrcel.api.modules.zones.service.AgentService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,8 +37,24 @@ public class DeliveryService {
     private final AgentService agentService;
     private final DeliveryRepository deliveryRepository;
 
+    @Transactional(readOnly = true)
+    public Page<Delivery> getDeliveries(
+            User currentUser,
+            String status,
+            String search,
+            Pageable pageable
+    ) {
+        log.info("Fetching deliveries for user: {}, role: {}",
+                currentUser.getId(),
+                currentUser.getRole());
+
+        Specification<Delivery> spec = buildSpecification(currentUser, status, search);
+
+        return deliveryRepository.findAll(spec, pageable);
+    }
+
     public Delivery getDeliveryByExternalId(String externalId) {
-        return deliveryRepository.getDeliveriesByExternalId(externalId).orElseThrow(
+        return deliveryRepository.findByExternalId(externalId).orElseThrow(
                 () -> new NotFoundException("Delivery with ID " + externalId + " not found")
         );
     }
@@ -74,6 +98,32 @@ public class DeliveryService {
 
         deliveryRepository.save(delivery);
         return delivery;
+    }
+
+    private Specification<Delivery> buildSpecification(User currentUser, String status, String search) {
+        Specification<Delivery> spec = Specification.allOf();
+
+        // Role-based filtering
+        if (!currentUser.getRole().equals(Role.ADMIN)) {
+            spec = spec.and(DeliverySpecification.hasUser(currentUser.getId()));
+        }
+
+        // Status filter
+        if (status != null && !status.isEmpty()) {
+            try {
+                DeliveryStatus deliveryStatus = DeliveryStatus.valueOf(status.toUpperCase());
+                spec = spec.and(DeliverySpecification.hasStatus(deliveryStatus));
+            } catch (IllegalArgumentException e) {
+                log.warn("Invalid delivery status: {}", status);
+            }
+        }
+
+        // Search filter
+        if (search != null && !search.isEmpty()) {
+            spec = spec.and(DeliverySpecification.search(search));
+        }
+
+        return spec;
     }
 
 

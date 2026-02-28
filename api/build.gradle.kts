@@ -5,8 +5,8 @@ plugins {
 }
 
 group = "com.parrcel"
-version = "0.0.1-SNAPSHOT"
-description = "api"
+version = "1.0.0"
+description = "Backend API that power oro web application"
 
 java {
     toolchain {

@@ -1,0 +1,179 @@
+import { Component, OnInit, signal, computed, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
+import {DeliveryService} from '@features/deliveries/services/delivery.service';
+import {DeliveryResponse, DeliveryStatus, PaymentStatus} from '@features/deliveries/models/delivery.model';
+import {debounceTime, distinctUntilChanged} from 'rxjs/operators';
+
+@Component({
+  selector: 'app-deliveries-list',
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    MatChipsModule,
+    MatPaginatorModule,
+    MatTableModule
+  ],
+  templateUrl: './deliveries-list.html',
+  styleUrl: './deliveries-list.css',
+  standalone: true
+})
+export class DeliveriesList implements OnInit {
+  private router = inject(Router);
+  private deliveryService = inject(DeliveryService);
+
+  Math = Math;
+
+  deliveries = signal<DeliveryResponse[]>([]);
+  isLoading = signal(true);
+
+  // Pagination
+  pageIndex = signal(0);
+  pageSize = signal(20);
+  totalElements = signal(0);
+
+  // Filters
+  searchControl = new FormControl('');
+  statusFilter = signal<string>('');
+
+  statusOptions = [
+    { value: '', label: 'All Statuses' },
+    { value: 'PENDING', label: 'Pending' },
+    { value: 'DROPPED_AT_PICKUP_AGENT', label: 'At Pickup Aget' },
+    { value: 'AT_HUB', label: 'At Hub' },
+    { value: 'OUT_FOR_DELIVERY', label: 'Out for Delivery' },
+    { value: 'DELIVERED', label: 'Delivered' },
+    { value: 'CANCELLED', label: 'Cancelled' }
+  ];
+
+  displayedColumns: string[] = [
+    'trackingNumber',
+    'recipient',
+    'route',
+    'package',
+    'fee',
+    'status',
+    'payment',
+    'date',
+    'actions'
+  ];
+
+  ngOnInit() {
+    this.loadDeliveries();
+    this.setupSearchListener();
+  }
+
+  setupSearchListener() {
+    this.searchControl.valueChanges
+      .pipe(
+        debounceTime(400),
+        distinctUntilChanged()
+      )
+      .subscribe(() => {
+        this.pageIndex.set(0);
+        this.loadDeliveries();
+      });
+  }
+
+  loadDeliveries() {
+    this.isLoading.set(true);
+
+    this.deliveryService.getDeliveries({
+      page: this.pageIndex(),
+      size: this.pageSize(),
+      status: this.statusFilter(),
+      search: this.searchControl.value || undefined
+    }).subscribe({
+      next: (response) => {
+        this.deliveries.set(response.content);
+        this.totalElements.set(response.totalElements);
+        this.isLoading.set(false);
+      },
+      error: (error) => {
+        console.error('Error loading deliveries:', error);
+        this.isLoading.set(false);
+      }
+    });
+  }
+
+  onStatusFilterChange(status: string) {
+    this.statusFilter.set(status);
+    this.pageIndex.set(0);
+    this.loadDeliveries();
+  }
+
+  onPageChange(event: PageEvent) {
+    this.pageIndex.set(event.pageIndex);
+    this.pageSize.set(event.pageSize);
+    this.loadDeliveries();
+  }
+
+  viewDelivery(delivery: DeliveryResponse) {
+    this.router.navigate(['/deliveries', delivery.externalId]);
+  }
+
+  createNewDelivery() {
+    this.router.navigate(['/deliveries/new']);
+  }
+
+  getDeliveryStatusClass(status: DeliveryStatus): string {
+    const statusMap: Record<DeliveryStatus, string> = {
+      [DeliveryStatus.PENDING]: 'status-pending',
+      [DeliveryStatus.DROPPED_AT_PICKUP_AGENT]: 'status-in-transit',
+      [DeliveryStatus.AT_HUB]: 'status-in-transit',
+      [DeliveryStatus.OUT_FOR_DELIVERY]: 'status-out-for-delivery',
+      [DeliveryStatus.DELIVERED]: 'status-delivered',
+      [DeliveryStatus.CANCELLED]: 'status-cancelled'
+    };
+    return statusMap[status] || '';
+  }
+
+  getDeliveryStatusLabel(status: DeliveryStatus): string {
+    const statusMap: Record<DeliveryStatus, string> = {
+      [DeliveryStatus.PENDING]: 'Pending',
+      [DeliveryStatus.DROPPED_AT_PICKUP_AGENT]: 'At Pickup',
+      [DeliveryStatus.AT_HUB]: 'At Hub',
+      [DeliveryStatus.OUT_FOR_DELIVERY]: 'Out for Delivery',
+      [DeliveryStatus.DELIVERED]: 'Delivered',
+      [DeliveryStatus.CANCELLED]: 'Cancelled'
+    };
+    return statusMap[status] || status;
+  }
+
+  getPaymentStatusClass(status: PaymentStatus): string {
+    const statusMap: Record<PaymentStatus, string> = {
+      [PaymentStatus.PENDING]: 'payment-pending',
+      [PaymentStatus.PAID]: 'payment-paid',
+      [PaymentStatus.FAILED]: 'payment-failed',
+      [PaymentStatus.REFUNDED]: 'payment-refunded'
+    };
+    return statusMap[status] || '';
+  }
+
+  getPaymentStatusLabel(status: PaymentStatus): string {
+    const statusMap: Record<PaymentStatus, string> = {
+      [PaymentStatus.PENDING]: 'Pending',
+      [PaymentStatus.PAID]: 'Paid',
+      [PaymentStatus.FAILED]: 'Failed',
+      [PaymentStatus.REFUNDED]: 'Refunded'
+    };
+    return statusMap[status] || status;
+  }
+
+}
