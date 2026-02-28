@@ -15,7 +15,6 @@ import java.time.Instant;
 @NoArgsConstructor
 @Table(name = "tokens")
 public class Token {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
