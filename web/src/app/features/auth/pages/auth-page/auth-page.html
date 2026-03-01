@@ -1,22 +1,24 @@
 <div class="flex min-h-screen">
-  <!-- Left marketing panel -->
-  <div class="hidden lg:flex lg:flex-[2] bg-black text-white items-center justify-center p-12">
-    <div class="max-w-lg space-y-4 text-center">
 
-      <!-- Brand name -->
-      <h1
-        class="text-7xl font-extrabold  text-primary">
-        ORO
-      </h1>
+  <!-- Left marketing panel -->
+  <div class="hidden lg:flex lg:flex-[2] bg-secondary text-secondary-foreground items-center justify-center p-12">
+    <div class="max-w-lg space-y-6 text-center">
+
+      <!-- Brand mark -->
+      <div class="flex items-center justify-center gap-1.5">
+        <span class="font-display text-8xl font-bold tracking-tight text-secondary-foreground leading-none">
+          Oro
+        </span>
+        <span class="w-2.5 h-2.5 rounded-full bg-primary mb-2 flex-shrink-0"></span>
+      </div>
+
+      <!-- Divider -->
+      <div class="w-12 h-px bg-outline mx-auto opacity-30"></div>
 
       <!-- Tagline -->
-      <p
-        class="text-xl text-gray-300 leading-relaxed
-               font-medium max-w-md mx-auto">
+      <p class="text-lg font-light leading-relaxed text-secondary-foreground/60 max-w-xs mx-auto">
         Grow your business with
-        <span class="text-primary font-semibold">
-          affordable and reliable
-        </span>
+        <span class="text-primary font-medium">affordable and reliable</span>
         delivery service.
       </p>
 
@@ -24,7 +26,8 @@
   </div>
 
   <!-- Right panel -->
-  <div class="flex flex-1 items-center justify-center bg-white p-4 md:p-8">
+  <div class="flex flex-1 items-center justify-center bg-surface-container-low p-4 md:p-8">
     <router-outlet />
   </div>
+
 </div>
