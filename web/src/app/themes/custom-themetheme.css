@@ -1,108 +1,130 @@
 html {
   color-scheme: light;
 
-  /* -------------------- PRIMARY PALETTE -------------------- */
-  --mat-sys-primary: #ffba38;
-  --mat-sys-on-primary: #000000;
-  --mat-sys-primary-container: #ffdeac;
-  --mat-sys-on-primary-container: #281900;
-  --mat-sys-inverse-primary: #ffba38;
-  --mat-sys-primary-fixed: #ffdeac;
-  --mat-sys-primary-fixed-dim: #ffba38;
-  --mat-sys-on-primary-fixed: #281900;
-  --mat-sys-on-primary-fixed-variant: #604100;
+  /* ═══════════════════════════════════════════════════════════
+     PRIMARY — Oro Gold
+     Base: #D4900A  (landing page --gold)
+     ═══════════════════════════════════════════════════════════ */
+  --mat-sys-primary:                    #D4900A;
+  --mat-sys-on-primary:                 #FFFFFF;
+  --mat-sys-primary-container:          #FDF3DC;  /* landing --gold-pale */
+  --mat-sys-on-primary-container:       #3D2600;
+  --mat-sys-inverse-primary:            #F0A500;  /* lighter gold for dark surfaces */
+  --mat-sys-primary-fixed:              #FDF3DC;
+  --mat-sys-primary-fixed-dim:          #F0A500;
+  --mat-sys-on-primary-fixed:           #3D2600;
+  --mat-sys-on-primary-fixed-variant:   #7A4F00;
 
-  /* -------------------- SECONDARY PALETTE -------------------- */
-  --mat-sys-secondary: #000000; /* your pure black */
-  --mat-sys-on-secondary: #ffffff; /* white text on black */
-  --mat-sys-secondary-container: #333333; /* dark gray container for contrast */
-  --mat-sys-on-secondary-container: #ffffff;
-  --mat-sys-secondary-fixed: #000000;
-  --mat-sys-secondary-fixed-dim: #222222;
-  --mat-sys-on-secondary-fixed: #ffffff;
-  --mat-sys-on-secondary-fixed-variant: #444444;
+  /* ═══════════════════════════════════════════════════════════
+     SECONDARY — Oro Ink (near-black)
+     Base: #0D0C0B  (landing page --ink)
+     ═══════════════════════════════════════════════════════════ */
+  --mat-sys-secondary:                  #0D0C0B;
+  --mat-sys-on-secondary:               #FFFFFF;
+  --mat-sys-secondary-container:        #2A2825;  /* warm dark container */
+  --mat-sys-on-secondary-container:     #F5F4F2;
+  --mat-sys-secondary-fixed:            #0D0C0B;
+  --mat-sys-secondary-fixed-dim:        #1C1A18;
+  --mat-sys-on-secondary-fixed:         #FFFFFF;
+  --mat-sys-on-secondary-fixed-variant: #6B6259;
 
-  /* -------------------- TERTIARY PALETTE -------------------- */
-  --mat-sys-tertiary: #c7c6c6;
-  --mat-sys-on-tertiary: #2f3131;
-  --mat-sys-tertiary-container: #464747;
-  --mat-sys-on-tertiary-container: #e3e2e2;
-  --mat-sys-tertiary-fixed: #e3e2e2;
-  --mat-sys-tertiary-fixed-dim: #c7c6c6;
-  --mat-sys-on-tertiary-fixed: #1a1c1c;
-  --mat-sys-on-tertiary-fixed-variant: #464747;
+  /* ═══════════════════════════════════════════════════════════
+     TERTIARY — Warm mid-tone (muted text / supporting UI)
+     ═══════════════════════════════════════════════════════════ */
+  --mat-sys-tertiary:                   #9E9589;
+  --mat-sys-on-tertiary:                #FFFFFF;
+  --mat-sys-tertiary-container:         #EDE9E3;
+  --mat-sys-on-tertiary-container:      #2A2420;
+  --mat-sys-tertiary-fixed:             #EDE9E3;
+  --mat-sys-tertiary-fixed-dim:         #9E9589;
+  --mat-sys-on-tertiary-fixed:          #1A1714;
+  --mat-sys-on-tertiary-fixed-variant:  #6B6259;
 
-  /* -------------------- NEUTRAL PALETTE -------------------- */
-  --mat-sys-background: #f9f9f9;
-  --mat-sys-on-background: #1a1c1c;
-  --mat-sys-surface: #f9f9f9;
-  --mat-sys-surface-dim: #dadada;
-  --mat-sys-surface-bright: #f9f9f9;
-  --mat-sys-surface-container-low: #f3f3f4;
-  --mat-sys-surface-container-lowest: #ffffff;
-  --mat-sys-surface-container: #eeeeee;
-  --mat-sys-surface-container-high: #e8e8e8;
-  --mat-sys-surface-container-highest: #e2e2e2;
-  --mat-sys-on-surface: #1a1c1c;
-  --mat-sys-shadow: #000000;
-  --mat-sys-scrim: #000000;
-  --mat-sys-surface-tint: #ffba38;
-  --mat-sys-inverse-surface: #2f3131;
-  --mat-sys-inverse-on-surface: #f0f1f1;
-  --mat-sys-outline: #909191;
-  --mat-sys-outline-variant: #c6c6c7;
-  --mat-sys-neutral10: #1a1c1c;
+  /* ═══════════════════════════════════════════════════════════
+     NEUTRAL — Warm whites and surfaces
+     Mirrors the landing page's warm off-white system
+     ═══════════════════════════════════════════════════════════ */
+  --mat-sys-background:                 #FFFFFF;
+  --mat-sys-on-background:              #0D0C0B;
+  --mat-sys-surface:                    #FFFFFF;
+  --mat-sys-surface-dim:                #E2DDD5;  /* landing --gray-200 */
+  --mat-sys-surface-bright:             #FFFFFF;
+  --mat-sys-surface-container-lowest:   #FFFFFF;
+  --mat-sys-surface-container-low:      #FAF8F4;  /* landing --cream */
+  --mat-sys-surface-container:          #F5F4F0;
+  --mat-sys-surface-container-high:     #EDEAE4;
+  --mat-sys-surface-container-highest:  #E5E2DC;
+  --mat-sys-on-surface:                 #0D0C0B;
+  --mat-sys-shadow:                     #0D0C0B;
+  --mat-sys-scrim:                      #0D0C0B;
+  --mat-sys-surface-tint:               #D4900A;
+  --mat-sys-inverse-surface:            #1C1A18;
+  --mat-sys-inverse-on-surface:         #FAF8F4;
+  --mat-sys-outline:                    #9E9589;  /* landing --gray-400 */
+  --mat-sys-outline-variant:            #E2DDD5;  /* landing --gray-200 */
+  --mat-sys-neutral10:                  #0D0C0B;
 
-  /* -------------------- ERROR PALETTE -------------------- */
-  --mat-sys-error: #ba1a1a;
-  --mat-sys-on-error: #ffffff;
-  --mat-sys-error-container: #ffdad6;
-  --mat-sys-on-error-container: #410002;
+  /* ═══════════════════════════════════════════════════════════
+     ERROR
+     ═══════════════════════════════════════════════════════════ */
+  --mat-sys-error:                      #BA1A1A;
+  --mat-sys-on-error:                   #FFFFFF;
+  --mat-sys-error-container:            #FFDAD6;
+  --mat-sys-on-error-container:         #410002;
 
-  /* -------------------- NEUTRAL VARIANT PALETTE -------------------- */
-  --mat-sys-surface-variant: #e2e2e2;
-  --mat-sys-on-surface-variant: #454747;
-  --mat-sys-neutral-variant20: #2f3131;
+  /* ═══════════════════════════════════════════════════════════
+     NEUTRAL VARIANT
+     ═══════════════════════════════════════════════════════════ */
+  --mat-sys-surface-variant:            #F0EEE9;
+  --mat-sys-on-surface-variant:         #6B6259;  /* landing --gray-600 */
+  --mat-sys-neutral-variant20:          #2A2420;
 
-  /* -------------------- TYPOGRAPHY -------------------- */
-  --mat-sys-brand-font-family: Roboto;
-  --mat-sys-plain-font-family: Roboto;
-  --mat-sys-bold-font-weight: 700;
-  --mat-sys-medium-font-weight: 500;
+  /* ═══════════════════════════════════════════════════════════
+     TYPOGRAPHY
+     Instrument Serif for brand/display, Geist for UI
+     ═══════════════════════════════════════════════════════════ */
+  --mat-sys-brand-font-family:   'Instrument Serif', Georgia, serif;
+  --mat-sys-plain-font-family:   'Geist', -apple-system, sans-serif;
+  --mat-sys-bold-font-weight:    700;
+  --mat-sys-medium-font-weight:  500;
   --mat-sys-regular-font-weight: 400;
 
-  /* -------------------- SHADOWS / ELEVATION -------------------- */
-  --mat-sys-umbra-color: color-mix(in srgb, var(--mat-sys-shadow), transparent 80%);
+  /* ═══════════════════════════════════════════════════════════
+     SHADOWS / ELEVATION — warm-tinted shadows
+     ═══════════════════════════════════════════════════════════ */
+  --mat-sys-umbra-color:    color-mix(in srgb, var(--mat-sys-shadow), transparent 80%);
   --mat-sys-penumbra-color: color-mix(in srgb, var(--mat-sys-shadow), transparent 86%);
-  --mat-sys-ambient-color: color-mix(in srgb, var(--mat-sys-shadow), transparent 88%);
+  --mat-sys-ambient-color:  color-mix(in srgb, var(--mat-sys-shadow), transparent 88%);
 
-  /* -------------------- CORNERS / SHAPE -------------------- */
-  --mat-sys-corner-extra-large: 28px;
-  --mat-sys-corner-extra-small: 4px;
-  --mat-sys-corner-full: 9999px;
-  --mat-sys-corner-large: 16px;
-  --mat-sys-corner-medium: 12px;
-  --mat-sys-corner-none: 0;
-  --mat-sys-corner-small: 8px;
+  /* ═══════════════════════════════════════════════════════════
+     SHAPE / CORNERS
+     Slightly tighter than default MD3 — matches landing's 8–10px radius
+     ═══════════════════════════════════════════════════════════ */
+  --mat-sys-corner-extra-large: 24px;
+  --mat-sys-corner-large:       16px;
+  --mat-sys-corner-medium:      10px;  /* landing btn-radius */
+  --mat-sys-corner-small:        8px;  /* landing btn-nav radius */
+  --mat-sys-corner-extra-small:  4px;
+  --mat-sys-corner-full:      9999px;
+  --mat-sys-corner-none:          0;
 
-  /* -------------------- STATES -------------------- */
+  /* ═══════════════════════════════════════════════════════════
+     INTERACTION STATES
+     ═══════════════════════════════════════════════════════════ */
   --mat-sys-dragged-state-layer-opacity: 0.16;
-  --mat-sys-focus-state-layer-opacity: 0.12;
-  --mat-sys-hover-state-layer-opacity: 0.08;
+  --mat-sys-focus-state-layer-opacity:   0.12;
+  --mat-sys-hover-state-layer-opacity:   0.08;
   --mat-sys-pressed-state-layer-opacity: 0.12;
 
+  /* ═══════════════════════════════════════════════════════════
+     APP SEMANTIC — non-MD3, used for status colours
+     ═══════════════════════════════════════════════════════════ */
+  --app-warning:    #F0A500;   /* lighter gold — repurposed as warning */
+  --app-on-warning: #3D2600;
 
-
-
-  /* Warning - Not a core MD3 token but useful for notifications */
-  --app-warning: #FF9800;
-  --app-on-warning: #FFFFFF;
-
-  /* Success - For success states and snackbars */
-  --app-success: #4CAF50;
+  --app-success:    #2E7D32;
   --app-on-success: #FFFFFF;
 
-  /* Info - For informational messages */
-  --app-info: #2196F3;
-  --app-on-info: #FFFFFF;
+  --app-info:       #1565C0;
+  --app-on-info:    #FFFFFF;
 }
