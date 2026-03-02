@@ -3,7 +3,6 @@ package com.parrcel.api.modules.deliveries.service;
 import com.parrcel.api.common.exception.InvalidDeliveryException;
 import com.parrcel.api.common.exception.NotFoundException;
 import com.parrcel.api.modules.deliveries.dto.CreateDeliveryDto;
-import com.parrcel.api.modules.deliveries.dto.DeliveryResponseDto;
 import com.parrcel.api.modules.deliveries.enums.DeliveryStatus;
 import com.parrcel.api.modules.deliveries.model.Delivery;
 import com.parrcel.api.modules.deliveries.repository.DeliveryRepository;
@@ -39,16 +38,17 @@ public class DeliveryService {
 
     @Transactional(readOnly = true)
     public Page<Delivery> getDeliveries(
-            User currentUser,
+            Long userId,
             String status,
             String search,
             Pageable pageable
     ) {
-        log.info("Fetching deliveries for user: {}, role: {}",
-                currentUser.getId(),
-                currentUser.getRole());
 
-        Specification<Delivery> spec = buildSpecification(currentUser, status, search);
+        log.info("Fetching deliveries for userId: {}", userId);
+
+        var user = userService.getUserById(userId);
+
+        Specification<Delivery> spec = buildSpecification(user, status, search);
 
         return deliveryRepository.findAll(spec, pageable);
     }
