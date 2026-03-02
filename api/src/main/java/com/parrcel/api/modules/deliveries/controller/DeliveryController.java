@@ -6,7 +6,6 @@ import com.parrcel.api.modules.deliveries.dto.DeliveryResponseDto;
 import com.parrcel.api.modules.deliveries.mapper.DeliveryMapper;
 import com.parrcel.api.modules.deliveries.model.Delivery;
 import com.parrcel.api.modules.deliveries.service.DeliveryService;
-import com.parrcel.api.modules.users.model.User;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,32 +28,17 @@ public class DeliveryController {
 
     @GetMapping
     public ResponseEntity<PageResponse<DeliveryResponseDto>> getDeliveries(
-            @AuthenticationPrincipal User currentUser,
+            @AuthenticationPrincipal Long currentUserId,  // Long, not User
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
             @RequestParam(required = false) String status,
             @RequestParam(required = false) String search
     ) {
-        Pageable pageable = PageRequest.of(
-                page,
-                size,
-                Sort.by("createdAt").descending()
-        );
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
 
-        Page<Delivery> deliveryPage = deliveryService.getDeliveries(
-                currentUser,
-                status,
-                search,
-                pageable
-        );
+        Page<Delivery> deliveryPage = deliveryService.getDeliveries(currentUserId, status, search, pageable);
 
-        Page<DeliveryResponseDto> dtoPage =
-                deliveryPage.map(deliveryMapper::toResponseDto);
-
-        PageResponse<DeliveryResponseDto> response =
-                PageResponse.of(dtoPage);
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(PageResponse.of(deliveryPage.map(deliveryMapper::toResponseDto)));
     }
 
     @GetMapping("/{externalId}")
@@ -67,7 +51,7 @@ public class DeliveryController {
 
     @PostMapping
     public ResponseEntity<DeliveryResponseDto> create(
-            @AuthenticationPrincipal long userId,
+            @AuthenticationPrincipal Long userId,
             UriComponentsBuilder uriComponentsBuilder,
             @Valid @RequestBody CreateDeliveryDto createDeliveryDto
     ) {
