@@ -1,8 +1,6 @@
 package com.parrcel.api.modules.deliveries.dto;
 
 import com.parrcel.api.modules.deliveries.enums.DeliveryStatus;
-import com.parrcel.api.modules.payment.enums.PaymentMethod;
-import com.parrcel.api.modules.deliveries.enums.PaymentStatus;
 
 import java.math.BigDecimal;
 
