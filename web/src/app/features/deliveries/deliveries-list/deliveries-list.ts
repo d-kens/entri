@@ -155,14 +155,4 @@ export class DeliveriesList implements OnInit {
     };
     return statusMap[status] || '';
   }
-
-  getPaymentStatusLabel(status: PaymentStatus): string {
-    const statusMap: Record<PaymentStatus, string> = {
-      [PaymentStatus.PENDING]: 'Pending',
-      [PaymentStatus.PAID]: 'Paid',
-      [PaymentStatus.FAILED]: 'Failed',
-      [PaymentStatus.REFUNDED]: 'Refunded'
-    };
-    return statusMap[status] || status;
-  }
 }
