@@ -24,7 +24,5 @@ public record DeliveryResponseDto(
         BigDecimal packagePrice,
         String paymentReference,
         String packageDescription,
-        PaymentStatus paymentStatus,
-        PaymentMethod paymentMethod,
         DeliveryStatus deliveryStatus
 ) {}

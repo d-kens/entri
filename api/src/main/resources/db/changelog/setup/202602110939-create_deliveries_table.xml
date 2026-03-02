@@ -11,6 +11,10 @@
                 <constraints primaryKey="true"/>
             </column>
 
+            <column name="external_id" type="VARCHAR(36)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
             <column name="tracking_number" type="VARCHAR(30)">
                 <constraints nullable="false" unique="true"/>
             </column>
@@ -55,8 +59,6 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="cash_collected_at" type="TIMESTAMP"/>
-
             <column name="delivery_fee" type="DECIMAL(10,2)">
                 <constraints nullable="false"/>
             </column>
@@ -65,17 +67,13 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="payment_method" type="VARCHAR(50)"/>
-
-            <column name="payment_reference" type="VARCHAR(100)"/>
-
             <column name="paid_at" type="TIMESTAMP"/>
 
             <column name="delivery_status" type="VARCHAR(50)" defaultValue="PENDING">
                 <constraints nullable="false"/>
             </column>
 
-            <!-- Status Timestamps -->
+
             <column name="dropped_at_pickup_agent_at" type="TIMESTAMP"/>
 
             <column name="arrived_at_hub_at" type="TIMESTAMP"/>
@@ -88,7 +86,7 @@
 
             <column name="cancellation_reason" type="VARCHAR(500)"/>
 
-            <!-- Audit Fields -->
+
             <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
@@ -96,10 +94,6 @@
             <column name="updated_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
-
-            <column name="created_by" type="BIGINT"/>
-
-            <column name="updated_by" type="BIGINT"/>
         </createTable>
 
         <addForeignKeyConstraint
@@ -135,16 +129,8 @@
             <column name="customer_id"/>
         </createIndex>
 
-        <createIndex indexName="idx_deliveries_status" tableName="deliveries">
-            <column name="delivery_status"/>
-        </createIndex>
-
-        <createIndex indexName="idx_deliveries_payment_status" tableName="deliveries">
-            <column name="payment_status"/>
-        </createIndex>
-
-        <createIndex indexName="idx_deliveries_created_at" tableName="deliveries">
-            <column name="created_at"/>
+        <createIndex indexName="idx_deliveries_external_id" tableName="deliveries">
+            <column name="external_id"/>
         </createIndex>
 
         <!-- Rollback -->
