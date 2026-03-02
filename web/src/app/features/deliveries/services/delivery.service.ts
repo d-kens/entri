@@ -60,13 +60,13 @@ export class DeliveryService {
   }
 
   initiatePayment(payload: {
-    deliveryId: string;
+    reference: string;
     paymentMethod: string;
     phoneNumber?: string;
     amount: number;
   }): Observable<any> {
     return this.http.post(
-      `${environment.apiBaseUrl}/deliveries/${payload.deliveryId}/payment`,
+      `${environment.apiBaseUrl}/payments/initiate`,
       payload
     );
   }
