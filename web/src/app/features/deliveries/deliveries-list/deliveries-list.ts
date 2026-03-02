@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, computed, inject } from '@angular/core';
+import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
@@ -8,12 +8,11 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatChipsModule } from '@angular/material/chips';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
-import { MatTableModule } from '@angular/material/table';
-import {DeliveryService} from '@features/deliveries/services/delivery.service';
-import {DeliveryResponse, DeliveryStatus, PaymentStatus} from '@features/deliveries/models/delivery.model';
-import {debounceTime, distinctUntilChanged} from 'rxjs/operators';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { DeliveryService } from '@features/deliveries/services/delivery.service';
+import { DeliveryResponse, DeliveryStatus, PaymentStatus } from '@features/deliveries/models/delivery.model';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'app-deliveries-list',
@@ -26,9 +25,8 @@ import {debounceTime, distinctUntilChanged} from 'rxjs/operators';
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    MatChipsModule,
     MatPaginatorModule,
-    MatTableModule
+    MatTooltipModule
   ],
   templateUrl: './deliveries-list.html',
   styleUrl: './deliveries-list.css',
@@ -55,23 +53,11 @@ export class DeliveriesList implements OnInit {
   statusOptions = [
     { value: '', label: 'All Statuses' },
     { value: 'PENDING', label: 'Pending' },
-    { value: 'DROPPED_AT_PICKUP_AGENT', label: 'At Pickup Aget' },
+    { value: 'DROPPED_AT_PICKUP_AGENT', label: 'At Pickup Agent' },
     { value: 'AT_HUB', label: 'At Hub' },
     { value: 'OUT_FOR_DELIVERY', label: 'Out for Delivery' },
     { value: 'DELIVERED', label: 'Delivered' },
     { value: 'CANCELLED', label: 'Cancelled' }
-  ];
-
-  displayedColumns: string[] = [
-    'trackingNumber',
-    'recipient',
-    'route',
-    'package',
-    'fee',
-    'status',
-    'payment',
-    'date',
-    'actions'
   ];
 
   ngOnInit() {
@@ -128,6 +114,11 @@ export class DeliveriesList implements OnInit {
     this.router.navigate(['/deliveries', delivery.externalId]);
   }
 
+  editDelivery(event: Event, delivery: DeliveryResponse) {
+    event.stopPropagation(); // Prevent row click
+    this.router.navigate(['/deliveries', delivery.externalId, 'edit']);
+  }
+
   createNewDelivery() {
     this.router.navigate(['/deliveries/new']);
   }
@@ -175,5 +166,4 @@ export class DeliveriesList implements OnInit {
     };
     return statusMap[status] || status;
   }
-
 }

@@ -1,4 +1,24 @@
-/* Status Chips - Minimal */
+/* Table Styles */
+table {
+  border-collapse: collapse;
+}
+
+thead {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+/* Action buttons */
+button[mat-icon-button] {
+  transition: all 0.2s;
+}
+
+button[mat-icon-button]:hover mat-icon {
+  color: var(--color-primary) !important;
+}
+
+/* Status Chips */
 .status-chip {
   display: inline-flex;
   align-items: center;
@@ -58,11 +78,30 @@
   color: var(--color-foreground);
 }
 
-/* Remove Material Table styles if using card layout */
-.mat-mdc-paginator {
+/* Material overrides */
+::ng-deep .mat-mdc-paginator {
   background: transparent !important;
 }
 
-.mat-mdc-form-field {
+::ng-deep .mat-mdc-form-field {
   font-size: 0.875rem;
+}
+
+/* Responsive - horizontal scroll on small screens */
+@media (max-width: 768px) {
+  .overflow-x-auto {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Hint that table scrolls horizontally */
+  .overflow-x-auto::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 30px;
+    background: linear-gradient(to left, rgba(0, 0, 0, 0.05), transparent);
+    pointer-events: none;
+  }
 }

@@ -7,36 +7,35 @@ services:
       - .env
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
     ports:
       - "3306:3306"
     volumes:
       - mysql-data:/var/lib/mysql
 
-  api:
-    build: ./api
-    container_name: oro-api
-    restart: always
-    depends_on:
-      - mysql
-    env_file:
-      - .env
-    ports:
-      - "8080:8080"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE}
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      SPRING_PROFILES_ACTIVE: docker
-
-  web:
-    build: ./web
-    container_name: oro-web
-    restart: always
-    depends_on:
-      - api
-    ports:
-      - "4200:80"
+#  api:
+#    build: ./api
+#    container_name: oro-api
+#    restart: always
+#    depends_on:
+#      - mysql
+#    env_file:
+#      - .env
+#    ports:
+#      - "8080:8080"
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE}
+#      SPRING_DATASOURCE_USERNAME: root
+#      SPRING_DATASOURCE_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+#      SPRING_PROFILES_ACTIVE: docker
+#
+#  web:
+#    build: ./web
+#    container_name: oro-web
+#    restart: always
+#    depends_on:
+#      - api
+#    ports:
+#      - "4200:80"
 
 volumes:
   mysql-data:
