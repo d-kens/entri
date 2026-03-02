@@ -19,7 +19,6 @@ public class PaymentService {
 
     private final Map<String, PaymentProvider> paymentProviders;
 
-    // Constructor injection - Spring auto-discovers all PaymentProvider beans
     public PaymentService(List<PaymentProvider> providers) {
         this.paymentProviders = providers.stream()
                 .collect(Collectors.toMap(

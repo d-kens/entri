@@ -1,5 +1,3 @@
-import {PaymentStatus} from '@features/payments/models/payment.model';
-
 export type CreateDeliveryDto = {
   toAgent: number;
   fromAgent: number;
@@ -50,7 +48,7 @@ export type DeliveryResponse = {
   packagePrice: number;
   paymentReference?: string;
   packageDescription?: string;
-  paymentStatus: PaymentStatus;
+  paymentStatus: string;
   paymentMethod?: string;
   deliveryStatus: DeliveryStatus;
 };
