@@ -64,7 +64,6 @@
             <th class="text-right px-4 py-3 text-xs font-semibold text-foreground/70 uppercase tracking-wide">Fee</th>
             <th class="text-left px-4 py-3 text-xs font-semibold text-foreground/70 uppercase tracking-wide">Status</th>
             <th class="text-left px-4 py-3 text-xs font-semibold text-foreground/70 uppercase tracking-wide">Payment</th>
-            <th class="text-left px-4 py-3 text-xs font-semibold text-foreground/70 uppercase tracking-wide">Date</th>
             <th class="w-20 text-center px-4 py-3 text-xs font-semibold text-foreground/70 uppercase tracking-wide">Actions</th>
           </tr>
           </thead>
@@ -122,11 +121,6 @@
                     [ngClass]="getPaymentStatusClass(delivery.paymentStatus)"
                   >
                     {{ getPaymentStatusLabel(delivery.paymentStatus) }}
-                  </span>
-                </td>
-                <td class="px-4 py-4">
-                  <span class="text-xs text-foreground/60 whitespace-nowrap">
-                    {{ delivery.createdAt | date:'MMM d, y' }}
                   </span>
                 </td>
                 <td class="px-4 py-4">

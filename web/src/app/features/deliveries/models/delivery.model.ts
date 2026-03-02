@@ -51,7 +51,6 @@ export type DeliveryResponse = {
   paymentStatus: PaymentStatus;
   paymentMethod?: string;
   deliveryStatus: DeliveryStatus;
-  createdAt: string
 };
 
 export interface DeliveryFilters {
