@@ -66,8 +66,8 @@ public class Mpesa implements PaymentProvider {
                     mpesaProperties.shortcode(),
                     normalizedPhone,
                     mpesaProperties.callbackUrl(),
-                    dto.reference(),
-                    "Payment for " + dto.reference()
+                    dto.paymentReference(),
+                    dto.paymentDescription()
             );
 
             log.info("Initiating STK Push for phone: {}, amount: {}", dto.phoneNumber(), dto.amount());

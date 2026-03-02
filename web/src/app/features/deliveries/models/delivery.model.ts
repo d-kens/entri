@@ -1,3 +1,5 @@
+import {PaymentStatus} from '@features/payments/models/payment.model';
+
 export type CreateDeliveryDto = {
   toAgent: number;
   fromAgent: number;
@@ -58,11 +60,4 @@ export interface DeliveryFilters {
   size?: number;
   status?: string;
   search?: string;
-}
-
-export enum PaymentStatus {
-  PENDING = 'PENDING',
-  PAID = 'PAID',
-  FAILED = 'FAILED',
-  REFUNDED = 'REFUNDED'
 }

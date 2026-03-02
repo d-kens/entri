@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @ValidInitiatePaymentDto
 public record InitiatePaymentDto(
         @NotBlank(message = "referenceId is required")
-        String reference,
+        String paymentReference,
 
         @ValidPaymentMethod
         @NotBlank(message = "paymentMethod is required")
@@ -21,5 +21,8 @@ public record InitiatePaymentDto(
 
         @NotNull(message = "amount is required")
         @DecimalMin(value = "0.01", message = "amount must be greater than 0")
-        BigDecimal amount
+        BigDecimal amount,
+
+        @NotBlank(message = "paymentDescription is required")
+        String paymentDescription
 ) {}

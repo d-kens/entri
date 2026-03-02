@@ -11,8 +11,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DeliveryService } from '@features/deliveries/services/delivery.service';
-import { DeliveryResponse, DeliveryStatus, PaymentStatus } from '@features/deliveries/models/delivery.model';
+import { DeliveryResponse, DeliveryStatus } from '@features/deliveries/models/delivery.model';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import {PaymentStatus} from '@features/payments/models/payment.model';
 
 @Component({
   selector: 'app-deliveries-list',
@@ -41,12 +42,10 @@ export class DeliveriesList implements OnInit {
   deliveries = signal<DeliveryResponse[]>([]);
   isLoading = signal(true);
 
-  // Pagination
   pageIndex = signal(0);
   pageSize = signal(20);
   totalElements = signal(0);
 
-  // Filters
   searchControl = new FormControl('');
   statusFilter = signal<string>('');
 
@@ -115,7 +114,7 @@ export class DeliveriesList implements OnInit {
   }
 
   editDelivery(event: Event, delivery: DeliveryResponse) {
-    event.stopPropagation(); // Prevent row click
+    event.stopPropagation();
     this.router.navigate(['/deliveries', delivery.externalId, 'edit']);
   }
 

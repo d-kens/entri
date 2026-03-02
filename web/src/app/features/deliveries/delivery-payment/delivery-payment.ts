@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, signal, computed, inject } from '@angular/core';
+import { Component, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -8,11 +8,12 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioModule } from '@angular/material/radio';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { DeliveryService, PaymentEvent } from '@features/deliveries/services/delivery.service';
+import { DeliveryService } from '@features/deliveries/services/delivery.service';
 import { DeliveryResponse } from '@features/deliveries/models/delivery.model';
 import { SnackbarService } from '@core/services/snackbar-service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import {PaymentService} from '@features/payments/services/payment.service';
 
 type PaymentMethod = 'MPESA' | 'CARD' | 'WALLET';
 
@@ -38,8 +39,9 @@ export class DeliveryPayment implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private fb = inject(FormBuilder);
-  private deliveryService = inject(DeliveryService);
+  private paymentService = inject(PaymentService);
   private snackbarService = inject(SnackbarService);
+  private deliveryService = inject(DeliveryService);
 
   deliveryId = signal<string>('');
   delivery = signal<DeliveryResponse | null>(null);
@@ -70,14 +72,16 @@ export class DeliveryPayment implements OnInit {
       phoneNumber: ['', [Validators.required, Validators.pattern(/^(07|01)\d{8}$/)]]
     });
 
-    this.paymentForm.get('paymentMethod')?.valueChanges.subscribe(method => {
-      const phoneControl = this.paymentForm.get('phoneNumber');
+    const paymentMethodControl = this.paymentForm.controls['paymentMethod'];
+    const phoneControl = this.paymentForm.controls['phoneNumber'];
+
+    paymentMethodControl.valueChanges.subscribe((method: string) => {
       if (method === 'MPESA') {
-        phoneControl?.setValidators([Validators.required, Validators.pattern(/^(07|01)\d{8}$/)]);
+        phoneControl.setValidators([Validators.required, Validators.pattern(/^(07|01)\d{8}$/)]);
       } else {
-        phoneControl?.clearValidators();
+        phoneControl.clearValidators();
       }
-      phoneControl?.updateValueAndValidity();
+      phoneControl.updateValueAndValidity();
     });
   }
 
@@ -115,13 +119,14 @@ export class DeliveryPayment implements OnInit {
     this.isProcessingPayment.set(true);
 
     const paymentPayload = {
-      reference: this.deliveryId(),
+      amount: this.totalAmount(),
+      paymentReference: this.deliveryId(),
+      paymentDescription: "Oro Delivery Fee Payment",
       paymentMethod: this.paymentForm.value.paymentMethod,
       phoneNumber: this.paymentForm.value.phoneNumber || undefined,
-      amount: this.totalAmount()
     };
 
-    this.deliveryService.initiatePayment(paymentPayload).subscribe({
+    this.paymentService.initiatePayment(paymentPayload).subscribe({
       next: (response) => {
         if (this.paymentForm.value.paymentMethod === 'MPESA') {
           this.snackbarService.showSuccess('STK push sent! Please enter your M-Pesa PIN');
@@ -141,7 +146,8 @@ export class DeliveryPayment implements OnInit {
     });
   }
 
-  subscribeToPaymentStatus() {} // TODO:
+  // TODO:
+  subscribeToPaymentStatus() {}
 
   cancelPayment() {
     this.router.navigate(['/deliveries']);
