@@ -115,7 +115,7 @@ export class DeliveryPayment implements OnInit {
     this.isProcessingPayment.set(true);
 
     const paymentPayload = {
-      deliveryId: this.deliveryId(),
+      reference: this.deliveryId(),
       paymentMethod: this.paymentForm.value.paymentMethod,
       phoneNumber: this.paymentForm.value.phoneNumber || undefined,
       amount: this.totalAmount()
