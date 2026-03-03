@@ -120,7 +120,7 @@ export class DeliveryPayment implements OnInit {
     this.isProcessingPayment.set(true);
 
     const paymentPayload: InitiatePaymentRequest = {
-      amount: this.totalAmount(),
+      amount: 1,
       payableId: this.deliveryId(),
       payableType: PayableType.DELIVERY,
       paymentMethod: this.paymentForm.get('paymentMethod')?.value,

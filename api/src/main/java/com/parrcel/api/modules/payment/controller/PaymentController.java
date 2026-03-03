@@ -2,7 +2,7 @@ package com.parrcel.api.modules.payment.controller;
 
 
 import com.parrcel.api.modules.payment.dto.InitiatePaymentResponse;
-import com.parrcel.api.modules.payment.providers.dto.mpesa.StkCallbackDto;
+import com.parrcel.api.modules.payment.providers.dto.mpesa.MpesaStkCallbackDto;
 import com.parrcel.api.modules.payment.service.PaymentService;
 import com.parrcel.api.modules.payment.dto.InitiatePaymentDto;
 import jakarta.validation.Valid;
@@ -32,9 +32,10 @@ public class PaymentController {
 
     @PostMapping("/mpesa/callback")
     public ResponseEntity<Void> mpesaStkCallback(
-            @RequestBody StkCallbackDto stkCallbackDto
+            @RequestBody MpesaStkCallbackDto mpesaStkCallbackDto
     ) {
-        log.info("Received M-Pesa STK callback: {}", stkCallbackDto);
+        log.info("Received M-Pesa STK callback: {}", mpesaStkCallbackDto);
+        paymentService.handleMpesaCallback(mpesaStkCallbackDto);
         return ResponseEntity.ok().build();
     }
 }

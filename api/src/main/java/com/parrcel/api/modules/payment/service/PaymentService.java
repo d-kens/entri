@@ -6,7 +6,9 @@ import com.parrcel.api.modules.payment.dto.InitiatePaymentResponse;
 import com.parrcel.api.modules.payment.enums.PaymentMethod;
 import com.parrcel.api.modules.payment.model.Payment;
 import com.parrcel.api.modules.payment.providers.PaymentProvider;
+import com.parrcel.api.modules.payment.providers.dto.ProviderCallbackResult;
 import com.parrcel.api.modules.payment.providers.dto.ProviderInitResponse;
+import com.parrcel.api.modules.payment.providers.dto.mpesa.MpesaStkCallbackDto;
 import com.parrcel.api.modules.payment.repository.PaymentRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -14,13 +16,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 public class PaymentService {
-
     private final PaymentRepository paymentRepository;
     private final Map<String, PaymentProvider> paymentProviders;
 
@@ -66,6 +68,7 @@ public class PaymentService {
         ProviderInitResponse providerInitResponse = provider.initiatePayment(initiatePaymentDto);
 
         payment.setProviderTransactionId(providerInitResponse.providerTransactionId());
+        paymentRepository.save(payment);
 
         log.info("Payment {} created, awaiting callback for providerTransactionId: {}",
                 payment.getExternalId(), providerInitResponse.providerTransactionId());
@@ -76,4 +79,37 @@ public class PaymentService {
         );
     }
 
+
+    @Transactional
+    public void handleMpesaCallback(MpesaStkCallbackDto dto) {
+        PaymentProvider mpesaProvider = paymentProviders.get(PaymentMethod.MPESA.toString());
+        ProviderCallbackResult result = mpesaProvider.parseCallback(dto);
+
+        Optional<Payment> optionalPayment = paymentRepository
+                .findByProviderTransactionId(result.providerTransactionId());
+
+        if (optionalPayment.isEmpty()) {
+            log.warn("Received callback for unknown providerTransactionId: {} — ignoring",
+                    result.providerTransactionId());
+            return;
+        }
+
+        Payment payment = optionalPayment.get();
+
+        if (payment.isTerminal()) {
+            log.warn("Payment {} is already {} — ignoring duplicate callback",
+                    payment.getExternalId(), payment.getStatus());
+            return;
+        }
+
+        if (result.success()) {
+            payment.markPaid(result.providerReference());
+            paymentRepository.save(payment);
+            log.info("Payment {} PAID — ref: {}", payment.getExternalId(), result.providerReference());
+        } else {
+            payment.markFailed(result.failureReason());
+            paymentRepository.save(payment);
+            log.warn("Payment {} FAILED — reason: {}", payment.getExternalId(), result.failureReason());
+        }
+    }
 }
