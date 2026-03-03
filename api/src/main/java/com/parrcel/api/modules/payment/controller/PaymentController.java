@@ -1,7 +1,7 @@
 package com.parrcel.api.modules.payment.controller;
 
 
-import com.parrcel.api.modules.payment.dto.PaymentResponse;
+import com.parrcel.api.modules.payment.dto.InitiatePaymentResponse;
 import com.parrcel.api.modules.payment.providers.dto.mpesa.StkCallbackDto;
 import com.parrcel.api.modules.payment.service.PaymentService;
 import com.parrcel.api.modules.payment.dto.InitiatePaymentDto;
@@ -24,7 +24,7 @@ public class PaymentController {
     private final PaymentService paymentService;
 
     @PostMapping("/initiate")
-    public PaymentResponse initiatePayment(
+    public InitiatePaymentResponse initiatePayment(
             @Valid @RequestBody InitiatePaymentDto dto
     ) {
         return paymentService.initiatePayment(dto);
