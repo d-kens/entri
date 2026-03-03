@@ -5,8 +5,10 @@ import com.parrcel.api.modules.payment.dto.InitiatePaymentDto;
 import com.parrcel.api.modules.payment.enums.PaymentMethod;
 import com.parrcel.api.modules.payment.providers.client.MpesaClient;
 import com.parrcel.api.modules.payment.providers.config.mpesa.MpesaProperties;
+import com.parrcel.api.modules.payment.providers.dto.ProviderCallbackResult;
 import com.parrcel.api.modules.payment.providers.dto.ProviderInitResponse;
 import com.parrcel.api.modules.payment.providers.dto.mpesa.MpesaAuthResponse;
+import com.parrcel.api.modules.payment.providers.dto.mpesa.MpesaStkCallbackDto;
 import com.parrcel.api.modules.payment.providers.dto.mpesa.MpesaStkRequestBody;
 import com.parrcel.api.modules.payment.providers.dto.mpesa.MpesaStkResponse;
 import com.parrcel.api.modules.payment.utils.PhoneNumberUtils;
@@ -14,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -25,7 +28,6 @@ import java.util.Base64;
 public class Mpesa implements PaymentProvider {
     private final MpesaClient mpesaClient;
     private final MpesaProperties mpesaProperties;
-
 
     private String generateTimestamp() {
         return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
@@ -75,7 +77,7 @@ public class Mpesa implements PaymentProvider {
             log.info("STK Push response: {}", response);
             log.info("STK Push response: {}", response.responseDescription());
 
-            return null;
+            return new ProviderInitResponse(response.checkoutRequestId());
         } catch (PaymentProviderException e) {
             log.error("STK Push failed: {}", e.getMessage());
             throw e;
@@ -86,4 +88,68 @@ public class Mpesa implements PaymentProvider {
     public String getProviderName() {
         return PaymentMethod.MPESA.toString();
     }
+
+    @Override
+    public ProviderCallbackResult parseCallback(Object rawCallback) {
+        MpesaStkCallbackDto dto = (MpesaStkCallbackDto) rawCallback;
+        MpesaStkCallbackDto.StkCallback stk = dto.body().stkCallback();
+
+        log.info("Parsing M-Pesa callback — CheckoutRequestID: {}, ResultCode: {}",
+                stk.checkoutRequestId(), stk.resultCode());
+
+        boolean success = stk.resultCode() == 0;
+
+        if (!success) {
+            return new ProviderCallbackResult(
+                    false,
+                    stk.checkoutRequestId(),
+                    null,
+                    null,
+                    null,
+                    null,
+                    stk.resultCode() + " - " + stk.resultDesc()
+            );
+        }
+
+        return new ProviderCallbackResult(
+                true,
+                stk.checkoutRequestId(),
+                extractMetadataValue(stk, "MpesaReceiptNumber"),
+                extractAmount(stk),
+                extractTransactionDate(stk),
+                extractPhoneNumber(stk),
+                null
+        );
+    }
+
+    private String extractMetadataValue(MpesaStkCallbackDto.StkCallback stk, String name) {
+        if (stk.callbackMetadata() == null || stk.callbackMetadata().item() == null) {
+            return null;
+        }
+
+        return stk.callbackMetadata().item().stream()
+                .filter(item -> name.equals(item.name()))
+                .map(item -> item.value() != null ? item.value().toString() : null)
+                .findFirst()
+                .orElse(null);
+    }
+
+    private BigDecimal extractAmount(MpesaStkCallbackDto.StkCallback stk) {
+        String value = extractMetadataValue(stk, "Amount");
+        return value != null ? new BigDecimal(value) : null;
+    }
+
+    private LocalDateTime extractTransactionDate(MpesaStkCallbackDto.StkCallback stk) {
+        String value = extractMetadataValue(stk, "TransactionDate");
+        if (value == null) return null;
+        // Safaricom format: yyyyMMddHHmmss e.g. 20191219102115
+        return LocalDateTime.parse(value, DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+    }
+
+    private String extractPhoneNumber(MpesaStkCallbackDto.StkCallback stk) {
+        String value = extractMetadataValue(stk, "PhoneNumber");
+        // Safaricom returns as long e.g. 254708374149
+        return value != null ? "+" + value : null;
+    }
+
 }

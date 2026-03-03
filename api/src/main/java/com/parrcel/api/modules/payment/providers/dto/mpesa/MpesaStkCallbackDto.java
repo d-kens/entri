@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
-public record StkCallbackDto(
+public record MpesaStkCallbackDto(
         @JsonProperty("Body") Body body
 ) {
     public record Body(
