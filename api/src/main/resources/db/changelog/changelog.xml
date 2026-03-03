@@ -15,4 +15,5 @@
     <include file="setup/202602090642-add_zone_type_to_zones.xml" relativeToChangelogFile="true" />
     <include file="setup/202602110939-create_deliveries_table.xml" relativeToChangelogFile="true" />
     <include file="setup/201603021149-create_payments_table.xml" relativeToChangelogFile="true" />
+    <include file="setup/202603030847-add_provider_transaction_id_to_payments.xml" relativeToChangelogFile="true" />
 </databaseChangeLog>

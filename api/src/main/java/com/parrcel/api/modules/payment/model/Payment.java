@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
+@Setter
 @Entity
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -52,6 +53,9 @@ public class Payment {
 
     @Column(name = "provider_reference", length = 100)
     private String providerReference;
+
+    @Column(name = "provider_transaction_id", length = 100)
+    private String providerTransactionId;
 
     @Column(name = "paid_by", length = 100)
     private String paidBy;

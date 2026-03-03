@@ -2,10 +2,10 @@ package com.parrcel.api.modules.payment.providers;
 
 import com.parrcel.api.common.exception.PaymentProviderException;
 import com.parrcel.api.modules.payment.dto.InitiatePaymentDto;
-import com.parrcel.api.modules.payment.dto.PaymentResponse;
 import com.parrcel.api.modules.payment.enums.PaymentMethod;
 import com.parrcel.api.modules.payment.providers.client.MpesaClient;
 import com.parrcel.api.modules.payment.providers.config.mpesa.MpesaProperties;
+import com.parrcel.api.modules.payment.providers.dto.ProviderInitResponse;
 import com.parrcel.api.modules.payment.providers.dto.mpesa.MpesaAuthResponse;
 import com.parrcel.api.modules.payment.providers.dto.mpesa.MpesaStkRequestBody;
 import com.parrcel.api.modules.payment.providers.dto.mpesa.MpesaStkResponse;
@@ -49,7 +49,7 @@ public class Mpesa implements PaymentProvider {
     }
 
     @Override
-    public PaymentResponse initiatePayment(InitiatePaymentDto dto) {
+    public ProviderInitResponse initiatePayment(InitiatePaymentDto dto) {
         try {
             String token = "Bearer " + authenticate();
             String timestamp = generateTimestamp();
@@ -66,7 +66,7 @@ public class Mpesa implements PaymentProvider {
                     mpesaProperties.shortcode(),
                     normalizedPhone,
                     mpesaProperties.callbackUrl(),
-                    dto.paymentReference(),
+                    dto.payableId(),
                     dto.paymentDescription()
             );
 

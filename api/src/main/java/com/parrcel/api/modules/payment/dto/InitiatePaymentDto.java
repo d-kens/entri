@@ -1,5 +1,6 @@
 package com.parrcel.api.modules.payment.dto;
 
+import com.parrcel.api.modules.payment.enums.PayableType;
 import com.parrcel.api.modules.payment.validation.ValidInitiatePaymentDto;
 import com.parrcel.api.modules.payment.validation.ValidPaymentMethod;
 import jakarta.validation.constraints.DecimalMin;
@@ -10,13 +11,6 @@ import java.math.BigDecimal;
 
 @ValidInitiatePaymentDto
 public record InitiatePaymentDto(
-        @NotBlank(message = "referenceId is required")
-        String paymentReference,
-
-        @ValidPaymentMethod
-        @NotBlank(message = "paymentMethod is required")
-        String paymentMethod,
-
         String phoneNumber,
 
         @NotNull(message = "amount is required")
@@ -24,5 +18,14 @@ public record InitiatePaymentDto(
         BigDecimal amount,
 
         @NotBlank(message = "paymentDescription is required")
-        String paymentDescription
+        String paymentDescription,
+
+        PayableType payableType,
+
+        @NotBlank(message = "payableId is required")
+        String payableId,
+
+        @ValidPaymentMethod
+        @NotBlank(message = "paymentMethod is required")
+        String paymentMethod
 ) {}

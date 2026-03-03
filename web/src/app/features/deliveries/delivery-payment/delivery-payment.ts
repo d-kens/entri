@@ -1,19 +1,20 @@
-import { Component, OnInit, signal, computed, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatIconModule } from '@angular/material/icon';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatRadioModule } from '@angular/material/radio';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { DeliveryService } from '@features/deliveries/services/delivery.service';
-import { DeliveryResponse } from '@features/deliveries/models/delivery.model';
-import { SnackbarService } from '@core/services/snackbar-service';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
+import {Component, computed, inject, OnInit, signal} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {ActivatedRoute, Router} from '@angular/router';
+import {MatButtonModule} from '@angular/material/button';
+import {MatCardModule} from '@angular/material/card';
+import {MatIconModule} from '@angular/material/icon';
+import {MatDividerModule} from '@angular/material/divider';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatRadioModule} from '@angular/material/radio';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {DeliveryService} from '@features/deliveries/services/delivery.service';
+import {DeliveryResponse} from '@features/deliveries/models/delivery.model';
+import {SnackbarService} from '@core/services/snackbar-service';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
 import {PaymentService} from '@features/payments/services/payment.service';
+import {InitiatePaymentRequest, PayableType} from '@features/payments/models/payment.model';
 
 type PaymentMethod = 'MPESA' | 'CARD' | 'WALLET';
 
@@ -118,19 +119,20 @@ export class DeliveryPayment implements OnInit {
 
     this.isProcessingPayment.set(true);
 
-    const paymentPayload = {
+    const paymentPayload: InitiatePaymentRequest = {
       amount: this.totalAmount(),
-      paymentReference: this.deliveryId(),
-      paymentDescription: "Oro Delivery Fee Payment",
-      paymentMethod: this.paymentForm.value.paymentMethod,
-      phoneNumber: this.paymentForm.value.phoneNumber || undefined,
+      payableId: this.deliveryId(),
+      payableType: PayableType.DELIVERY,
+      paymentMethod: this.paymentForm.get('paymentMethod')?.value,
+      phoneNumber: this.paymentForm.get('phoneNumber')?.value || undefined,
+      paymentDescription: 'Oro Delivery Fee Payment'
     };
 
     this.paymentService.initiatePayment(paymentPayload).subscribe({
       next: (response) => {
         if (this.paymentForm.value.paymentMethod === 'MPESA') {
           this.snackbarService.showSuccess('STK push sent! Please enter your M-Pesa PIN');
-          this.subscribeToPaymentStatus();
+          this.subscribeToPaymentStatus(response.paymentId);
         } else {
           this.isProcessingPayment.set(false);
           this.snackbarService.showSuccess('Payment successful!');
@@ -147,7 +149,7 @@ export class DeliveryPayment implements OnInit {
   }
 
   // TODO:
-  subscribeToPaymentStatus() {}
+  subscribeToPaymentStatus(paymentId: string) {}
 
   cancelPayment() {
     this.router.navigate(['/deliveries']);

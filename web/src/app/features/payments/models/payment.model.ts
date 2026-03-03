@@ -1,3 +1,7 @@
+export enum PayableType {
+  DELIVERY = 'DELIVERY'
+}
+
 export enum PaymentStatus {
   PENDING = 'PENDING',
   PAID = 'PAID',
@@ -8,7 +12,18 @@ export enum PaymentStatus {
 export type InitiatePaymentRequest = {
   amount: number,
   phoneNumber?: string,
-  paymentMethod: string,
-  paymentReference: string,
   paymentDescription: string,
+  payableType: PayableType,
+  payableId: string,
+  paymentMethod: string
 }
+
+export type InitiatePaymentResponse = {
+  paymentId: string,
+  payableId: string
+}
+
+
+
+
+
