@@ -3,6 +3,8 @@ package com.parrcel.api.modules.payment.service;
 import com.parrcel.api.modules.payment.dto.InitiatePaymentDto;
 import com.parrcel.api.modules.payment.dto.InitiatePaymentResponse;
 import com.parrcel.api.modules.payment.enums.PaymentMethod;
+import com.parrcel.api.modules.payment.events.PaymentFailedEvent;
+import com.parrcel.api.modules.payment.events.PaymentSuccessEvent;
 import com.parrcel.api.modules.payment.model.Payment;
 import com.parrcel.api.modules.payment.providers.Mpesa;
 import com.parrcel.api.modules.payment.providers.dto.mpesa.MpesaParseCallbackResult;
@@ -12,6 +14,7 @@ import com.parrcel.api.modules.payment.repository.PaymentRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -22,6 +25,7 @@ import java.util.Optional;
 public class PaymentService {
     private final Mpesa mpesa;
     private final PaymentRepository paymentRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
     public InitiatePaymentResponse initiatePayment(InitiatePaymentDto initiatePaymentDto) {
@@ -75,11 +79,28 @@ public class PaymentService {
         if (result.success()) {
             payment.markPaid(result.providerReference());
             paymentRepository.save(payment);
-            log.info("Payment {} PAID — ref: {}", payment.getExternalId(), result.providerReference());
+            log.info("Payment {} SUCCESSFULL — ref: {}", payment.getExternalId(), result.providerReference());
+
+            eventPublisher.publishEvent(new PaymentSuccessEvent(
+                    payment.getExternalId(),
+                    payment.getPaymentType(),
+                    payment.getReferenceId(),
+                    result.amount(),
+                    result.transactionDate()
+            ));
+
+
         } else {
             payment.markFailed(result.failureReason());
             paymentRepository.save(payment);
             log.warn("Payment {} FAILED — reason: {}", payment.getExternalId(), result.failureReason());
+
+            eventPublisher.publishEvent(new PaymentFailedEvent(
+                    payment.getExternalId(),
+                    payment.getPaymentType(),
+                    payment.getReferenceId(),
+                    result.failureReason()
+            ));
         }
     }
 }
