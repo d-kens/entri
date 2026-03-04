@@ -14,7 +14,7 @@ import {SnackbarService} from '@core/services/snackbar-service';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {PaymentService} from '@features/payments/services/payment.service';
-import {InitiatePaymentRequest, PayableType} from '@features/payments/models/payment.model';
+import {InitiatePaymentRequest, PaymentType} from '@features/payments/models/payment.model';
 
 type PaymentMethod = 'MPESA' | 'CARD' | 'WALLET';
 
@@ -121,8 +121,8 @@ export class DeliveryPayment implements OnInit {
 
     const paymentPayload: InitiatePaymentRequest = {
       amount: 1,
-      payableId: this.deliveryId(),
-      payableType: PayableType.DELIVERY,
+      referenceId: this.deliveryId(),
+      paymentType: PaymentType.DELIVERY_FEE,
       paymentMethod: this.paymentForm.get('paymentMethod')?.value,
       phoneNumber: this.paymentForm.get('phoneNumber')?.value || undefined,
       paymentDescription: 'Oro Delivery Fee Payment'

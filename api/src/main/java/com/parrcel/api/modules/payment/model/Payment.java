@@ -1,7 +1,8 @@
 package com.parrcel.api.modules.payment.model;
 
 
-import com.parrcel.api.modules.payment.enums.PayableType;
+import com.parrcel.api.modules.payment.enums.PaymentDirection;
+import com.parrcel.api.modules.payment.enums.PaymentType;
 import com.parrcel.api.modules.payment.enums.PaymentMethod;
 import com.parrcel.api.modules.payment.enums.PaymentStatus;
 import jakarta.persistence.*;
@@ -30,11 +31,15 @@ public class Payment {
     private String externalId = UUID.randomUUID().toString();
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "payable_type", nullable = false, length = 50)
-    private PayableType payableType;
+    @Column(name = "payment_direction", nullable = false, length = 20)
+    private PaymentDirection paymentDirection;
 
-    @Column(name = "payable_id", nullable = false, length = 36)
-    private String payableId;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "payment_type", nullable = false, length = 50)
+    private PaymentType paymentType;
+
+    @Column(name = "reference_id", nullable = false, length = 36)
+    private String referenceId;
 
     @Column(name = "amount", nullable = false, precision = 10, scale = 2)
     private BigDecimal amount;

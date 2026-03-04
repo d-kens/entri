@@ -16,11 +16,15 @@
                 <constraints nullable="false" unique="true"/>
             </column>
 
-            <column name="payable_type" type="VARCHAR(50)">
+            <column name="payment_direction" type="varchar(20)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="payment_type" type="VARCHAR(50)">
                 <constraints nullable="false"/>
             </column>
 
-            <column name="payable_id" type="VARCHAR(36)">
+            <column name="referenceId" type="VARCHAR(36)">
                 <constraints nullable="false"/>
             </column>
 
@@ -35,6 +39,8 @@
             </column>
 
             <column name="method" type="VARCHAR(50)"/>
+
+            <column name="provider_transaction_id" type="VARCHAR(100)"/>
 
             <column name="provider_reference" type="VARCHAR(100)"/>
 
