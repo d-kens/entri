@@ -62,7 +62,8 @@
             <th class="text-left px-4 py-3 text-xs font-semibold text-foreground/70 uppercase tracking-wide">Route</th>
             <th class="text-left px-4 py-3 text-xs font-semibold text-foreground/70 uppercase tracking-wide">Package</th>
             <th class="text-right px-4 py-3 text-xs font-semibold text-foreground/70 uppercase tracking-wide">Fee</th>
-            <th class="text-left px-4 py-3 text-xs font-semibold text-foreground/70 uppercase tracking-wide">Status</th>
+            <th class="text-left px-4 py-3 text-xs font-semibold text-foreground/70 uppercase tracking-wide">Delivery Status</th>
+            <th class="text-left px-4 py-3 text-xs font-semibold text-foreground/70 uppercase tracking-wide">Payment Status</th>
             <th class="w-20 text-center px-4 py-3 text-xs font-semibold text-foreground/70 uppercase tracking-wide">Actions</th>
           </tr>
           </thead>
@@ -115,15 +116,22 @@
                   </span>
                 </td>
                 <td class="px-4 py-4">
-                  <div class="flex items-center justify-center gap-2">
-                    @if (delivery.deliveryStatus === 'PENDING') {
+                  <span
+                    class="status-chip"
+                    [ngClass]="getPaymentStatusClass(delivery.paymentStatus)"
+                  >
+                    {{ getPaymentStatusLabel(delivery.paymentStatus) }}
+                  </span>
+                </td>
+                <td class="px-4 py-4">
+                  <div class="flex items-center justify-center">
+                    @if (delivery.paymentStatus !== 'PAID') {
                       <button
-                        mat-icon-button
-                        class="!w-8 !h-8 !flex !items-center !justify-center"
-                        (click)="editDelivery($event, delivery)"
-                        matTooltip="Edit delivery"
+                        mat-stroked-button
+                        class="!h-7 !text-xs !px-3 !rounded-md !border-primary !text-primary"
+                        (click)="payForDelivery($event, delivery)"
                       >
-                        <mat-icon class="!w-5 !h-5 !text-base text-foreground/60 hover:text-primary">edit</mat-icon>
+                        Pay
                       </button>
                     }
                   </div>

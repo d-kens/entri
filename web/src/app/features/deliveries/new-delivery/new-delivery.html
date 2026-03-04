@@ -172,7 +172,7 @@
           matInput
           formControlName="packageDescription"
           rows="3"
-          placeholder="Any special handling instructions..."
+          placeholder="Describe your package in terms of what it is, color etc..."
         ></textarea>
         @if (deliveryForm.get('packageDescription')?.invalid && deliveryForm.get('packageDescription')?.touched) {
           <mat-error>{{ getErrorMessage('packageDescription') }}</mat-error>

@@ -28,7 +28,7 @@ public class DeliveryController {
 
     @GetMapping
     public ResponseEntity<PageResponse<DeliveryResponseDto>> getDeliveries(
-            @AuthenticationPrincipal Long currentUserId,  // Long, not User
+            @AuthenticationPrincipal Long currentUserId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
             @RequestParam(required = false) String status,
