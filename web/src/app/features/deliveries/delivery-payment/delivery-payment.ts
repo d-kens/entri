@@ -16,7 +16,6 @@ import {MatInputModule} from '@angular/material/input';
 import {PaymentService} from '@features/payments/services/payment.service';
 import {InitiatePaymentRequest, PaymentType} from '@features/payments/models/payment.model';
 
-type PaymentMethod = 'MPESA' | 'CARD' | 'WALLET';
 
 @Component({
   selector: 'app-delivery-payment',

@@ -113,9 +113,9 @@ export class DeliveriesList implements OnInit {
     this.router.navigate(['/deliveries', delivery.externalId]);
   }
 
-  editDelivery(event: Event, delivery: DeliveryResponse) {
+  payForDelivery(event: Event, delivery: DeliveryResponse) {
     event.stopPropagation();
-    this.router.navigate(['/deliveries', delivery.externalId, 'edit']);
+    this.router.navigate(['/deliveries', delivery.externalId, 'payment']);
   }
 
   createNewDelivery() {
@@ -150,9 +150,17 @@ export class DeliveriesList implements OnInit {
     const statusMap: Record<PaymentStatus, string> = {
       [PaymentStatus.PENDING]: 'payment-pending',
       [PaymentStatus.PAID]: 'payment-paid',
-      [PaymentStatus.FAILED]: 'payment-failed',
-      [PaymentStatus.REFUNDED]: 'payment-refunded'
+      [PaymentStatus.FAILED]: 'payment-failed'
     };
     return statusMap[status] || '';
+  }
+
+  getPaymentStatusLabel(status: PaymentStatus): string {
+    const statusMap: Record<PaymentStatus, string> = {
+      [PaymentStatus.PENDING]: 'Pending',
+      [PaymentStatus.FAILED]: 'Failed',
+      [PaymentStatus.PAID]: 'Paid'
+    };
+    return statusMap[status] || status;
   }
 }

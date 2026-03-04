@@ -2,6 +2,7 @@ package com.parrcel.api.modules.payment.service;
 
 import com.parrcel.api.modules.payment.dto.InitiatePaymentDto;
 import com.parrcel.api.modules.payment.dto.InitiatePaymentResponse;
+import com.parrcel.api.modules.payment.enums.PaymentDirection;
 import com.parrcel.api.modules.payment.enums.PaymentMethod;
 import com.parrcel.api.modules.payment.events.PaymentFailedEvent;
 import com.parrcel.api.modules.payment.events.PaymentSuccessEvent;
@@ -36,6 +37,7 @@ public class PaymentService {
                 .description(initiatePaymentDto.paymentDescription())
                 .method(PaymentMethod.valueOf(initiatePaymentDto.paymentMethod()))
                 .phoneNumber(initiatePaymentDto.phoneNumber())
+                .paymentDirection(PaymentDirection.INBOUND)
                 .build();
 
         payment = paymentRepository.save(payment);

@@ -1,6 +1,7 @@
 package com.parrcel.api.modules.deliveries.dto;
 
 import com.parrcel.api.modules.deliveries.enums.DeliveryStatus;
+import com.parrcel.api.modules.payment.enums.PaymentStatus;
 
 import java.math.BigDecimal;
 
@@ -22,5 +23,6 @@ public record DeliveryResponseDto(
         BigDecimal packagePrice,
         String paymentReference,
         String packageDescription,
-        DeliveryStatus deliveryStatus
+        DeliveryStatus deliveryStatus,
+        PaymentStatus paymentStatus
 ) {}
