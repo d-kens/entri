@@ -68,7 +68,7 @@ public class Mpesa implements PaymentProvider {
                     mpesaProperties.shortcode(),
                     normalizedPhone,
                     mpesaProperties.callbackUrl(),
-                    dto.payableId(),
+                    dto.paymentDescription(),
                     dto.paymentDescription()
             );
 
