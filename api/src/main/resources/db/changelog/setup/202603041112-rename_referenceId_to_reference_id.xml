@@ -1,0 +1,25 @@
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd">
+
+    <changeSet id="rename-referenceId-to-reference_id" author="d.onyango">
+
+        <renameColumn
+                tableName="payments"
+                oldColumnName="referenceId"
+                newColumnName="reference_id"
+                columnDataType="VARCHAR(36)"/>
+
+        <rollback>
+            <renameColumn
+                    tableName="payments"
+                    oldColumnName="reference_id"
+                    newColumnName="referenceId"
+                    columnDataType="VARCHAR(36)"/>
+        </rollback>
+
+    </changeSet>
+
+</databaseChangeLog>
