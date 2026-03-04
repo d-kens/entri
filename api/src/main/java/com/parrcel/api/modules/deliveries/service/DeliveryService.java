@@ -100,15 +100,35 @@ public class DeliveryService {
         return delivery;
     }
 
+    @Transactional
+    public void markDeliveryAsPaid(String deliveryExternalId) {
+        Delivery delivery = deliveryRepository.findByExternalId(deliveryExternalId)
+                .orElseThrow(() -> new NotFoundException("Delivery not found: " + deliveryExternalId));
+
+        delivery.markAsPaid();
+        deliveryRepository.save(delivery);
+
+        log.info("Delivery {} marked as PAID", deliveryExternalId);
+    }
+
+    @Transactional
+    public void markDeliveryPaymentFailed(String deliveryExternalId) {
+        Delivery delivery = deliveryRepository.findByExternalId(deliveryExternalId)
+                .orElseThrow(() -> new NotFoundException("Delivery not found: " + deliveryExternalId));
+
+        delivery.markPaymentFailed();
+        deliveryRepository.save(delivery);
+
+        log.warn("Delivery {} payment marked as FAILED", deliveryExternalId);
+    }
+
     private Specification<Delivery> buildSpecification(User currentUser, String status, String search) {
         Specification<Delivery> spec = Specification.allOf();
 
-        // Role-based filtering
         if (!currentUser.getRole().equals(Role.ADMIN)) {
             spec = spec.and(DeliverySpecification.hasUser(currentUser.getId()));
         }
 
-        // Status filter
         if (status != null && !status.isEmpty()) {
             try {
                 DeliveryStatus deliveryStatus = DeliveryStatus.valueOf(status.toUpperCase());
@@ -118,7 +138,6 @@ public class DeliveryService {
             }
         }
 
-        // Search filter
         if (search != null && !search.isEmpty()) {
             spec = spec.and(DeliverySpecification.search(search));
         }
