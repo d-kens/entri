@@ -2,10 +2,9 @@ package com.parrcel.api.modules.payment.providers;
 
 import com.parrcel.api.common.exception.PaymentProviderException;
 import com.parrcel.api.modules.payment.dto.InitiatePaymentDto;
-import com.parrcel.api.modules.payment.enums.PaymentMethod;
 import com.parrcel.api.modules.payment.providers.client.MpesaClient;
 import com.parrcel.api.modules.payment.providers.config.mpesa.MpesaProperties;
-import com.parrcel.api.modules.payment.providers.dto.ProviderCallbackResult;
+import com.parrcel.api.modules.payment.providers.dto.mpesa.MpesaParseCallbackResult;
 import com.parrcel.api.modules.payment.providers.dto.ProviderInitResponse;
 import com.parrcel.api.modules.payment.providers.dto.mpesa.MpesaAuthResponse;
 import com.parrcel.api.modules.payment.providers.dto.mpesa.MpesaStkCallbackDto;
@@ -14,7 +13,7 @@ import com.parrcel.api.modules.payment.providers.dto.mpesa.MpesaStkResponse;
 import com.parrcel.api.modules.payment.utils.PhoneNumberUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
@@ -23,9 +22,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 
 @Slf4j
-@Component
+@Service
 @RequiredArgsConstructor
-public class Mpesa implements PaymentProvider {
+public class Mpesa {
     private final MpesaClient mpesaClient;
     private final MpesaProperties mpesaProperties;
 
@@ -50,7 +49,6 @@ public class Mpesa implements PaymentProvider {
         return response.accessToken();
     }
 
-    @Override
     public ProviderInitResponse initiatePayment(InitiatePaymentDto dto) {
         try {
             String token = "Bearer " + authenticate();
@@ -84,14 +82,7 @@ public class Mpesa implements PaymentProvider {
         }
     }
 
-    @Override
-    public String getProviderName() {
-        return PaymentMethod.MPESA.toString();
-    }
-
-    @Override
-    public ProviderCallbackResult parseCallback(Object rawCallback) {
-        MpesaStkCallbackDto dto = (MpesaStkCallbackDto) rawCallback;
+    public MpesaParseCallbackResult parseCallback(MpesaStkCallbackDto dto) {
         MpesaStkCallbackDto.StkCallback stk = dto.body().stkCallback();
 
         log.info("Parsing M-Pesa callback — CheckoutRequestID: {}, ResultCode: {}",
@@ -100,7 +91,7 @@ public class Mpesa implements PaymentProvider {
         boolean success = stk.resultCode() == 0;
 
         if (!success) {
-            return new ProviderCallbackResult(
+            return new MpesaParseCallbackResult(
                     false,
                     stk.checkoutRequestId(),
                     null,
@@ -111,7 +102,7 @@ public class Mpesa implements PaymentProvider {
             );
         }
 
-        return new ProviderCallbackResult(
+        return new MpesaParseCallbackResult(
                 true,
                 stk.checkoutRequestId(),
                 extractMetadataValue(stk, "MpesaReceiptNumber"),
@@ -151,5 +142,4 @@ public class Mpesa implements PaymentProvider {
         // Safaricom returns as long e.g. 254708374149
         return value != null ? "+" + value : null;
     }
-
 }

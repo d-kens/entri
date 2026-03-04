@@ -1,5 +1,7 @@
-export enum PayableType {
-  DELIVERY = 'DELIVERY'
+export enum PaymentType {
+  WITHDRAWAL = '  WITHDRAWAL',
+  DELIVERY_FEE = 'DELIVERY_FEE',
+  PAYMENT_ON_DELIVERY_COLLECTION = 'PAYMENT_ON_DELIVERY_COLLECTION'
 }
 
 export enum PaymentStatus {
@@ -13,14 +15,14 @@ export type InitiatePaymentRequest = {
   amount: number,
   phoneNumber?: string,
   paymentDescription: string,
-  payableType: PayableType,
-  payableId: string,
+  paymentType: PaymentType,
+  referenceId: string,
   paymentMethod: string
 }
 
 export type InitiatePaymentResponse = {
   paymentId: string,
-  payableId: string
+  referenceId: string
 }
 
 

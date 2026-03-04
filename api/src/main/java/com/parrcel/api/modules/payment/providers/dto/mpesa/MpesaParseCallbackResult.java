@@ -1,9 +1,9 @@
-package com.parrcel.api.modules.payment.providers.dto;
+package com.parrcel.api.modules.payment.providers.dto.mpesa;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public record ProviderCallbackResult(
+public record MpesaParseCallbackResult(
         boolean success,
         String providerTransactionId,
         String providerReference,

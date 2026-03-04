@@ -1,62 +1,33 @@
 package com.parrcel.api.modules.payment.service;
 
-import com.parrcel.api.common.exception.NotFoundException;
 import com.parrcel.api.modules.payment.dto.InitiatePaymentDto;
 import com.parrcel.api.modules.payment.dto.InitiatePaymentResponse;
 import com.parrcel.api.modules.payment.enums.PaymentMethod;
 import com.parrcel.api.modules.payment.model.Payment;
-import com.parrcel.api.modules.payment.providers.PaymentProvider;
-import com.parrcel.api.modules.payment.providers.dto.ProviderCallbackResult;
+import com.parrcel.api.modules.payment.providers.Mpesa;
+import com.parrcel.api.modules.payment.providers.dto.mpesa.MpesaParseCallbackResult;
 import com.parrcel.api.modules.payment.providers.dto.ProviderInitResponse;
 import com.parrcel.api.modules.payment.providers.dto.mpesa.MpesaStkCallbackDto;
 import com.parrcel.api.modules.payment.repository.PaymentRepository;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class PaymentService {
+    private final Mpesa mpesa;
     private final PaymentRepository paymentRepository;
-    private final Map<String, PaymentProvider> paymentProviders;
-
-    public PaymentService(
-            List<PaymentProvider> providers,
-            PaymentRepository paymentRepository
-    ) {
-        this.paymentProviders = providers.stream()
-                .collect(Collectors.toMap(
-                        PaymentProvider::getProviderName,
-                        Function.identity()
-                ));
-
-        this.paymentRepository = paymentRepository;
-
-        log.info("Registered payment providers: {}", paymentProviders.keySet());
-    }
-
 
     @Transactional
     public InitiatePaymentResponse initiatePayment(InitiatePaymentDto initiatePaymentDto) {
-        log.info("Routing payment for method: {}", initiatePaymentDto.paymentMethod());
-
-        PaymentProvider provider = paymentProviders.get(initiatePaymentDto.paymentMethod());
-
-        if (provider == null) {
-            throw new NotFoundException(
-                    "No provider found for payment method: " + initiatePaymentDto.paymentMethod()
-            );
-        }
-
         Payment payment = Payment.builder()
-                .payableType(initiatePaymentDto.payableType())
-                .payableId(initiatePaymentDto.payableId())
+                .paymentType(initiatePaymentDto.paymentType())
+                .referenceId(initiatePaymentDto.referenceId())
                 .amount(initiatePaymentDto.amount())
                 .description(initiatePaymentDto.paymentDescription())
                 .method(PaymentMethod.valueOf(initiatePaymentDto.paymentMethod()))
@@ -65,7 +36,7 @@ public class PaymentService {
 
         payment = paymentRepository.save(payment);
 
-        ProviderInitResponse providerInitResponse = provider.initiatePayment(initiatePaymentDto);
+        ProviderInitResponse providerInitResponse = mpesa.initiatePayment(initiatePaymentDto);
 
         payment.setProviderTransactionId(providerInitResponse.providerTransactionId());
         paymentRepository.save(payment);
@@ -75,15 +46,14 @@ public class PaymentService {
 
         return new InitiatePaymentResponse(
                 payment.getExternalId(),
-                payment.getPayableId()
+                payment.getReferenceId()
         );
     }
 
 
     @Transactional
     public void handleMpesaCallback(MpesaStkCallbackDto dto) {
-        PaymentProvider mpesaProvider = paymentProviders.get(PaymentMethod.MPESA.toString());
-        ProviderCallbackResult result = mpesaProvider.parseCallback(dto);
+        MpesaParseCallbackResult result = mpesa.parseCallback(dto);
 
         Optional<Payment> optionalPayment = paymentRepository
                 .findByProviderTransactionId(result.providerTransactionId());

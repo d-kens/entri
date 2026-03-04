@@ -1,6 +1,6 @@
 package com.parrcel.api.modules.payment.dto;
 
-import com.parrcel.api.modules.payment.enums.PayableType;
+import com.parrcel.api.modules.payment.enums.PaymentType;
 import com.parrcel.api.modules.payment.validation.ValidInitiatePaymentDto;
 import com.parrcel.api.modules.payment.validation.ValidPaymentMethod;
 import jakarta.validation.constraints.DecimalMin;
@@ -20,10 +20,10 @@ public record InitiatePaymentDto(
         @NotBlank(message = "paymentDescription is required")
         String paymentDescription,
 
-        PayableType payableType,
+        PaymentType paymentType,
 
-        @NotBlank(message = "payableId is required")
-        String payableId,
+        @NotBlank(message = "referenceId is required")
+        String referenceId,
 
         @ValidPaymentMethod
         @NotBlank(message = "paymentMethod is required")
