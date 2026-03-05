@@ -19,7 +19,7 @@ import java.util.UUID;
 @Entity
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Table(name = "payments")
 public class Payment {
     @Id
