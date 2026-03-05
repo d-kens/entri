@@ -33,7 +33,7 @@ export class PaymentService {
         observer.next(data);
 
         // Complete if payment is done (success or failure)
-        if (data.status === PaymentStatus.PAID || data.status === PaymentStatus.FAILED) {
+        if (data.status === PaymentStatus.SUCCESS || data.status === PaymentStatus.FAILED) {
           eventSource.close();
           observer.complete();
         }

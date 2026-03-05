@@ -119,7 +119,7 @@ public class PaymentService {
 
 
     public SseEmitter streamPaymentEvents(String paymentId) {
-        SseEmitter emitter = new SseEmitter(120_000L);
+        SseEmitter emitter = new SseEmitter(240_000L);
 
         sseEmitters.computeIfAbsent(paymentId, k -> new CopyOnWriteArrayList<>()).add(emitter);
 
@@ -164,7 +164,7 @@ public class PaymentService {
                 log.debug("Successfully sent event to client for payment: {}", paymentId);
 
                 // Close emitter after sending terminal event
-                if (event.status() == PaymentStatus.PAID || event.status() == PaymentStatus.FAILED) {
+                if (event.status() == PaymentStatus.SUCCESS || event.status() == PaymentStatus.FAILED) {
                     emitter.complete();
                 }
             } catch (IOException e) {
@@ -173,7 +173,7 @@ public class PaymentService {
             }
         }
 
-        if (event.status() == PaymentStatus.PAID || event.status() == PaymentStatus.FAILED) {
+        if (event.status() == PaymentStatus.SUCCESS || event.status() == PaymentStatus.FAILED) {
             sseEmitters.remove(paymentId);
             log.info("Cleaned up emitters for completed payment: {}", paymentId);
         }

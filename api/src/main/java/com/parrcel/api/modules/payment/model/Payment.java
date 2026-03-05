@@ -90,7 +90,7 @@ public class Payment {
 
 
     public void markPaid(String providerReference) {
-        this.status = PaymentStatus.PAID;
+        this.status = PaymentStatus.SUCCESS;
         this.providerReference = providerReference;
         this.paidAt = LocalDateTime.now();
     }
@@ -102,6 +102,6 @@ public class Payment {
     }
 
     public boolean isTerminal() {
-        return status == PaymentStatus.PAID || status == PaymentStatus.FAILED;
+        return status == PaymentStatus.SUCCESS || status == PaymentStatus.FAILED;
     }
 }
