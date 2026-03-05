@@ -8,6 +8,8 @@ import com.parrcel.api.modules.payment.events.PaymentSuccessEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
@@ -17,6 +19,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 public class DeliveryPaymentListener {
     private final DeliveryService deliveryService;
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void onPaymentCompleted(PaymentSuccessEvent event) {
         if (event.paymentType() != PaymentType.DELIVERY_FEE) return;
@@ -25,6 +28,7 @@ public class DeliveryPaymentListener {
         deliveryService.markDeliveryAsPaid(event.referenceId());
     }
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void onPaymentFailed(PaymentFailedEvent event) {
         if (event.paymentType() != PaymentType.DELIVERY_FEE) return;

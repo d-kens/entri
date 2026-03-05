@@ -128,7 +128,6 @@ public class AuthService {
 
             return "If email exists, a reset link has been sent";
         } catch (NotFoundException exception) {
-            System.out.println("User not found");
             return "If email exists, a reset link has been sent";
         }
     }

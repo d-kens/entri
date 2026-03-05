@@ -57,7 +57,6 @@ public class TokenService {
         );
 
         if(!token.isValid()) {
-            System.out.println("Password Reset Token is invalid");
             throw new InvalidTokenException("Invalid token");
         }
 
