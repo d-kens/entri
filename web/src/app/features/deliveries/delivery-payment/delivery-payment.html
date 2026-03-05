@@ -14,85 +14,124 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
       <!-- Payment Form (Left/Top) -->
+      <!-- Payment Form (Left/Top) -->
       <div class="lg:col-span-3">
-        <form [formGroup]="paymentForm" (ngSubmit)="processPayment()">
-          <!-- Payment Method Selection -->
-          <div class="mb-8">
-            <h2 class="text-base font-semibold text-foreground mb-4">Payment Method</h2>
-
-            <div class="space-y-3">
-              @for (method of paymentMethods; track method.value) {
-                <label
-                  class="payment-method-card"
-                  [class.selected]="paymentForm.get('paymentMethod')?.value === method.value"
-                >
-                  <input
-                    type="radio"
-                    formControlName="paymentMethod"
-                    [value]="method.value"
-                    class="hidden"
-                  >
-                  <div class="flex items-center gap-3">
-                    <div class="payment-icon">
-                      <mat-icon class="!text-xl">{{ method.icon }}</mat-icon>
-                    </div>
-                    <div class="flex-1">
-                      <p class="text-sm font-semibold text-foreground">{{ method.label }}</p>
-                      <p class="text-xs text-foreground/60">{{ method.description }}</p>
-                    </div>
-                    <mat-icon class="check-icon !text-xl">
-                      {{ paymentForm.get('paymentMethod')?.value === method.value ? 'radio_button_checked' : 'radio_button_unchecked' }}
-                    </mat-icon>
-                  </div>
-                </label>
-              }
-            </div>
-          </div>
-
-          <!-- M-Pesa Phone Number -->
-          @if (paymentForm.get('paymentMethod')?.value === 'MPESA') {
+        @if (!paymentInitiated()) {
+          <!-- Show form when payment not initiated -->
+          <form [formGroup]="paymentForm" (ngSubmit)="processPayment()">
+            <!-- Payment Method Selection -->
             <div class="mb-8">
-              <h2 class="text-base font-semibold text-foreground mb-4">Phone Number</h2>
-              <mat-form-field appearance="outline" class="w-full compact-field">
-                <mat-label>M-Pesa Number</mat-label>
-                <input matInput formControlName="phoneNumber" placeholder="0712345678">
-                <mat-icon matPrefix>phone</mat-icon>
-                @if (paymentForm.get('phoneNumber')?.invalid && paymentForm.get('phoneNumber')?.touched) {
-                  <mat-error>{{ getErrorMessage('phoneNumber') }}</mat-error>
-                }
-                <mat-hint>STK push will be sent to this number</mat-hint>
-              </mat-form-field>
-            </div>
-          }
+              <h2 class="text-base font-semibold text-foreground mb-4">Payment Method</h2>
 
-          <!-- Action Buttons -->
-          <div class="flex flex-col sm:flex-row gap-3 mt-8">
-            <button
-              mat-stroked-button
-              type="button"
-              class="w-full h-11 !rounded-lg"
-              (click)="cancelPayment()"
-              [disabled]="isProcessingPayment()"
-            >
-              Cancel
-            </button>
-            <button
-              mat-flat-button
-              class="w-full h-11 !rounded-lg !bg-primary !text-primary-foreground"
-              type="submit"
-              [disabled]="isProcessingPayment()"
-            >
-              @if (isProcessingPayment()) {
-                <div class="flex items-center justify-center gap-2">
-                  <mat-spinner diameter="18"></mat-spinner>
-                  <span>Processing...</span>
+              <div class="space-y-3">
+                @for (method of paymentMethods; track method.value) {
+                  <label
+                    class="payment-method-card"
+                    [class.selected]="paymentForm.get('paymentMethod')?.value === method.value"
+                  >
+                    <input
+                      type="radio"
+                      formControlName="paymentMethod"
+                      [value]="method.value"
+                      class="hidden"
+                    >
+                    <div class="flex items-center gap-3">
+                      <div class="payment-icon">
+                        <mat-icon class="!text-xl">{{ method.icon }}</mat-icon>
+                      </div>
+                      <div class="flex-1">
+                        <p class="text-sm font-semibold text-foreground">{{ method.label }}</p>
+                        <p class="text-xs text-foreground/60">{{ method.description }}</p>
+                      </div>
+                      <mat-icon class="check-icon !text-xl">
+                        {{ paymentForm.get('paymentMethod')?.value === method.value ? 'radio_button_checked' : 'radio_button_unchecked' }}
+                      </mat-icon>
+                    </div>
+                  </label>
+                }
+              </div>
+            </div>
+
+            <!-- M-Pesa Phone Number -->
+            @if (paymentForm.get('paymentMethod')?.value === 'MPESA') {
+              <div class="mb-8">
+                <h2 class="text-base font-semibold text-foreground mb-4">Phone Number</h2>
+                <mat-form-field appearance="outline" class="w-full compact-field">
+                  <mat-label>M-Pesa Number</mat-label>
+                  <input matInput formControlName="phoneNumber" placeholder="0712345678">
+                  <mat-icon matPrefix>phone</mat-icon>
+                  @if (paymentForm.get('phoneNumber')?.invalid && paymentForm.get('phoneNumber')?.touched) {
+                    <mat-error>{{ getErrorMessage('phoneNumber') }}</mat-error>
+                  }
+                  <mat-hint>STK push will be sent to this number</mat-hint>
+                </mat-form-field>
+              </div>
+            }
+
+            <!-- Action Button -->
+            <div class="mt-8">
+              <button
+                mat-flat-button
+                class="w-full h-12 !rounded-lg !bg-primary !text-primary-foreground !text-base !font-semibold"
+                type="submit"
+              >
+                Pay KSh {{ totalAmount() | number:'1.2-2' }}
+              </button>
+            </div>
+          </form>
+        } @else {
+          <!-- Payment Status Display -->
+          <div class="payment-status-container">
+            @if (paymentStatus() === 'waiting') {
+              <!-- Waiting for payment -->
+              <div class="text-center py-12">
+                <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-primary/10 flex items-center justify-center">
+                  <mat-icon class="!w-12 !h-12 !text-5xl text-primary animate-pulse">phone_android</mat-icon>
                 </div>
-              } @else {
-                <span>Pay KSh {{ totalAmount() | number:'1.2-2' }}</span>
-              }
-            </button>
+                <h3 class="text-xl font-semibold text-foreground mb-3">Check Your Phone</h3>
+                <p class="text-sm text-foreground/70 mb-8 max-w-md mx-auto leading-relaxed">
+                  A prompt has been sent to <span class="font-semibold">{{ paymentForm.get('phoneNumber')?.value }}</span>.
+                  Enter your M-Pesa PIN to confirm payment.
+                </p>
+                <div class="flex items-center justify-center gap-3">
+                  <mat-spinner diameter="24"></mat-spinner>
+                  <span class="text-sm font-medium text-foreground/60">Waiting for confirmation...</span>
+                </div>
+              </div>
+            }
+
+            @if (paymentStatus() === 'success') {
+              <!-- Payment successful -->
+              <div class="text-center py-12">
+                <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-success/10 flex items-center justify-center">
+                  <mat-icon class="!w-12 !h-12 !text-5xl text-success">check_circle</mat-icon>
+                </div>
+                <h3 class="text-xl font-semibold text-foreground mb-3">Payment Successful!</h3>
+                <p class="text-sm text-foreground/70 mb-6">{{ paymentMessage() }}</p>
+                <p class="text-xs text-foreground/50">Redirecting to delivery details...</p>
+              </div>
+            }
+
+            @if (paymentStatus() === 'failed') {
+              <!-- Payment failed -->
+              <div class="text-center py-12">
+                <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-error/10 flex items-center justify-center">
+                  <mat-icon class="!w-12 !h-12 !text-5xl text-error">error</mat-icon>
+                </div>
+                <h3 class="text-xl font-semibold text-foreground mb-3">Payment Failed</h3>
+                <p class="text-sm text-foreground/70 mb-8">{{ paymentMessage() }}</p>
+                <button
+                  mat-flat-button
+                  class="!h-11 !rounded-lg !bg-primary !text-primary-foreground !px-8"
+                  (click)="retryPayment()"
+                >
+                  <mat-icon class="mr-2">refresh</mat-icon>
+                  Try Again
+                </button>
+              </div>
+            }
           </div>
-        </form>
+        }
       </div>
 
       <!-- Summary (Right/Bottom) -->

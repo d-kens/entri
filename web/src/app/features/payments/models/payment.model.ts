@@ -24,6 +24,18 @@ export type InitiatePaymentResponse = {
   referenceId: string
 }
 
+export interface PaymentEvent {
+  paymentId: string;
+  paymentType: string;
+  referenceId: string;
+  status: PaymentStatus;
+  amount: number | null;
+  providerReference: string | null;
+  failureReason: string | null;
+  transactionDate: string | null;
+  timestamp: string;
+}
+
 
 
 

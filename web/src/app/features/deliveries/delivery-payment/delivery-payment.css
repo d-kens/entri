@@ -43,3 +43,42 @@
 .payment-method-card.selected .check-icon {
   color: var(--color-primary);
 }
+
+/* Payment status container */
+.payment-status-container {
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Pulse animation for phone icon */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Success/Error colors */
+.text-success {
+  color: var(--color-success);
+}
+
+.bg-success\/10 {
+  background-color: color-mix(in srgb, var(--color-success) 10%, transparent);
+}
+
+.text-error {
+  color: var(--color-error);
+}
+
+.bg-error\/10 {
+  background-color: color-mix(in srgb, var(--color-error) 10%, transparent);
+}

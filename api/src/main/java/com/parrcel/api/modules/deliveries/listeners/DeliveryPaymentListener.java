@@ -1,10 +1,8 @@
 package com.parrcel.api.modules.deliveries.listeners;
 
-
 import com.parrcel.api.modules.deliveries.service.DeliveryService;
 import com.parrcel.api.modules.payment.enums.PaymentType;
-import com.parrcel.api.modules.payment.events.PaymentFailedEvent;
-import com.parrcel.api.modules.payment.events.PaymentSuccessEvent;
+import com.parrcel.api.modules.payment.events.PaymentEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -21,19 +19,17 @@ public class DeliveryPaymentListener {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    public void onPaymentCompleted(PaymentSuccessEvent event) {
-        if (event.paymentType() != PaymentType.DELIVERY_FEE) return;
+    public void onPaymentEvent(PaymentEvent event) {
+        if (event.paymentType() != PaymentType.DELIVERY_FEE) {
+            return;
+        }
 
-        log.info("Handling PaymentSuccessEvent for delivery: {}", event.referenceId());
-        deliveryService.markDeliveryAsPaid(event.referenceId());
-    }
-
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    public void onPaymentFailed(PaymentFailedEvent event) {
-        if (event.paymentType() != PaymentType.DELIVERY_FEE) return;
-
-        log.info("Handling PaymentFailedEvent for delivery: {}", event.referenceId());
-        deliveryService.markDeliveryPaymentFailed(event.referenceId());
+        if (event.isSuccess()) {
+            log.info("Handling successful payment for delivery: {}", event.referenceId());
+            deliveryService.markDeliveryAsPaid(event.referenceId());
+        } else if (event.isFailure()) {
+            log.info("Handling failed payment for delivery: {}", event.referenceId());
+            deliveryService.markDeliveryPaymentFailed(event.referenceId());
+        }
     }
 }
