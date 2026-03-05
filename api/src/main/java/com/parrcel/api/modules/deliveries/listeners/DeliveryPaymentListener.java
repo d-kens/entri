@@ -21,7 +21,7 @@ public class DeliveryPaymentListener {
     public void onPaymentCompleted(PaymentSuccessEvent event) {
         if (event.paymentType() != PaymentType.DELIVERY_FEE) return;
 
-        log.info("Handling PaymentCompletedEvent for delivery: {}", event.referenceId());
+        log.info("Handling PaymentSuccessEvent for delivery: {}", event.referenceId());
         deliveryService.markDeliveryAsPaid(event.referenceId());
     }
 
