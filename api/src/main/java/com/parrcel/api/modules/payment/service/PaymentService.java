@@ -81,7 +81,7 @@ public class PaymentService {
         if (result.success()) {
             payment.markPaid(result.providerReference());
             paymentRepository.save(payment);
-            log.info("Payment {} SUCCESSFULL — ref: {}", payment.getExternalId(), result.providerReference());
+            log.info("Payment {} SUCCESSFUL — ref: {}", payment.getExternalId(), result.providerReference());
 
             eventPublisher.publishEvent(new PaymentSuccessEvent(
                     payment.getExternalId(),
