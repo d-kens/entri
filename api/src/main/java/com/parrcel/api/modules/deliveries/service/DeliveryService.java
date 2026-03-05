@@ -106,16 +106,7 @@ public class DeliveryService {
                 .orElseThrow(() -> new NotFoundException("Delivery not found: " + deliveryExternalId));
 
         delivery.markAsPaid();
-
-        System.out.println("------------------------------------------");
-        System.out.println(delivery.getPaymentStatus());
-        System.out.println("------------------------------------------");
-
         deliveryRepository.save(delivery);
-
-        System.out.println("------------------------------------------");
-        System.out.println(delivery.getPaymentStatus());
-        System.out.println("------------------------------------------");
 
         log.info("Delivery {} marked as PAID", deliveryExternalId);
     }
