@@ -1,4 +1,4 @@
-import {Component, computed, inject, OnInit, signal} from '@angular/core';
+import {Component, computed, inject, OnDestroy, OnInit, signal} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatButtonModule} from '@angular/material/button';
@@ -14,8 +14,8 @@ import {SnackbarService} from '@core/services/snackbar-service';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {PaymentService} from '@features/payments/services/payment.service';
-import {InitiatePaymentRequest, PaymentType} from '@features/payments/models/payment.model';
-
+import {InitiatePaymentRequest, PaymentStatus, PaymentType} from '@features/payments/models/payment.model';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-delivery-payment',
@@ -35,7 +35,7 @@ import {InitiatePaymentRequest, PaymentType} from '@features/payments/models/pay
   templateUrl: './delivery-payment.html',
   styleUrl: './delivery-payment.css',
 })
-export class DeliveryPayment implements OnInit {
+export class DeliveryPayment implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private fb = inject(FormBuilder);
@@ -47,8 +47,12 @@ export class DeliveryPayment implements OnInit {
   delivery = signal<DeliveryResponse | null>(null);
   isLoading = signal(true);
   isProcessingPayment = signal(false);
+  paymentInitiated = signal(false);
+  paymentStatus = signal<'waiting' | 'success' | 'failed' | null>(null);
+  paymentMessage = signal<string>('');
 
   paymentForm!: FormGroup;
+  private paymentSubscription?: Subscription;
 
   paymentMethods = [
     { value: 'MPESA', label: 'M-Pesa', icon: 'phone_android', description: 'Pay via M-Pesa STK Push' },
@@ -64,6 +68,10 @@ export class DeliveryPayment implements OnInit {
     this.deliveryId.set(this.route.snapshot.paramMap.get('id') || '');
     this.initializeForm();
     this.loadDelivery();
+  }
+
+  ngOnDestroy() {
+    this.paymentSubscription?.unsubscribe();
   }
 
   initializeForm() {
@@ -115,11 +123,11 @@ export class DeliveryPayment implements OnInit {
     }
 
     this.isProcessingPayment.set(true);
-
-    this.isProcessingPayment.set(true);
+    this.paymentInitiated.set(true);
+    this.paymentStatus.set('waiting');
 
     const paymentPayload: InitiatePaymentRequest = {
-      amount: 1,
+      amount: this.totalAmount(),
       referenceId: this.deliveryId(),
       paymentType: PaymentType.DELIVERY_FEE,
       paymentMethod: this.paymentForm.get('paymentMethod')?.value,
@@ -129,29 +137,58 @@ export class DeliveryPayment implements OnInit {
 
     this.paymentService.initiatePayment(paymentPayload).subscribe({
       next: (response) => {
-        if (this.paymentForm.value.paymentMethod === 'MPESA') {
-          this.snackbarService.showSuccess('STK push sent! Please enter your M-Pesa PIN');
-          this.subscribeToPaymentStatus(response.paymentId);
-        } else {
-          this.isProcessingPayment.set(false);
-          this.snackbarService.showSuccess('Payment successful!');
-          this.router.navigate(['/deliveries', this.deliveryId()]);
-        }
+        this.snackbarService.showSuccess('STK push sent to your phone');
+        this.subscribeToPaymentStatus(response.paymentId);
       },
       error: (error) => {
         console.error('Payment error:', error);
         const errorMessage = error?.error?.message || 'Payment failed. Please try again';
         this.snackbarService.showError(errorMessage);
         this.isProcessingPayment.set(false);
+        this.paymentInitiated.set(false);
+        this.paymentStatus.set(null);
       }
     });
   }
 
-  // TODO:
-  subscribeToPaymentStatus(paymentId: string) {}
+  subscribeToPaymentStatus(paymentId: string) {
+    this.paymentSubscription = this.paymentService.subscribeToPaymentEvents(paymentId).subscribe({
+      next: (event) => {
+        console.log('Payment event received:', event);
 
-  cancelPayment() {
-    this.router.navigate(['/deliveries']);
+        if (event.status === PaymentStatus.PAID) {
+          this.paymentStatus.set('success');
+          this.paymentMessage.set('Payment completed successfully!');
+          this.isProcessingPayment.set(false);
+          this.snackbarService.showSuccess('Payment successful!');
+
+          setTimeout(() => {
+            this.router.navigate(['/deliveries', this.deliveryId()]);
+          }, 2000);
+        } else if (event.status === PaymentStatus.FAILED) {
+          this.paymentStatus.set('failed');
+          this.paymentMessage.set('Payment failed');
+          this.isProcessingPayment.set(false);
+          this.snackbarService.showError('Payment failed');
+        }
+      },
+      error: (error) => {
+        console.error('Payment event error:', error);
+        this.paymentStatus.set('failed');
+        this.paymentMessage.set('Connection lost. Please check your payment status.');
+        this.isProcessingPayment.set(false);
+      },
+      complete: () => {
+        console.log('Payment event stream completed');
+      }
+    });
+  }
+
+  retryPayment() {
+    this.paymentInitiated.set(false);
+    this.paymentStatus.set(null);
+    this.paymentMessage.set('');
+    this.paymentSubscription?.unsubscribe();
   }
 
   getErrorMessage(fieldName: string): string {
