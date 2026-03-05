@@ -113,7 +113,7 @@ public class Delivery {
     private LocalDateTime updatedAt;
 
     public void markAsPaid() {
-        this.paymentStatus = PaymentStatus.PAID;
+        this.paymentStatus = PaymentStatus.SUCCESS;
         this.paidAt = LocalDateTime.now();
     }
 
@@ -123,7 +123,7 @@ public class Delivery {
 
 
     public boolean isPaid() {
-        return paymentStatus == PaymentStatus.PAID;
+        return paymentStatus == PaymentStatus.SUCCESS;
     }
 
     public boolean isDelivered() {

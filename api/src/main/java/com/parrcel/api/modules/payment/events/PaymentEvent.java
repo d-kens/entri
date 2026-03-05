@@ -29,7 +29,7 @@ public record PaymentEvent(
                 paymentId,
                 paymentType,
                 referenceId,
-                PaymentStatus.PAID,
+                PaymentStatus.SUCCESS,
                 amount,
                 providerReference,
                 null,
@@ -58,7 +58,7 @@ public record PaymentEvent(
     }
 
     public boolean isSuccess() {
-        return status == PaymentStatus.PAID;
+        return status == PaymentStatus.SUCCESS;
     }
 
     public boolean isFailure() {

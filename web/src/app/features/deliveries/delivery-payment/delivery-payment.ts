@@ -100,7 +100,7 @@ export class DeliveryPayment implements OnInit, OnDestroy {
         this.delivery.set(delivery);
         this.isLoading.set(false);
 
-        if (delivery.paymentStatus === 'PAID') {
+        if (delivery.paymentStatus === PaymentStatus.SUCCESS) {
           this.snackbarService.showInfo('This delivery has already been paid for');
           this.router.navigate(['/deliveries', delivery.externalId]);
         }
@@ -156,7 +156,7 @@ export class DeliveryPayment implements OnInit, OnDestroy {
       next: (event) => {
         console.log('Payment event received:', event);
 
-        if (event.status === PaymentStatus.PAID) {
+        if (event.status === PaymentStatus.SUCCESS) {
           this.paymentStatus.set('success');
           this.paymentMessage.set('Payment completed successfully!');
           this.isProcessingPayment.set(false);

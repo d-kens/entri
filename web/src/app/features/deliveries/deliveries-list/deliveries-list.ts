@@ -149,7 +149,7 @@ export class DeliveriesList implements OnInit {
   getPaymentStatusClass(status: PaymentStatus): string {
     const statusMap: Record<PaymentStatus, string> = {
       [PaymentStatus.PENDING]: 'payment-pending',
-      [PaymentStatus.PAID]: 'payment-paid',
+      [PaymentStatus.SUCCESS]: 'payment-success',
       [PaymentStatus.FAILED]: 'payment-failed'
     };
     return statusMap[status] || '';
@@ -159,7 +159,7 @@ export class DeliveriesList implements OnInit {
     const statusMap: Record<PaymentStatus, string> = {
       [PaymentStatus.PENDING]: 'Pending',
       [PaymentStatus.FAILED]: 'Failed',
-      [PaymentStatus.PAID]: 'Paid'
+      [PaymentStatus.SUCCESS]: 'Success'
     };
     return statusMap[status] || status;
   }
