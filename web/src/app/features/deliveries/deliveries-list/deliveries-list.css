@@ -58,7 +58,7 @@ button[mat-icon-button]:hover mat-icon {
   color: var(--color-warning);
 }
 
-.payment-paid {
+.payment-success {
   background-color: color-mix(in srgb, var(--color-success) 12%, transparent);
   color: var(--color-success);
 }
