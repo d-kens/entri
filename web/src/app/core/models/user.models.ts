@@ -9,7 +9,7 @@ export type CreateUserRequest = {
 
 export type UserResponse = {
   id: number,
-  role: 'ADMIN' | 'MERCHANT' | 'AGENT',
+  role: 'ADMIN' | 'CUSTOMER' | 'AGENT',
   email: string,
   userName: string,
   phoneNumber: string

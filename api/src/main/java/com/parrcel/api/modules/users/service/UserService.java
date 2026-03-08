@@ -50,7 +50,7 @@ public class UserService {
 
         userRepository.save(user);
 
-        if (user.getRole() == Role.MERCHANT)
+        if (user.getRole() == Role.CUSTOMER)
             sendWelcomeEmail(user);
 
        return user;

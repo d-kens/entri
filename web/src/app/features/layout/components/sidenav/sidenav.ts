@@ -21,12 +21,13 @@ interface MenuItem {
   ],
   templateUrl: './sidenav.html',
   styleUrl: './sidenav.css',
+  standalone: true
 })
 export class Sidenav implements OnInit {
   isMobile = input<boolean>(false);
   closeSidenav = output<void>();
 
-  private currentRole: 'ADMIN' | 'MERCHANT' | 'AGENT' = 'MERCHANT';
+  private currentRole: 'ADMIN' | 'CUSTOMER' | 'AGENT' = 'CUSTOMER';
 
   menuItem = signal<MenuItem[]>([]);
 
@@ -41,8 +42,8 @@ export class Sidenav implements OnInit {
       case 'ADMIN':
         this.menuItem.set(this.getAdminMenu());
         break;
-      case 'MERCHANT':
-        this.menuItem.set(this.getMerchantMenu());
+      case 'CUSTOMER':
+        this.menuItem.set(this.getCustomerMenu());
         break;
       case 'AGENT':
         this.menuItem.set(this.getAgentMenu());
@@ -52,28 +53,10 @@ export class Sidenav implements OnInit {
     }
   }
 
-  private getAdminMenu(): MenuItem[] {
+  private getCustomerMenu(): MenuItem[] {
     return [
-      { icon: 'dashboard', label: 'Dashboard', route: '/dashboard' },
-      { icon: 'local_shipping', label: 'Orders', route: '/orders' },
-      { icon: 'store', label: 'Agents', route: '/agents' },
-      { icon: 'two_wheeler', label: 'Riders', route: '/riders' },
-      { icon: 'shopping_bag', label: 'Merchants', route: '/merchants' },
-      { icon: 'widgets', label: 'Batching', route: '/batching' },
-      { icon: 'route', label: 'Routing', route: '/routing' },
-      { icon: 'payments', label: 'Payments', route: '/payments' },
-      { icon: 'account_balance_wallet', label: 'Payouts', route: '/payouts' },
-      { icon: 'analytics', label: 'Reports', route: '/reports' },
-      { icon: 'notifications', label: 'Notifications', route: '/notifications' },
-      { icon: 'tune', label: 'Settings', route: '/settings' },
-    ];
-  }
-
-  private getMerchantMenu(): MenuItem[] {
-    return [
-      { icon: 'inventory_2', label: 'My Deliveries', route: '/deliveries' },
+      { icon: 'inventory_2', label: 'Deliveries', route: '/deliveries' },
       { icon: 'add_circle', label: 'New Delivery', route: '/deliveries/new' },
-      { icon: 'location_on', label: 'Drop-off Points', route: '/drop-off-points' },
       { icon: 'account_circle', label: 'Profile', route: '/profile' },
       { icon: 'help', label: 'Support', route: '/support' },
     ];
@@ -81,7 +64,6 @@ export class Sidenav implements OnInit {
 
   private getAgentMenu(): MenuItem[] {
     return [
-      { icon: 'dashboard', label: 'Dashboard', route: '/dashboard' },
       { icon: 'qr_code_scanner', label: 'Scan Parcel', route: '/scan' },
       { icon: 'input', label: 'Incoming', route: '/incoming' },
       { icon: 'output', label: 'Outgoing', route: '/outgoing' },
@@ -90,6 +72,18 @@ export class Sidenav implements OnInit {
       { icon: 'account_balance', label: 'Payout Request', route: '/payout' },
       { icon: 'notifications', label: 'Notifications', route: '/notifications' },
       { icon: 'settings', label: 'Settings', route: '/settings' },
+    ];
+  }
+
+  private getAdminMenu(): MenuItem[] {
+    return [
+      { icon: 'dashboard', label: 'Dashboard', route: '/dashboard' },
+      { icon: 'inventory_2', label: 'Deliveries', route: '/deliveries' },
+      { icon: 'store', label: 'Agents', route: '/agents' },
+      { icon: 'shopping_bag', label: 'Customers', route: '/customers' },
+      { icon: 'payments', label: 'Payments', route: '/payments' },
+      { icon: 'analytics', label: 'Reports', route: '/reports' },
+      { icon: 'tune', label: 'Settings', route: '/settings' },
     ];
   }
 
