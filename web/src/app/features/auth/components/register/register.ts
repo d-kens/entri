@@ -68,7 +68,7 @@ export class Register {
     this.isLoading.set(true);
 
     const payload: CreateUserRequest = {
-      role: 'MERCHANT',
+      role: 'CUSTOMER',
       email: this.registerForm.get('email')!.value,
       userName: this.registerForm.get('userName')!.value,
       password: this.registerForm.get('password')!.value,
