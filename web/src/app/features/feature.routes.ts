@@ -2,10 +2,7 @@ import {Routes} from '@angular/router';
 import {Layout} from '@features/layout/layout';
 import {Welcome} from '@features/layout/components/welcome/welcome';
 import {authGuard} from '@core/guards/auth-guard';
-import {TrackDelivery} from '@features/track-delivery/track-delivery';
-
-// TODO: Fix logout issue
-// TODO: Fix User Profile Card Issues
+import {TrackDelivery} from '@features/deliveries/track-delivery/track-delivery';
 
 export const FEATURE_ROUTES: Routes = [
   {
