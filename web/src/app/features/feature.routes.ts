@@ -22,7 +22,7 @@ export const FEATURE_ROUTES: Routes = [
     ]
   },
   {
-    path: 'track',
+    path: 'track-delivery',
     component: TrackDelivery
   }
 ]
