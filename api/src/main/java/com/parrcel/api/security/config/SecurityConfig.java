@@ -56,6 +56,7 @@ public class SecurityConfig {
                         .requestMatchers("/auth/forgot-password").permitAll()
                         .requestMatchers("/payments/**").permitAll()
                         .requestMatchers("/auth/reset-password").permitAll()
+                        .requestMatchers("/deliveries/track/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/users").permitAll()
                         .requestMatchers(HttpMethod.GET, "/users").hasRole(Role.ADMIN.name())
                         .anyRequest().authenticated()
