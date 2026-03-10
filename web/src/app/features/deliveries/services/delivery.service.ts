@@ -6,7 +6,7 @@ import {
   CreateDeliveryDto,
   DeliveryFilters,
   DeliveryResponse,
-  PageResponse
+  PageResponse, TrackDeliveryResponse
 } from '@features/deliveries/models/delivery.model';
 
 @Injectable({
@@ -47,6 +47,12 @@ export class DeliveryService {
     return this.http.get<PageResponse<DeliveryResponse>>(
       `${environment.apiBaseUrl}/deliveries`,
       { params }
+    );
+  }
+
+  trackDelivery(trackingNumber: string): Observable<TrackDeliveryResponse> {
+    return this.http.get<TrackDeliveryResponse>(
+      `${environment.apiBaseUrl}/deliveries/track/${trackingNumber}`
     );
   }
 }
