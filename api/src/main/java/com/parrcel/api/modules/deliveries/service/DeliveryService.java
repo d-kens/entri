@@ -3,6 +3,8 @@ package com.parrcel.api.modules.deliveries.service;
 import com.parrcel.api.common.exception.InvalidDeliveryException;
 import com.parrcel.api.common.exception.NotFoundException;
 import com.parrcel.api.modules.deliveries.dto.CreateDeliveryDto;
+import com.parrcel.api.modules.deliveries.dto.DeliveryResponseDto;
+import com.parrcel.api.modules.deliveries.dto.TrackDeliveryResponseDto;
 import com.parrcel.api.modules.deliveries.enums.DeliveryStatus;
 import com.parrcel.api.modules.deliveries.model.Delivery;
 import com.parrcel.api.modules.deliveries.repository.DeliveryRepository;
@@ -23,6 +25,8 @@ import java.math.BigDecimal;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -122,6 +126,7 @@ public class DeliveryService {
         log.warn("Delivery {} payment marked as FAILED", deliveryExternalId);
     }
 
+
     private Specification<Delivery> buildSpecification(User currentUser, String status, String search) {
         Specification<Delivery> spec = Specification.allOf();
 
@@ -160,5 +165,110 @@ public class DeliveryService {
             sb.append(CHARS.charAt(RANDOM.nextInt(CHARS.length())));
         }
         return sb.toString();
+    }
+
+
+    public TrackDeliveryResponseDto trackByTrackingNumber(String trackingNumber) {
+        log.info("Tracking delivery by tracking number: {}", trackingNumber);
+
+        Delivery delivery = deliveryRepository.findByTrackingNumber(trackingNumber).orElseThrow(
+                () -> new NotFoundException("Delivery not found with tracking number: " + trackingNumber)
+        );
+
+        return buildTrackingResponse(delivery);
+    }
+
+    private TrackDeliveryResponseDto buildTrackingResponse(Delivery delivery) {
+
+        List<TrackDeliveryResponseDto.TrackingTimeline> timeline = buildTimeline(delivery);
+
+        TrackDeliveryResponseDto.LocationInfo from = new TrackDeliveryResponseDto.LocationInfo(
+                delivery.getFromAgent().getZone().getZoneName(),
+                delivery.getFromAgent().getName()
+        );
+
+        TrackDeliveryResponseDto.LocationInfo to = new TrackDeliveryResponseDto.LocationInfo(
+                delivery.getToAgent().getZone().getZoneName(),
+                delivery.getToAgent().getName()
+        );
+
+        return new TrackDeliveryResponseDto(
+                delivery.getTrackingNumber(),
+                delivery.getPackageName(),
+                delivery.getPackagePrice(),
+                delivery.getDeliveryStatus(),
+                delivery.getRecipientName(),
+                delivery.getRecipientPhone(),
+                from,
+                to,
+                timeline
+        );
+
+    }
+
+    private List<TrackDeliveryResponseDto.TrackingTimeline> buildTimeline(Delivery delivery) {
+        List<TrackDeliveryResponseDto.TrackingTimeline> timeline = new ArrayList<>();
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd, h:mm a");
+
+        DeliveryStatus currentStatus = delivery.getDeliveryStatus();
+
+        // Event 1: Package Received
+        timeline.add(new TrackDeliveryResponseDto.TrackingTimeline(
+                "Package Received",
+                delivery.getCreatedAt() != null ? delivery.getCreatedAt().format(formatter) : "Pending",
+                delivery.getFromAgent().getName(),
+                isStatusReached(currentStatus, DeliveryStatus.PENDING)
+        ));
+
+        // Event 2: Dropped at Pickup Point
+        timeline.add(new TrackDeliveryResponseDto.TrackingTimeline(
+                "Dropped at Pickup Point",
+                delivery.getDroppedAtPickupAgentAt() != null ? delivery.getDroppedAtPickupAgentAt().format(formatter) : "Pending",
+                delivery.getFromAgent().getName(),
+                isStatusReached(currentStatus, DeliveryStatus.DROPPED_AT_PICKUP_AGENT)
+        ));
+
+        // Event 3: At Hub
+        timeline.add(new TrackDeliveryResponseDto.TrackingTimeline(
+                "At Hub",
+                delivery.getArrivedAtHubAt() != null ? delivery.getArrivedAtHubAt().format(formatter) : "Pending",
+                "Main Sorting Hub",
+                isStatusReached(currentStatus, DeliveryStatus.AT_HUB)
+        ));
+
+        // Event 4: Out for Delivery
+        timeline.add(new TrackDeliveryResponseDto.TrackingTimeline(
+                "Out for Delivery",
+                delivery.getOutForDeliveryAt() != null ? delivery.getOutForDeliveryAt().format(formatter) : "Pending",
+                delivery.getToAgent().getName(),
+                isStatusReached(currentStatus, DeliveryStatus.OUT_FOR_DELIVERY)
+        ));
+
+        // Event 5: Delivered
+        timeline.add(new TrackDeliveryResponseDto.TrackingTimeline(
+                "Delivered",
+                delivery.getDeliveredAt() != null ? delivery.getDeliveredAt().format(formatter) : "Pending",
+                delivery.getToAgent().getName(),
+                isStatusReached(currentStatus, DeliveryStatus.DELIVERED)
+        ));
+
+        return timeline;
+
+    }
+
+    private boolean isStatusReached(DeliveryStatus currentStatus, DeliveryStatus targetStatus) {
+        List<DeliveryStatus> statusOrder = List.of(
+                DeliveryStatus.PENDING,
+                DeliveryStatus.DROPPED_AT_PICKUP_AGENT,
+                DeliveryStatus.AT_HUB,
+                DeliveryStatus.OUT_FOR_DELIVERY,
+                DeliveryStatus.DELIVERED
+        );
+
+        int currentIndex = statusOrder.indexOf(currentStatus);
+        int targetIndex = statusOrder.indexOf(targetStatus);
+
+        return currentIndex >= targetIndex;
     }
 }
