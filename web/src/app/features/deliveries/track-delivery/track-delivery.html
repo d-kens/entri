@@ -1,0 +1,169 @@
+<div class="min-h-screen bg-surface py-8 sm:py-16 px-6">
+  <div class="max-w-4xl mx-auto">
+
+    <!-- Header -->
+    <div class="text-center mb-12">
+      <h1 class="text-3xl sm:text-4xl font-bold text-foreground mb-3">Track Your Package</h1>
+      <p class="text-foreground/60">Enter your tracking number below</p>
+    </div>
+
+    <!-- Search -->
+    <form [formGroup]="trackingForm" (ngSubmit)="trackPackage()" class="mb-12">
+      <div class="max-w-2xl mx-auto">
+        <div class="flex gap-3">
+          <mat-form-field appearance="outline" class="flex-1">
+            <input
+              matInput
+              formControlName="trackingNumber"
+              placeholder="ORO-250115..."
+              class="!text-base tracking-wide"
+              autocomplete="off"
+            >
+            @if (trackingForm.get('trackingNumber')?.invalid && trackingForm.get('trackingNumber')?.touched) {
+              <mat-error>Enter a valid tracking number</mat-error>
+            }
+          </mat-form-field>
+
+          <button
+            mat-flat-button
+            type="submit"
+            class="track-button"
+            [disabled]="isSearching() || trackingForm.invalid"
+          >
+            @if (isSearching()) {
+              <mat-spinner diameter="20"></mat-spinner>
+            } @else {
+              Track
+            }
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <!-- Loading -->
+    @if (isSearching()) {
+      <div class="flex justify-center py-20">
+        <mat-spinner diameter="48"></mat-spinner>
+      </div>
+    }
+
+    <!-- Not Found -->
+    @if (notFound() && !isSearching()) {
+      <div class="max-w-md mx-auto text-center py-16">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-error/10 mb-6">
+          <mat-icon class="!w-8 !h-8 !text-3xl text-error">search_off</mat-icon>
+        </div>
+        <h3 class="text-xl font-semibold text-foreground mb-2">Not Found</h3>
+        <p class="text-foreground/60 mb-8">No package found with this tracking number</p>
+        <button mat-stroked-button class="!rounded-lg" (click)="reset()">
+          Try Again
+        </button>
+      </div>
+    }
+
+    <!-- Results -->
+    @if (trackingInfo() && !isSearching()) {
+      <!-- Centered Container -->
+      <div class="results-container">
+        <div class="grid lg:grid-cols-2 gap-8 lg:gap-20">
+
+          <!-- Left: Package & Delivery Info -->
+          <div class="space-y-6">
+
+            <!-- Tracking Number & Status -->
+            <div>
+              <div class="text-sm text-foreground/50 mb-2">Tracking Number</div>
+              <div class="font-mono text-lg font-bold text-foreground tracking-wide mb-4">
+                {{ trackingInfo()?.trackingNumber }}
+              </div>
+              <div class="status-badge" [attr.data-status]="trackingInfo()!.status.toLowerCase()">
+                {{ getStatusLabel(trackingInfo()!.status) }}
+              </div>
+            </div>
+
+            <div class="h-px bg-outline-variant"></div>
+
+            <!-- Package Details -->
+            <div>
+              <div class="section-title mb-3">Package</div>
+              <div class="info-row">
+                <span class="info-label">Description</span>
+                <span class="info-value">{{ trackingInfo()?.packageName }}</span>
+              </div>
+            </div>
+
+            <div class="h-px bg-outline-variant"></div>
+
+            <div>
+              <div class="section-title mb-3">Delivery</div>
+              <div class="space-y-3">
+                <div class="info-row">
+                  <span class="info-label">From Zone</span>
+                  <span class="info-value">{{ trackingInfo()?.from?.zone }}</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">From Point</span>
+                  <span class="info-value">{{ trackingInfo()?.from?.agent }}</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">To Zone</span>
+                  <span class="info-value">{{ trackingInfo()?.to?.zone }}</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">To Point</span>
+                  <span class="info-value">{{ trackingInfo()?.to?.agent }}</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">Recipient</span>
+                  <span class="info-value">{{ trackingInfo()?.recipientName }}</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">Phone</span>
+                  <span class="info-value">{{ trackingInfo()?.recipientPhone }}</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Right: Tracking History -->
+          <div>
+            <div class="section-title mb-6">Tracking History</div>
+            <div class="timeline">
+              @for (item of trackingInfo()?.timeline; track $index; let last = $last) {
+                <div class="timeline-item" [class.completed]="item.completed">
+                  <div class="timeline-marker">
+                    <div class="timeline-dot"></div>
+                    @if (!last) {
+                      <div class="timeline-connector"></div>
+                    }
+                  </div>
+                  <div class="timeline-content">
+                    <div class="timeline-status">{{ item.status }}</div>
+                    <div class="timeline-meta">
+                      <span>{{ item.timestamp }}</span>
+                      <span class="separator">•</span>
+                      <span>{{ item.location }}</span>
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Track Another -->
+        <div class="text-center pt-12 mt-8 border-t border-outline-variant">
+          <button
+            mat-button
+            class="!text-foreground/60 !font-medium"
+            (click)="reset()"
+          >
+            Track Another Package
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+</div>

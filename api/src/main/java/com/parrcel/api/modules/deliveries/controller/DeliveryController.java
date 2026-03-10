@@ -3,6 +3,7 @@ package com.parrcel.api.modules.deliveries.controller;
 import com.parrcel.api.common.dto.PageResponse;
 import com.parrcel.api.modules.deliveries.dto.CreateDeliveryDto;
 import com.parrcel.api.modules.deliveries.dto.DeliveryResponseDto;
+import com.parrcel.api.modules.deliveries.dto.TrackDeliveryResponseDto;
 import com.parrcel.api.modules.deliveries.mapper.DeliveryMapper;
 import com.parrcel.api.modules.deliveries.model.Delivery;
 import com.parrcel.api.modules.deliveries.service.DeliveryService;
@@ -47,6 +48,14 @@ public class DeliveryController {
     ) {
         var delivery = deliveryService.getDeliveryByExternalId(externalId);
         return deliveryMapper.toResponseDto(delivery);
+    }
+
+    @GetMapping("/track/{trackingNumber}")
+    public ResponseEntity<TrackDeliveryResponseDto> trackDelivery(
+            @PathVariable String trackingNumber
+    ) {
+        TrackDeliveryResponseDto responseDto = deliveryService.trackByTrackingNumber(trackingNumber);
+        return ResponseEntity.ok(responseDto);
     }
 
     @PostMapping
