@@ -61,3 +61,27 @@ export interface DeliveryFilters {
   status?: string;
   search?: string;
 }
+
+export type TrackDeliveryResponse = {
+  trackingNumber: string;
+  packageName: string;
+  packagePrice: number;
+  status: string;
+  recipientName: string;
+  recipientPhone: string;
+  from: LocationInfo;
+  to: LocationInfo;
+  timeline: TrackingTimeline[];
+}
+
+export interface LocationInfo {
+  zone: string;
+  agent: string;
+}
+
+export interface TrackingTimeline {
+  status: string;
+  timestamp: string;
+  location: string;
+  completed: boolean;
+}

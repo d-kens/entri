@@ -1,9 +1,8 @@
 import {Routes} from '@angular/router';
 import {Layout} from '@features/layout/layout';
 import {Welcome} from '@features/layout/components/welcome/welcome';
-
-// TODO: Fix logout issue
-// TODO: Fix User Profile Card Issues
+import {authGuard} from '@core/guards/auth-guard';
+import {TrackDelivery} from '@features/deliveries/track-delivery/track-delivery';
 
 export const FEATURE_ROUTES: Routes = [
   {
@@ -12,12 +11,18 @@ export const FEATURE_ROUTES: Routes = [
     children: [
       {
         path: '',
+        canActivate: [authGuard],
         component: Welcome
       },
       {
         path: 'deliveries',
+        canActivate: [authGuard],
         loadChildren: () => import('./deliveries/deliveries.routes').then(m => m.DELIVERIES_ROUTES)
       }
     ]
+  },
+  {
+    path: 'track-delivery',
+    component: TrackDelivery
   }
 ]
