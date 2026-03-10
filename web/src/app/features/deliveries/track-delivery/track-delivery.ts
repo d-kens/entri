@@ -36,7 +36,12 @@ export class TrackDelivery {
 
   constructor() {
     this.trackingForm = this.fb.group({
-      trackingNumber: ['', [Validators.required, Validators.minLength(10)]]
+      trackingNumber: ['',
+        [
+            Validators.required,
+            Validators.pattern(/^(PAR|ORO)-\d{12}-[A-Z0-9]{4}$/)
+        ]
+      ]
     });
   }
 
@@ -50,7 +55,10 @@ export class TrackDelivery {
     this.trackingInfo.set(null);
     this.notFound.set(false);
 
-    const trackingNumber = this.trackingForm.get('trackingNumber')?.value.trim().toUpperCase();
+    const trackingNumber = this.trackingForm.get('trackingNumber')?.value
+        .trim()
+        .toUpperCase()
+        .replace(/\s+/g, '');
 
     this.deliveryService.trackDelivery(trackingNumber).pipe(
       catchError((error) => {
@@ -83,5 +91,18 @@ export class TrackDelivery {
       'DELIVERED': 'Delivered'
     };
     return statusMap[status] || status;
+  }
+
+  getErrorMessage(): string {
+    const control = this.trackingForm.get('trackingNumber');
+
+    if (control?.hasError('required')) {
+      return 'Tracking number is required';
+    }
+    if (control?.hasError('pattern')) {
+      return 'Invalid tracking number format (e.g., PAR-260304200856-DZ47)';
+    }
+
+    return '';
   }
 }
