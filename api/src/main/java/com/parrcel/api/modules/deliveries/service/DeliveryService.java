@@ -156,7 +156,7 @@ public class DeliveryService {
         String dateTimePrefix = now.format(DateTimeFormatter.ofPattern("yyMMddHHmmss"));
         String randomSuffix = generateRandomString(4);
 
-        return "PAR-" + dateTimePrefix + "-" + randomSuffix;
+        return "ORO-" + dateTimePrefix + "-" + randomSuffix;
     }
 
     private String generateRandomString(int length) {
