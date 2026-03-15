@@ -1,27 +1,24 @@
-# ---------- Stage 1: Build ----------
 FROM gradle:8.14-jdk21 AS build
 WORKDIR /app
 
-# Copy only Gradle config files first for caching
 COPY build.gradle.kts settings.gradle.kts ./
 COPY gradle ./gradle
 
-# Download dependencies (cached if unchanged)
 RUN gradle dependencies --no-daemon
 
-# Copy source and build jar
 COPY src ./src
 RUN gradle clean bootJar --no-daemon
 
-# ---------- Stage 2: Run ----------
-FROM eclipse-temurin:21-jdk
+FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 
-# Copy only the generated boot jar
+RUN addgroup -S spring && adduser -S spring -G spring
+USER spring:spring
+
 COPY --from=build /app/build/libs/*.jar app.jar
 
-# Expose the port Render will use
 EXPOSE 8080
 
-# Run the application
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENV JAVA_OPTS="-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0 -XX:+UseG1GC"
+
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]

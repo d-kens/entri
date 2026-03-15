@@ -3,15 +3,7 @@ spring:
     name: oro
 
   datasource:
-    url: ${SPRING_DATASOURCE_URL}
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
-
-  jpa:
-    show-sql: true
-    hibernate:
-      ddl-auto: none
 
   liquibase:
     change-log: classpath:/db/changelog/changelog.xml
@@ -35,6 +27,3 @@ mpesa:
   shortcode: ${MPESA_SHORTCODE}
   passkey: ${MPESA_PASSKEY}
   callback-url: ${MPESA_CALLBACK_URL}
-  endpoints:
-    auth: ${MPESA_AUTH_ENDPOINT}
-    stk-push: ${MPESA_STK_PUSH_ENDPOINT}
