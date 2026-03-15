@@ -3,8 +3,8 @@ Content-Type: application/json
 
 {
   "password": "123456789",
-  "email": "kennyyy@gmail.com",
+  "email": "omondikens1@gmail.com",
   "userName": "ken",
   "phoneNumber": "0707127309",
-  "role": "ADMIN"
+  "role": "CUSTOMER"
 }

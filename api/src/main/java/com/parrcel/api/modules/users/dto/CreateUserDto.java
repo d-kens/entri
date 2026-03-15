@@ -2,7 +2,6 @@ package com.parrcel.api.modules.users.dto;
 
 import com.parrcel.api.modules.users.validation.ValidPhoneNumber;
 import com.parrcel.api.modules.users.validation.ValidRole;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
@@ -18,8 +17,6 @@ public record CreateUserDto(
         @ValidPhoneNumber
         String phoneNumber,
 
-        @NotBlank(message = "email is required")
-        @Email(message = "email must be a valid email")
         String email,
 
         @ValidRole

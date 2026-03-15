@@ -19,7 +19,7 @@ public class JwtService {
     private Jwt generateToken(User user, long tokenExpiration) {
         var claims = Jwts.claims()
                 .subject(user.getId().toString())
-                .add("email", user.getEmail())
+                .add("phoneNumber", user.getPhoneNumber())
                 .add("name", user.getUserName())
                 .add("role", user.getRole())
                 .issuedAt(new Date())

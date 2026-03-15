@@ -63,8 +63,8 @@ public class GlobalExceptionHandler {
         );
     }
 
-    @ExceptionHandler(EmailAlreadyExistException.class)
-    public ResponseEntity<ErrorDto> handleEmailAlreadyExist(EmailAlreadyExistException exception) {
+    @ExceptionHandler(PhoneNumberAlreadyExistException.class)
+    public ResponseEntity<ErrorDto> handlePhoneNumberAlreadyExistException(PhoneNumberAlreadyExistException exception) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 new ErrorDto(exception.getMessage())
         );

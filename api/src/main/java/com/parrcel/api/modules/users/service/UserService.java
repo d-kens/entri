@@ -1,7 +1,7 @@
 package com.parrcel.api.modules.users.service;
 
-import com.parrcel.api.common.exception.EmailAlreadyExistException;
 import com.parrcel.api.common.exception.NotFoundException;
+import com.parrcel.api.common.exception.PhoneNumberAlreadyExistException;
 import com.parrcel.api.modules.notification.enums.NotificationType;
 import com.parrcel.api.modules.notification.events.CreateSubscriberEvent;
 import com.parrcel.api.modules.notification.events.SendNotificationEvent;
@@ -29,9 +29,9 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final ApplicationEventPublisher eventPublisher;
 
-    public User getUserByEmail(String email) {
-        return userRepository.findUserByEmail(email).orElseThrow(
-                () -> new NotFoundException("users with email " + email + "not found")
+    public User getUserByPhoneNumber(String phoneNumber) {
+        return userRepository.findUserByPhoneNumber(phoneNumber).orElseThrow(
+                () -> new NotFoundException("users with phone number " + phoneNumber + "not found")
         );
     }
 
@@ -42,8 +42,9 @@ public class UserService {
     }
 
     public User createUser(CreateUserDto dto) {
-        if (userRepository.existsByEmail(dto.email()))
-            throw new EmailAlreadyExistException();
+
+        if (userRepository.existsByPhoneNumber(dto.phoneNumber()))
+            throw new PhoneNumberAlreadyExistException();
 
         var user = userMapper.toEntity(dto);
         user.setPasswordHash(passwordEncoder.encode(dto.password()));
@@ -51,12 +52,12 @@ public class UserService {
         userRepository.save(user);
 
         if (user.getRole() == Role.CUSTOMER)
-            sendWelcomeEmail(user);
+            sendWelcomeNotification(user);
 
        return user;
     }
 
-    public void sendWelcomeEmail(User user) {
+    public void sendWelcomeNotification(User user) {
 
         eventPublisher.publishEvent(
                 new CreateSubscriberEvent(user)
@@ -69,7 +70,7 @@ public class UserService {
                                 "userName", user.getUserName(),
                                 "dashboardUrl", String.format("%s/dashboard", baseUrl)
                         ),
-                        NotificationType.WELCOME_EMAIL
+                        NotificationType.WELCOME_NOTIFICATION
                 )
         );
     }

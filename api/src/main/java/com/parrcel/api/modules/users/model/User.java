@@ -15,11 +15,7 @@ import java.time.LocalDateTime;
 @Entity
 @NoArgsConstructor
 @Table(
-        name = "users",
-        uniqueConstraints = {
-                @UniqueConstraint(name = "users_user_name_key", columnNames = "user_name"),
-                @UniqueConstraint(name = "users_email_key", columnNames = "email")
-        }
+        name = "users"
 )
 public class User {
 
@@ -30,10 +26,10 @@ public class User {
     @Column(name = "user_name", nullable = false, length = 50)
     private String userName;
 
-    @Column(nullable = false, length = 100)
+    @Column(length = 100)
     private String email;
 
-    @Column(name = "password_hash", nullable = false, length = 255)
+    @Column(name = "password_hash", nullable = false, length = 50)
     private String passwordHash;
 
     @Column(name = "phone_number", nullable = false, length = 15)
