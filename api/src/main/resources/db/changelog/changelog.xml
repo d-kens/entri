@@ -15,4 +15,5 @@
     <include file="setup/202602110939-create_deliveries_table.xml" relativeToChangelogFile="true" />
     <include file="setup/201603021149-create_payments_table.xml" relativeToChangelogFile="true" />
     <include file="setup/202603041112-rename_referenceId_to_reference_id.xml" relativeToChangelogFile="true" />
+    <include file="setup/202603150906-update_users_email_phone_constraint.xml" relativeToChangelogFile="true" />
 </databaseChangeLog>

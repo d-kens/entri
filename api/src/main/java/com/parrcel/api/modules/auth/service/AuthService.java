@@ -48,12 +48,12 @@ public class AuthService {
 
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        authRequest.email(),
+                        authRequest.phoneNumber(),
                         authRequest.password()
                 )
         );
 
-        var user = userService.getUserByEmail(authRequest.email());
+        var user = userService.getUserByPhoneNumber(authRequest.phoneNumber());
         var accessToken = jwtService.generateAccessToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
 
@@ -110,7 +110,7 @@ public class AuthService {
 
     public String forgotPassword(ForgotPasswordRequest request) {
         try {
-            var user = userService.getUserByEmail(request.email());
+            var user = userService.getUserByPhoneNumber(request.phoneNumber());
 
             var tokenResponse = tokenService.generateToken(user, TokenPurpose.PASSWORD_RESET, null);
 
@@ -126,9 +126,9 @@ public class AuthService {
                     new SendNotificationEvent(user, payload, NotificationType.RESET_PASSWORD)
             );
 
-            return "If email exists, a reset link has been sent";
+            return "If phone number exists, a reset link has been sent";
         } catch (NotFoundException exception) {
-            return "If email exists, a reset link has been sent";
+            return "If phone number exists, a reset link has been sent";
         }
     }
 
