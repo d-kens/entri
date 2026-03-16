@@ -2,6 +2,7 @@ package com.parrcel.api.modules.users.service;
 
 import com.parrcel.api.common.exception.NotFoundException;
 import com.parrcel.api.common.exception.PhoneNumberAlreadyExistException;
+import com.parrcel.api.common.utils.PhoneNumberUtils;
 import com.parrcel.api.modules.notification.enums.NotificationType;
 import com.parrcel.api.modules.notification.events.CreateSubscriberEvent;
 import com.parrcel.api.modules.notification.events.SendNotificationEvent;
@@ -30,8 +31,8 @@ public class UserService {
     private final ApplicationEventPublisher eventPublisher;
 
     public User getUserByPhoneNumber(String phoneNumber) {
-        return userRepository.findUserByPhoneNumber(phoneNumber).orElseThrow(
-                () -> new NotFoundException("users with phone number " + phoneNumber + "not found")
+        return userRepository.findUserByPhoneNumber(PhoneNumberUtils.normalize(phoneNumber)).orElseThrow(
+                () -> new NotFoundException("user with phone number " + phoneNumber + " not found")
         );
     }
 
@@ -42,11 +43,13 @@ public class UserService {
     }
 
     public User createUser(CreateUserDto dto) {
+        String normalizedPhone = PhoneNumberUtils.normalize(dto.phoneNumber());
 
         if (userRepository.existsByPhoneNumber(dto.phoneNumber()))
             throw new PhoneNumberAlreadyExistException();
 
         var user = userMapper.toEntity(dto);
+        user.setPhoneNumber(normalizedPhone);
         user.setPasswordHash(passwordEncoder.encode(dto.password()));
 
         userRepository.save(user);
