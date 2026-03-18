@@ -38,7 +38,12 @@ export class ForgotPassword {
     private snackbarService: SnackbarService
   ) {
     this.forgotPasswordForm = fb.group({
-      email: ['', [Validators.email, Validators.required]]
+      phoneNumber: ['', [
+        Validators.required,
+        Validators.pattern(/^0[17]\d{8}$/), // Matches 07XXXXXXXX or 01XXXXXXXX
+        Validators.minLength(10),
+        Validators.maxLength(10)
+      ]],
     })
   }
 
@@ -51,7 +56,7 @@ export class ForgotPassword {
     this.isLoading.set(true);
 
     const payload: ForgotPasswordPayload = {
-      email: this.forgotPasswordForm.get('email')!.value
+      phoneNumber: this.forgotPasswordForm.get('phoneNumber')!.value
     }
 
     this.authService.sendPasswordResetInstructions(payload).subscribe({
@@ -67,6 +72,19 @@ export class ForgotPassword {
         this.isLoading.set(false);
       }
     })
+  }
+
+  getPhoneErrorMessage(): string {
+    const control = this.forgotPasswordForm.get('phoneNumber');
+
+    if (control?.hasError('required')) {
+      return 'Phone number is required';
+    }
+    if (control?.hasError('pattern') || control?.hasError('minLength') || control?.hasError('maxLength')) {
+      return 'Enter a valid Kenyan phone number (07XX XXX XXX or 01XX XXX XXX)';
+    }
+
+    return '';
   }
 
   showForm() {

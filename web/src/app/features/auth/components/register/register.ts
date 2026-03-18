@@ -44,8 +44,12 @@ export class Register {
   ) {
     this.registerForm = fb.group({
       userName: ['', Validators.required],
-      phoneNumber: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
+      phoneNumber: ['', [
+        Validators.required,
+        Validators.pattern(/^0[17]\d{8}$/),
+        Validators.minLength(10),
+        Validators.maxLength(10)
+      ]],
       password: ['', Validators.required],
       confirmPassword: ['', Validators.required]
     }, { validators: passwordsMatchValidator });
@@ -69,7 +73,6 @@ export class Register {
 
     const payload: CreateUserRequest = {
       role: 'CUSTOMER',
-      email: this.registerForm.get('email')!.value,
       userName: this.registerForm.get('userName')!.value,
       password: this.registerForm.get('password')!.value,
       phoneNumber: this.registerForm.get('phoneNumber')!.value
