@@ -42,9 +42,14 @@ export class Login {
     private snackbarService: SnackbarService,
   ) {
     this.loginForm = fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      phoneNumber: ['', [
+        Validators.required,
+        Validators.pattern(/^0[17]\d{8}$/), // Matches 07XXXXXXXX or 01XXXXXXXX
+        Validators.minLength(10),
+        Validators.maxLength(10)
+      ]],
       password: ['', [Validators.required]]
-    })
+    });
 
     const fromQuery = this.route.snapshot.queryParamMap.get('returnUrl');
     if (fromQuery) {
@@ -53,8 +58,21 @@ export class Login {
   }
 
   togglePasswordVisibility(event: MouseEvent) {
-    this.hidePassword.set(!this.hidePassword())
+    this.hidePassword.set(!this.hidePassword());
     event.stopPropagation();
+  }
+
+  getPhoneErrorMessage(): string {
+    const control = this.loginForm.get('phoneNumber');
+
+    if (control?.hasError('required')) {
+      return 'Phone number is required';
+    }
+    if (control?.hasError('pattern') || control?.hasError('minLength') || control?.hasError('maxLength')) {
+      return 'Enter a valid Kenyan phone number (07XX XXX XXX or 01XX XXX XXX)';
+    }
+
+    return '';
   }
 
   login() {
@@ -66,7 +84,7 @@ export class Login {
     this.isLoading.set(true);
 
     const authRequest: AuthRequest = {
-      email: this.loginForm.get('email')!.value,
+      phoneNumber: this.loginForm.get('phoneNumber')!.value, // Send as-is: 0707127309
       password: this.loginForm.get('password')!.value
     };
 
@@ -79,7 +97,7 @@ export class Login {
       error: (err) => {
         console.log('This is the error: ', err);
         const errorMessage = err?.error?.message || 'Login failed. Please check your credentials.';
-        this.snackbarService.showError(errorMessage)
+        this.snackbarService.showError(errorMessage);
         this.isLoading.set(false);
       }
     });

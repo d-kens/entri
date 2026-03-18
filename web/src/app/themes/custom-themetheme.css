@@ -101,9 +101,9 @@ html {
      Slightly tighter than default MD3 — matches landing's 8–10px radius
      ═══════════════════════════════════════════════════════════ */
   --mat-sys-corner-extra-large: 24px;
-  --mat-sys-corner-large:       16px;
-  --mat-sys-corner-medium:      10px;  /* landing btn-radius */
-  --mat-sys-corner-small:        8px;  /* landing btn-nav radius */
+  --mat-sys-corner-large:       9px;
+  --mat-sys-corner-medium:      8px;  /* landing btn-radius */
+  --mat-sys-corner-small:        6px;  /* landing btn-nav radius */
   --mat-sys-corner-extra-small:  4px;
   --mat-sys-corner-full:      9999px;
   --mat-sys-corner-none:          0;

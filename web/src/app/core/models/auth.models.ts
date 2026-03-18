@@ -1,5 +1,5 @@
 export type AuthRequest = {
-  email: string,
+  phoneNumber: string,
   password: string
 }
 
@@ -13,7 +13,7 @@ export type JWTPayload = {
 };
 
 export type ForgotPasswordPayload = {
-  email: string
+  phoneNumber: string
 }
 
 export type ResetPasswordPayload = {
