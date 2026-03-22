@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
+@Setter
 @Entity
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)

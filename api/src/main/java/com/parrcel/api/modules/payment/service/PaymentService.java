@@ -98,7 +98,6 @@ public class PaymentService {
                     result.transactionDate()
             );
 
-
         } else {
             payment.markFailed(result.failureReason());
             paymentRepository.save(payment);
