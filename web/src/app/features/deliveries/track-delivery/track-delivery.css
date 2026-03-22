@@ -39,7 +39,14 @@
 
 /* Search Section */
 .track-button {
+  height: 56px !important;
   min-width: 120px !important;
+  border-radius: 8px !important;
+  background: var(--color-primary) !important;
+  color: var(--color-black) !important;
+  font-weight: 600 !important;
+  font-size: 0.9375rem !important;
+  letter-spacing: 0.01em !important;
 }
 
 .track-button:disabled {
