@@ -1,6 +1,5 @@
 package com.parrcel.api.modules.payment.model;
 
-
 import com.parrcel.api.modules.payment.enums.PaymentDirection;
 import com.parrcel.api.modules.payment.enums.PaymentType;
 import com.parrcel.api.modules.payment.enums.PaymentMethod;
@@ -26,9 +25,8 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Builder.Default
     @Column(name = "external_id", nullable = false, unique = true, length = 36)
-    private String externalId = UUID.randomUUID().toString();
+    private String externalId;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "payment_direction", nullable = false, length = 20)
@@ -47,10 +45,9 @@ public class Payment {
     @Column(name = "description")
     private String description;
 
-    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 50)
-    private PaymentStatus status = PaymentStatus.PENDING;
+    private PaymentStatus status;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "method", length = 50)
@@ -88,6 +85,16 @@ public class Payment {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
+    @PrePersist
+    protected void onCreate() {
+        if (externalId == null) {
+            externalId = UUID.randomUUID().toString();
+        }
+
+        if (status == null) {
+            status = PaymentStatus.PENDING;
+        }
+    }
 
     public void markPaid(String providerReference) {
         this.status = PaymentStatus.SUCCESS;

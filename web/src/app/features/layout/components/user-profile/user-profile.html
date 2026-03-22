@@ -10,7 +10,11 @@
         <span class="text-sm font-medium text-on-surface leading-none">{{ user()?.userName }}</span>
         @if (user()?.role !== 'ADMIN') {
           <span class="text-xs text-on-surface-variant leading-none mt-1">
-            KSh {{ walletBalance() | number:'1.2-2' }}
+            @if (isLoadingBalance()) {
+              <mat-spinner diameter="12" class="inline-block"></mat-spinner>
+            } @else {
+              KSh {{ walletBalance() | number:'1.2-2' }}
+            }
           </span>
         }
       </div>
