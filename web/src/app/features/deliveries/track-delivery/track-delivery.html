@@ -85,7 +85,7 @@
             @if (trackingInfo()?.isCollectCash) {
 
               @if (collectionPaid()) {
-                <!-- Paid -->
+                <!-- Paid this session -->
                 <div class="flex items-center gap-3 p-4 rounded-xl bg-success/10 border border-success/20">
                   <mat-icon class="!w-5 !h-5 !text-xl text-success flex-shrink-0">check_circle</mat-icon>
                   <div>
@@ -96,7 +96,31 @@
                   </div>
                 </div>
 
-              } @else if (showPaymentFlow()) {
+              } @else if (trackingInfo()?.isCashCollected) {
+                <!-- Already collected from DB -->
+                <div class="flex items-center gap-3 p-4 rounded-xl bg-success/10 border border-success/20">
+                  <mat-icon class="!w-5 !h-5 !text-xl text-success flex-shrink-0">check_circle</mat-icon>
+                  <div>
+                    <p class="text-sm font-semibold text-success">Payment Already Collected</p>
+                    <p class="text-xs text-foreground/60 mt-0.5">
+                      KSh {{ trackingInfo()?.cashAmount | number:'1.0-0' }} has been collected
+                    </p>
+                  </div>
+                </div>
+
+              } @else if (!canPay()) {
+                <!-- Not yet delivered — informational only -->
+                <div class="flex items-start gap-3 p-4 rounded-xl bg-surface-container border border-outline-variant">
+                  <mat-icon class="!w-5 !h-5 !text-xl text-foreground/40 flex-shrink-0 mt-0.5">payments</mat-icon>
+                  <div>
+                    <p class="text-sm font-semibold text-foreground/70">Collection Payment Pending</p>
+                    <p class="text-sm text-foreground/50 mt-0.5">
+                      KSh {{ trackingInfo()?.cashAmount | number:'1.0-0' }} will be due when your package is delivered
+                    </p>
+                  </div>
+                </div>
+
+              } @else if (showPaymentForm()) {
                 <!-- Inline payment flow -->
                 <div class="p-4 rounded-xl border border-outline-variant">
                   <div class="flex items-center justify-between mb-4">
@@ -109,13 +133,13 @@
                     <button
                       mat-icon-button
                       class="!w-8 !h-8 !text-foreground/40"
-                      (click)="showPaymentFlow.set(false)"
+                      (click)="showPaymentForm.set(false)"
                     >
                       <mat-icon class="!text-base">close</mat-icon>
                     </button>
                   </div>
                   <app-payment
-                    [amount]="1"
+                    [amount]="trackingInfo()!.cashAmount"
                     [referenceId]="trackingInfo()!.deliveryId"
                     [paymentType]="PaymentType.CASH_ON_DELIVERY_COLLECTION"
                     paymentDescription="Oro Collection Payment"
@@ -125,7 +149,7 @@
                 </div>
 
               } @else {
-                <!-- Banner with pay button -->
+                <!-- Banner with pay button — only reachable when canPay() is true -->
                 <div class="flex items-start gap-3 p-4 rounded-xl bg-warning/10 border border-warning/20">
                   <mat-icon class="!w-5 !h-5 !text-xl text-warning flex-shrink-0 mt-0.5">payments</mat-icon>
                   <div class="flex-1 min-w-0">
@@ -133,14 +157,14 @@
                     <p class="text-sm text-foreground/70 mb-3">
                       You need to pay
                       <span class="font-bold text-foreground">
-                                                KSh {{ trackingInfo()?.cashAmount | number:'1.0-0' }}
-                                            </span>
+                        KSh {{ trackingInfo()?.cashAmount | number:'1.0-0' }}
+                      </span>
                       for the item before it can be released to you.
                     </p>
                     <button
                       mat-flat-button
                       class="!h-9 !text-sm !px-4 !rounded-lg !bg-warning !text-white !font-semibold"
-                      (click)="showPaymentFlow.set(true)"
+                      (click)="showPaymentForm.set(true)"
                     >
                       Pay KSh {{ trackingInfo()?.cashAmount | number:'1.0-0' }}
                     </button>
