@@ -126,6 +126,28 @@ public class DeliveryService {
         log.warn("Delivery {} payment marked as FAILED", deliveryExternalId);
     }
 
+    @Transactional
+    public void markCashCollected(String deliveryExternalId) {
+        log.info("Marking cash as collected for delivery: {}", deliveryExternalId);
+
+        Delivery delivery = deliveryRepository.findByExternalId(deliveryExternalId)
+                .orElseThrow(() -> new NotFoundException("Delivery not found: " + deliveryExternalId));
+
+        if (!delivery.isCollectCash()) {
+            throw new InvalidDeliveryException("Delivery does not have cash collection enabled");
+        }
+
+        if (delivery.isCashCollected()) {
+            log.warn("Cash already marked as collected for delivery: {}", deliveryExternalId);
+            return;
+        }
+
+        delivery.setCashCollected(true);
+        deliveryRepository.save(delivery);
+
+        log.info("Cash marked as collected for delivery: {}", deliveryExternalId);
+    }
+
 
     private Specification<Delivery> buildSpecification(User currentUser, String status, String search) {
         Specification<Delivery> spec = Specification.allOf();

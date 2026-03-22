@@ -2,8 +2,11 @@ package com.parrcel.api.modules.wallet.service;
 
 import com.parrcel.api.modules.users.model.User;
 import com.parrcel.api.modules.users.service.UserService;
+import com.parrcel.api.modules.wallet.entity.TransactionStatus;
+import com.parrcel.api.modules.wallet.entity.TransactionType;
 import com.parrcel.api.modules.wallet.entity.Wallet;
 import com.parrcel.api.modules.wallet.entity.WalletTransaction;
+import com.parrcel.api.modules.wallet.exception.InsufficientBalanceException;
 import com.parrcel.api.modules.wallet.repository.WalletRepository;
 import com.parrcel.api.modules.wallet.repository.WalletTransactionRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +15,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
 
 
 @Slf4j
@@ -45,5 +50,84 @@ public class WalletService {
     @Transactional(readOnly = true)
     public Page<WalletTransaction> getWalletTransactions(Long walletId, Pageable pageable) {
         return walletTransactionRepository.findByWalletId(walletId, pageable);
+    }
+
+    /**
+     * Credit wallet - add money
+     */
+    @Transactional
+    public WalletTransaction creditWallet(
+            Wallet wallet,
+            BigDecimal amount,
+            String referenceType,
+            String referenceId,
+            String description
+    ) {
+        log.info("Crediting wallet {} with amount {}", wallet.getExternalId(), amount);
+
+        BigDecimal balanceBefore = wallet.getBalance();
+        wallet.credit(amount);
+        walletRepository.save(wallet);
+
+        WalletTransaction transaction = WalletTransaction.builder()
+                .wallet(wallet)
+                .type(TransactionType.CREDIT)
+                .amount(amount)
+                .balanceAfter(balanceBefore)
+                .balanceAfter(wallet.getBalance())
+                .status(TransactionStatus.COMPLETED)
+                .referenceType(referenceType)
+                .referenceId(referenceId)
+                .description(description)
+                .build();
+
+        transaction.complete();
+
+        transaction = walletTransactionRepository.save(transaction);
+        log.info("Wallet credited successfully. New balance: {}", wallet.getBalance());
+        return transaction;
+    }
+
+
+    /**
+     * Debit wallet - remove money
+     */
+    @Transactional
+    public WalletTransaction debitWallet(
+            Wallet wallet,
+            BigDecimal amount,
+            String referenceType,
+            String referenceId,
+            String description
+    ) {
+        log.info("Debiting wallet {} with amount {}", wallet.getExternalId(), amount);
+
+        if (!wallet.hasSufficientBalance(amount)) {
+            throw new InsufficientBalanceException(
+                    "Insufficient balance. Available: " + wallet.getBalance() + ", Required: " + amount
+            );
+        }
+
+        BigDecimal balanceBefore = wallet.getBalance();
+        wallet.debit(amount);
+        walletRepository.save(wallet);
+
+        WalletTransaction transaction = WalletTransaction.builder()
+                .wallet(wallet)
+                .type(TransactionType.DEBIT)
+                .amount(amount)
+                .balanceBefore(balanceBefore)
+                .balanceAfter(wallet.getBalance())
+                .status(TransactionStatus.COMPLETED)
+                .referenceType(referenceType)
+                .referenceId(referenceId)
+                .description(description)
+                .build();
+
+        transaction.complete();
+        transaction = walletTransactionRepository.save(transaction);
+
+        log.info("Wallet debited successfully. New balance: {}", wallet.getBalance());
+        return transaction;
     }
 }
