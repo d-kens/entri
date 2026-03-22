@@ -71,7 +71,7 @@ export type TrackDeliveryResponse = {
 
 export interface LocationInfo {
   zone: string;
-  agent: string;
+  point: string;
 }
 
 export interface TrackingTimeline {
