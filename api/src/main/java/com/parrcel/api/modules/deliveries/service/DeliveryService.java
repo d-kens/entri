@@ -216,6 +216,7 @@ public class DeliveryService {
 
         return new TrackDeliveryResponseDto(
                 delivery.getExternalId(),
+                delivery.getDeliveryStatus(),
                 delivery.getTrackingNumber(),
                 delivery.getPackageName(),
                 delivery.getPackagePrice(),
@@ -224,6 +225,7 @@ public class DeliveryService {
                 delivery.getRecipientPhone(),
                 delivery.isCollectCash(),
                 delivery.getCashAmount(),
+                delivery.isCashCollected(),
                 from,
                 to,
                 timeline

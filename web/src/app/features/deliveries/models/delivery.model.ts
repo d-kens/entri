@@ -54,6 +54,7 @@ export interface DeliveryFilters {
 
 export type TrackDeliveryResponse = {
   deliveryId: string,
+  deliveryStatus: DeliveryStatus,
   trackingNumber: string;
   packageName: string;
   packagePrice: number;
@@ -62,6 +63,7 @@ export type TrackDeliveryResponse = {
   recipientPhone: string;
   isCollectCash: boolean;
   cashAmount: number;
+  isCashCollected: boolean;
   from: LocationInfo;
   to: LocationInfo;
   timeline: TrackingTimeline[];

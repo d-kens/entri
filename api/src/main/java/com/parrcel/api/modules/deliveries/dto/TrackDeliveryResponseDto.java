@@ -7,6 +7,7 @@ import java.util.List;
 
 public record TrackDeliveryResponseDto(
         String deliveryId,
+        DeliveryStatus deliveryStatus,
         String trackingNumber,
         String packageName,
         BigDecimal packagePrice,
@@ -15,6 +16,7 @@ public record TrackDeliveryResponseDto(
         String recipientPhone,
         boolean isCollectCash,
         BigDecimal cashAmount,
+        boolean isCashCollected,
         LocationInfo from,
         LocationInfo to,
         List<TrackingTimeline> timeline
