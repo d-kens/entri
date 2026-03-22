@@ -127,7 +127,8 @@ export class DeliveryPayment implements OnInit, OnDestroy {
     this.paymentStatus.set('waiting');
 
     const paymentPayload: InitiatePaymentRequest = {
-      amount: this.totalAmount(),
+      // amount: this.totalAmount(),
+      amount: 1, // TODO: Remove hard coded amount
       referenceId: this.deliveryId(),
       paymentType: PaymentType.DELIVERY_FEE,
       paymentMethod: this.paymentForm.get('paymentMethod')?.value,
