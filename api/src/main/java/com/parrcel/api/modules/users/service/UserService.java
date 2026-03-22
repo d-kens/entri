@@ -31,6 +31,11 @@ public class UserService {
     private final ApplicationEventPublisher eventPublisher;
 
     public User getUserByPhoneNumber(String phoneNumber) {
+
+        System.out.println("-------------------------");
+        System.out.println(PhoneNumberUtils.normalize(phoneNumber));
+        System.out.println("-------------------------");
+
         return userRepository.findUserByPhoneNumber(PhoneNumberUtils.normalize(phoneNumber)).orElseThrow(
                 () -> new NotFoundException("user with phone number " + phoneNumber + " not found")
         );
