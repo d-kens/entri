@@ -25,7 +25,7 @@ public class CustomUserDetailsService implements UserDetailsService  {
             var authorities = List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));
 
             return new User(
-                    user.getEmail(),
+                    user.getPhoneNumber(),
                     user.getPasswordHash(),
                     authorities
             );
