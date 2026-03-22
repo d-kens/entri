@@ -6,8 +6,9 @@ import {
   CreateDeliveryDto,
   DeliveryFilters,
   DeliveryResponse,
-  PageResponse, TrackDeliveryResponse
+  TrackDeliveryResponse
 } from '@features/deliveries/models/delivery.model';
+import {PageResponse} from '@core/models/common.model';
 
 @Injectable({
   providedIn: 'root'

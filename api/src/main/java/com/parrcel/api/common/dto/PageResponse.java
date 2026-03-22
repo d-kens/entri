@@ -1,5 +1,6 @@
 package com.parrcel.api.common.dto;
 
+import com.parrcel.api.modules.wallet.dto.WalletTransactionResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

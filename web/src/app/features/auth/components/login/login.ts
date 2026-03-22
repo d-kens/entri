@@ -69,7 +69,7 @@ export class Login {
       return 'Phone number is required';
     }
     if (control?.hasError('pattern') || control?.hasError('minLength') || control?.hasError('maxLength')) {
-      return 'Enter a valid Kenyan phone number (07XX XXX XXX or 01XX XXX XXX)';
+      return 'Enter a valid phone number';
     }
 
     return '';

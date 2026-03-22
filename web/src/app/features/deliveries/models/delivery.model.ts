@@ -22,16 +22,6 @@ export enum DeliveryStatus {
   CANCELLED = 'CANCELLED'
 }
 
-export interface PageResponse<T> {
-  content: T[];
-  pageNumber: number;
-  pageSize: number;
-  totalElements: number;
-  totalPages: number;
-  last: boolean;
-  first: boolean;
-}
-
 export type DeliveryResponse = {
   toAgent: string;
   fromAgent: string;
