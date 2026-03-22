@@ -6,9 +6,11 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import {DeliveryService} from '@features/deliveries/services/delivery.service';
-import {catchError, of} from 'rxjs';
-import {TrackDeliveryResponse} from '@features/deliveries/models/delivery.model';
+import { DeliveryService } from '@features/deliveries/services/delivery.service';
+import { catchError, of } from 'rxjs';
+import { TrackDeliveryResponse } from '@features/deliveries/models/delivery.model';
+import { PaymentType } from '@features/payments/models/payment.model';
+import {Payment} from '@features/payments/component/payment/payment';
 
 @Component({
   selector: 'app-track-delivery',
@@ -20,28 +22,31 @@ import {TrackDeliveryResponse} from '@features/deliveries/models/delivery.model'
     MatInputModule,
     MatButtonModule,
     MatIconModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    Payment
   ],
   templateUrl: './track-delivery.html',
   styleUrl: './track-delivery.css'
 })
 export class TrackDelivery {
   private fb = inject(FormBuilder);
-  private deliveryService = inject(DeliveryService)
+  private deliveryService = inject(DeliveryService);
+
+  PaymentType = PaymentType;
 
   trackingForm: FormGroup;
   isSearching = signal(false);
-  trackingInfo = signal< TrackDeliveryResponse | null>(null);
+  trackingInfo = signal<TrackDeliveryResponse | null>(null);
   notFound = signal(false);
+  showPaymentFlow = signal(false);
+  collectionPaid = signal(false);
 
   constructor() {
     this.trackingForm = this.fb.group({
-      trackingNumber: ['',
-        [
-            Validators.required,
-            Validators.pattern(/^(PAR|ORO)-\d{12}-[A-Z0-9]{4}$/)
-        ]
-      ]
+      trackingNumber: ['', [
+        Validators.required,
+        Validators.pattern(/^(PAR|ORO)-\d{12}-[A-Z0-9]{4}$/)
+      ]]
     });
   }
 
@@ -54,32 +59,43 @@ export class TrackDelivery {
     this.isSearching.set(true);
     this.trackingInfo.set(null);
     this.notFound.set(false);
+    this.showPaymentFlow.set(false);
+    this.collectionPaid.set(false);
 
     const trackingNumber = this.trackingForm.get('trackingNumber')?.value
-        .trim()
-        .toUpperCase()
-        .replace(/\s+/g, '');
+      .trim()
+      .toUpperCase()
+      .replace(/\s+/g, '');
 
     this.deliveryService.trackDelivery(trackingNumber).pipe(
-      catchError((error) => {
+      catchError(() => {
         this.notFound.set(true);
         this.isSearching.set(false);
         return of(null);
       })
     ).subscribe({
       next: (data) => {
-        if (data) {
-          this.trackingInfo.set(data);
-        }
+        if (data) this.trackingInfo.set(data);
         this.isSearching.set(false);
       }
     });
+  }
+
+  onPaymentCompleted() {
+    this.collectionPaid.set(true);
+    this.showPaymentFlow.set(false);
+  }
+
+  onPaymentFailed() {
+    // PaymentFlow handles its own retry UI — nothing to do here
   }
 
   reset() {
     this.trackingForm.reset();
     this.trackingInfo.set(null);
     this.notFound.set(false);
+    this.showPaymentFlow.set(false);
+    this.collectionPaid.set(false);
   }
 
   getStatusLabel(status: string): string {
@@ -95,14 +111,8 @@ export class TrackDelivery {
 
   getErrorMessage(): string {
     const control = this.trackingForm.get('trackingNumber');
-
-    if (control?.hasError('required')) {
-      return 'Tracking number is required';
-    }
-    if (control?.hasError('pattern')) {
-      return 'Invalid tracking number format (e.g., PAR-260304200856-DZ47)';
-    }
-
+    if (control?.hasError('required')) return 'Tracking number is required';
+    if (control?.hasError('pattern')) return 'Invalid tracking number format (e.g., PAR-260304200856-DZ47)';
     return '';
   }
 }

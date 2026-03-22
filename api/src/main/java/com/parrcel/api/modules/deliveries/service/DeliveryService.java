@@ -215,6 +215,7 @@ public class DeliveryService {
         );
 
         return new TrackDeliveryResponseDto(
+                delivery.getExternalId(),
                 delivery.getTrackingNumber(),
                 delivery.getPackageName(),
                 delivery.getPackagePrice(),
