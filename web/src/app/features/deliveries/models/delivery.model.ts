@@ -53,6 +53,7 @@ export interface DeliveryFilters {
 }
 
 export type TrackDeliveryResponse = {
+  deliveryId: string,
   trackingNumber: string;
   packageName: string;
   packagePrice: number;

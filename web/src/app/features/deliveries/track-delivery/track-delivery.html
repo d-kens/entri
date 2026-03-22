@@ -27,7 +27,6 @@
               <mat-error>{{ getErrorMessage() }}</mat-error>
             }
           </mat-form-field>
-
           <button
             mat-flat-button
             type="submit"
@@ -59,9 +58,7 @@
         </div>
         <h3 class="text-xl font-semibold text-foreground mb-2">Not Found</h3>
         <p class="text-foreground/60 mb-8">No package found with this tracking number</p>
-        <button mat-stroked-button class="!rounded-lg" (click)="reset()">
-          Try Again
-        </button>
+        <button mat-stroked-button class="!rounded-lg" (click)="reset()">Try Again</button>
       </div>
     }
 
@@ -84,27 +81,72 @@
               </div>
             </div>
 
-            <!-- Cash Collection Banner -->
+            <!-- Cash Collection Section -->
             @if (trackingInfo()?.isCollectCash) {
-              <div class="flex items-start gap-3 p-4 rounded-xl bg-warning/10 border border-warning/20">
-                <mat-icon class="!w-5 !h-5 !text-xl text-warning flex-shrink-0 mt-0.5">payments</mat-icon>
-                <div class="flex-1 min-w-0">
-                  <p class="text-sm font-semibold text-warning mb-0.5">Payment Required for Collection</p>
-                  <p class="text-sm text-foreground/70 mb-3">
-                    You need to pay
-                    <span class="font-bold text-foreground">
-                                            KSh {{ trackingInfo()?.cashAmount | number:'1.0-0' }}
-                                        </span>
-                    for the item before it can be released to you.
-                  </p>
-                  <button
-                    mat-flat-button
-                    class="!h-9 !text-sm !px-4 !rounded-lg !bg-warning !text-white !font-semibold"
-                  >
-                    Pay KSh {{ trackingInfo()?.cashAmount | number:'1.0-0' }}
-                  </button>
+
+              @if (collectionPaid()) {
+                <!-- Paid -->
+                <div class="flex items-center gap-3 p-4 rounded-xl bg-success/10 border border-success/20">
+                  <mat-icon class="!w-5 !h-5 !text-xl text-success flex-shrink-0">check_circle</mat-icon>
+                  <div>
+                    <p class="text-sm font-semibold text-success">Payment Received</p>
+                    <p class="text-xs text-foreground/60 mt-0.5">
+                      KSh {{ trackingInfo()?.cashAmount | number:'1.0-0' }} paid successfully
+                    </p>
+                  </div>
                 </div>
-              </div>
+
+              } @else if (showPaymentFlow()) {
+                <!-- Inline payment flow -->
+                <div class="p-4 rounded-xl border border-outline-variant">
+                  <div class="flex items-center justify-between mb-4">
+                    <div>
+                      <p class="text-sm font-semibold text-foreground">Pay for Collection</p>
+                      <p class="text-xs text-foreground/50 mt-0.5">
+                        KSh {{ trackingInfo()?.cashAmount | number:'1.0-0' }} due
+                      </p>
+                    </div>
+                    <button
+                      mat-icon-button
+                      class="!w-8 !h-8 !text-foreground/40"
+                      (click)="showPaymentFlow.set(false)"
+                    >
+                      <mat-icon class="!text-base">close</mat-icon>
+                    </button>
+                  </div>
+                  <app-payment
+                    [amount]="trackingInfo()!.cashAmount"
+                    [referenceId]="trackingInfo()!.deliveryId"
+                    [paymentType]="PaymentType.CASH_ON_DELIVERY_COLLECTION"
+                    paymentDescription="Oro Collection Payment"
+                    (completed)="onPaymentCompleted()"
+                    (failed)="onPaymentFailed()"
+                  />
+                </div>
+
+              } @else {
+                <!-- Banner with pay button -->
+                <div class="flex items-start gap-3 p-4 rounded-xl bg-warning/10 border border-warning/20">
+                  <mat-icon class="!w-5 !h-5 !text-xl text-warning flex-shrink-0 mt-0.5">payments</mat-icon>
+                  <div class="flex-1 min-w-0">
+                    <p class="text-sm font-semibold text-warning mb-0.5">Payment Required for Collection</p>
+                    <p class="text-sm text-foreground/70 mb-3">
+                      You need to pay
+                      <span class="font-bold text-foreground">
+                                                KSh {{ trackingInfo()?.cashAmount | number:'1.0-0' }}
+                                            </span>
+                      for the item before it can be released to you.
+                    </p>
+                    <button
+                      mat-flat-button
+                      class="!h-9 !text-sm !px-4 !rounded-lg !bg-warning !text-white !font-semibold"
+                      (click)="showPaymentFlow.set(true)"
+                    >
+                      Pay KSh {{ trackingInfo()?.cashAmount | number:'1.0-0' }}
+                    </button>
+                  </div>
+                </div>
+              }
             }
 
             <div class="h-px bg-outline-variant"></div>
@@ -182,11 +224,7 @@
 
         <!-- Track Another -->
         <div class="text-center pt-12 mt-8 border-t border-outline-variant">
-          <button
-            mat-button
-            class="!text-foreground/60 !font-medium"
-            (click)="reset()"
-          >
+          <button mat-button class="!text-foreground/60 !font-medium" (click)="reset()">
             Track Another Package
           </button>
         </div>
