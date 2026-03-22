@@ -59,6 +59,8 @@ export type TrackDeliveryResponse = {
   status: string;
   recipientName: string;
   recipientPhone: string;
+  isCollectCash: boolean;
+  cashAmount: number;
   from: LocationInfo;
   to: LocationInfo;
   timeline: TrackingTimeline[];

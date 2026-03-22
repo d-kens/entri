@@ -164,8 +164,8 @@ export class DeliveryPayment implements OnInit, OnDestroy {
           this.snackbarService.showSuccess('Payment successful!');
 
           setTimeout(() => {
-            this.router.navigate(['/deliveries', this.deliveryId()]);
-          }, 2000);
+            this.router.navigate(['/deliveries']);
+          }, 1000);
         } else if (event.status === PaymentStatus.FAILED) {
           this.paymentStatus.set('failed');
           this.paymentMessage.set('Payment failed');
