@@ -20,7 +20,7 @@
               matInput
               formControlName="trackingNumber"
               placeholder="example: ORO-260304200856-DZ47"
-              class="!text-base tracking-wide"
+              class="!text-base tracking-wide compact-field"
               autocomplete="off"
             >
             @if (trackingForm.get('trackingNumber')?.invalid && trackingForm.get('trackingNumber')?.touched) {
@@ -30,7 +30,7 @@
           <button
             mat-flat-button
             type="submit"
-            class="track-button"
+            class="h-11 !rounded-lg"
             [disabled]="isSearching() || trackingForm.invalid"
           >
             @if (isSearching()) {
