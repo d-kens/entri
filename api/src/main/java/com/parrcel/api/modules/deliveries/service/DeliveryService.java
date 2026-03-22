@@ -221,6 +221,8 @@ public class DeliveryService {
                 delivery.getDeliveryStatus(),
                 delivery.getRecipientName(),
                 delivery.getRecipientPhone(),
+                delivery.isCollectCash(),
+                delivery.getCashAmount(),
                 from,
                 to,
                 timeline

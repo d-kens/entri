@@ -26,9 +26,8 @@ public class Delivery {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Builder.Default
     @Column(name = "external_id", nullable = false, unique = true, length = 36)
-    private String externalId = UUID.randomUUID().toString();
+    private String externalId;
 
     @Column(name = "tracking_number", nullable = false, unique = true, length = 30)
     private String trackingNumber;
@@ -112,6 +111,13 @@ public class Delivery {
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        if (externalId == null) {
+            externalId = UUID.randomUUID().toString();
+        }
+    }
 
     public void markAsPaid() {
         this.paymentStatus = PaymentStatus.SUCCESS;

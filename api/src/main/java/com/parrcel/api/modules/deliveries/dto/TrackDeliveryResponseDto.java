@@ -12,6 +12,8 @@ public record TrackDeliveryResponseDto(
         DeliveryStatus status,
         String recipientName,
         String recipientPhone,
+        boolean isCollectCash,
+        BigDecimal cashAmount,
         LocationInfo from,
         LocationInfo to,
         List<TrackingTimeline> timeline
