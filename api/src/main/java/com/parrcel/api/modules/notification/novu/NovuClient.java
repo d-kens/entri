@@ -4,7 +4,7 @@ import co.novu.api.common.SubscriberRequest;
 import co.novu.api.events.requests.TriggerEventRequest;
 import co.novu.common.base.Novu;
 import co.novu.common.rest.NovuNetworkException;
-import com.parrcel.api.common.exception.NotificationDeliveryException;
+import com.parrcel.api.modules.notification.exception.NotificationDeliveryException;
 import com.parrcel.api.modules.notification.config.NovuProperties;
 import com.parrcel.api.modules.notification.dto.NotificationDto;
 import com.parrcel.api.modules.notification.dto.SubscriberDto;

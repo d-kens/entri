@@ -1,6 +1,6 @@
 package com.parrcel.api.modules.deliveries.service;
 
-import com.parrcel.api.common.exception.InvalidDeliveryException;
+import com.parrcel.api.modules.deliveries.exception.InvalidDeliveryException;
 import com.parrcel.api.common.exception.NotFoundException;
 import com.parrcel.api.modules.deliveries.dto.CreateDeliveryDto;
 import com.parrcel.api.modules.deliveries.dto.TrackDeliveryResponseDto;

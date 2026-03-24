@@ -1,6 +1,6 @@
 package com.parrcel.api.modules.payment.providers;
 
-import com.parrcel.api.common.exception.PaymentProviderException;
+import com.parrcel.api.modules.payment.exception.PaymentProviderException;
 import com.parrcel.api.modules.payment.dto.InitiatePaymentDto;
 import com.parrcel.api.modules.payment.providers.client.MpesaClient;
 import com.parrcel.api.modules.payment.providers.config.mpesa.MpesaProperties;

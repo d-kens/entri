@@ -1,6 +1,6 @@
 package com.parrcel.api.modules.auth.service;
 
-import com.parrcel.api.common.exception.InvalidTokenException;
+import com.parrcel.api.modules.token.exception.InvalidTokenException;
 import com.parrcel.api.common.exception.NotFoundException;
 import com.parrcel.api.modules.auth.dto.*;
 import com.parrcel.api.modules.notification.entity.NotificationType;
