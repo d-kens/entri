@@ -1,4 +1,4 @@
-package com.parrcel.api.modules.deliveries.enums;
+package com.parrcel.api.modules.deliveries.entity;
 
 public enum DeliveryStatus {
     PENDING,

@@ -10,31 +10,62 @@
             <column name="zone_name" value="South B"/>
             <column name="city" value="Nairobi"/>
             <column name="is_active" valueBoolean="true"/>
+
+            <!-- Audit fields -->
+            <column name="created" valueDate="2026-02-06 00:00:00"/>
+            <column name="created_by" value="system"/>
+            <column name="modified" valueDate="2026-02-06 00:00:00"/>
+            <column name="modified_by" value="system"/>
         </insert>
+
         <insert tableName="zones">
             <column name="zone_name" value="Kilimani"/>
             <column name="city" value="Nairobi"/>
             <column name="is_active" valueBoolean="true"/>
+            <column name="created" valueDate="2026-02-06 00:00:00"/>
+            <column name="created_by" value="system"/>
+            <column name="modified" valueDate="2026-02-06 00:00:00"/>
+            <column name="modified_by" value="system"/>
         </insert>
+
         <insert tableName="zones">
             <column name="zone_name" value="Kasarani"/>
             <column name="city" value="Nairobi"/>
             <column name="is_active" valueBoolean="true"/>
+            <column name="created" valueDate="2026-02-06 00:00:00"/>
+            <column name="created_by" value="system"/>
+            <column name="modified" valueDate="2026-02-06 00:00:00"/>
+            <column name="modified_by" value="system"/>
         </insert>
+
         <insert tableName="zones">
             <column name="zone_name" value="Roysambu"/>
             <column name="city" value="Nairobi"/>
             <column name="is_active" valueBoolean="true"/>
+            <column name="created" valueDate="2026-02-06 00:00:00"/>
+            <column name="created_by" value="system"/>
+            <column name="modified" valueDate="2026-02-06 00:00:00"/>
+            <column name="modified_by" value="system"/>
         </insert>
+
         <insert tableName="zones">
             <column name="zone_name" value="Lower Kabete"/>
             <column name="city" value="Nairobi"/>
             <column name="is_active" valueBoolean="true"/>
+            <column name="created" valueDate="2026-02-06 00:00:00"/>
+            <column name="created_by" value="system"/>
+            <column name="modified" valueDate="2026-02-06 00:00:00"/>
+            <column name="modified_by" value="system"/>
         </insert>
+
         <insert tableName="zones">
             <column name="zone_name" value="Imara Daima"/>
             <column name="city" value="Nairobi"/>
             <column name="is_active" valueBoolean="true"/>
+            <column name="created" valueDate="2026-02-06 00:00:00"/>
+            <column name="created_by" value="system"/>
+            <column name="modified" valueDate="2026-02-06 00:00:00"/>
+            <column name="modified_by" value="system"/>
         </insert>
 
         <rollback>
@@ -46,7 +77,7 @@
 
     <!-- SEED AGENTS POINTS -->
     <changeSet id="seed-agents" author="d.onyango">
-        <!-- Example: generate 1-2 points per zone -->
+
         <insert tableName="agents">
             <column name="name" value="South B Depot"/>
             <column name="zone_id" valueNumeric="1"/>
@@ -58,8 +89,12 @@
             <column name="phone" value="0722000001"/>
             <column name="opening_time" value="08:00:00"/>
             <column name="closing_time" value="18:00:00"/>
-            <column name="created_at" valueDate="2026-02-06 00:00:00"/>
-            <column name="updated_at" valueDate="2026-02-06 00:00:00"/>
+
+            <!-- Audit fields -->
+            <column name="created" valueDate="2026-02-06 00:00:00"/>
+            <column name="created_by" value="system"/>
+            <column name="modified" valueDate="2026-02-06 00:00:00"/>
+            <column name="modified_by" value="system"/>
         </insert>
 
         <insert tableName="agents">
@@ -73,8 +108,12 @@
             <column name="phone" value="0722000002"/>
             <column name="opening_time" value="08:00:00"/>
             <column name="closing_time" value="18:00:00"/>
-            <column name="created_at" valueDate="2026-02-06 00:00:00"/>
-            <column name="updated_at" valueDate="2026-02-06 00:00:00"/>
+
+            <!-- Audit fields -->
+            <column name="created" valueDate="2026-02-06 00:00:00"/>
+            <column name="created_by" value="system"/>
+            <column name="modified" valueDate="2026-02-06 00:00:00"/>
+            <column name="modified_by" value="system"/>
         </insert>
 
         <rollback>

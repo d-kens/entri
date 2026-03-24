@@ -1,4 +1,4 @@
-package com.parrcel.api.modules.token.enums;
+package com.parrcel.api.modules.token.entity;
 
 /**
  * Enumeration for different token purposes.

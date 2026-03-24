@@ -1,7 +1,7 @@
 package com.parrcel.api.modules.zones.service;
 
 import com.parrcel.api.common.exception.NotFoundException;
-import com.parrcel.api.modules.zones.model.Agent;
+import com.parrcel.api.modules.zones.entity.Agent;
 import com.parrcel.api.modules.zones.repository.AgentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

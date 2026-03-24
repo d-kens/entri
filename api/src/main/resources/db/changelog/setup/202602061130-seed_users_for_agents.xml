@@ -4,7 +4,8 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd">
 
-    <changeSet id="seed-users-for-parcel-points" author="d.onyango">
+    <changeSet id="seed-users-for-agents" author="d.onyango">
+
         <insert tableName="users">
             <column name="id" valueNumeric="1"/>
             <column name="user_name" value="default_agent"/>
@@ -13,23 +14,29 @@
             <column name="phone_number" value="0712345678"/>
             <column name="role" value="AGENT"/>
             <column name="is_active" valueBoolean="true"/>
-            <column name="created_at" valueDate="2026-02-06 00:00:00"/>
-            <column name="updated_at" valueDate="2026-02-06 00:00:00"/>
+
+            <!-- Audit fields -->
+            <column name="created" valueDate="2026-02-06 00:00:00"/>
+            <column name="created_by" value="system"/>
+            <column name="modified" valueDate="2026-02-06 00:00:00"/>
+            <column name="modified_by" value="system"/>
         </insert>
 
         <insert tableName="users">
             <column name="id" valueNumeric="2"/>
-            <column name="user_name" value="default_agent 2"/>
+            <column name="user_name" value="default_agent_2"/>
             <column name="password_hash" value="password123"/>
             <column name="email" value="agent2@example.com"/>
             <column name="phone_number" value="0712345656"/>
             <column name="role" value="AGENT"/>
             <column name="is_active" valueBoolean="true"/>
-            <column name="created_at" valueDate="2026-02-06 00:00:00"/>
-            <column name="updated_at" valueDate="2026-02-06 00:00:00"/>
+
+            <!-- Audit fields -->
+            <column name="created" valueDate="2026-02-06 00:00:00"/>
+            <column name="created_by" value="system"/>
+            <column name="modified" valueDate="2026-02-06 00:00:00"/>
+            <column name="modified_by" value="system"/>
         </insert>
-
-
 
         <rollback>
             <delete tableName="users">

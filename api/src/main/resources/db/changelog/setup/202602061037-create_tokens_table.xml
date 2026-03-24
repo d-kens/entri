@@ -23,16 +23,20 @@
 
             <column name="request_ip" type="VARCHAR(45)"/>
 
-            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
-                <constraints nullable="false"/>
-            </column>
-
             <column name="expires_at" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
 
             <column name="used_at" type="TIMESTAMP"/>
             <column name="invalidated_at" type="TIMESTAMP"/>
+
+            <column name="created" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="modified" type="TIMESTAMP"/>
+            <column name="modified_by" type="VARCHAR(255)"/>
+
         </createTable>
 
         <!-- Foreign key -->

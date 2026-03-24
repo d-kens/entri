@@ -2,8 +2,8 @@ package com.parrcel.api.modules.users.mapper;
 
 import com.parrcel.api.modules.users.dto.CreateUserDto;
 import com.parrcel.api.modules.users.dto.UserResponse;
-import com.parrcel.api.modules.users.model.User;
-import com.parrcel.api.modules.users.enums.Role;
+import com.parrcel.api.modules.users.entity.User;
+import com.parrcel.api.modules.users.entity.Role;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

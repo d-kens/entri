@@ -1,4 +1,4 @@
-package com.parrcel.api.modules.payment.enums;
+package com.parrcel.api.modules.payment.entity;
 
 public enum PaymentType {
     WITHDRAWAL,

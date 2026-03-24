@@ -1,6 +1,6 @@
 package com.parrcel.api.modules.payment.validation;
 
-import com.parrcel.api.modules.payment.enums.PaymentMethod;
+import com.parrcel.api.modules.payment.entity.PaymentMethod;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 

@@ -1,7 +1,7 @@
-package com.parrcel.api.modules.token.model;
+package com.parrcel.api.modules.token.entity;
 
-import com.parrcel.api.modules.token.enums.TokenPurpose;
-import com.parrcel.api.modules.users.model.User;
+import com.parrcel.api.common.entity.AbstractAuditableEntity;
+import com.parrcel.api.modules.users.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +14,7 @@ import java.time.Instant;
 @Entity
 @NoArgsConstructor
 @Table(name = "tokens")
-public class Token {
+public class Token extends AbstractAuditableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -33,10 +33,6 @@ public class Token {
     @Column(name = "request_ip", length = 45)
     private String requestIp;
 
-    // DB owned
-    @Column(name = "created_at", insertable = false, updatable = false)
-    private Instant createdAt;
-
     @Column(name = "expires_at", nullable = false)
     private Instant expiresAt;
 
@@ -45,6 +41,7 @@ public class Token {
 
     @Column(name = "invalidated_at")
     private Instant invalidatedAt;
+
 
     public boolean isValid() {
         Instant now = Instant.now();

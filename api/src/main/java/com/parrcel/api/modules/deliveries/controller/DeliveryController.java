@@ -5,7 +5,7 @@ import com.parrcel.api.modules.deliveries.dto.CreateDeliveryDto;
 import com.parrcel.api.modules.deliveries.dto.DeliveryResponseDto;
 import com.parrcel.api.modules.deliveries.dto.TrackDeliveryResponseDto;
 import com.parrcel.api.modules.deliveries.mapper.DeliveryMapper;
-import com.parrcel.api.modules.deliveries.model.Delivery;
+import com.parrcel.api.modules.deliveries.entity.Delivery;
 import com.parrcel.api.modules.deliveries.service.DeliveryService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;

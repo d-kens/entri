@@ -1,13 +1,11 @@
-package com.parrcel.api.modules.deliveries.model;
+package com.parrcel.api.modules.deliveries.entity;
 
-import com.parrcel.api.modules.deliveries.enums.DeliveryStatus;
-import com.parrcel.api.modules.payment.enums.PaymentStatus;
-import com.parrcel.api.modules.users.model.User;
-import com.parrcel.api.modules.zones.model.Agent;
+import com.parrcel.api.common.entity.AbstractAuditableEntity;
+import com.parrcel.api.modules.payment.entity.PaymentStatus;
+import com.parrcel.api.modules.users.entity.User;
+import com.parrcel.api.modules.zones.entity.Agent;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -20,7 +18,7 @@ import java.util.UUID;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Table(name = "deliveries")
-public class Delivery {
+public class Delivery extends AbstractAuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -103,14 +101,6 @@ public class Delivery {
 
     @Column(name = "cancellation_reason", length = 500)
     private String cancellationReason;
-
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
 
     @PrePersist
     protected void onCreate() {

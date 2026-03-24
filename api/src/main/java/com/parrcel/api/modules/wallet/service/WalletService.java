@@ -1,6 +1,6 @@
 package com.parrcel.api.modules.wallet.service;
 
-import com.parrcel.api.modules.users.model.User;
+import com.parrcel.api.modules.users.entity.User;
 import com.parrcel.api.modules.users.service.UserService;
 import com.parrcel.api.modules.wallet.entity.TransactionStatus;
 import com.parrcel.api.modules.wallet.entity.TransactionType;

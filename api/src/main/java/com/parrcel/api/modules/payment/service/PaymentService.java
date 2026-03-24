@@ -2,11 +2,11 @@ package com.parrcel.api.modules.payment.service;
 
 import com.parrcel.api.modules.payment.dto.InitiatePaymentDto;
 import com.parrcel.api.modules.payment.dto.InitiatePaymentResponse;
-import com.parrcel.api.modules.payment.enums.PaymentDirection;
-import com.parrcel.api.modules.payment.enums.PaymentMethod;
-import com.parrcel.api.modules.payment.enums.PaymentStatus;
+import com.parrcel.api.modules.payment.entity.PaymentDirection;
+import com.parrcel.api.modules.payment.entity.PaymentMethod;
+import com.parrcel.api.modules.payment.entity.PaymentStatus;
 import com.parrcel.api.modules.payment.events.PaymentEvent;
-import com.parrcel.api.modules.payment.model.Payment;
+import com.parrcel.api.modules.payment.entity.Payment;
 import com.parrcel.api.modules.payment.providers.Mpesa;
 import com.parrcel.api.modules.payment.providers.dto.mpesa.MpesaParseCallbackResult;
 import com.parrcel.api.modules.payment.providers.dto.ProviderInitResponse;

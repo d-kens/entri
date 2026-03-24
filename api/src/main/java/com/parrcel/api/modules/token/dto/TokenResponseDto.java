@@ -1,6 +1,6 @@
 package com.parrcel.api.modules.token.dto;
 
-import com.parrcel.api.modules.token.enums.TokenPurpose;
+import com.parrcel.api.modules.token.entity.TokenPurpose;
 import java.time.Instant;
 
 public record TokenResponseDto(

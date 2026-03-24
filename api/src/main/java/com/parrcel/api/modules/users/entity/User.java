@@ -1,14 +1,10 @@
-package com.parrcel.api.modules.users.model;
+package com.parrcel.api.modules.users.entity;
 
-import com.parrcel.api.modules.users.enums.Role;
+import com.parrcel.api.common.entity.AbstractAuditableEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -17,8 +13,7 @@ import java.time.LocalDateTime;
 @Table(
         name = "users"
 )
-public class User {
-
+public class User extends AbstractAuditableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -41,12 +36,4 @@ public class User {
 
     @Column(name = "is_active", nullable = false)
     private Boolean isActive = true;
-
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
 }

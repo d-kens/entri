@@ -1,15 +1,13 @@
-package com.parrcel.api.modules.zones.model;
+package com.parrcel.api.modules.zones.entity;
 
-import com.parrcel.api.modules.users.model.User;
+import com.parrcel.api.common.entity.AbstractAuditableEntity;
+import com.parrcel.api.modules.users.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
@@ -17,8 +15,7 @@ import java.time.LocalTime;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Agent {
-
+public class Agent extends AbstractAuditableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -54,12 +51,4 @@ public class Agent {
 
     @Column(name = "closing_time", nullable = false)
     private LocalTime closingTime;
-
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
 }

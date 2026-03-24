@@ -1,4 +1,4 @@
-package com.parrcel.api.modules.notification.enums;
+package com.parrcel.api.modules.notification.entity;
 
 import lombok.Getter;
 

@@ -1,7 +1,7 @@
 package com.parrcel.api.modules.payment.events;
 
-import com.parrcel.api.modules.payment.enums.PaymentStatus;
-import com.parrcel.api.modules.payment.enums.PaymentType;
+import com.parrcel.api.modules.payment.entity.PaymentStatus;
+import com.parrcel.api.modules.payment.entity.PaymentType;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
