@@ -1,6 +1,11 @@
 package com.parrcel.api.common.exception;
 
 import com.parrcel.api.common.dto.ErrorDto;
+import com.parrcel.api.modules.deliveries.exception.InvalidDeliveryException;
+import com.parrcel.api.modules.notification.exception.NotificationDeliveryException;
+import com.parrcel.api.modules.payment.exception.PaymentProviderException;
+import com.parrcel.api.modules.token.exception.InvalidTokenException;
+import com.parrcel.api.modules.users.exception.PhoneNumberAlreadyExistException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;

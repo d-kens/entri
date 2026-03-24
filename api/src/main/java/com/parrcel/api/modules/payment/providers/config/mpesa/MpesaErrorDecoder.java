@@ -1,7 +1,7 @@
 package com.parrcel.api.modules.payment.providers.config.mpesa;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.parrcel.api.common.exception.PaymentProviderException;
+import com.parrcel.api.modules.payment.exception.PaymentProviderException;
 import com.parrcel.api.modules.payment.providers.dto.mpesa.MpesaErrorResponse;
 import feign.Response;
 import feign.codec.ErrorDecoder;

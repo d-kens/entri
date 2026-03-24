@@ -1,4 +1,4 @@
-package com.parrcel.api.common.exception;
+package com.parrcel.api.modules.users.exception;
 
 public class PhoneNumberAlreadyExistException extends RuntimeException {
     public PhoneNumberAlreadyExistException() {

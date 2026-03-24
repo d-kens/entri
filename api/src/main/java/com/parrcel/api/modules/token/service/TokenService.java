@@ -1,6 +1,6 @@
 package com.parrcel.api.modules.token.service;
 
-import com.parrcel.api.common.exception.InvalidTokenException;
+import com.parrcel.api.modules.token.exception.InvalidTokenException;
 import com.parrcel.api.modules.token.config.TokenConfig;
 import com.parrcel.api.modules.token.dto.TokenResponseDto;
 import com.parrcel.api.modules.token.entity.Token;

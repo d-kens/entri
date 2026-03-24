@@ -1,6 +1,6 @@
 package com.parrcel.api.modules.notification.service;
 
-import com.parrcel.api.common.exception.NotificationDeliveryException;
+import com.parrcel.api.modules.notification.exception.NotificationDeliveryException;
 import com.parrcel.api.modules.notification.dto.NotificationDto;
 import com.parrcel.api.modules.notification.dto.SubscriberDto;
 import com.parrcel.api.modules.notification.events.CreateSubscriberEvent;

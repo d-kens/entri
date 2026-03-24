@@ -1,7 +1,7 @@
 package com.parrcel.api.modules.users.service;
 
 import com.parrcel.api.common.exception.NotFoundException;
-import com.parrcel.api.common.exception.PhoneNumberAlreadyExistException;
+import com.parrcel.api.modules.users.exception.PhoneNumberAlreadyExistException;
 import com.parrcel.api.common.utils.PhoneNumberUtils;
 import com.parrcel.api.modules.notification.entity.NotificationType;
 import com.parrcel.api.modules.notification.events.CreateSubscriberEvent;
