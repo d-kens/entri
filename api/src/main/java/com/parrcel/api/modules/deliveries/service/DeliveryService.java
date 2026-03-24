@@ -3,14 +3,13 @@ package com.parrcel.api.modules.deliveries.service;
 import com.parrcel.api.common.exception.InvalidDeliveryException;
 import com.parrcel.api.common.exception.NotFoundException;
 import com.parrcel.api.modules.deliveries.dto.CreateDeliveryDto;
-import com.parrcel.api.modules.deliveries.dto.DeliveryResponseDto;
 import com.parrcel.api.modules.deliveries.dto.TrackDeliveryResponseDto;
-import com.parrcel.api.modules.deliveries.enums.DeliveryStatus;
-import com.parrcel.api.modules.deliveries.model.Delivery;
+import com.parrcel.api.modules.deliveries.entity.DeliveryStatus;
+import com.parrcel.api.modules.deliveries.entity.Delivery;
 import com.parrcel.api.modules.deliveries.repository.DeliveryRepository;
 import com.parrcel.api.modules.deliveries.repository.DeliverySpecification;
-import com.parrcel.api.modules.users.enums.Role;
-import com.parrcel.api.modules.users.model.User;
+import com.parrcel.api.modules.users.entity.Role;
+import com.parrcel.api.modules.users.entity.User;
 import com.parrcel.api.modules.users.service.UserService;
 import com.parrcel.api.modules.zones.service.AgentService;
 import lombok.AllArgsConstructor;
@@ -24,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -243,7 +243,9 @@ public class DeliveryService {
         // Event 1: Package Received
         timeline.add(new TrackDeliveryResponseDto.TrackingTimeline(
                 "Package Received",
-                delivery.getCreatedAt() != null ? delivery.getCreatedAt().format(formatter) : "Pending",
+                delivery.getCreated() != null
+                        ? formatter.format(delivery.getCreated().atZone(ZoneId.systemDefault()))
+                        : "Pending",
                 delivery.getFromAgent().getName(),
                 isStatusReached(currentStatus, DeliveryStatus.PENDING)
         ));

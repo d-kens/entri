@@ -1,7 +1,7 @@
 package com.parrcel.api.modules.deliveries.listeners;
 
 import com.parrcel.api.modules.deliveries.service.DeliveryService;
-import com.parrcel.api.modules.payment.enums.PaymentType;
+import com.parrcel.api.modules.payment.entity.PaymentType;
 import com.parrcel.api.modules.payment.events.PaymentEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

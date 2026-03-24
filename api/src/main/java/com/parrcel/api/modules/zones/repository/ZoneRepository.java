@@ -1,6 +1,6 @@
 package com.parrcel.api.modules.zones.repository;
 
-import com.parrcel.api.modules.zones.model.Zone;
+import com.parrcel.api.modules.zones.entity.Zone;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

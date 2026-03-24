@@ -1,13 +1,8 @@
-package com.parrcel.api.modules.payment.model;
+package com.parrcel.api.modules.payment.entity;
 
-import com.parrcel.api.modules.payment.enums.PaymentDirection;
-import com.parrcel.api.modules.payment.enums.PaymentType;
-import com.parrcel.api.modules.payment.enums.PaymentMethod;
-import com.parrcel.api.modules.payment.enums.PaymentStatus;
+import com.parrcel.api.common.entity.AbstractAuditableEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -20,7 +15,7 @@ import java.util.UUID;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Table(name = "payments")
-public class Payment {
+public class Payment extends AbstractAuditableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -76,14 +71,6 @@ public class Payment {
 
     @Column(name = "failed_at")
     private LocalDateTime failedAt;
-
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
 
     @PrePersist
     protected void onCreate() {

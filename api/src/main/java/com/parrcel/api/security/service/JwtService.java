@@ -1,6 +1,6 @@
 package com.parrcel.api.security.service;
 
-import com.parrcel.api.modules.users.model.User;
+import com.parrcel.api.modules.users.entity.User;
 import com.parrcel.api.security.config.JwtConfig;
 import com.parrcel.api.security.model.Jwt;
 import io.jsonwebtoken.Claims;

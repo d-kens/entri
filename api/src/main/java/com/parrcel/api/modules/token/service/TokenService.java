@@ -3,10 +3,10 @@ package com.parrcel.api.modules.token.service;
 import com.parrcel.api.common.exception.InvalidTokenException;
 import com.parrcel.api.modules.token.config.TokenConfig;
 import com.parrcel.api.modules.token.dto.TokenResponseDto;
-import com.parrcel.api.modules.token.model.Token;
-import com.parrcel.api.modules.token.enums.TokenPurpose;
+import com.parrcel.api.modules.token.entity.Token;
+import com.parrcel.api.modules.token.entity.TokenPurpose;
 import com.parrcel.api.modules.token.repository.TokenRepository;
-import com.parrcel.api.modules.users.model.User;
+import com.parrcel.api.modules.users.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,7 +42,6 @@ public class TokenService {
         token.setPurpose(purpose);
         token.setRequestIp(requestIp);
         token.setExpiresAt(expiresAt);
-        token.setCreatedAt(Instant.now());
 
         tokenRepository.save(token);
 

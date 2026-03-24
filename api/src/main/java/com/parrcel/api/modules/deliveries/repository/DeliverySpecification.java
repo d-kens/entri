@@ -1,7 +1,7 @@
 package com.parrcel.api.modules.deliveries.repository;
 
-import com.parrcel.api.modules.deliveries.enums.DeliveryStatus;
-import com.parrcel.api.modules.deliveries.model.Delivery;
+import com.parrcel.api.modules.deliveries.entity.DeliveryStatus;
+import com.parrcel.api.modules.deliveries.entity.Delivery;
 import org.springframework.data.jpa.domain.Specification;
 
 public class DeliverySpecification {

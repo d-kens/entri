@@ -2,7 +2,7 @@ package com.parrcel.api.modules.deliveries.mapper;
 
 
 import com.parrcel.api.modules.deliveries.dto.DeliveryResponseDto;
-import com.parrcel.api.modules.deliveries.model.Delivery;
+import com.parrcel.api.modules.deliveries.entity.Delivery;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

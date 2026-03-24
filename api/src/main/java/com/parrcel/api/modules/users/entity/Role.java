@@ -1,12 +1,10 @@
-package com.parrcel.api.modules.users.enums;
+package com.parrcel.api.modules.users.entity;
 
 public enum Role {
     ADMIN,
     CUSTOMER,
     AGENT,
-
     RIDER;
-
     public static Role from (String value) {
         return Role.valueOf(value.toUpperCase());
     }

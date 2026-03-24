@@ -1,6 +1,6 @@
 package com.parrcel.api.modules.zones.service;
 
-import com.parrcel.api.modules.zones.model.Zone;
+import com.parrcel.api.modules.zones.entity.Zone;
 import com.parrcel.api.modules.zones.repository.ZoneRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

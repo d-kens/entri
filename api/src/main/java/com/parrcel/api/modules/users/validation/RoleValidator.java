@@ -1,7 +1,7 @@
 package com.parrcel.api.modules.users.validation;
 
 
-import com.parrcel.api.modules.users.enums.Role;
+import com.parrcel.api.modules.users.entity.Role;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 

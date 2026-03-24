@@ -1,9 +1,9 @@
 package com.parrcel.api.modules.wallet.listeners;
 
 
-import com.parrcel.api.modules.deliveries.model.Delivery;
+import com.parrcel.api.modules.deliveries.entity.Delivery;
 import com.parrcel.api.modules.deliveries.service.DeliveryService;
-import com.parrcel.api.modules.payment.enums.PaymentType;
+import com.parrcel.api.modules.payment.entity.PaymentType;
 import com.parrcel.api.modules.payment.events.PaymentEvent;
 import com.parrcel.api.modules.wallet.entity.Wallet;
 import com.parrcel.api.modules.wallet.service.WalletService;

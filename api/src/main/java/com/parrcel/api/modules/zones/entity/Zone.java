@@ -1,26 +1,17 @@
-package com.parrcel.api.modules.zones.model;
+package com.parrcel.api.modules.zones.entity;
 
-
+import com.parrcel.api.common.entity.AbstractAuditableEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @Entity
 @NoArgsConstructor
-@Table(
-        name = "zones",
-        uniqueConstraints = {
-                @UniqueConstraint(name = "uc_zone_name_city", columnNames = {"zone_name", "city"})
-        }
-)
-public class Zone {
+@Table(name = "zones")
+public class Zone extends AbstractAuditableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -36,12 +27,4 @@ public class Zone {
 
     @Column(name = "is_cbd", nullable = false)
     private Boolean isCbd;
-
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
 }

@@ -1,7 +1,7 @@
 package com.parrcel.api.modules.zones.mapper;
 
 import com.parrcel.api.modules.zones.dto.ZoneResponse;
-import com.parrcel.api.modules.zones.model.Zone;
+import com.parrcel.api.modules.zones.entity.Zone;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

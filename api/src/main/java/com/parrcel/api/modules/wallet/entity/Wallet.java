@@ -1,7 +1,8 @@
 package com.parrcel.api.modules.wallet.entity;
 
 
-import com.parrcel.api.modules.users.model.User;
+import com.parrcel.api.common.entity.AbstractAuditableEntity;
+import com.parrcel.api.modules.users.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,7 +21,7 @@ import java.util.UUID;
 @Table(
         name = "wallets"
 )
-public class Wallet {
+public class Wallet extends AbstractAuditableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -33,19 +34,11 @@ public class Wallet {
     private User user;
 
     @Column(nullable = false, precision = 19, scale = 2)
-    private BigDecimal balance; // Available balance only
+    private BigDecimal balance;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private WalletStatus status;
-
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
 
     @PrePersist
     protected void onCreate() {

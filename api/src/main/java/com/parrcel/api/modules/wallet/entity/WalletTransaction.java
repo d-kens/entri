@@ -1,9 +1,9 @@
 package com.parrcel.api.modules.wallet.entity;
 
 
+import com.parrcel.api.common.entity.AbstractAuditableEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -15,10 +15,8 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
-@Table(
-        name = "wallet_transactions"
-)
-public class WalletTransaction {
+@Table(name = "wallet_transactions")
+public class WalletTransaction extends AbstractAuditableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -58,10 +56,6 @@ public class WalletTransaction {
 
     @Column(columnDefinition = "TEXT")
     private String metadata; // JSON for additional data
-
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
 
     private LocalDateTime completedAt;
 
