@@ -61,8 +61,7 @@ public class WalletPaymentListener {
             walletService.creditWallet(
                     merchantWallet,
                     event.amount(),
-                    "PAYMENT",
-                    event.paymentId(),
+                    event.referenceId(),
                     "COD collection for delivery " + delivery.getTrackingNumber()
             );
 

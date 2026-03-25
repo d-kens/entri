@@ -2,6 +2,8 @@ package com.parrcel.api.modules.wallet.service;
 
 import com.parrcel.api.modules.users.entity.User;
 import com.parrcel.api.modules.users.service.UserService;
+import com.parrcel.api.modules.wallet.dto.WithdrawRequest;
+import com.parrcel.api.modules.wallet.dto.WithdrawResponse;
 import com.parrcel.api.modules.wallet.entity.TransactionStatus;
 import com.parrcel.api.modules.wallet.entity.TransactionType;
 import com.parrcel.api.modules.wallet.entity.Wallet;
@@ -52,6 +54,17 @@ public class WalletService {
         return walletTransactionRepository.findByWalletId(walletId, pageable);
     }
 
+    @Transactional
+    public WithdrawResponse withDraw(WithdrawRequest request, Long userId) {
+        var wallet = getOrCreateWallet(userId);
+
+        if (request.amount().compareTo(wallet.getBalance()) > 0) {
+            throw new InsufficientBalanceException("Insufficient balance");
+        }
+
+        return new WithdrawResponse("payment-id");
+    }
+
     /**
      * Credit wallet - add money
      */
@@ -59,7 +72,6 @@ public class WalletService {
     public WalletTransaction creditWallet(
             Wallet wallet,
             BigDecimal amount,
-            String referenceType,
             String referenceId,
             String description
     ) {
@@ -76,7 +88,6 @@ public class WalletService {
                 .balanceAfter(balanceBefore)
                 .balanceAfter(wallet.getBalance())
                 .status(TransactionStatus.COMPLETED)
-                .referenceType(referenceType)
                 .referenceId(referenceId)
                 .description(description)
                 .build();
@@ -85,49 +96,6 @@ public class WalletService {
 
         transaction = walletTransactionRepository.save(transaction);
         log.info("Wallet credited successfully. New balance: {}", wallet.getBalance());
-        return transaction;
-    }
-
-
-    /**
-     * Debit wallet - remove money
-     */
-    @Transactional
-    public WalletTransaction debitWallet(
-            Wallet wallet,
-            BigDecimal amount,
-            String referenceType,
-            String referenceId,
-            String description
-    ) {
-        log.info("Debiting wallet {} with amount {}", wallet.getExternalId(), amount);
-
-        if (!wallet.hasSufficientBalance(amount)) {
-            throw new InsufficientBalanceException(
-                    "Insufficient balance. Available: " + wallet.getBalance() + ", Required: " + amount
-            );
-        }
-
-        BigDecimal balanceBefore = wallet.getBalance();
-        wallet.debit(amount);
-        walletRepository.save(wallet);
-
-        WalletTransaction transaction = WalletTransaction.builder()
-                .wallet(wallet)
-                .type(TransactionType.DEBIT)
-                .amount(amount)
-                .balanceBefore(balanceBefore)
-                .balanceAfter(wallet.getBalance())
-                .status(TransactionStatus.COMPLETED)
-                .referenceType(referenceType)
-                .referenceId(referenceId)
-                .description(description)
-                .build();
-
-        transaction.complete();
-        transaction = walletTransactionRepository.save(transaction);
-
-        log.info("Wallet debited successfully. New balance: {}", wallet.getBalance());
         return transaction;
     }
 }

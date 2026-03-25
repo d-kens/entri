@@ -36,15 +36,9 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="reference_type" type="VARCHAR(50)"/>
-
             <column name="reference_id" type="VARCHAR(255)"/>
 
             <column name="description" type="VARCHAR(500)"/>
-
-            <column name="metadata" type="TEXT"/>
-
-            <column name="completed_at" type="TIMESTAMP"/>
 
             <column name="created" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
                 <constraints nullable="false"/>
