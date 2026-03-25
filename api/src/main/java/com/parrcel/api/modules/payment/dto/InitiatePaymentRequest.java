@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 
-public record InitiatePaymentDto(
+public record InitiatePaymentRequest(
         @ValidPhoneNumber
         String phoneNumber,
 
