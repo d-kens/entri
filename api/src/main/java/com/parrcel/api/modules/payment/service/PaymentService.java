@@ -1,27 +1,17 @@
 package com.parrcel.api.modules.payment.service;
 
-import com.parrcel.api.modules.payment.dto.InitiatePaymentDto;
-import com.parrcel.api.modules.payment.dto.InitiatePaymentResponse;
-import com.parrcel.api.modules.payment.entity.PaymentDirection;
-import com.parrcel.api.modules.payment.entity.PaymentMethod;
+import com.parrcel.api.common.exception.NotFoundException;
+import com.parrcel.api.modules.payment.entity.Payment;
 import com.parrcel.api.modules.payment.entity.PaymentStatus;
 import com.parrcel.api.modules.payment.events.PaymentEvent;
-import com.parrcel.api.modules.payment.entity.Payment;
-import com.parrcel.api.modules.payment.providers.Mpesa;
-import com.parrcel.api.modules.payment.providers.dto.mpesa.MpesaParseCallbackResult;
-import com.parrcel.api.modules.payment.providers.dto.ProviderInitResponse;
-import com.parrcel.api.modules.payment.providers.dto.mpesa.MpesaStkCallbackDto;
 import com.parrcel.api.modules.payment.repository.PaymentRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -29,96 +19,25 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @Service
 @RequiredArgsConstructor
 public class PaymentService {
-    private final Mpesa mpesa;
+
     private final PaymentRepository paymentRepository;
-    private final ApplicationEventPublisher eventPublisher;
     private final Map<String, CopyOnWriteArrayList<SseEmitter>> sseEmitters = new ConcurrentHashMap<>();
 
 
-
-
-    @Transactional
-    public InitiatePaymentResponse initiatePayment(InitiatePaymentDto initiatePaymentDto) {
-        Payment payment = Payment.builder()
-                .paymentType(initiatePaymentDto.paymentType())
-                .referenceId(initiatePaymentDto.referenceId())
-                .amount(initiatePaymentDto.amount())
-                .description(initiatePaymentDto.paymentDescription())
-                .method(PaymentMethod.valueOf(initiatePaymentDto.paymentMethod()))
-                .phoneNumber(initiatePaymentDto.phoneNumber())
-                .paymentDirection(PaymentDirection.INBOUND)
-                .build();
-
-        payment = paymentRepository.save(payment);
-
-        ProviderInitResponse providerInitResponse = mpesa.initiatePayment(initiatePaymentDto);
-
-        payment.setProviderTransactionId(providerInitResponse.providerTransactionId());
-        paymentRepository.save(payment);
-
-        log.info("Payment {} created, awaiting callback for providerTransactionId: {}",
-                payment.getExternalId(), providerInitResponse.providerTransactionId());
-
-        return new InitiatePaymentResponse(
-                payment.getExternalId(),
-                payment.getReferenceId()
+    public Payment findPaymentByProviderTransactionId(String providerTransactionId) {
+        return  paymentRepository.findByProviderTransactionId(providerTransactionId).orElseThrow(
+                () -> new NotFoundException("Payment with provider transaction ID: " + providerTransactionId + " not found")
         );
     }
-    @Transactional
-    public void handleMpesaCallback(MpesaStkCallbackDto dto) {
-        MpesaParseCallbackResult result = mpesa.parseCallback(dto);
 
-        Optional<Payment> optionalPayment = paymentRepository
-                .findByProviderTransactionId(result.providerTransactionId());
-
-        if (optionalPayment.isEmpty()) {
-            log.warn("Received callback for unknown providerTransactionId: {} — ignoring",
-                    result.providerTransactionId());
-            return;
-        }
-
-        Payment payment = optionalPayment.get();
-
-        if (payment.isTerminal()) {
-            log.warn("Payment {} is already {} — ignoring duplicate callback",
-                    payment.getExternalId(), payment.getStatus());
-            return;
-        }
-
-        PaymentEvent event;
-
-        if (result.success()) {
-            payment.markPaid(result.providerReference());
-            paymentRepository.save(payment);
-            log.info("Payment {} SUCCESSFUL — ref: {}", payment.getExternalId(), result.providerReference());
-
-            event = PaymentEvent.success(
-                    payment.getExternalId(),
-                    payment.getPaymentType(),
-                    payment.getReferenceId(),
-                    result.amount(),
-                    result.providerReference(),
-                    result.transactionDate()
-            );
-
-        } else {
-            payment.markFailed(result.failureReason());
-            paymentRepository.save(payment);
-            log.warn("Payment {} FAILED — reason: {}", payment.getExternalId(), result.failureReason());
-
-            event = PaymentEvent.failure(
-                    payment.getExternalId(),
-                    payment.getPaymentType(),
-                    payment.getReferenceId(),
-                    result.failureReason()
-            );
-        }
-
-        eventPublisher.publishEvent(event);
-
-        sendPaymentEventToClients(payment.getExternalId(), event);
+    public void markPaymentAsPaid(Payment payment, String receiptNumber) {
+        payment.markPaid(receiptNumber);
+        paymentRepository.save(payment);
     }
-
+    public void markPaymentAsFailed(Payment payment, String reason) {
+        payment.markFailed(reason);
+        paymentRepository.save(payment);
+    }
 
     public SseEmitter streamPaymentEvents(String paymentId) {
         SseEmitter emitter = new SseEmitter(240_000L);
@@ -146,7 +65,7 @@ public class PaymentService {
         return emitter;
     }
 
-    private void sendPaymentEventToClients(String paymentId, PaymentEvent event) {
+    public void sendPaymentEventToClients(String paymentId, PaymentEvent event) {
         CopyOnWriteArrayList<SseEmitter> paymentEmitters = sseEmitters.get(paymentId);
 
         if (paymentEmitters == null || paymentEmitters.isEmpty()) {
@@ -165,7 +84,6 @@ public class PaymentService {
 
                 log.debug("Successfully sent event to client for payment: {}", paymentId);
 
-                // Close emitter after sending terminal event
                 if (event.status() == PaymentStatus.SUCCESS || event.status() == PaymentStatus.FAILED) {
                     emitter.complete();
                 }
