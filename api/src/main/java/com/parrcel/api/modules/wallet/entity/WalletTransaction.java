@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
@@ -30,7 +29,7 @@ public class WalletTransaction extends AbstractAuditableEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private TransactionType type; // CREDIT or DEBIT
+    private TransactionType type;
 
     @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal amount;
@@ -45,19 +44,11 @@ public class WalletTransaction extends AbstractAuditableEntity {
     @Column(nullable = false)
     private TransactionStatus status;
 
-    @Column(length = 50)
-    private String referenceType; // PAYMENT, WITHDRAWAL, REFUND
-
     @Column(length = 255)
-    private String referenceId; // Links to Payment.externalId or other entity
+    private String referenceId;
 
     @Column(length = 500)
     private String description;
-
-    @Column(columnDefinition = "TEXT")
-    private String metadata; // JSON for additional data
-
-    private LocalDateTime completedAt;
 
     @PrePersist
     protected void onCreate() {
@@ -72,6 +63,5 @@ public class WalletTransaction extends AbstractAuditableEntity {
 
     public void complete() {
         this.status = TransactionStatus.COMPLETED;
-        this.completedAt = LocalDateTime.now();
     }
 }

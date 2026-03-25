@@ -1,7 +1,7 @@
 package com.parrcel.api.modules.users.dto;
 
-import com.parrcel.api.modules.users.validation.ValidPhoneNumber;
-import com.parrcel.api.modules.users.validation.ValidRole;
+import com.parrcel.api.common.validators.ValidPhoneNumber;
+import com.parrcel.api.modules.users.validators.ValidRole;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 

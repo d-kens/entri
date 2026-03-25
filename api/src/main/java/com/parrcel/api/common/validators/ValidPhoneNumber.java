@@ -1,4 +1,4 @@
-package com.parrcel.api.modules.users.validation;
+package com.parrcel.api.common.validators;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;

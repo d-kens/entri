@@ -1,4 +1,4 @@
-package com.parrcel.api.modules.users.validation;
+package com.parrcel.api.modules.users.validators;
 
 
 import com.parrcel.api.modules.users.entity.Role;

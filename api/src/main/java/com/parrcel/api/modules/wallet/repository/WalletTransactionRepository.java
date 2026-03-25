@@ -11,12 +11,5 @@ import java.util.Optional;
 
 @Repository
 public interface WalletTransactionRepository extends JpaRepository<WalletTransaction, Long> {
-    Optional<WalletTransaction> findByExternalId(String externalId);
-
     Page<WalletTransaction> findByWalletId(Long walletId, Pageable pageable);
-
-    Optional<WalletTransaction> findByReferenceTypeAndReferenceId(
-            String referenceType,
-            String referenceId
-    );
 }
