@@ -1,19 +1,27 @@
 package com.parrcel.api.modules.payment.service;
 
 import com.parrcel.api.common.exception.NotFoundException;
+import com.parrcel.api.modules.payment.dto.InitiatePaymentRequest;
+import com.parrcel.api.modules.payment.dto.InitiatePaymentResponse;
 import com.parrcel.api.modules.payment.entity.Payment;
+import com.parrcel.api.modules.payment.entity.PaymentMethod;
 import com.parrcel.api.modules.payment.entity.PaymentStatus;
 import com.parrcel.api.modules.payment.events.PaymentEvent;
+import com.parrcel.api.modules.payment.providers.Mpesa;
+import com.parrcel.api.modules.payment.providers.dto.ProviderInitResponse;
+import com.parrcel.api.modules.payment.providers.dto.mpesa.MpesaStkCallback;
 import com.parrcel.api.modules.payment.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -22,11 +30,107 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @Service
 @RequiredArgsConstructor
 public class PaymentService {
-
+    private final Mpesa mpesa;
     private final PaymentRepository paymentRepository;
     private final ApplicationEventPublisher eventPublisher;
     private final Map<String, CopyOnWriteArrayList<SseEmitter>> sseEmitters = new ConcurrentHashMap<>();
 
+    @Transactional
+    public InitiatePaymentResponse initiatePayment(InitiatePaymentRequest request) {
+
+        Payment payment = Payment.builder()
+                .referenceId(request.referenceId())
+                .amount(request.amount())
+                .description(request.paymentDescription())
+                .method(PaymentMethod.valueOf(request.paymentMethod()))
+                .phoneNumber(request.phoneNumber())
+                .build();
+
+        payment = paymentRepository.save(payment);
+
+        ProviderInitResponse providerResponse = mpesa.initiateStkPush(request);
+
+        payment.setProviderTransactionId(providerResponse.providerTransactionId());
+        paymentRepository.save(payment);
+
+        log.info("{} Payment {} created, awaiting callback for providerTransactionId: {}",
+                payment.getExternalId(), providerResponse.providerTransactionId());
+
+        return new InitiatePaymentResponse(payment.getExternalId(), payment.getReferenceId());
+    }
+
+
+    public void handleStkCallback(MpesaStkCallback mpesaStkCallback) {
+        MpesaStkCallback.StkCallback stk = mpesaStkCallback.body().stkCallback();
+        boolean success = stk.resultCode() == 0;
+        String providerReference = success ? extractMetadataValue(stk, "MpesaReceiptNumber") : null;
+        String failureReason = success ? null : stk.resultCode() + " - " + stk.resultDesc();
+        BigDecimal amount = success ? extractAmount(stk) : null;
+        LocalDateTime transactionDate = success ? extractTransactionDate(stk) : null;
+
+        processPaymentStatus(
+                stk.checkoutRequestId(),
+                success,
+                providerReference,
+                failureReason,
+                amount,
+                transactionDate
+        );
+    }
+
+    private void processPaymentStatus(String providerTransactionId, boolean success, String providerReference, String failureReason, BigDecimal amount, LocalDateTime transactionDate) {
+        Payment payment = findPaymentByProviderTransactionId(providerTransactionId);
+
+        if (payment.isTerminal()) {
+            log.warn("Payment {} is already {} — ignoring duplicate update",
+                    payment.getExternalId(), payment.getStatus());
+            return;
+        }
+
+        PaymentEvent event;
+        if (success) {
+            markPaymentAsPaid(payment, providerReference);
+            event = PaymentEvent.success(
+                    payment.getExternalId(),
+                    payment.getReferenceId(),
+                    amount,
+                    providerReference,
+                    transactionDate
+            );
+        } else {
+            markPaymentAsFailed(payment, failureReason);
+            event = PaymentEvent.failure(
+                    payment.getExternalId(),
+                    payment.getReferenceId(),
+                    failureReason
+            );
+        }
+
+        eventPublisher.publishEvent(event);
+        sendPaymentEventToClients(payment.getExternalId(), event);
+    }
+
+    private String extractMetadataValue(MpesaStkCallback.StkCallback stk, String name) {
+        if (stk.callbackMetadata() == null || stk.callbackMetadata().item() == null) {
+            return null;
+        }
+        return stk.callbackMetadata().item().stream()
+                .filter(item -> name.equals(item.name()))
+                .map(item -> item.value() != null ? item.value().toString() : null)
+                .findFirst()
+                .orElse(null);
+    }
+
+    private BigDecimal extractAmount(MpesaStkCallback.StkCallback stk) {
+        String value = extractMetadataValue(stk, "Amount");
+        return value != null ? new BigDecimal(value) : null;
+    }
+
+    private LocalDateTime extractTransactionDate(MpesaStkCallback.StkCallback stk) {
+        String value = extractMetadataValue(stk, "TransactionDate");
+        if (value == null) return null;
+        return LocalDateTime.parse(value, DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+    }
 
     public Payment findPaymentByProviderTransactionId(String providerTransactionId) {
         return  paymentRepository.findByProviderTransactionId(providerTransactionId).orElseThrow(
@@ -69,7 +173,7 @@ public class PaymentService {
         return emitter;
     }
 
-    public void sendPaymentEventToClients(String paymentId, PaymentEvent event) {
+    private void sendPaymentEventToClients(String paymentId, PaymentEvent event) {
         CopyOnWriteArrayList<SseEmitter> paymentEmitters = sseEmitters.get(paymentId);
 
         if (paymentEmitters == null || paymentEmitters.isEmpty()) {
@@ -114,39 +218,5 @@ public class PaymentService {
                 log.info("All emitters removed for payment: {}", paymentId);
             }
         }
-    }
-
-    public void processPaymentStatus(String providerTransactionId, boolean success, String providerReference, String failureReason, BigDecimal amount, LocalDateTime transactionDate) {
-        Payment payment = findPaymentByProviderTransactionId(providerTransactionId);
-
-        if (payment.isTerminal()) {
-            log.warn("Payment {} is already {} — ignoring duplicate update",
-                    payment.getExternalId(), payment.getStatus());
-            return;
-        }
-
-        PaymentEvent event;
-        if (success) {
-            markPaymentAsPaid(payment, providerReference);
-            event = PaymentEvent.success(
-                    payment.getExternalId(),
-                    payment.getPaymentType(),
-                    payment.getReferenceId(),
-                    amount,
-                    providerReference,
-                    transactionDate
-            );
-        } else {
-            markPaymentAsFailed(payment, failureReason);
-            event = PaymentEvent.failure(
-                    payment.getExternalId(),
-                    payment.getPaymentType(),
-                    payment.getReferenceId(),
-                    failureReason
-            );
-        }
-
-        eventPublisher.publishEvent(event);
-        sendPaymentEventToClients(payment.getExternalId(), event);
     }
 }

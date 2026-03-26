@@ -23,14 +23,6 @@ public class Payment extends AbstractAuditableEntity {
     @Column(name = "external_id", nullable = false, unique = true, length = 36)
     private String externalId;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "payment_direction", nullable = false, length = 20)
-    private PaymentDirection paymentDirection;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "payment_type", nullable = false, length = 50)
-    private PaymentType paymentType;
-
     @Column(name = "reference_id", nullable = false, length = 36)
     private String referenceId;
 
