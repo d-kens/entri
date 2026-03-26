@@ -15,7 +15,6 @@ import com.parrcel.api.modules.payment.service.PaymentService;
 import com.parrcel.api.modules.payment.utils.PhoneNumberUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -32,7 +31,6 @@ public class MpesaProvider implements PaymentProvider {
     private final MpesaClient mpesaClient;
     private final MpesaProperties mpesaProperties;
     private final PaymentService paymentService;
-    private final ApplicationEventPublisher eventPublisher;
 
 
     public String authenticate() {
@@ -101,48 +99,20 @@ public class MpesaProvider implements PaymentProvider {
 
     public void handleStkCallback(MpesaStkCallback mpesaStkCallback) {
         MpesaStkCallback.StkCallback stk = mpesaStkCallback.body().stkCallback();
-        try {
-            var payment = paymentService.findPaymentByProviderTransactionId(stk.checkoutRequestId());
+        boolean success = stk.resultCode() == 0;
+        String providerReference = success ? extractMetadataValue(stk, "MpesaReceiptNumber") : null;
+        String failureReason = success ? null : stk.resultCode() + " - " + stk.resultDesc();
+        BigDecimal amount = success ? extractAmount(stk) : null;
+        LocalDateTime transactionDate = success ? extractTransactionDate(stk) : null;
 
-            if (payment.isTerminal()) {
-                log.warn("Payment {} is already {} — ignoring duplicate callback",
-                        payment.getExternalId(), payment.getStatus());
-                return;
-            }
-
-            PaymentEvent event;
-
-            if (stk.resultCode() == 0) {
-                String receiptNumber = extractMetadataValue(stk, "MpesaReceiptNumber");
-                paymentService.markPaymentAsPaid(payment, receiptNumber);
-
-                event = PaymentEvent.success(
-                        payment.getExternalId(),
-                        payment.getPaymentType(),
-                        payment.getReferenceId(),
-                        extractAmount(stk),
-                        receiptNumber,
-                        extractTransactionDate(stk)
-                );
-            } else {
-                String failureReason = stk.resultCode() + " - " + stk.resultDesc();
-                paymentService.markPaymentAsFailed(payment, failureReason);
-
-                event = PaymentEvent.failure(
-                        payment.getExternalId(),
-                        payment.getPaymentType(),
-                        payment.getReferenceId(),
-                        failureReason
-                );
-            }
-
-            eventPublisher.publishEvent(event);
-            paymentService.sendPaymentEventToClients(payment.getExternalId(), event);
-
-        } catch (NotFoundException e) {
-            log.warn("Received callback for unknown providerTransactionId: {} — ignoring",
-                    stk.checkoutRequestId());
-        }
+        paymentService.processPaymentStatus(
+                stk.checkoutRequestId(),
+                success,
+                providerReference,
+                failureReason,
+                amount,
+                transactionDate
+        );
     }
 
     private String extractMetadataValue(MpesaStkCallback.StkCallback stk, String name) {
