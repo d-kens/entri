@@ -1,7 +1,6 @@
 package com.parrcel.api.modules.payment.dto;
 
 import com.parrcel.api.common.validators.ValidPhoneNumber;
-import com.parrcel.api.modules.payment.entity.PaymentType;
 import com.parrcel.api.modules.payment.validation.ValidPaymentMethod;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;

@@ -1,7 +1,6 @@
 package com.parrcel.api.modules.payment.repository;
 
 
-import com.parrcel.api.modules.payment.entity.PaymentType;
 import com.parrcel.api.modules.payment.entity.PaymentStatus;
 import com.parrcel.api.modules.payment.entity.Payment;
 import org.springframework.data.jpa.repository.JpaRepository;

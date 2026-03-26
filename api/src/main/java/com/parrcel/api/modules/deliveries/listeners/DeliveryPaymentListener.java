@@ -1,7 +1,6 @@
 package com.parrcel.api.modules.deliveries.listeners;
 
 import com.parrcel.api.modules.deliveries.service.DeliveryService;
-import com.parrcel.api.modules.payment.entity.PaymentType;
 import com.parrcel.api.modules.payment.events.PaymentEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,10 +19,6 @@ public class DeliveryPaymentListener {
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void onPaymentEvent(PaymentEvent event) {
-        if (event.paymentType() != PaymentType.DELIVERY_FEE) {
-            return;
-        }
-
         if (event.isSuccess()) {
             log.info("Handling successful payment for delivery: {}", event.referenceId());
             deliveryService.markDeliveryAsPaid(event.referenceId());

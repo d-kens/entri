@@ -1,14 +1,12 @@
 package com.parrcel.api.modules.payment.events;
 
 import com.parrcel.api.modules.payment.entity.PaymentStatus;
-import com.parrcel.api.modules.payment.entity.PaymentType;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public record PaymentEvent(
         String paymentId,
-        PaymentType paymentType,
         String referenceId,
         PaymentStatus status,
         BigDecimal amount,
@@ -19,7 +17,6 @@ public record PaymentEvent(
 ) {
     public static PaymentEvent success(
             String paymentId,
-            PaymentType paymentType,
             String referenceId,
             BigDecimal amount,
             String providerReference,
@@ -27,7 +24,6 @@ public record PaymentEvent(
     ) {
         return new PaymentEvent(
                 paymentId,
-                paymentType,
                 referenceId,
                 PaymentStatus.SUCCESS,
                 amount,
@@ -40,13 +36,11 @@ public record PaymentEvent(
 
     public static PaymentEvent failure(
             String paymentId,
-            PaymentType paymentType,
             String referenceId,
             String failureReason
     ) {
         return new PaymentEvent(
                 paymentId,
-                paymentType,
                 referenceId,
                 PaymentStatus.FAILED,
                 null,
