@@ -1,5 +1,7 @@
 package com.parrcel.api.modules.wallet.service;
 
+import com.parrcel.api.modules.deliveries.entity.Delivery;
+import com.parrcel.api.modules.deliveries.service.DeliveryService;
 import com.parrcel.api.modules.users.entity.User;
 import com.parrcel.api.modules.users.service.UserService;
 import com.parrcel.api.modules.wallet.dto.WithdrawRequest;
@@ -28,6 +30,7 @@ public class WalletService {
     private final UserService userService;
     private final WalletRepository walletRepository;
     private final WalletTransactionRepository walletTransactionRepository;
+    private final DeliveryService deliveryService;
 
     private Wallet createWallet(User user) {
         var wallet = new Wallet();
@@ -97,5 +100,36 @@ public class WalletService {
         transaction = walletTransactionRepository.save(transaction);
         log.info("Wallet credited successfully. New balance: {}", wallet.getBalance());
         return transaction;
+    }
+
+    @Transactional
+    public void processCodCollection(String deliveryExternalId, BigDecimal amount, String paymentId) {
+        Delivery delivery = deliveryService.getDeliveryByExternalId(deliveryExternalId);
+
+        if (delivery.isCashCollected()) {
+            log.info("Cash already collected for delivery: {} - Skipping duplicate",
+                    delivery.getExternalId());
+            return;
+        }
+
+        if (!delivery.isCollectCash()) {
+            log.error("Payment {} references delivery {} without COD enabled",
+                    paymentId, delivery.getExternalId());
+            return;
+        }
+
+        Wallet merchantWallet = getOrCreateWallet(delivery.getUser().getId());
+
+        creditWallet(
+                merchantWallet,
+                amount,
+                deliveryExternalId,
+                "COD collection for delivery " + delivery.getTrackingNumber()
+        );
+
+        deliveryService.markCashCollected(delivery.getExternalId());
+
+        log.info("Merchant wallet credited for COD payment: {} - Amount: {}",
+                paymentId, amount);
     }
 }

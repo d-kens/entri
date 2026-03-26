@@ -7,10 +7,13 @@ import com.parrcel.api.modules.payment.events.PaymentEvent;
 import com.parrcel.api.modules.payment.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -21,6 +24,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class PaymentService {
 
     private final PaymentRepository paymentRepository;
+    private final ApplicationEventPublisher eventPublisher;
     private final Map<String, CopyOnWriteArrayList<SseEmitter>> sseEmitters = new ConcurrentHashMap<>();
 
 
@@ -110,5 +114,39 @@ public class PaymentService {
                 log.info("All emitters removed for payment: {}", paymentId);
             }
         }
+    }
+
+    public void processPaymentStatus(String providerTransactionId, boolean success, String providerReference, String failureReason, BigDecimal amount, LocalDateTime transactionDate) {
+        Payment payment = findPaymentByProviderTransactionId(providerTransactionId);
+
+        if (payment.isTerminal()) {
+            log.warn("Payment {} is already {} — ignoring duplicate update",
+                    payment.getExternalId(), payment.getStatus());
+            return;
+        }
+
+        PaymentEvent event;
+        if (success) {
+            markPaymentAsPaid(payment, providerReference);
+            event = PaymentEvent.success(
+                    payment.getExternalId(),
+                    payment.getPaymentType(),
+                    payment.getReferenceId(),
+                    amount,
+                    providerReference,
+                    transactionDate
+            );
+        } else {
+            markPaymentAsFailed(payment, failureReason);
+            event = PaymentEvent.failure(
+                    payment.getExternalId(),
+                    payment.getPaymentType(),
+                    payment.getReferenceId(),
+                    failureReason
+            );
+        }
+
+        eventPublisher.publishEvent(event);
+        sendPaymentEventToClients(payment.getExternalId(), event);
     }
 }
