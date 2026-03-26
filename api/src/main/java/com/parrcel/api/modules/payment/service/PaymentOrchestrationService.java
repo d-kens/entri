@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 public class PaymentOrchestrationService {
 
     private final PaymentRepository paymentRepository;
-    private final PaymentProviderRegistry providerRegistry;
+    private final PaymentProviderRegistry paymentProviderRegistry;
 
     @Transactional
     public InitiatePaymentResponse initiatePayment(InitiatePaymentRequest request) {
@@ -36,7 +36,7 @@ public class PaymentOrchestrationService {
 
         payment = paymentRepository.save(payment);
 
-        PaymentProvider provider = providerRegistry.getProvider(request.paymentMethod());
+        PaymentProvider provider = paymentProviderRegistry.getProvider(request.paymentMethod());
         ProviderInitResponse providerResponse = provider.initiateCollection(request);
 
         payment.setProviderTransactionId(providerResponse.providerTransactionId());
