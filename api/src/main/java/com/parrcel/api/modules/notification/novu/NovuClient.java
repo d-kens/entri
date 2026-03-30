@@ -49,10 +49,7 @@ public class NovuClient {
 
     private SubscriberRequest buildSubscriber(SubscriberDto dto) {
         SubscriberRequest subscriber = new SubscriberRequest();
-        subscriber.setEmail(dto.email());
         subscriber.setPhone(dto.phoneNumber());
-        subscriber.setFirstName(dto.firstName());
-        subscriber.setLastName(dto.lastName());
         subscriber.setSubscriberId(dto.id().toString());
         return subscriber;
     }

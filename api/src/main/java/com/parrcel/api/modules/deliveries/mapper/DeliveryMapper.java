@@ -12,6 +12,6 @@ public interface DeliveryMapper {
     @Mapping(target = "fromAgent", source = "fromAgent.name")
     @Mapping(target = "toZone", source = "toAgent.zone.zoneName")
     @Mapping(target = "fromZone", source = "fromAgent.zone.zoneName")
-    @Mapping(target = "customerName", source = "user.userName")
+    @Mapping(target = "customerName", source = "user.name")
     DeliveryResponseDto toResponseDto(Delivery delivery);
 }

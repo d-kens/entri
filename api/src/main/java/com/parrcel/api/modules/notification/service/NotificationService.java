@@ -74,9 +74,6 @@ public class NotificationService {
     private SubscriberDto toSubscriber(User user) {
         return new SubscriberDto(
                 user.getId(),
-                user.getEmail(),
-                user.getUserName(),
-                "",
                 user.getPhoneNumber()
         );
     }
