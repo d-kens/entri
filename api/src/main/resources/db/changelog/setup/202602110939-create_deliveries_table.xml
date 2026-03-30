@@ -49,16 +49,6 @@
 
             <column name="package_description" type="VARCHAR(500)"/>
 
-            <column name="collect_cash" type="BOOLEAN" defaultValueBoolean="false">
-                <constraints nullable="false"/>
-            </column>
-
-            <column name="cash_amount" type="DECIMAL(10,2)"/>
-
-            <column name="cash_collected" type="BOOLEAN" defaultValueBoolean="false">
-                <constraints nullable="false"/>
-            </column>
-
             <column name="delivery_fee" type="DECIMAL(10,2)">
                 <constraints nullable="false"/>
             </column>
@@ -72,7 +62,6 @@
             <column name="delivery_status" type="VARCHAR(50)" defaultValue="PENDING">
                 <constraints nullable="false"/>
             </column>
-
 
             <column name="dropped_at_pickup_agent_at" type="TIMESTAMP"/>
 

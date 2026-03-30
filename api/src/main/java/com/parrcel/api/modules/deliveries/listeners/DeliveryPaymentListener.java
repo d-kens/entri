@@ -22,6 +22,7 @@ public class DeliveryPaymentListener {
         if (event.isSuccess()) {
             log.info("Handling successful payment for delivery: {}", event.referenceId());
             deliveryService.markDeliveryAsPaid(event.referenceId());
+            deliveryService.sendDeliveryNotification(event.referenceId());
         } else if (event.isFailure()) {
             log.info("Handling failed payment for delivery: {}", event.referenceId());
             deliveryService.markDeliveryPaymentFailed(event.referenceId());
