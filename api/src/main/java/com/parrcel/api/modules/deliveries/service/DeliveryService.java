@@ -8,12 +8,15 @@ import com.parrcel.api.modules.deliveries.entity.DeliveryStatus;
 import com.parrcel.api.modules.deliveries.entity.Delivery;
 import com.parrcel.api.modules.deliveries.repository.DeliveryRepository;
 import com.parrcel.api.modules.deliveries.repository.DeliverySpecification;
+import com.parrcel.api.modules.notification.entity.NotificationType;
+import com.parrcel.api.modules.notification.events.SendNotificationEvent;
 import com.parrcel.api.modules.users.entity.Role;
 import com.parrcel.api.modules.users.entity.User;
 import com.parrcel.api.modules.users.service.UserService;
 import com.parrcel.api.modules.zones.service.AgentService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -27,12 +30,13 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
 @AllArgsConstructor
 public class DeliveryService {
-
+    private final ApplicationEventPublisher eventPublisher;
     private static final SecureRandom RANDOM = new SecureRandom();
     private static final String CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 
@@ -126,26 +130,23 @@ public class DeliveryService {
         log.warn("Delivery {} payment marked as FAILED", deliveryExternalId);
     }
 
-    @Transactional
-    public void markCashCollected(String deliveryExternalId) {
-        log.info("Marking cash as collected for delivery: {}", deliveryExternalId);
-
+    public void sendDeliveryNotification(String deliveryExternalId) {
         Delivery delivery = deliveryRepository.findByExternalId(deliveryExternalId)
                 .orElseThrow(() -> new NotFoundException("Delivery not found: " + deliveryExternalId));
 
-        if (!delivery.isCollectCash()) {
-            throw new InvalidDeliveryException("Delivery does not have cash collection enabled");
-        }
 
-        if (delivery.isCashCollected()) {
-            log.warn("Cash already marked as collected for delivery: {}", deliveryExternalId);
-            return;
-        }
+        User user = delivery.getUser();
 
-        delivery.setCashCollected(true);
-        deliveryRepository.save(delivery);
-
-        log.info("Cash marked as collected for delivery: {}", deliveryExternalId);
+        eventPublisher.publishEvent(
+                new SendNotificationEvent(
+                        user,
+                        Map.of(
+                                "userName", user.getUserName(),
+                                "message", "Your delivery fee has been paid. Please securely package your item, clearly label it with the tracking number, and include the recipient's name and phone number. Drop it off at your selected agent as soon as possible."
+                        ),
+                        NotificationType.DELIVERY_FEE_PAYMENT
+                )
+        );
     }
 
 

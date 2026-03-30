@@ -57,17 +57,6 @@ public class Delivery extends AbstractAuditableEntity {
     @Column(name = "package_description", length = 500)
     private String packageDescription;
 
-    @Builder.Default
-    @Column(name = "collect_cash", nullable = false)
-    private boolean collectCash = false;
-
-    @Column(name = "cash_amount", precision = 10, scale = 2)
-    private BigDecimal cashAmount;
-
-    @Builder.Default
-    @Column(name = "cash_collected", nullable = false)
-    private boolean cashCollected = false;
-
     @Column(name = "delivery_fee", nullable = false, precision = 10, scale = 2)
     private BigDecimal deliveryFee;
 
@@ -136,4 +125,3 @@ public class Delivery extends AbstractAuditableEntity {
                 deliveryStatus == DeliveryStatus.DROPPED_AT_PICKUP_AGENT;
     }
 }
-
