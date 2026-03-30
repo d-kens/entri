@@ -1,11 +1,18 @@
 package com.parrcel.api.modules.users.entity;
 
-public enum Role {
-    ADMIN,
-    CUSTOMER,
-    AGENT,
-    RIDER;
-    public static Role from (String value) {
-        return Role.valueOf(value.toUpperCase());
-    }
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
+@Entity
+@Table(name = "roles")
+public class Role {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true, length = 50)
+    private String name;
 }

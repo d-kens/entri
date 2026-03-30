@@ -19,8 +19,6 @@ public record InitiatePaymentRequest(
         @NotBlank(message = "paymentDescription is required")
         String paymentDescription,
 
-        PaymentType paymentType,
-
         @NotBlank(message = "referenceId is required")
         String referenceId,
 

@@ -10,7 +10,6 @@ import com.parrcel.api.modules.deliveries.repository.DeliveryRepository;
 import com.parrcel.api.modules.deliveries.repository.DeliverySpecification;
 import com.parrcel.api.modules.notification.entity.NotificationType;
 import com.parrcel.api.modules.notification.events.SendNotificationEvent;
-import com.parrcel.api.modules.users.entity.Role;
 import com.parrcel.api.modules.users.entity.User;
 import com.parrcel.api.modules.users.service.UserService;
 import com.parrcel.api.modules.zones.service.AgentService;
@@ -93,8 +92,6 @@ public class DeliveryService {
                 .fromAgent(fromAgent)
                 .toAgent(toAgent)
                 .user(user)
-                .collectCash(dto.collectCash())
-                .cashAmount(dto.cashAmount())
                 .packageName(dto.packageName())
                 .packagePrice(dto.packagePrice())
                 .packageDescription(dto.packageDescription())
@@ -141,7 +138,7 @@ public class DeliveryService {
                 new SendNotificationEvent(
                         user,
                         Map.of(
-                                "userName", user.getUserName(),
+                                "userName", user.getName(),
                                 "message", "Your delivery fee has been paid. Please securely package your item, clearly label it with the tracking number, and include the recipient's name and phone number. Drop it off at your selected agent as soon as possible."
                         ),
                         NotificationType.DELIVERY_FEE_PAYMENT
@@ -153,7 +150,7 @@ public class DeliveryService {
     private Specification<Delivery> buildSpecification(User currentUser, String status, String search) {
         Specification<Delivery> spec = Specification.allOf();
 
-        if (!currentUser.getRole().equals(Role.ADMIN)) {
+        if (currentUser.getRoles().stream().noneMatch(role -> role.getName().equals("ADMIN"))) {
             spec = spec.and(DeliverySpecification.hasUser(currentUser.getId()));
         }
 
@@ -224,9 +221,6 @@ public class DeliveryService {
                 delivery.getDeliveryStatus(),
                 delivery.getRecipientName(),
                 delivery.getRecipientPhone(),
-                delivery.isCollectCash(),
-                delivery.getCashAmount(),
-                delivery.isCashCollected(),
                 from,
                 to,
                 timeline
