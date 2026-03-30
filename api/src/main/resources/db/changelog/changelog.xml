@@ -10,10 +10,8 @@
     <include file="setup/202602091400-create_refresh_token_sessions_table.xml" relativeToChangelogFile="true" />
     <include file="setup/202602061048-create_zones_table.xml" relativeToChangelogFile="true" />
     <include file="setup/202602061058-create_agents_table.xml" relativeToChangelogFile="true" />
-    <include file="setup/202602061130-seed_users_for_agents.xml" relativeToChangelogFile="true" />
-    <include file="setup/202602061125-seed_zones_and_agents.xml" relativeToChangelogFile="true" />
     <include file="setup/202602110939-create_deliveries_table.xml" relativeToChangelogFile="true" />
     <include file="setup/202603021149-create_payments_table.xml" relativeToChangelogFile="true" />
-    <include file="setup/202603220316-create_wallets_table.xml" relativeToChangelogFile="true" />
-    <include file="setup/202603220319-create_wallet_transactions_table.xml" relativeToChangelogFile="true" />
+    <include file="setup/202603301022-create_roles_table.xml" relativeToChangelogFile="true" />
+    <include file="setup/202603301022-create_user_roles_table.xml" relativeToChangelogFile="true" />
 </databaseChangeLog>
