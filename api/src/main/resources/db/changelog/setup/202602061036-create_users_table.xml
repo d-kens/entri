@@ -9,6 +9,10 @@
                 <constraints primaryKey="true"/>
             </column>
 
+            <column name="external_id" type="VARCHAR(36)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
             <column name="name" type="VARCHAR(100)">
                 <constraints nullable="false"/>
             </column>

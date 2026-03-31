@@ -1,5 +1,0 @@
-package com.parrcel.api.modules.payment.providers.dto;
-
-public record ProviderInitResponse(
-        String providerTransactionId
-) {}

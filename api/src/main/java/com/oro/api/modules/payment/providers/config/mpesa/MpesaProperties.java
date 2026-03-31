@@ -1,0 +1,13 @@
+package com.oro.api.modules.payment.providers.config.mpesa;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
+@ConfigurationProperties(prefix = "mpesa")
+public record MpesaProperties(
+        String baseUrl,
+        String consumerKey,
+        String consumerSecret,
+        String shortcode,
+        String passkey,
+        String callbackUrl
+) {}
