@@ -1,0 +1,28 @@
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd">
+
+    <changeSet id="seed-roles" author="d.onyango">
+        <insert tableName="roles">
+            <column name="name" value="MERCHANT"/>
+        </insert>
+        <insert tableName="roles">
+            <column name="name" value="RIDER"/>
+        </insert>
+        <insert tableName="roles">
+            <column name="name" value="AGENT"/>
+        </insert>
+        <insert tableName="roles">
+            <column name="name" value="ADMIN"/>
+        </insert>
+
+        <rollback>
+            <delete tableName="roles">
+                <where>name IN ('MERCHANT', 'RIDER', 'AGENT', 'ADMIN')</where>
+            </delete>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>
