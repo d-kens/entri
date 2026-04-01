@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -28,7 +29,8 @@ public class User extends AbstractAuditableEntity {
     @Column(name = "name", nullable = false, length = 100)
     private String name;
 
-    private boolean active = true;
+    @Column(name = "is_active", nullable = false)
+    private boolean isActive = true;
 
     @Embedded
     private TwoFactorCode twoFactorCode;
@@ -40,6 +42,13 @@ public class User extends AbstractAuditableEntity {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles = new HashSet<>();
+
+    @PrePersist
+    public void prePersist() {
+        if (externalId == null) {
+            externalId = UUID.randomUUID().toString();
+        }
+    }
 
     public void requestOtp(int minutesValid) {
         twoFactorCode.generate(minutesValid);

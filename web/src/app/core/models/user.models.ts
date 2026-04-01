@@ -1,15 +1,11 @@
-export type CreateUserRequest = {
-  userName: string,
-  password: string,
-  phoneNumber: string,
-  role: string
+export type RegisterMerchantRequest = {
+  name: string,
+  phoneNumber: string
 }
 
-
 export type UserResponse = {
-  id: number,
-  role: 'ADMIN' | 'CUSTOMER' | 'AGENT',
-  email: string,
-  userName: string,
-  phoneNumber: string
+  externalId: string,
+  name: string,
+  phoneNumber: string,
+  roles: string[]
 }

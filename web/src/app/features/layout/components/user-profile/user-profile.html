@@ -7,8 +7,8 @@
     <!-- User Icon & Name -->
     <div class="flex items-center gap-2">
       <div class="flex flex-col items-start">
-        <span class="text-sm font-medium text-on-surface leading-none">{{ user()?.userName }}</span>
-        @if (user()?.role !== 'ADMIN') {
+        <span class="text-sm font-medium text-on-surface leading-none">{{ user()?.name }}</span>
+        @if (!user()?.roles?.includes('ADMIN')) {
           <span class="text-xs text-on-surface-variant leading-none mt-1">
             @if (isLoadingBalance()) {
               <mat-spinner diameter="12" class="inline-block"></mat-spinner>
@@ -26,7 +26,7 @@
 </button>
 
 <mat-menu #userMenu="matMenu" xPosition="before" class="user-profile-menu">
-  @if (user()?.role !== 'ADMIN') {
+  @if (!user()?.roles?.includes('ADMIN')) {
     <button mat-menu-item (click)="navigateToPayout()" class="!py-3 !px-4">
       <div class="flex items-center gap-3">
         <mat-icon class="!w-5 !h-5 !text-[20px] text-primary">payment</mat-icon>

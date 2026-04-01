@@ -1,19 +1,19 @@
 import {Component, signal} from '@angular/core';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {CommonModule} from '@angular/common';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {SnackbarService} from '@core/services/snackbar-service';
 import {AuthService} from '@core/services/auth-service';
-import {AuthRequest} from '@core/models/auth.models';
 
 @Component({
   selector: 'app-login',
   standalone: true,
+  host: { class: 'w-full' },
   imports: [
     CommonModule,
     RouterLink,
@@ -30,7 +30,7 @@ import {AuthRequest} from '@core/models/auth.models';
 export class Login {
   loginForm!: FormGroup;
   isLoading = signal(false);
-  hidePassword = signal(true);
+  otpSent = signal(false);
 
   returnUrl: string = '/';
 
@@ -44,11 +44,11 @@ export class Login {
     this.loginForm = fb.group({
       phoneNumber: ['', [
         Validators.required,
-        Validators.pattern(/^0[17]\d{8}$/), // Matches 07XXXXXXXX or 01XXXXXXXX
+        Validators.pattern(/^0[17]\d{8}$/),
         Validators.minLength(10),
         Validators.maxLength(10)
       ]],
-      password: ['', [Validators.required]]
+      code: ['']
     });
 
     const fromQuery = this.route.snapshot.queryParamMap.get('returnUrl');
@@ -57,49 +57,55 @@ export class Login {
     }
   }
 
-  togglePasswordVisibility(event: MouseEvent) {
-    this.hidePassword.set(!this.hidePassword());
-    event.stopPropagation();
-  }
-
-  getPhoneErrorMessage(): string {
-    const control = this.loginForm.get('phoneNumber');
-
-    if (control?.hasError('required')) {
-      return 'Phone number is required';
-    }
-    if (control?.hasError('pattern') || control?.hasError('minLength') || control?.hasError('maxLength')) {
-      return 'Enter a valid phone number';
-    }
-
-    return '';
-  }
-
   login() {
-    if (this.loginForm.invalid) {
-      this.loginForm.markAllAsTouched();
-      return;
+    if (this.otpSent()) {
+      if (this.loginForm.invalid) {
+        this.loginForm.markAllAsTouched();
+        return;
+      }
+    } else {
+      const phoneControl = this.loginForm.get('phoneNumber');
+      phoneControl?.markAsTouched();
+      if (phoneControl?.invalid) return;
     }
 
     this.isLoading.set(true);
 
-    const authRequest: AuthRequest = {
-      phoneNumber: this.loginForm.get('phoneNumber')!.value, // Send as-is: 0707127309
-      password: this.loginForm.get('password')!.value
-    };
+    const phoneNumber = this.loginForm.get('phoneNumber')!.value;
+    const code = this.otpSent() ? this.loginForm.get('code')!.value : undefined;
 
-    this.authService.login(authRequest).subscribe({
-      next: () => {
+    this.authService.login({ phoneNumber, code }).subscribe({
+      next: (response) => {
         this.isLoading.set(false);
-        this.snackbarService.showSuccess('Login successful!');
-        this.router.navigateByUrl(this.returnUrl);
+        if (response?.accessToken) {
+          this.router.navigateByUrl(this.returnUrl);
+        } else {
+          this.loginForm.get('phoneNumber')?.disable();
+          this.loginForm.get('code')?.setValidators([Validators.required, Validators.pattern(/^\d{6}$/)]);
+          this.loginForm.get('code')?.updateValueAndValidity();
+          this.otpSent.set(true);
+        }
       },
       error: (err) => {
-        console.log('This is the error: ', err);
-        const errorMessage = err?.error?.message || 'Login failed. Please check your credentials.';
+        const errorMessage = err?.error?.message || (this.otpSent() ? 'Invalid or expired code.' : 'Failed to send OTP.');
         this.snackbarService.showError(errorMessage);
         this.isLoading.set(false);
       }
     });
+  }
+
+  changePhone() {
+    this.loginForm.get('phoneNumber')?.enable();
+    const codeControl = this.loginForm.get('code');
+    codeControl?.clearValidators();
+    codeControl?.reset('');
+    codeControl?.updateValueAndValidity();
+    this.otpSent.set(false);
+  }
+
+  get maskedPhone(): string {
+    const p = this.loginForm.get('phoneNumber')!.value as string;
+    if (!p) return '';
+    return p.slice(0, 4) + '****' + p.slice(-2);
   }
 }

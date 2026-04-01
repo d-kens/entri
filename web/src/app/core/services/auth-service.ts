@@ -26,17 +26,17 @@ export class AuthService {
     return localStorage.getItem(this.ACCESS_TOKEN_KEY);
   }
 
-  login(authRequest: AuthRequest): Observable<AccessToken> {
+  login(authRequest: AuthRequest): Observable<Partial<AccessToken>> {
     return this.http
-      .post<AccessToken>(`${environment.apiBaseUrl}/auth/login`, authRequest, {
+      .post<Partial<AccessToken>>(`${environment.apiBaseUrl}/auth/login`, authRequest, {
         withCredentials: true
       })
       .pipe(
-        tap({
-          next: (response) => {
+        tap((response) => {
+          if (response?.accessToken) {
             localStorage.setItem(this.ACCESS_TOKEN_KEY, response.accessToken);
             this.authStatusSignal.set(true);
-          },
+          }
         }),
         catchError((error) => {
           this.authStatusSignal.set(false);

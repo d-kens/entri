@@ -44,7 +44,7 @@ export class Toolbar implements OnInit {
         this.user.set(user);
 
         // Load wallet balance only for non-admin users
-        if (user.role !== 'ADMIN') {
+        if (!user.roles.includes('ADMIN')) {
           this.loadWalletBalance();
         }
       },

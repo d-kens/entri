@@ -1,6 +1,6 @@
 export type AuthRequest = {
   phoneNumber: string,
-  password: string
+  code?: string
 }
 
 export type AccessToken = {

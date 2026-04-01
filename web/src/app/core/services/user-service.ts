@@ -1,7 +1,7 @@
 import {inject, Injectable} from '@angular/core';
 import { environment } from 'environments/environment';
 import {HttpClient} from '@angular/common/http';
-import {CreateUserRequest, UserResponse} from '../models/user.models';
+import {RegisterMerchantRequest, UserResponse} from '../models/user.models';
 import {Observable} from 'rxjs';
 
 @Injectable({
@@ -10,9 +10,9 @@ import {Observable} from 'rxjs';
 export class UserService {
   private http: HttpClient = inject(HttpClient);
 
-  createUser(payload: CreateUserRequest): Observable<UserResponse> {
+  registerMerchant(payload: RegisterMerchantRequest): Observable<UserResponse> {
     return this.http.post<UserResponse>(
-      `${environment.apiBaseUrl}/users`,
+      `${environment.apiBaseUrl}/auth/register`,
       payload
     )
   }
