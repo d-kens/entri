@@ -27,6 +27,13 @@
 
             <column name="two_factor_code" type="VARCHAR(10)"/>
             <column name="two_factor_code_expiration" type="TIMESTAMP"/>
+
+            <column name="created" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="modified" type="TIMESTAMP"/>
+            <column name="modified_by" type="VARCHAR(255)"/>
         </createTable>
 
         <rollback>

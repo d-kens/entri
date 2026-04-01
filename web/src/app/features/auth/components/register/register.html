@@ -5,60 +5,26 @@
   </div>
 
   <form [formGroup]="registerForm" class="space-y-2">
-    <mat-form-field appearance="outline" class="w-full compact-field">
-      <mat-label>Username</mat-label>
-      <input matInput type="text" placeholder="Enter username" formControlName="userName">
+    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full compact-field">
+      <mat-label>Full Name</mat-label>
+      <input matInput type="text" placeholder="Enter your full name" formControlName="name">
       <mat-icon matSuffix>account_circle</mat-icon>
 
-      @if(registerForm.get('userName')?.hasError('required')) {
-        <mat-error>Username is required</mat-error>
+      @if(registerForm.get('name')?.hasError('required')) {
+        <mat-error>Full name is required</mat-error>
       }
     </mat-form-field>
 
-    <mat-form-field appearance="outline" class="w-full compact-field">
+    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full compact-field">
       <mat-label>Phone Number</mat-label>
-      <input matInput type="text" placeholder="Enter phone number (e.g 254707123567)" formControlName="phoneNumber">
+      <input matInput type="text" placeholder="e.g. 254707123567" formControlName="phoneNumber">
       <mat-icon matSuffix>phone</mat-icon>
 
       @if(registerForm.get('phoneNumber')?.hasError('required')) {
-        <mat-error>Phone Number is required</mat-error>
+        <mat-error>Phone number is required</mat-error>
       }
-    </mat-form-field>
-
-    <mat-form-field appearance="outline" class="w-full compact-field">
-      <mat-label>Password</mat-label>
-      <input matInput [type]="visibility().password ? 'password' : 'text'" formControlName="password">
-      <button
-        matIconButton
-        matSuffix
-        (click)="toggleVisibility('password', $event)"
-        type="button"
-      >
-        <mat-icon>{{ visibility().password ? 'visibility_off' : 'visibility' }}</mat-icon>
-      </button>
-
-      @if(registerForm.get('password')?.hasError('required')) {
-        <mat-error>Password is required</mat-error>
-      }
-    </mat-form-field>
-
-    <mat-form-field appearance="outline" class="w-full compact-field">
-      <mat-label>Confirm Password</mat-label>
-      <input matInput [type]="visibility().confirmPassword ? 'password' : 'text'" formControlName="confirmPassword">
-      <button
-        matIconButton
-        matSuffix
-        (click)="toggleVisibility('confirmPassword', $event)"
-        type="button"
-      >
-        <mat-icon>{{ visibility().confirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
-      </button>
-
-      @if(registerForm.get('confirmPassword')?.hasError('required')) {
-        <mat-error>Password confirmation is required</mat-error>
-      }
-      @if(registerForm.get('confirmPassword')?.hasError('passwordMismatch')) {
-        <mat-error>Passwords do not match</mat-error>
+      @if(registerForm.get('phoneNumber')?.hasError('pattern') || registerForm.get('phoneNumber')?.hasError('minlength') || registerForm.get('phoneNumber')?.hasError('maxlength')) {
+        <mat-error>Enter a valid Kenyan number starting with 254 (e.g. 254707123567)</mat-error>
       }
     </mat-form-field>
 

@@ -8,9 +8,8 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Router, RouterLink} from '@angular/router';
 import {SnackbarService} from '@core/services/snackbar-service';
-import {CreateUserRequest} from '@core/models/user.models';
+import {RegisterMerchantRequest} from '@core/models/user.models';
 import {UserService} from '@core/services/user-service';
-import {passwordsMatchValidator} from '@core/utils/validators';
 
 @Component({
   selector: 'app-register',
@@ -31,10 +30,6 @@ import {passwordsMatchValidator} from '@core/utils/validators';
 export class Register {
   registerForm!: FormGroup;
   isLoading = signal(false);
-  visibility = signal({
-    password: true,
-    confirmPassword: true,
-  });
 
   constructor(
     private router: Router,
@@ -43,24 +38,14 @@ export class Register {
     private snackbarService: SnackbarService
   ) {
     this.registerForm = fb.group({
-      userName: ['', Validators.required],
+      name: ['', Validators.required],
       phoneNumber: ['', [
         Validators.required,
-        Validators.pattern(/^0[17]\d{8}$/),
-        Validators.minLength(10),
-        Validators.maxLength(10)
+        Validators.pattern(/^254[17]\d{8}$/),
+        Validators.minLength(12),
+        Validators.maxLength(12)
       ]],
-      password: ['', Validators.required],
-      confirmPassword: ['', Validators.required]
-    }, { validators: passwordsMatchValidator });
-  }
-
-  toggleVisibility(field: 'password' | 'confirmPassword', event: MouseEvent) {
-    event.stopPropagation();
-    this.visibility.update(v => ({
-      ...v,
-      [field]: !v[field],
-    }));
+    });
   }
 
   createAccount() {
@@ -71,25 +56,22 @@ export class Register {
 
     this.isLoading.set(true);
 
-    const payload: CreateUserRequest = {
-      role: 'CUSTOMER',
-      userName: this.registerForm.get('userName')!.value,
-      password: this.registerForm.get('password')!.value,
+    const payload: RegisterMerchantRequest = {
+      name: this.registerForm.get('name')!.value,
       phoneNumber: this.registerForm.get('phoneNumber')!.value
     }
 
-    this.userService.createUser(payload).subscribe({
+    this.userService.registerMerchant(payload).subscribe({
       next: () => {
         this.isLoading.set(false);
-        this.snackbarService.showSuccess('Account Created Succesfully!!');
-        this.router.navigateByUrl('/auth/login')
+        this.snackbarService.showSuccess('Account created successfully!');
+        this.router.navigateByUrl('/auth/login');
       },
       error: (err) => {
-        console.log('This is the error: ', err);
         const errorMessage = err?.error?.message || 'Account creation failed. Please try again.';
         this.snackbarService.showError(errorMessage);
         this.isLoading.set(false);
       }
-    })
+    });
   }
 }

@@ -1,69 +1,48 @@
-<div>
+<div class="w-full">
   <div class="text-center mb-6">
     <h2 class="text-2xl text-gray-900 font-semibold mb-2">Welcome Back</h2>
-    <p class="text-sm text-gray-500">Sign in to continue</p>
+    @if (otpSent()) {
+      <p class="text-sm text-gray-500">
+        Enter the 6-digit code sent to <span class="font-medium text-gray-700">{{ maskedPhone }}</span>
+      </p>
+    } @else {
+      <p class="text-sm text-gray-500">Enter your phone number to receive an OTP</p>
+    }
   </div>
 
   <form [formGroup]="loginForm" class="space-y-2">
-    <!-- Phone Number Input -->
-    <mat-form-field appearance="outline" class="w-full compact-field">
+    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full compact-field">
       <mat-label>Phone Number</mat-label>
-      <input
-        matInput
-        type="tel"
-        placeholder="e.g: 0707127309"
-        formControlName="phoneNumber"
-        maxlength="10"
-        inputmode="numeric"
-      >
+      <input matInput type="tel" placeholder="e.g: 0707127309" formControlName="phoneNumber">
       <mat-icon matSuffix>phone</mat-icon>
-
-      @if(loginForm.get('phoneNumber')?.invalid && loginForm.get('phoneNumber')?.touched) {
-        <mat-error>{{ getPhoneErrorMessage() }}</mat-error>
+      @if (loginForm.get('phoneNumber')?.hasError('required')) {
+        <mat-error>Phone number is required</mat-error>
+      } @else {
+        <mat-error>Enter a valid number (e.g. 0707127309)</mat-error>
       }
     </mat-form-field>
 
-    <!-- Password Input -->
-    <mat-form-field appearance="outline" class="w-full compact-field">
-      <mat-label>Password</mat-label>
-      <input matInput [type]="hidePassword() ? 'password' : 'text'" formControlName="password">
-      <button
-        matIconButton
-        matSuffix
-        (click)="togglePasswordVisibility($event)"
-        type="button"
-      >
-        <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
-      </button>
+    @if (otpSent()) {
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full compact-field">
+        <mat-label>OTP Code</mat-label>
+        <input matInput type="text" inputmode="numeric" placeholder="Enter 6-digit code" formControlName="code" maxlength="6" autocomplete="one-time-code">
+        <mat-icon matSuffix>lock</mat-icon>
+        @if (loginForm.get('code')?.hasError('required')) {
+          <mat-error>OTP code is required</mat-error>
+        } @else {
+          <mat-error>Enter a valid 6-digit code</mat-error>
+        }
+      </mat-form-field>
+    }
 
-      @if(loginForm.get('password')?.hasError('required')) {
-        <mat-error>Password is required</mat-error>
-      }
-    </mat-form-field>
-
-    <div class="text-right -mt-4">
-      <a [routerLink]="['/auth/forgot-password']" class="text-sm text-gray-500 hover:underline cursor-pointer">
-        Forgot password?
-      </a>
-    </div>
-
-    <button
-      mat-flat-button
-      class="w-full h-11 !rounded-lg"
-      type="button"
-      (click)="login()"
-      [disabled]="isLoading()"
-    >
+    <button mat-flat-button class="w-full h-11 !rounded-lg" type="button" (click)="login()" [disabled]="isLoading()">
       @if (isLoading()) {
         <div class="flex items-center justify-center gap-2">
-          <mat-progress-spinner
-            diameter="18"
-            mode="indeterminate"
-          ></mat-progress-spinner>
-          <span>Signing in...</span>
+          <mat-progress-spinner diameter="18" mode="indeterminate"></mat-progress-spinner>
+          <span>{{ otpSent() ? 'Verifying...' : 'Sending OTP...' }}</span>
         </div>
       } @else {
-        <span>Sign In</span>
+        <span>{{ otpSent() ? 'Login' : 'Send OTP' }}</span>
       }
     </button>
   </form>

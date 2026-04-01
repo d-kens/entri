@@ -1,16 +1,12 @@
 package com.oro.api.modules.user.dto;
 
 import com.oro.api.common.validators.ValidPhoneNumber;
-import com.oro.api.modules.user.validators.ValidRole;
 import jakarta.validation.constraints.NotBlank;
 
-public record CreateUserRequest(
+public record RegisterMerchantRequest(
         @NotBlank(message = "name is required")
         String name,
 
         @ValidPhoneNumber
-        String phoneNumber,
-
-        @ValidRole(excluded = {"MERCHANT"})
-        String role
+        String phoneNumber
 ) {}
