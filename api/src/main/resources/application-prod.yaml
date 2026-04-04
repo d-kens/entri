@@ -41,6 +41,9 @@ server:
   http2:
     enabled: true
 
+cookie:
+  secure: true
+
 mpesa:
   base-url: ${MPESA_BASE_URL:https://api.safaricom.co.ke}
   endpoints:

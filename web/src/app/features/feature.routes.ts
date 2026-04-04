@@ -18,6 +18,16 @@ export const FEATURE_ROUTES: Routes = [
         path: 'deliveries',
         canActivate: [authGuard],
         loadChildren: () => import('./deliveries/deliveries.routes').then(m => m.DELIVERIES_ROUTES)
+      },
+      {
+        path: 'support',
+        canActivate: [authGuard],
+        loadComponent: () => import('./support/support').then(m => m.Support)
+      },
+      {
+        path: 'profile',
+        canActivate: [authGuard],
+        loadComponent: () => import('./profile/profile').then(m => m.Profile)
       }
     ]
   },

@@ -4,40 +4,15 @@
   class="!p-0 !min-w-0 !h-auto hover:!bg-transparent"
 >
   <div class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-surface-container transition-colors">
-    <!-- User Icon & Name -->
-    <div class="flex items-center gap-2">
-      <div class="flex flex-col items-start">
-        <span class="text-sm font-medium text-on-surface leading-none">{{ user()?.name }}</span>
-        @if (!user()?.roles?.includes('ADMIN')) {
-          <span class="text-xs text-on-surface-variant leading-none mt-1">
-            @if (isLoadingBalance()) {
-              <mat-spinner diameter="12" class="inline-block"></mat-spinner>
-            } @else {
-              KSh {{ walletBalance() | number:'1.2-2' }}
-            }
-          </span>
-        }
-      </div>
+    <div class="flex flex-col items-start">
+      <span class="text-sm font-medium text-on-surface leading-none">{{ user()?.name }}</span>
+      <span class="text-xs text-on-surface-variant leading-none mt-1">{{ user()?.roles?.[0] }}</span>
     </div>
-
-    <!-- Dropdown Arrow -->
     <mat-icon class="!w-5 !h-5 !text-[20px] text-on-surface-variant">arrow_drop_down</mat-icon>
   </div>
 </button>
 
 <mat-menu #userMenu="matMenu" xPosition="before" class="user-profile-menu">
-  @if (!user()?.roles?.includes('ADMIN')) {
-    <button mat-menu-item (click)="navigateToPayout()" class="!py-3 !px-4">
-      <div class="flex items-center gap-3">
-        <mat-icon class="!w-5 !h-5 !text-[20px] text-primary">payment</mat-icon>
-        <div class="flex flex-col items-start">
-          <span class="text-sm font-medium text-on-surface">Request Payout</span>
-          <span class="text-xs text-on-surface-variant">Withdraw funds</span>
-        </div>
-      </div>
-    </button>
-  }
-
   <button mat-menu-item (click)="logout()" class="!py-3 !px-4 logout-item">
     <div class="flex items-center gap-3">
       <mat-icon class="!w-5 !h-5 !text-[20px] logout-icon">logout</mat-icon>

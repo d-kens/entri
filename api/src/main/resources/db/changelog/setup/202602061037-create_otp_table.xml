@@ -3,8 +3,8 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd">
-    <changeSet id="create-tokens-table" author="d.onyango">
-        <createTable tableName="tokens">
+    <changeSet id="create-otp-table" author="d.onyango">
+        <createTable tableName="otp">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true"/>
             </column>
@@ -13,7 +13,7 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="token_hash" type="VARCHAR(128)">
+            <column name="otp_hash" type="VARCHAR(128)">
                 <constraints nullable="false"/>
             </column>
 
@@ -41,15 +41,15 @@
 
         <!-- Foreign key -->
         <addForeignKeyConstraint
-                baseTableName="tokens"
+                baseTableName="otp"
                 baseColumnNames="user_id"
                 referencedTableName="users"
                 referencedColumnNames="id"
-                constraintName="fk_tokens_user"/>
+                constraintName="fk_otp_user"/>
 
         <!-- Rollback -->
         <rollback>
-            <dropTable tableName="tokens"/>
+            <dropTable tableName="otp"/>
         </rollback>
     </changeSet>
 
