@@ -1,5 +1,6 @@
 package com.oro.api.modules.payment.providers;
 
+import com.oro.api.common.utils.PhoneNumberUtils;
 import com.oro.api.modules.payment.dto.InitiatePaymentRequest;
 import com.oro.api.modules.payment.exception.PaymentProviderException;
 import com.oro.api.modules.payment.providers.client.MpesaClient;
@@ -8,7 +9,6 @@ import com.oro.api.modules.payment.providers.dto.ProviderInitResponse;
 import com.oro.api.modules.payment.providers.dto.mpesa.MpesaAuthResponse;
 import com.oro.api.modules.payment.providers.dto.mpesa.MpesaStkRequestBody;
 import com.oro.api.modules.payment.providers.dto.mpesa.MpesaStkResponse;
-import com.oro.api.modules.payment.utils.PhoneNumberUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

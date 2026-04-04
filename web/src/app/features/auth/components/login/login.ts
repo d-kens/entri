@@ -30,7 +30,9 @@ import {AuthService} from '@core/services/auth-service';
 export class Login {
   loginForm!: FormGroup;
   isLoading = signal(false);
-  otpSent = signal(false);
+  hidePassword = signal(true);
+
+  togglePassword() { this.hidePassword.update(v => !v); }
 
   returnUrl: string = '/';
 
@@ -48,7 +50,7 @@ export class Login {
         Validators.minLength(10),
         Validators.maxLength(10)
       ]],
-      code: ['']
+      password: ['', Validators.required]
     });
 
     const fromQuery = this.route.snapshot.queryParamMap.get('returnUrl');
@@ -58,54 +60,26 @@ export class Login {
   }
 
   login() {
-    if (this.otpSent()) {
-      if (this.loginForm.invalid) {
-        this.loginForm.markAllAsTouched();
-        return;
-      }
-    } else {
-      const phoneControl = this.loginForm.get('phoneNumber');
-      phoneControl?.markAsTouched();
-      if (phoneControl?.invalid) return;
+    if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
+      return;
     }
 
     this.isLoading.set(true);
 
-    const phoneNumber = this.loginForm.get('phoneNumber')!.value;
-    const code = this.otpSent() ? this.loginForm.get('code')!.value : undefined;
-
-    this.authService.login({ phoneNumber, code }).subscribe({
-      next: (response) => {
+    this.authService.login({
+      phoneNumber: this.loginForm.get('phoneNumber')!.value,
+      password: this.loginForm.get('password')!.value
+    }).subscribe({
+      next: () => {
         this.isLoading.set(false);
-        if (response?.accessToken) {
-          this.router.navigateByUrl(this.returnUrl);
-        } else {
-          this.loginForm.get('phoneNumber')?.disable();
-          this.loginForm.get('code')?.setValidators([Validators.required, Validators.pattern(/^\d{6}$/)]);
-          this.loginForm.get('code')?.updateValueAndValidity();
-          this.otpSent.set(true);
-        }
+        this.router.navigateByUrl(this.returnUrl);
       },
       error: (err) => {
-        const errorMessage = err?.error?.message || (this.otpSent() ? 'Invalid or expired code.' : 'Failed to send OTP.');
+        const errorMessage = err?.error?.message || 'Invalid phone number or password.';
         this.snackbarService.showError(errorMessage);
         this.isLoading.set(false);
       }
     });
-  }
-
-  changePhone() {
-    this.loginForm.get('phoneNumber')?.enable();
-    const codeControl = this.loginForm.get('code');
-    codeControl?.clearValidators();
-    codeControl?.reset('');
-    codeControl?.updateValueAndValidity();
-    this.otpSent.set(false);
-  }
-
-  get maskedPhone(): string {
-    const p = this.loginForm.get('phoneNumber')!.value as string;
-    if (!p) return '';
-    return p.slice(0, 4) + '****' + p.slice(-2);
   }
 }

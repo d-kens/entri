@@ -21,12 +21,13 @@
                 <constraints nullable="false" unique="true"/>
             </column>
 
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false" />
+            </column>
+
             <column name="is_active" type="BOOLEAN" defaultValueBoolean="true">
                 <constraints nullable="false"/>
             </column>
-
-            <column name="two_factor_code" type="VARCHAR(10)"/>
-            <column name="two_factor_code_expiration" type="TIMESTAMP"/>
 
             <column name="created" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
                 <constraints nullable="false"/>

@@ -1,11 +1,11 @@
-<div>
+<div class="w-full max-w-md mx-auto">
   <div class="text-center mb-6">
     <h2 class="text-2xl text-gray-900 font-semibold mb-2">Create an Account</h2>
     <p class="text-sm text-gray-500">Sign up to get started</p>
   </div>
 
   <form [formGroup]="registerForm" class="space-y-2">
-    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full compact-field">
+    <mat-form-field appearance="outline" class="w-full compact-field">
       <mat-label>Full Name</mat-label>
       <input matInput type="text" placeholder="Enter your full name" formControlName="name">
       <mat-icon matSuffix>account_circle</mat-icon>
@@ -15,16 +15,41 @@
       }
     </mat-form-field>
 
-    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full compact-field">
+    <mat-form-field appearance="outline" class="w-full compact-field">
       <mat-label>Phone Number</mat-label>
-      <input matInput type="text" placeholder="e.g. 254707123567" formControlName="phoneNumber">
+      <input matInput type="text" placeholder="e.g. 0707123567" formControlName="phoneNumber">
       <mat-icon matSuffix>phone</mat-icon>
 
       @if(registerForm.get('phoneNumber')?.hasError('required')) {
         <mat-error>Phone number is required</mat-error>
+      } @else if(registerForm.get('phoneNumber')?.hasError('minlength') || registerForm.get('phoneNumber')?.hasError('maxlength')) {
+        <mat-error>Invalid phone number</mat-error>
       }
-      @if(registerForm.get('phoneNumber')?.hasError('pattern') || registerForm.get('phoneNumber')?.hasError('minlength') || registerForm.get('phoneNumber')?.hasError('maxlength')) {
-        <mat-error>Enter a valid Kenyan number starting with 254 (e.g. 254707123567)</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-full compact-field">
+      <mat-label>Password</mat-label>
+      <input matInput [type]="hidePassword() ? 'password' : 'text'" placeholder="At least 8 characters" formControlName="password">
+      <button mat-icon-button matSuffix type="button" (mousedown)="$event.preventDefault()" (click)="togglePassword()">
+        <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+      @if(registerForm.get('password')?.hasError('required')) {
+        <mat-error>Password is required</mat-error>
+      } @else if(registerForm.get('password')?.hasError('minlength')) {
+        <mat-error>Password must be at least 8 characters</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-full compact-field">
+      <mat-label>Confirm Password</mat-label>
+      <input matInput [type]="hideConfirmPassword() ? 'password' : 'text'" placeholder="Re-enter your password" formControlName="confirmPassword" [errorStateMatcher]="passwordMatcher">
+      <button mat-icon-button matSuffix type="button" (mousedown)="$event.preventDefault()" (click)="toggleConfirmPassword()">
+        <mat-icon>{{ hideConfirmPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+      @if(registerForm.get('confirmPassword')?.hasError('required')) {
+        <mat-error>Please confirm your password</mat-error>
+      } @else if(registerForm.hasError('passwordsMismatch')) {
+        <mat-error>Passwords do not match</mat-error>
       }
     </mat-form-field>
 

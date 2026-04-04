@@ -1,6 +1,7 @@
 export type RegisterMerchantRequest = {
   name: string,
-  phoneNumber: string
+  phoneNumber: string,
+  password: string
 }
 
 export type UserResponse = {

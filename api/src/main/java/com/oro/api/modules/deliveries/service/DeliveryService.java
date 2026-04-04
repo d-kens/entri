@@ -8,7 +8,7 @@ import com.oro.api.modules.deliveries.entity.DeliveryStatus;
 import com.oro.api.modules.deliveries.entity.Delivery;
 import com.oro.api.modules.deliveries.repository.DeliveryRepository;
 import com.oro.api.modules.deliveries.repository.DeliverySpecification;
-import com.oro.api.modules.notification.entity.NotificationType;
+import com.oro.api.modules.notification.enums.NotificationType;
 import com.oro.api.modules.notification.events.SendNotificationEvent;
 import com.oro.api.modules.user.entity.User;
 import com.oro.api.modules.user.service.UserService;
