@@ -7,7 +7,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { Sidenav } from '@features/layout/components/sidenav/sidenav';
 import {Toolbar} from '@features/layout/components/toolbar/toolbar';
 
-type UserRole = 'ADMIN' | 'CUSTOMER' | 'AGENT';
+type UserRole = 'ADMIN' | 'MERCHANT' | 'AGENT';
 
 @Component({
   selector: 'app-dashboard-layout',

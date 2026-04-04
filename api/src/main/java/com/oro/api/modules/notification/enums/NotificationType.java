@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum NotificationType {
 
-    OTP("OTP"),
+    RESET_PASSWORD("RESET_PASSWORD"),
     DELIVERY_FEE_PAYMENT("DELIVERY_FEE_PAYMENT");
 
     private final String notificationType;

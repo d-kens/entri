@@ -6,7 +6,7 @@
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd"
 >
     <include file="setup/202602061036-create_users_table.xml" relativeToChangelogFile="true" />
-    <include file="setup/202602061037-create_tokens_table.xml" relativeToChangelogFile="true" />
+    <include file="setup/202602061037-create_otp_table.xml" relativeToChangelogFile="true" />
     <include file="setup/202602091400-create_refresh_token_sessions_table.xml" relativeToChangelogFile="true" />
     <include file="setup/202602061048-create_zones_table.xml" relativeToChangelogFile="true" />
     <include file="setup/202602061058-create_agents_table.xml" relativeToChangelogFile="true" />

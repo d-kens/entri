@@ -1,0 +1,123 @@
+/* Hero icon */
+.hero-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  border-radius: var(--mat-sys-corner-extra-large);
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--mat-sys-primary) 20%, transparent),
+    color-mix(in srgb, var(--mat-sys-primary) 8%, transparent)
+  );
+  color: var(--mat-sys-primary);
+}
+
+.hero-icon mat-icon {
+  font-size: 36px;
+  width: 36px;
+  height: 36px;
+}
+
+/* Availability badge */
+.availability-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 14px;
+  border-radius: 999px;
+  background-color: color-mix(in srgb, var(--mat-sys-primary) 10%, transparent);
+  color: var(--mat-sys-primary);
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+.pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: currentColor;
+  flex-shrink: 0;
+  animation: pulse 2.2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+/* Contact card */
+.contact-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 20px;
+  border-radius: var(--mat-sys-corner-large);
+  border: 1px solid var(--mat-sys-outline-variant);
+  background-color: var(--mat-sys-surface-container-low);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease;
+  cursor: pointer;
+}
+
+.contact-card:hover {
+  border-color: var(--mat-sys-primary);
+  background-color: color-mix(in srgb, var(--mat-sys-primary) 5%, var(--mat-sys-surface-container-low));
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--mat-sys-primary) 14%, transparent);
+}
+
+.contact-card:hover .card-arrow {
+  transform: translateX(4px);
+  color: var(--mat-sys-primary);
+}
+
+/* Card icon */
+.card-icon-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: var(--mat-sys-corner-medium);
+  background-color: color-mix(in srgb, var(--mat-sys-primary) 12%, transparent);
+  color: var(--mat-sys-primary);
+  margin-bottom: 10px;
+}
+
+/* Card text */
+.card-label {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--mat-sys-on-surface-variant);
+  margin: 0;
+}
+
+.card-value {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--mat-sys-on-surface);
+  margin: 0;
+}
+
+.card-hint {
+  font-size: 0.8125rem;
+  color: var(--mat-sys-on-surface-variant);
+  margin: 0;
+}
+
+/* Animated arrow */
+.card-arrow {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  font-size: 18px !important;
+  width: 18px !important;
+  height: 18px !important;
+  color: var(--mat-sys-on-surface-variant);
+  transition: transform 0.2s ease, color 0.2s ease;
+}

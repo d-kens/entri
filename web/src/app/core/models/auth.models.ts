@@ -3,10 +3,19 @@ export type AuthRequest = {
   password: string
 }
 
-
 export type AuthResponse = {
   accessToken: string,
   externalId: string,
   roles: string[],
   name: string,
+}
+
+export type ForgotPasswordRequest = {
+  phoneNumber: string
+}
+
+export type ResetPasswordRequest = {
+  phoneNumber: string,
+  otp: string,
+  newPassword: string
 }
