@@ -6,12 +6,11 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public record TrackDeliveryResponseDto(
-        String deliveryId,
+        String externalId,
         DeliveryStatus deliveryStatus,
         String trackingNumber,
         String packageName,
         BigDecimal packagePrice,
-        DeliveryStatus status,
         String recipientName,
         String recipientPhone,
         LocationInfo from,

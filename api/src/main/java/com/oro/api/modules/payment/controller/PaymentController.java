@@ -17,8 +17,6 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 @RequestMapping("payments")
 @RequiredArgsConstructor
 public class PaymentController {
-
-
     private final PaymentService paymentService;
 
     @PostMapping("/initiate")
@@ -33,7 +31,6 @@ public class PaymentController {
         paymentService.handleStkCallback(mpesaStkCallback);
         return ResponseEntity.ok().build();
     }
-
 
     @GetMapping(value = "/{paymentId}/events", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter streamPaymentEvents(@PathVariable String paymentId) {

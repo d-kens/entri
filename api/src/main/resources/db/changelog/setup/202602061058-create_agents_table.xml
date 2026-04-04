@@ -21,6 +21,8 @@
                 <constraints nullable="false"/>
             </column>
 
+            <column name="route_id" type="BIGINT" />
+
             <column name="latitude" type="DECIMAL(9,6)"/>
             <column name="longitude" type="DECIMAL(9,6)"/>
 
@@ -67,6 +69,13 @@
                 referencedTableName="users"
                 referencedColumnNames="id"
                 constraintName="fk_agents_user"/>
+
+        <addForeignKeyConstraint
+                baseTableName="agents"
+                baseColumnNames="route_id"
+                referencedTableName="delivery_routes"
+                referencedColumnNames="id"
+                constraintName="fk_agents_route"/>
 
         <!-- Rollback -->
         <rollback>

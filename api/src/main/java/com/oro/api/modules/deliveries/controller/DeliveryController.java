@@ -7,6 +7,7 @@ import com.oro.api.modules.deliveries.dto.TrackDeliveryResponseDto;
 import com.oro.api.modules.deliveries.mapper.DeliveryMapper;
 import com.oro.api.modules.deliveries.entity.Delivery;
 import com.oro.api.modules.deliveries.service.DeliveryService;
+import com.oro.api.security.model.UserPrincipal;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -28,7 +29,7 @@ public class DeliveryController {
 
     @GetMapping
     public ResponseEntity<PageResponse<DeliveryResponseDto>> getDeliveries(
-            @AuthenticationPrincipal Long currentUserId,
+            @AuthenticationPrincipal UserPrincipal principal,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
             @RequestParam(required = false) String status,
@@ -36,7 +37,12 @@ public class DeliveryController {
     ) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("created").descending());
 
-        Page<Delivery> deliveryPage = deliveryService.getDeliveries(currentUserId, status, search, pageable);
+        Page<Delivery> deliveryPage = deliveryService.getDeliveries(
+                principal.getUser().getId(),
+                status,
+                search,
+                pageable
+        );
 
         return ResponseEntity.ok(PageResponse.of(deliveryPage.map(deliveryMapper::toResponseDto)));
     }
@@ -59,11 +65,11 @@ public class DeliveryController {
 
     @PostMapping
     public ResponseEntity<DeliveryResponseDto> create(
-            @AuthenticationPrincipal Long userId,
+            @AuthenticationPrincipal UserPrincipal principal,
             UriComponentsBuilder uriComponentsBuilder,
             @Valid @RequestBody CreateDeliveryDto createDeliveryDto
     ) {
-        var delivery = deliveryService.create(createDeliveryDto, userId);
+        var delivery = deliveryService.create(createDeliveryDto, principal.getUser().getId());
         var uri = uriComponentsBuilder.path("/deliveries/{deliveryId}")
                 .buildAndExpand(delivery.getId())
                 .toUri();

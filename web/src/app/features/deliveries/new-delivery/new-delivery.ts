@@ -220,22 +220,6 @@ export class NewDelivery implements OnInit {
       packageName: ['', [Validators.required, Validators.minLength(2)]],
       packagePrice: ['', [Validators.required, Validators.min(0)]],
       packageDescription: ['', [Validators.required, Validators.maxLength(500)]],
-
-      collectCash: [false],
-      cashAmount: [{ value: '', disabled: true }]
-    });
-
-    this.deliveryForm.get('collectCash')?.valueChanges.subscribe(checked => {
-      const cashAmountControl = this.deliveryForm.get('cashAmount');
-      if (checked) {
-        cashAmountControl?.enable();
-        cashAmountControl?.setValidators([Validators.required, Validators.min(1)]);
-      } else {
-        cashAmountControl?.disable();
-        cashAmountControl?.clearValidators();
-        cashAmountControl?.setValue('');
-      }
-      cashAmountControl?.updateValueAndValidity();
     });
 
     this.deliveryForm.get('fromZone')?.valueChanges.subscribe((value) => {
@@ -271,10 +255,6 @@ export class NewDelivery implements OnInit {
       packageName: formValue.packageName,
       packagePrice: Number(formValue.packagePrice),
       packageDescription: formValue.packageDescription,
-      collectCash: formValue.collectCash,
-      cashAmount: formValue.collectCash
-        ? Number(formValue.cashAmount)
-        : undefined,
       deliveryFee: this.deliveryFee()
     };
 

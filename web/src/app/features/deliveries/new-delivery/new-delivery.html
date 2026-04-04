@@ -35,7 +35,7 @@
       <h2 class="text-lg font-normal text-on-surface mb-3">Where are you sending from?</h2>
       <div class="flex flex-col md:flex-row gap-3">
         <mat-form-field appearance="outline" class="w-full md:flex-1 compact-field">
-          <mat-label>Pickup Zone</mat-label>
+          <mat-label>Pickup Location</mat-label>
           <mat-icon matPrefix>location_on</mat-icon>
           <input
             matInput
@@ -43,7 +43,7 @@
             formControlName="fromZone"
             [matAutocomplete]="fromZoneAuto"
             (input)="onFromZoneSearch($event)"
-            placeholder="Search zone...">
+            placeholder="Search location...">
           <mat-autocomplete
             #fromZoneAuto="matAutocomplete"
             [displayWith]="displayZone"
@@ -57,7 +57,7 @@
               </mat-option>
             }
             @if (filteredFromZones().length === 0) {
-              <mat-option disabled>No zones found</mat-option>
+              <mat-option disabled>No locations found</mat-option>
             }
           </mat-autocomplete>
           @if (deliveryForm.get('fromZone')?.invalid && deliveryForm.get('fromZone')?.touched) {
@@ -75,7 +75,7 @@
             <mat-select formControlName="fromAgent" placeholder="Select pickup point">
               @for (point of fromAgents(); track point.id) {
                 <mat-option [value]="point.id">
-                  {{ point.name }} - {{ point.addressDescription }}
+                  {{ point.name }}
                 </mat-option>
               }
             </mat-select>
@@ -92,7 +92,7 @@
       <h2 class="text-lg font-normal text-on-surface mb-3">Where are you sending to?</h2>
       <div class="flex flex-col md:flex-row gap-3">
         <mat-form-field appearance="outline" class="w-full md:flex-1 compact-field">
-          <mat-label>Delivery Zone</mat-label>
+          <mat-label>Delivery Location</mat-label>
           <mat-icon matPrefix>location_on</mat-icon>
           <input
             matInput
@@ -100,7 +100,7 @@
             formControlName="toZone"
             [matAutocomplete]="toZoneAuto"
             (input)="onToZoneSearch($event)"
-            placeholder="Search zone...">
+            placeholder="Search location...">
           <mat-autocomplete
             #toZoneAuto="matAutocomplete"
             [displayWith]="displayZone"
@@ -114,7 +114,7 @@
               </mat-option>
             }
             @if (filteredToZones().length === 0) {
-              <mat-option disabled>No zones found</mat-option>
+              <mat-option disabled>No locations found</mat-option>
             }
           </mat-autocomplete>
           @if (deliveryForm.get('toZone')?.invalid && deliveryForm.get('toZone')?.touched) {
@@ -132,7 +132,7 @@
             <mat-select formControlName="toAgent" placeholder="Select delivery point">
               @for (point of toAgents(); track point.id) {
                 <mat-option [value]="point.id">
-                  {{ point.name }} - {{ point.addressDescription }}
+                  {{ point.name }}
                 </mat-option>
               }
             </mat-select>
@@ -178,33 +178,6 @@
           <mat-error>{{ getErrorMessage('packageDescription') }}</mat-error>
         }
       </mat-form-field>
-    </div>
-
-    <!-- Cash on Delivery -->
-    <div>
-      <h2 class="text-lg font-normal text-on-surface mb-3">Cash on Delivery</h2>
-      <div class="space-y-4">
-        <div class="flex items-start gap-3 p-4 rounded-lg border border-outline-variant">
-          <mat-checkbox formControlName="collectCash" class="!mt-0.5"></mat-checkbox>
-          <div class="flex-1">
-            <p class="text-sm font-medium text-on-surface mb-1">Collect cash from recipient</p>
-            <p class="text-xs text-on-surface-variant">We'll collect payment on your behalf and add it to your wallet</p>
-          </div>
-        </div>
-
-        @if (deliveryForm.get('collectCash')?.value) {
-          <div class="pl-4">
-            <mat-form-field appearance="outline" class="w-full md:w-1/2 compact-field">
-              <mat-label>Amount to Collect</mat-label>
-              <input matInput type="number" formControlName="cashAmount" placeholder="0.00">
-              <mat-icon matSuffix>payments</mat-icon>
-              @if (deliveryForm.get('cashAmount')?.invalid && deliveryForm.get('cashAmount')?.touched) {
-                <mat-error>{{ getErrorMessage('cashAmount') }}</mat-error>
-              }
-            </mat-form-field>
-          </div>
-        }
-      </div>
     </div>
 
     <!-- Submit Button -->

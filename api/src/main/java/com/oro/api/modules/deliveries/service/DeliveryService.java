@@ -10,6 +10,7 @@ import com.oro.api.modules.deliveries.repository.DeliveryRepository;
 import com.oro.api.modules.deliveries.repository.DeliverySpecification;
 import com.oro.api.modules.notification.enums.NotificationType;
 import com.oro.api.modules.notification.events.SendNotificationEvent;
+import com.oro.api.modules.routes.service.DeliveryBatchService;
 import com.oro.api.modules.user.entity.User;
 import com.oro.api.modules.user.service.UserService;
 import com.oro.api.modules.zones.service.AgentService;
@@ -42,6 +43,7 @@ public class DeliveryService {
     private final UserService userService;
     private final AgentService agentService;
     private final DeliveryRepository deliveryRepository;
+    private final DeliveryBatchService deliveryBatchService;
 
     @Transactional(readOnly = true)
     public Page<Delivery> getDeliveries(
@@ -72,9 +74,6 @@ public class DeliveryService {
         log.info("Creating delivery order for user: {}, from point: {}, to point: {}",
                 userId, dto.fromAgent(), dto.toAgent());
 
-        if (dto.collectCash() && (dto.cashAmount() == null || dto.cashAmount().compareTo(BigDecimal.ZERO) <= 0))
-            throw new InvalidDeliveryException("cashAmount id required for collect cash");
-
         var user = userService.getUserById(userId);
         var toAgent = agentService.getAgentPointById(dto.toAgent());
         var fromAgent = agentService.getAgentPointById(dto.fromAgent());
@@ -103,6 +102,36 @@ public class DeliveryService {
 
         deliveryRepository.save(delivery);
         return delivery;
+    }
+
+    @Transactional
+    public Delivery updateDeliveryStatus(String externalId, DeliveryStatus newStatus, String cancellationReason) {
+        Delivery delivery = getDeliveryByExternalId(externalId);
+        DeliveryStatus current = delivery.getDeliveryStatus();
+
+        if (!current.canTransitionTo(newStatus)) {
+            throw new InvalidDeliveryException(
+                    "Cannot transition delivery from " + current + " to " + newStatus);
+        }
+
+        LocalDateTime now = LocalDateTime.now();
+
+        switch (newStatus) {
+            case DROPPED_AT_PICKUP_AGENT -> delivery.setDroppedAtPickupAgentAt(now);
+            case AT_HUB -> {
+                delivery.setArrivedAtHubAt(now);
+                deliveryBatchService.assignToBatch(delivery);
+            }
+            case DELIVERED -> delivery.setDeliveredAt(now);
+            case CANCELLED -> {
+                delivery.setCancelledAt(now);
+                delivery.setCancellationReason(cancellationReason);
+            }
+            default -> { }
+        }
+
+        delivery.setDeliveryStatus(newStatus);
+        return deliveryRepository.save(delivery);
     }
 
     @Transactional
@@ -218,7 +247,6 @@ public class DeliveryService {
                 delivery.getTrackingNumber(),
                 delivery.getPackageName(),
                 delivery.getPackagePrice(),
-                delivery.getDeliveryStatus(),
                 delivery.getRecipientName(),
                 delivery.getRecipientPhone(),
                 from,

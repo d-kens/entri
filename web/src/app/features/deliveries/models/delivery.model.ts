@@ -3,11 +3,9 @@ import {PaymentStatus} from '@features/payments/models/payment.model';
 export type CreateDeliveryDto = {
   toAgent: number;
   fromAgent: number;
-  cashAmount?: number;
   deliveryFee: number;
   packageName: string;
   packagePrice: number;
-  collectCash: boolean;
   recipientName: string;
   recipientPhone: string;
   packageDescription: string;
@@ -29,19 +27,14 @@ export type DeliveryResponse = {
   fromZone: string;
   externalId: string;
   packageName: string;
-  collectCash: boolean;
   customerName: string;
   recipientName: string;
   recipientPhone: string;
   trackingNumber: string;
-  cashAmount?: number;
-  cashCollected: boolean;
   deliveryFee: number;
   packagePrice: number;
-  paymentReference?: string;
   packageDescription?: string;
   paymentStatus: PaymentStatus;
-  paymentMethod?: string;
   deliveryStatus: DeliveryStatus;
 };
 
@@ -53,17 +46,13 @@ export interface DeliveryFilters {
 }
 
 export type TrackDeliveryResponse = {
-  deliveryId: string,
+  externalId: string,
   deliveryStatus: DeliveryStatus,
   trackingNumber: string;
   packageName: string;
   packagePrice: number;
-  status: string;
   recipientName: string;
   recipientPhone: string;
-  isCollectCash: boolean;
-  cashAmount: number;
-  isCashCollected: boolean;
   from: LocationInfo;
   to: LocationInfo;
   timeline: TrackingTimeline[];

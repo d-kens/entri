@@ -1,13 +1,11 @@
 package com.oro.api.modules.deliveries.dto;
 
-import com.oro.api.modules.deliveries.validation.ValidCashAmount;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 
-@ValidCashAmount
 public record CreateDeliveryDto(
         @NotNull(message = "toAgent is required")
         Long toAgent,
@@ -15,16 +13,11 @@ public record CreateDeliveryDto(
         @NotNull(message = "fromAgent is required")
         Long fromAgent,
 
-        @NotNull(message = "collectCash is required")
-        Boolean collectCash,
-
         @NotBlank(message = "packageName is required")
         String packageName,
 
         @NotBlank(message = "recipientName is required")
         String recipientName,
-
-        BigDecimal cashAmount,
 
         @NotBlank(message = "recipientPhone is required")
         String recipientPhone,

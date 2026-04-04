@@ -2,7 +2,6 @@ import {Routes} from '@angular/router';
 import {Layout} from '@features/layout/layout';
 import {Welcome} from '@features/layout/components/welcome/welcome';
 import {authGuard} from '@core/guards/auth-guard';
-import {TrackDelivery} from '@features/deliveries/track-delivery/track-delivery';
 
 export const FEATURE_ROUTES: Routes = [
   {
@@ -30,9 +29,5 @@ export const FEATURE_ROUTES: Routes = [
         loadComponent: () => import('./profile/profile').then(m => m.Profile)
       }
     ]
-  },
-  {
-    path: 'track-delivery',
-    component: TrackDelivery
   }
 ]
