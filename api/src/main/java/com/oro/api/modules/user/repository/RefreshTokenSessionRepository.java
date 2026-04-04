@@ -1,6 +1,6 @@
-package com.oro.api.modules.token.repository;
+package com.oro.api.modules.user.repository;
 
-import com.oro.api.modules.token.entity.RefreshTokenSession;
+import com.oro.api.modules.user.entity.RefreshTokenSession;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

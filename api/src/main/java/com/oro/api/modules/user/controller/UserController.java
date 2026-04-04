@@ -5,11 +5,14 @@ import com.oro.api.modules.user.dto.CreateUserRequest;
 import com.oro.api.modules.user.dto.UpdateUserRequest;
 import com.oro.api.modules.user.dto.UserResponse;
 import com.oro.api.modules.user.service.UserService;
+import com.oro.api.security.model.UserPrincipal;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -43,9 +46,11 @@ public class UserController {
     }
 
     @PatchMapping("/{externalId}")
+    @PreAuthorize("hasRole('ADMIN') or #principal.user.externalId == #externalId")
     public ResponseEntity<UserResponse> updateUser(
             @PathVariable String externalId,
-            @Valid @RequestBody UpdateUserRequest request
+            @Valid @RequestBody UpdateUserRequest request,
+            @AuthenticationPrincipal UserPrincipal principal
     ) {
         return ResponseEntity.ok(userService.updateUser(externalId, request));
     }

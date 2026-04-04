@@ -28,6 +28,9 @@ jwt:
   access-token-expiration: 120
   refresh-token-expiration: 300
 
+cookie:
+  secure: false
+
 mpesa:
   base-url: ${MPESA_BASE_URL:https://sandbox.safaricom.co.ke}
   callback-url: ${MPESA_CALLBACK_URL:https://your-ngrok-url.ngrok.io/api/mpesa/stk/callback}

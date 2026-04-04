@@ -1,7 +1,6 @@
-package com.oro.api.modules.token.entity;
+package com.oro.api.modules.user.entity;
 
 import com.oro.api.common.entity.AbstractAuditableEntity;
-import com.oro.api.modules.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
