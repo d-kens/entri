@@ -8,6 +8,8 @@
     <include file="setup/202602061036-create_users_table.xml" relativeToChangelogFile="true" />
     <include file="setup/202602061037-create_otp_table.xml" relativeToChangelogFile="true" />
     <include file="setup/202602091400-create_refresh_token_sessions_table.xml" relativeToChangelogFile="true" />
+    <include file="setup/202604040001-create_delivery_routes_table.xml" relativeToChangelogFile="true" />
+    <include file="setup/202604040003-create_delivery_batches_table.xml" relativeToChangelogFile="true" />
     <include file="setup/202602061048-create_zones_table.xml" relativeToChangelogFile="true" />
     <include file="setup/202602061058-create_agents_table.xml" relativeToChangelogFile="true" />
     <include file="setup/202602110939-create_deliveries_table.xml" relativeToChangelogFile="true" />
@@ -15,4 +17,5 @@
     <include file="setup/202603301022-create_roles_table.xml" relativeToChangelogFile="true" />
     <include file="setup/202603301022-create_user_roles_table.xml" relativeToChangelogFile="true" />
     <include file="setup/202603310001-seed_roles.xml" relativeToChangelogFile="true" />
+    <include file="setup/202604040006-seed_zones_and_agents.xml" relativeToChangelogFile="true" />
 </databaseChangeLog>

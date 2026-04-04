@@ -2,6 +2,7 @@ package com.oro.api.modules.deliveries.entity;
 
 import com.oro.api.common.entity.AbstractAuditableEntity;
 import com.oro.api.modules.payment.entity.PaymentStatus;
+import com.oro.api.modules.routes.entity.DeliveryBatch;
 import com.oro.api.modules.user.entity.User;
 import com.oro.api.modules.zones.entity.Agent;
 import jakarta.persistence.*;
@@ -90,6 +91,10 @@ public class Delivery extends AbstractAuditableEntity {
 
     @Column(name = "cancellation_reason", length = 500)
     private String cancellationReason;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "batch_id")
+    private DeliveryBatch batch;
 
     @PrePersist
     protected void onCreate() {

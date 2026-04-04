@@ -1,6 +1,7 @@
 package com.oro.api.modules.zones.entity;
 
 import com.oro.api.common.entity.AbstractAuditableEntity;
+import com.oro.api.modules.routes.entity.DeliveryRoute;
 import com.oro.api.modules.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -51,4 +52,8 @@ public class Agent extends AbstractAuditableEntity {
 
     @Column(name = "closing_time", nullable = false)
     private LocalTime closingTime;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "route_id")
+    private DeliveryRoute route;
 }

@@ -57,6 +57,9 @@ export class Sidenav implements OnInit {
     return [
       { icon: 'inventory_2', label: 'Deliveries', route: '/deliveries' },
       { icon: 'add_circle', label: 'New Delivery', route: '/deliveries/new' },
+      {
+         icon: 'timeline', label: 'Track Delivery', route: '/deliveries/track',
+      },
       { icon: 'account_circle', label: 'Profile', route: '/profile' },
       { icon: 'help', label: 'Support', route: '/support' },
     ];
