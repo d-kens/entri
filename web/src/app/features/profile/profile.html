@@ -1,0 +1,118 @@
+<div class="max-w-xl mx-auto px-4 py-8 sm:p-8">
+
+  @if (isLoadingUser()) {
+    <div class="flex justify-center py-24">
+      <mat-spinner diameter="36" />
+    </div>
+  } @else if (user()) {
+
+    <!-- Avatar + name -->
+    <div class="flex items-center gap-4 mb-10">
+      <div class="avatar">{{ initials() }}</div>
+      <div>
+        <p class="text-lg font-semibold text-on-surface leading-tight">{{ user()!.name }}</p>
+        <p class="text-sm text-on-surface-variant mt-0.5">{{ user()!.roles[0] | titlecase }}</p>
+      </div>
+    </div>
+
+    <!-- Personal Information -->
+    <section class="section">
+      <div class="section-header">
+        <p class="section-title">Personal Information</p>
+        @if (!isEditing()) {
+          <button mat-icon-button (click)="startEditing()" class="edit-btn">
+            <mat-icon>edit</mat-icon>
+          </button>
+        }
+      </div>
+
+      <form [formGroup]="profileForm">
+        <div class="field-group">
+          <mat-form-field appearance="outline" class="compact-field w-full">
+            <mat-label>Full name</mat-label>
+            <mat-icon matPrefix>person_outline</mat-icon>
+            <input matInput formControlName="name" [readonly]="!isEditing()">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="compact-field w-full">
+            <mat-label>Phone number</mat-label>
+            <mat-icon matPrefix>phone</mat-icon>
+            <input matInput formControlName="phoneNumber" readonly>
+          </mat-form-field>
+        </div>
+
+        @if (isEditing()) {
+          <div class="flex gap-2 justify-end mt-2">
+            <button mat-button (click)="cancelEditing()" [disabled]="isSavingProfile()">Cancel</button>
+            <button mat-flat-button class="!bg-primary" (click)="saveProfile()" [disabled]="isSavingProfile()">
+              @if (isSavingProfile()) { <mat-spinner diameter="18" /> } @else { Save }
+            </button>
+          </div>
+        }
+      </form>
+    </section>
+
+    <!-- Security -->
+    <section class="section">
+      <div class="section-header">
+        <p class="section-title">Security</p>
+        <button mat-button class="!text-sm" (click)="togglePasswordSection()">
+          {{ showPasswordSection() ? 'Cancel' : 'Change password' }}
+        </button>
+      </div>
+
+      @if (showPasswordSection()) {
+        <form [formGroup]="passwordForm" class="field-group">
+          <mat-form-field appearance="outline" class="compact-field w-full">
+            <mat-label>Current password</mat-label>
+            <mat-icon matPrefix>lock_outline</mat-icon>
+            <input matInput formControlName="currentPassword" [type]="showCurrentPassword() ? 'text' : 'password'">
+            <button mat-icon-button matSuffix type="button" (click)="toggleCurrentPassword()">
+              <mat-icon>{{ showCurrentPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="compact-field w-full">
+            <mat-label>New password</mat-label>
+            <mat-icon matPrefix>lock_outline</mat-icon>
+            <input matInput formControlName="newPassword" [type]="showNewPassword() ? 'text' : 'password'">
+            <button mat-icon-button matSuffix type="button" (click)="toggleNewPassword()">
+              <mat-icon>{{ showNewPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+            @if (passwordForm.get('newPassword')?.invalid && passwordForm.get('newPassword')?.touched) {
+              <mat-error>Minimum 8 characters</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="compact-field w-full">
+            <mat-label>Confirm new password</mat-label>
+            <mat-icon matPrefix>lock_outline</mat-icon>
+            <input matInput formControlName="confirmPassword" [type]="showConfirmPassword() ? 'text' : 'password'">
+            <button mat-icon-button matSuffix type="button" (click)="toggleConfirmPassword()">
+              <mat-icon>{{ showConfirmPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+          </mat-form-field>
+
+          <div class="flex justify-end">
+            <button mat-flat-button class="!bg-primary" (click)="changePassword()" [disabled]="isChangingPassword()">
+              @if (isChangingPassword()) { <mat-spinner diameter="18" /> } @else { Update password }
+            </button>
+          </div>
+        </form>
+      }
+    </section>
+
+    <!-- Account -->
+    <section class="section border-error-container">
+      <div class="section-header">
+        <p class="section-title">Account</p>
+      </div>
+      <button mat-button class="logout-btn" (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        Log out
+      </button>
+    </section>
+
+  }
+
+</div>

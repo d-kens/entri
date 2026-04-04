@@ -1,9 +1,8 @@
 package com.oro.api.security.service;
 
 import com.oro.api.modules.user.service.UserService;
+import com.oro.api.security.model.UserPrincipal;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,11 +17,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String phoneNumber) throws UsernameNotFoundException {
         var user = userService.getUserByPhoneNumber(phoneNumber);
-
-        var authorities = user.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
-                .toList();
-
-        return new User(user.getPhoneNumber(), user.getPassword(), authorities);
+        return new UserPrincipal(user);
     }
 }

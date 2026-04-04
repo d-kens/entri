@@ -1,8 +1,8 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { environment } from 'environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { catchError, Observable, tap, throwError } from 'rxjs';
-import {AuthResponse, AuthRequest} from '../models/auth.models';
+import { catchError, finalize, Observable, tap, throwError } from 'rxjs';
+import {AuthResponse, AuthRequest, ForgotPasswordRequest, ResetPasswordRequest} from '../models/auth.models';
 import {UserResponse} from '@core/models/user.models';
 
 @Injectable({
@@ -56,12 +56,17 @@ export class AuthService {
       );
   }
 
+  clearSession(): void {
+    localStorage.removeItem(this.ACCESS_TOKEN_KEY);
+    this.authStatusSignal.set(false);
+  }
+
   logout(): Observable<void> {
     return this.http.post<void>(`${environment.apiBaseUrl}/auth/logout`, {}, {
       withCredentials: true
     })
       .pipe(
-        tap(() => {
+        finalize(() => {
           localStorage.removeItem(this.ACCESS_TOKEN_KEY);
           this.authStatusSignal.set(false);
         })
@@ -69,6 +74,14 @@ export class AuthService {
   }
 
   getCurrentUser(): Observable<UserResponse> {
-    return this.http.get<UserResponse>(`${environment.apiBaseUrl}/auth/me`)
+    return this.http.get<UserResponse>(`${environment.apiBaseUrl}/auth/me`);
+  }
+
+  forgotPassword(request: ForgotPasswordRequest): Observable<void> {
+    return this.http.post<void>(`${environment.apiBaseUrl}/auth/forgot-password`, request);
+  }
+
+  resetPassword(request: ResetPasswordRequest): Observable<void> {
+    return this.http.post<void>(`${environment.apiBaseUrl}/auth/reset-password`, request);
   }
 }

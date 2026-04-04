@@ -1,4 +1,4 @@
-package com.oro.api.modules.token.entity;
+package com.oro.api.modules.otp.entity;
 
 import com.oro.api.common.entity.AbstractAuditableEntity;
 import com.oro.api.modules.user.entity.User;
@@ -13,8 +13,8 @@ import java.time.Instant;
 @Setter
 @Entity
 @NoArgsConstructor
-@Table(name = "tokens")
-public class Token extends AbstractAuditableEntity {
+@Table(name = "otp")
+public class Otp extends AbstractAuditableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,12 +23,12 @@ public class Token extends AbstractAuditableEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(name = "token_hash", nullable = false, length = 128)
-    private String tokenHash;
+    @Column(name = "otp_hash", nullable = false, length = 128)
+    private String otpHash;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 50)
-    private TokenPurpose purpose;
+    private OtpPurpose purpose;
 
     @Column(name = "request_ip", length = 45)
     private String requestIp;
@@ -41,7 +41,6 @@ public class Token extends AbstractAuditableEntity {
 
     @Column(name = "invalidated_at")
     private Instant invalidatedAt;
-
 
     public boolean isValid() {
         Instant now = Instant.now();

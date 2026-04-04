@@ -4,7 +4,8 @@ import com.oro.api.common.dto.ErrorDto;
 import com.oro.api.modules.deliveries.exception.InvalidDeliveryException;
 import com.oro.api.modules.notification.exception.NotificationDeliveryException;
 import com.oro.api.modules.payment.exception.PaymentProviderException;
-import com.oro.api.modules.token.exception.InvalidTokenException;
+import com.oro.api.modules.otp.exception.InvalidOtpException;
+import com.oro.api.modules.user.exception.InvalidTokenException;
 import com.oro.api.modules.user.exception.PhoneNumberAlreadyExistException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,6 +50,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidTokenException.class)
     public ResponseEntity<ErrorDto> handleInvalidTokenException(InvalidTokenException e) {
+        return ResponseEntity.badRequest().body(
+                new ErrorDto(e.getMessage())
+        );
+    }
+
+    @ExceptionHandler(InvalidOtpException.class)
+    public ResponseEntity<ErrorDto> handleInvalidOtpException(InvalidOtpException e) {
         return ResponseEntity.badRequest().body(
                 new ErrorDto(e.getMessage())
         );
