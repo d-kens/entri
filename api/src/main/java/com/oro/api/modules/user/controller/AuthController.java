@@ -1,8 +1,12 @@
 package com.oro.api.modules.user.controller;
 
+import com.oro.api.modules.user.dto.AuthRequest;
+import com.oro.api.modules.user.dto.AuthResponse;
 import com.oro.api.modules.user.dto.RegisterMerchantRequest;
 import com.oro.api.modules.user.dto.UserResponse;
+import com.oro.api.modules.user.service.AuthService;
 import com.oro.api.modules.user.service.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +21,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @AllArgsConstructor
 public class AuthController {
     private final UserService userService;
+    private final AuthService authService;
 
     @PostMapping("/register")
     public ResponseEntity<UserResponse> register(
@@ -30,7 +35,12 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Void> login() {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<AuthResponse> authenticate(
+            @Valid @RequestBody AuthRequest request,
+            HttpServletResponse response
+    ) {
+        return authService.authenticate(request, response)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.noContent().build());
     }
 }

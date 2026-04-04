@@ -34,7 +34,7 @@ public class DeliveryController {
             @RequestParam(required = false) String status,
             @RequestParam(required = false) String search
     ) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Pageable pageable = PageRequest.of(page, size, Sort.by("created").descending());
 
         Page<Delivery> deliveryPage = deliveryService.getDeliveries(currentUserId, status, search, pageable);
 

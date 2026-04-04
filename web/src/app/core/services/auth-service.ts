@@ -2,7 +2,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { environment } from 'environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, tap, throwError } from 'rxjs';
-import {AccessToken, AuthRequest, ForgotPasswordPayload, ResetPasswordPayload} from '../models/auth.models';
+import {AuthResponse, AuthRequest} from '../models/auth.models';
 import {UserResponse} from '@core/models/user.models';
 
 @Injectable({
@@ -26,9 +26,9 @@ export class AuthService {
     return localStorage.getItem(this.ACCESS_TOKEN_KEY);
   }
 
-  login(authRequest: AuthRequest): Observable<Partial<AccessToken>> {
+  login(authRequest: AuthRequest): Observable<AuthResponse> {
     return this.http
-      .post<Partial<AccessToken>>(`${environment.apiBaseUrl}/auth/login`, authRequest, {
+      .post<AuthResponse>(`${environment.apiBaseUrl}/auth/login`, authRequest, {
         withCredentials: true
       })
       .pipe(
@@ -45,9 +45,9 @@ export class AuthService {
       );
   }
 
-  refreshToken(): Observable<AccessToken> {
+  refreshToken(): Observable<AuthResponse> {
     return this.http
-      .post<AccessToken>(`${environment.apiBaseUrl}/auth/refresh-token`, {}, {withCredentials: true})
+      .post<AuthResponse>(`${environment.apiBaseUrl}/auth/refresh-token`, {}, {withCredentials: true})
       .pipe(
         tap(response => {
           localStorage.setItem(this.ACCESS_TOKEN_KEY, response.accessToken);
@@ -66,19 +66,6 @@ export class AuthService {
           this.authStatusSignal.set(false);
         })
       );
-  }
-
-  sendPasswordResetInstructions(payload: ForgotPasswordPayload): Observable<string> {
-    return this.http.post<string>(
-      `${environment.apiBaseUrl}/auth/forgot-password`, payload
-    );
-  }
-
-  resetPassword(payload: ResetPasswordPayload): Observable<string> {
-    return this.http.post<string>(
-      `${environment.apiBaseUrl}/auth/reset-password`,
-      payload
-    )
   }
 
   getCurrentUser(): Observable<UserResponse> {

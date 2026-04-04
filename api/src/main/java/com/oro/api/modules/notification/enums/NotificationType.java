@@ -1,4 +1,4 @@
-package com.oro.api.modules.notification.entity;
+package com.oro.api.modules.notification.enums;
 
 import lombok.Getter;
 

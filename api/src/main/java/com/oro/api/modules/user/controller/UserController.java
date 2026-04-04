@@ -10,14 +10,12 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping("/users")
 @AllArgsConstructor
-@PreAuthorize("hasAuthority('ADMIN')")
 public class UserController {
     private final UserService userService;
 

@@ -29,11 +29,11 @@ public class User extends AbstractAuditableEntity {
     @Column(name = "name", nullable = false, length = 100)
     private String name;
 
+    @Column(name = "password", nullable = false)
+    private String password;
+
     @Column(name = "is_active", nullable = false)
     private boolean isActive = true;
-
-    @Embedded
-    private TwoFactorCode twoFactorCode;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -48,13 +48,5 @@ public class User extends AbstractAuditableEntity {
         if (externalId == null) {
             externalId = UUID.randomUUID().toString();
         }
-    }
-
-    public void requestOtp(int minutesValid) {
-        twoFactorCode.generate(minutesValid);
-    }
-
-    public boolean verifyOtp(String code) {
-        return twoFactorCode.verify(code);
     }
 }

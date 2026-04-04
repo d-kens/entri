@@ -2,16 +2,11 @@ package com.oro.api.modules.user.dto;
 
 import com.oro.api.common.validators.ValidPhoneNumber;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 
-public record RegisterMerchantRequest(
-        @NotBlank(message = "name is required")
-        String name,
-
+public record AuthRequest(
         @ValidPhoneNumber
         String phoneNumber,
 
         @NotBlank(message = "password is required")
-        @Size(min = 8, message = "password must be at least 8 characters")
         String password
 ) {}
