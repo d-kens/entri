@@ -10,7 +10,7 @@
     <!-- Search -->
     <form [formGroup]="trackingForm" (ngSubmit)="trackPackage()" class="mb-12">
       <div class="max-w-2xl mx-auto">
-        <div class="flex gap-3">
+        <div class="flex flex-col sm:flex-row gap-3">
           <mat-form-field appearance="outline" class="flex-1 compact-field">
             <mat-label>Tracking Number</mat-label>
             <mat-icon matPrefix>search</mat-icon>
@@ -28,7 +28,7 @@
             mat-flat-button
             color="primary"
             type="submit"
-            class="h-11 !rounded-lg !px-6 self-start mt-1"
+            class="h-11 !rounded-lg !px-6 sm:self-start sm:mt-1"
             [disabled]="isSearching() || trackingForm.invalid"
           >
             @if (isSearching()) {
