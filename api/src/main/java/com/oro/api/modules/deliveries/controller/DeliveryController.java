@@ -4,6 +4,7 @@ import com.oro.api.common.dto.PageResponse;
 import com.oro.api.modules.deliveries.dto.CreateDeliveryDto;
 import com.oro.api.modules.deliveries.dto.DeliveryResponseDto;
 import com.oro.api.modules.deliveries.dto.TrackDeliveryResponseDto;
+import com.oro.api.modules.deliveries.dto.UpdateDeliveryStatusDto;
 import com.oro.api.modules.deliveries.mapper.DeliveryMapper;
 import com.oro.api.modules.deliveries.entity.Delivery;
 import com.oro.api.modules.deliveries.service.DeliveryService;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -28,6 +30,7 @@ public class DeliveryController {
     private final DeliveryService deliveryService;
 
     @GetMapping
+    @PreAuthorize("hasAuthority('delivery:read')")
     public ResponseEntity<PageResponse<DeliveryResponseDto>> getDeliveries(
             @AuthenticationPrincipal UserPrincipal principal,
             @RequestParam(defaultValue = "0") int page,
@@ -48,10 +51,12 @@ public class DeliveryController {
     }
 
     @GetMapping("/{externalId}")
+    @PreAuthorize("hasAuthority('delivery:read')")
     public DeliveryResponseDto getDeliveryByExternalId(
+            @AuthenticationPrincipal UserPrincipal principal,
             @PathVariable String externalId
     ) {
-        var delivery = deliveryService.getDeliveryByExternalId(externalId);
+        var delivery = deliveryService.getDeliveryByExternalId(externalId, principal.getUser());
         return deliveryMapper.toResponseDto(delivery);
     }
 
@@ -63,7 +68,24 @@ public class DeliveryController {
         return ResponseEntity.ok(responseDto);
     }
 
+    @PatchMapping("/{externalId}/status")
+    @PreAuthorize("hasAuthority('delivery:update')")
+    public ResponseEntity<DeliveryResponseDto> updateStatus(
+            @PathVariable String externalId,
+            @AuthenticationPrincipal UserPrincipal principal,
+            @Valid @RequestBody UpdateDeliveryStatusDto dto
+    ) {
+        boolean isAdmin = principal.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        var delivery = deliveryService.updateDeliveryStatus(
+                externalId, dto.status(), dto.cancellationReason(), isAdmin);
+
+        return ResponseEntity.ok(deliveryMapper.toResponseDto(delivery));
+    }
+
     @PostMapping
+    @PreAuthorize("hasAuthority('delivery:create')")
     public ResponseEntity<DeliveryResponseDto> create(
             @AuthenticationPrincipal UserPrincipal principal,
             UriComponentsBuilder uriComponentsBuilder,

@@ -3,6 +3,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { AuthService } from '@core/services/auth-service';
 
 interface MenuItem {
   icon: string;
@@ -27,23 +28,21 @@ export class Sidenav implements OnInit {
   isMobile = input<boolean>(false);
   closeSidenav = output<void>();
 
-  private currentRole: 'ADMIN' | 'CUSTOMER' | 'AGENT' = 'CUSTOMER';
-
   menuItem = signal<MenuItem[]>([]);
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) {}
 
   ngOnInit() {
     this.loadMenuByRole();
   }
 
   private loadMenuByRole() {
-    switch(this.currentRole) {
+    switch(this.authService.getRole()) {
       case 'ADMIN':
         this.menuItem.set(this.getAdminMenu());
         break;
-      case 'CUSTOMER':
-        this.menuItem.set(this.getCustomerMenu());
+      case 'MERCHANT':
+        this.menuItem.set(this.getMerchantMenu());
         break;
       case 'AGENT':
         this.menuItem.set(this.getAgentMenu());
@@ -53,13 +52,11 @@ export class Sidenav implements OnInit {
     }
   }
 
-  private getCustomerMenu(): MenuItem[] {
+  private getMerchantMenu(): MenuItem[] {
     return [
       { icon: 'inventory_2', label: 'Deliveries', route: '/deliveries' },
       { icon: 'add_circle', label: 'New Delivery', route: '/deliveries/new' },
-      {
-         icon: 'timeline', label: 'Track Delivery', route: '/deliveries/track',
-      },
+      { icon: 'timeline', label: 'Track Delivery', route: '/deliveries/track' },
       { icon: 'account_circle', label: 'Profile', route: '/profile' },
       { icon: 'help', label: 'Support', route: '/support' },
     ];
@@ -67,14 +64,11 @@ export class Sidenav implements OnInit {
 
   private getAgentMenu(): MenuItem[] {
     return [
-      { icon: 'qr_code_scanner', label: 'Scan Parcel', route: '/scan' },
-      { icon: 'input', label: 'Incoming', route: '/incoming' },
-      { icon: 'output', label: 'Outgoing', route: '/outgoing' },
-      { icon: 'inventory', label: 'Current Stock', route: '/stock' },
+      { icon: 'inventory_2', label: 'Deliveries', route: '/deliveries' },
       { icon: 'paid', label: 'Commissions', route: '/commissions' },
       { icon: 'account_balance', label: 'Payout Request', route: '/payout' },
-      { icon: 'notifications', label: 'Notifications', route: '/notifications' },
-      { icon: 'settings', label: 'Settings', route: '/settings' },
+      { icon: 'account_circle', label: 'Profile', route: '/profile' },
+      { icon: 'help', label: 'Support', route: '/support' },
     ];
   }
 

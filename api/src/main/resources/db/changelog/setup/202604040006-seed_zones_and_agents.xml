@@ -46,37 +46,37 @@
         <insert tableName="users">
             <column name="external_id" value="a1b2c3d4-0001-0001-0001-000000000001"/>
             <column name="name" value="James Otieno"/>
-            <column name="phone_number" value="+254711000001"/>
+            <column name="phone_number" value="254711000001"/>
             <column name="password" value="$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lihO"/>
         </insert>
         <insert tableName="users">
             <column name="external_id" value="a1b2c3d4-0001-0001-0001-000000000002"/>
             <column name="name" value="Mary Wanjiku"/>
-            <column name="phone_number" value="+254711000002"/>
+            <column name="phone_number" value="254711000002"/>
             <column name="password" value="$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lihO"/>
         </insert>
         <insert tableName="users">
             <column name="external_id" value="a1b2c3d4-0001-0001-0001-000000000003"/>
             <column name="name" value="Peter Kamau"/>
-            <column name="phone_number" value="+254711000003"/>
+            <column name="phone_number" value="254711000003"/>
             <column name="password" value="$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lihO"/>
         </insert>
         <insert tableName="users">
             <column name="external_id" value="a1b2c3d4-0001-0001-0001-000000000004"/>
             <column name="name" value="Grace Achieng"/>
-            <column name="phone_number" value="+254711000004"/>
+            <column name="phone_number" value="254711000004"/>
             <column name="password" value="$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lihO"/>
         </insert>
         <insert tableName="users">
             <column name="external_id" value="a1b2c3d4-0001-0001-0001-000000000005"/>
             <column name="name" value="David Mwangi"/>
-            <column name="phone_number" value="+254711000005"/>
+            <column name="phone_number" value="254711000005"/>
             <column name="password" value="$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lihO"/>
         </insert>
 
         <rollback>
             <delete tableName="users">
-                <where>phone_number IN ('+254711000001', '+254711000002', '+254711000003', '+254711000004', '+254711000005')</where>
+                <where>phone_number IN ('254711000001', '254711000002', '254711000003', '254711000004', '254711000005')</where>
             </delete>
         </rollback>
     </changeSet>
@@ -87,7 +87,7 @@
             INSERT INTO user_roles (user_id, role_id)
             SELECT u.id, r.id
             FROM users u, roles r
-            WHERE u.phone_number IN ('+254711000001', '+254711000002', '+254711000003', '+254711000004', '+254711000005')
+            WHERE u.phone_number IN ('254711000001', '254711000002', '254711000003', '254711000004', '254711000005')
               AND r.name = 'AGENT';
         </sql>
 
@@ -96,7 +96,7 @@
                 DELETE FROM user_roles
                 WHERE user_id IN (
                     SELECT id FROM users
-                    WHERE phone_number IN ('+254711000001', '+254711000002', '+254711000003', '+254711000004', '+254711000005')
+                    WHERE phone_number IN ('254711000001', '254711000002', '254711000003', '254711000004', '254711000005')
                 );
             </sql>
         </rollback>
@@ -109,9 +109,9 @@
             VALUES (
                 'CBD Pickup - Anniversary Towers',
                 (SELECT id FROM zones WHERE zone_name = 'CBD' AND city = 'Nairobi'),
-                (SELECT id FROM users WHERE phone_number = '+254711000001'),
+                (SELECT id FROM users WHERE phone_number = '254711000001'),
                 'Ground Floor, Anniversary Towers, University Way, Nairobi CBD',
-                '+254711000001',
+                '254711000001',
                 '08:00:00', '18:00:00',
                 -1.284089, 36.820849
             );
@@ -120,9 +120,9 @@
             VALUES (
                 'Westlands Pickup - Sarit Centre',
                 (SELECT id FROM zones WHERE zone_name = 'Westlands' AND city = 'Nairobi'),
-                (SELECT id FROM users WHERE phone_number = '+254711000002'),
+                (SELECT id FROM users WHERE phone_number = '254711000002'),
                 'Sarit Centre, Westlands Road, Nairobi',
-                '+254711000002',
+                '254711000002',
                 '08:00:00', '20:00:00',
                 -1.263768, 36.803074
             );
@@ -131,9 +131,9 @@
             VALUES (
                 'Karen Pickup - Waterfront',
                 (SELECT id FROM zones WHERE zone_name = 'Karen' AND city = 'Nairobi'),
-                (SELECT id FROM users WHERE phone_number = '+254711000003'),
+                (SELECT id FROM users WHERE phone_number = '254711000003'),
                 'The Waterfront Karen, Karen Road, Nairobi',
-                '+254711000003',
+                '254711000003',
                 '09:00:00', '19:00:00',
                 -1.340530, 36.707300
             );
@@ -142,9 +142,9 @@
             VALUES (
                 'Kasarani Pickup - Roysambu',
                 (SELECT id FROM zones WHERE zone_name = 'Kasarani' AND city = 'Nairobi'),
-                (SELECT id FROM users WHERE phone_number = '+254711000004'),
+                (SELECT id FROM users WHERE phone_number = '254711000004'),
                 'Roysambu Shopping Centre, Thika Road, Nairobi',
-                '+254711000004',
+                '254711000004',
                 '08:00:00', '18:00:00',
                 -1.228350, 36.897120
             );
@@ -153,9 +153,9 @@
             VALUES (
                 'Embakasi Pickup - Gateway Mall',
                 (SELECT id FROM zones WHERE zone_name = 'Embakasi' AND city = 'Nairobi'),
-                (SELECT id FROM users WHERE phone_number = '+254711000005'),
+                (SELECT id FROM users WHERE phone_number = '254711000005'),
                 'Gateway Mall, Mombasa Road, Embakasi, Nairobi',
-                '+254711000005',
+                '254711000005',
                 '08:00:00', '20:00:00',
                 -1.319150, 36.927430
             );
@@ -166,7 +166,7 @@
                 DELETE FROM agents
                 WHERE agent_id IN (
                     SELECT id FROM users
-                    WHERE phone_number IN ('+254711000001', '+254711000002', '+254711000003', '+254711000004', '+254711000005')
+                    WHERE phone_number IN ('254711000001', '254711000002', '254711000003', '254711000004', '254711000005')
                 );
             </sql>
         </rollback>

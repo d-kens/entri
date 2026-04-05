@@ -23,6 +23,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
+    @PreAuthorize("hasAuthority('user:read')")
     public ResponseEntity<PageResponse<UserResponse>> getUsers(
             @PageableDefault(size = 20) Pageable pageable
     ) {
@@ -30,11 +31,13 @@ public class UserController {
     }
 
     @GetMapping("/{externalId}")
+    @PreAuthorize("hasAuthority('user:read')")
     public ResponseEntity<UserResponse> getUser(@PathVariable String externalId) {
         return ResponseEntity.ok(userService.getUserByExternalId(externalId));
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('user:create')")
     public ResponseEntity<UserResponse> createUser(
             UriComponentsBuilder uriComponentsBuilder,
             @Valid @RequestBody CreateUserRequest request
@@ -46,7 +49,7 @@ public class UserController {
     }
 
     @PatchMapping("/{externalId}")
-    @PreAuthorize("hasRole('ADMIN') or #principal.user.externalId == #externalId")
+    @PreAuthorize("hasAuthority('user:update') or #principal.user.externalId == #externalId")
     public ResponseEntity<UserResponse> updateUser(
             @PathVariable String externalId,
             @Valid @RequestBody UpdateUserRequest request,
@@ -56,6 +59,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{externalId}")
+    @PreAuthorize("hasAuthority('user:delete')")
     public ResponseEntity<Void> deactivateUser(@PathVariable String externalId) { // TODO: Will return user object with the token (token is transient field)
         userService.deactivateUser(externalId);
         return ResponseEntity.noContent().build();
