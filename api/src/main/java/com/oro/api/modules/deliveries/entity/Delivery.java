@@ -127,6 +127,6 @@ public class Delivery extends AbstractAuditableEntity {
 
     public boolean canBeCancelled() {
         return deliveryStatus == DeliveryStatus.PENDING ||
-                deliveryStatus == DeliveryStatus.DROPPED_AT_PICKUP_AGENT;
+                deliveryStatus == DeliveryStatus.AT_PICKUP_AGENT;
     }
 }

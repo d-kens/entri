@@ -65,7 +65,7 @@ export class DeliveryPayment implements OnInit, OnDestroy {
   });
 
   ngOnInit() {
-    this.deliveryId.set(this.route.snapshot.paramMap.get('id') || '');
+    this.deliveryId.set(this.route.snapshot.paramMap.get('externalId') || '');
     this.initializeForm();
     this.loadDelivery();
   }

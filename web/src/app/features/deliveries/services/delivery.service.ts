@@ -6,7 +6,8 @@ import {
   CreateDeliveryDto,
   DeliveryFilters,
   DeliveryResponse,
-  TrackDeliveryResponse
+  TrackDeliveryResponse,
+  UpdateDeliveryStatusDto
 } from '@features/deliveries/models/delivery.model';
 import {PageResponse} from '@core/models/common.model';
 
@@ -48,6 +49,13 @@ export class DeliveryService {
     return this.http.get<PageResponse<DeliveryResponse>>(
       `${environment.apiBaseUrl}/deliveries`,
       { params }
+    );
+  }
+
+  updateDeliveryStatus(externalId: string, dto: UpdateDeliveryStatusDto): Observable<DeliveryResponse> {
+    return this.http.patch<DeliveryResponse>(
+      `${environment.apiBaseUrl}/deliveries/${externalId}/status`,
+      dto
     );
   }
 

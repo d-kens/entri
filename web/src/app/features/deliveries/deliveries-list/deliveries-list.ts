@@ -14,6 +14,7 @@ import { DeliveryService } from '@features/deliveries/services/delivery.service'
 import { DeliveryResponse, DeliveryStatus } from '@features/deliveries/models/delivery.model';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import {PaymentStatus} from '@features/payments/models/payment.model';
+import {AuthService} from '@core/services/auth-service';
 
 @Component({
   selector: 'app-deliveries-list',
@@ -27,7 +28,7 @@ import {PaymentStatus} from '@features/payments/models/payment.model';
     MatIconModule,
     MatProgressSpinnerModule,
     MatPaginatorModule,
-    MatTooltipModule
+    MatTooltipModule,
   ],
   templateUrl: './deliveries-list.html',
   styleUrl: './deliveries-list.css',
@@ -36,6 +37,7 @@ import {PaymentStatus} from '@features/payments/models/payment.model';
 export class DeliveriesList implements OnInit {
   private router = inject(Router);
   private deliveryService = inject(DeliveryService);
+  private authService = inject(AuthService);
 
   Math = Math;
 
@@ -52,9 +54,10 @@ export class DeliveriesList implements OnInit {
   statusOptions = [
     { value: '', label: 'All Statuses' },
     { value: 'PENDING', label: 'Pending' },
-    { value: 'DROPPED_AT_PICKUP_AGENT', label: 'At Pickup Agent' },
+    { value: 'AT_PICKUP_AGENT', label: 'At Pickup Agent' },
     { value: 'AT_HUB', label: 'At Hub' },
     { value: 'OUT_FOR_DELIVERY', label: 'Out for Delivery' },
+    { value: 'AT_DESTINATION_AGENT', label: 'At Destination Agent' },
     { value: 'DELIVERED', label: 'Delivered' },
     { value: 'CANCELLED', label: 'Cancelled' }
   ];
@@ -118,6 +121,14 @@ export class DeliveriesList implements OnInit {
     this.router.navigate(['/deliveries', delivery.externalId, 'payment']);
   }
 
+  canCreateDelivery(): boolean {
+    return this.authService.hasPermission('delivery:create');
+  }
+
+  canUpdateStatus(): boolean {
+    return this.authService.hasPermission('delivery:update');
+  }
+
   createNewDelivery() {
     this.router.navigate(['/deliveries/new']);
   }
@@ -125,9 +136,10 @@ export class DeliveriesList implements OnInit {
   getDeliveryStatusClass(status: DeliveryStatus): string {
     const statusMap: Record<DeliveryStatus, string> = {
       [DeliveryStatus.PENDING]: 'status-pending',
-      [DeliveryStatus.DROPPED_AT_PICKUP_AGENT]: 'status-in-transit',
+      [DeliveryStatus.AT_PICKUP_AGENT]: 'status-in-transit',
       [DeliveryStatus.AT_HUB]: 'status-in-transit',
       [DeliveryStatus.OUT_FOR_DELIVERY]: 'status-out-for-delivery',
+      [DeliveryStatus.AT_DESTINATION_AGENT]: 'at-destination-agent',
       [DeliveryStatus.DELIVERED]: 'status-delivered',
       [DeliveryStatus.CANCELLED]: 'status-cancelled'
     };
@@ -137,9 +149,10 @@ export class DeliveriesList implements OnInit {
   getDeliveryStatusLabel(status: DeliveryStatus): string {
     const statusMap: Record<DeliveryStatus, string> = {
       [DeliveryStatus.PENDING]: 'Pending',
-      [DeliveryStatus.DROPPED_AT_PICKUP_AGENT]: 'At Pickup',
+      [DeliveryStatus.AT_PICKUP_AGENT]: 'At Pickup Agent',
       [DeliveryStatus.AT_HUB]: 'At Hub',
       [DeliveryStatus.OUT_FOR_DELIVERY]: 'Out for Delivery',
+      [DeliveryStatus.AT_DESTINATION_AGENT]: 'At Destination Agent',
       [DeliveryStatus.DELIVERED]: 'Delivered',
       [DeliveryStatus.CANCELLED]: 'Cancelled'
     };

@@ -13,9 +13,10 @@ export type CreateDeliveryDto = {
 
 export enum DeliveryStatus {
   PENDING = 'PENDING',
-  DROPPED_AT_PICKUP_AGENT = 'DROPPED_AT_PICKUP_AGENT',
+  AT_PICKUP_AGENT = 'AT_PICKUP_AGENT',
   AT_HUB = 'AT_HUB',
   OUT_FOR_DELIVERY = 'OUT_FOR_DELIVERY',
+  AT_DESTINATION_AGENT = 'AT_DESTINATION_AGENT',
   DELIVERED = 'DELIVERED',
   CANCELLED = 'CANCELLED'
 }
@@ -37,6 +38,11 @@ export type DeliveryResponse = {
   paymentStatus: PaymentStatus;
   deliveryStatus: DeliveryStatus;
 };
+
+export type UpdateDeliveryStatusDto = {
+  status: DeliveryStatus;
+  cancellationReason?: string;
+}
 
 export interface DeliveryFilters {
   page?: number;

@@ -14,6 +14,7 @@ import com.oro.api.modules.routes.service.DeliveryBatchService;
 import com.oro.api.modules.user.entity.User;
 import com.oro.api.modules.user.service.UserService;
 import com.oro.api.modules.zones.service.AgentService;
+import org.springframework.security.access.AccessDeniedException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -23,7 +24,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -62,10 +62,28 @@ public class DeliveryService {
         return deliveryRepository.findAll(spec, pageable);
     }
 
-    public Delivery getDeliveryByExternalId(String externalId) {
-        return deliveryRepository.findByExternalId(externalId).orElseThrow(
+    public Delivery getDeliveryByExternalId(String externalId, User currentUser) {
+        Delivery delivery = deliveryRepository.findByExternalId(externalId).orElseThrow(
                 () -> new NotFoundException("Delivery with ID " + externalId + " not found")
         );
+
+        boolean isMerchant = currentUser.getRoles().stream().anyMatch(r -> r.getName().equals("MERCHANT"));
+        boolean isAgent = currentUser.getRoles().stream().anyMatch(r -> r.getName().equals("AGENT"));
+
+        if (isMerchant && !delivery.getUser().getId().equals(currentUser.getId())) {
+            throw new AccessDeniedException("Access denied");
+        }
+
+        if (isAgent) {
+            Long userId = currentUser.getId();
+            boolean linked = delivery.getFromAgent().getUser().getId().equals(userId)
+                    || delivery.getToAgent().getUser().getId().equals(userId);
+            if (!linked) {
+                throw new AccessDeniedException("Access denied");
+            }
+        }
+
+        return delivery;
     }
 
     @Transactional
@@ -105,9 +123,16 @@ public class DeliveryService {
     }
 
     @Transactional
-    public Delivery updateDeliveryStatus(String externalId, DeliveryStatus newStatus, String cancellationReason) {
-        Delivery delivery = getDeliveryByExternalId(externalId);
+    public Delivery updateDeliveryStatus(String externalId, DeliveryStatus newStatus, String cancellationReason, boolean isAdmin) {
+        Delivery delivery = deliveryRepository.findByExternalId(externalId).orElseThrow(
+                () -> new NotFoundException("Delivery with ID " + externalId + " not found")
+        );
         DeliveryStatus current = delivery.getDeliveryStatus();
+
+        if (!isAdmin && !newStatus.isAgentAllowed()) {
+            throw new InvalidDeliveryException(
+                    "Agents are not permitted to set status: " + newStatus);
+        }
 
         if (!current.canTransitionTo(newStatus)) {
             throw new InvalidDeliveryException(
@@ -117,7 +142,7 @@ public class DeliveryService {
         LocalDateTime now = LocalDateTime.now();
 
         switch (newStatus) {
-            case DROPPED_AT_PICKUP_AGENT -> delivery.setDroppedAtPickupAgentAt(now);
+            case AT_PICKUP_AGENT -> delivery.setDroppedAtPickupAgentAt(now);
             case AT_HUB -> {
                 delivery.setArrivedAtHubAt(now);
                 deliveryBatchService.assignToBatch(delivery);
@@ -179,8 +204,13 @@ public class DeliveryService {
     private Specification<Delivery> buildSpecification(User currentUser, String status, String search) {
         Specification<Delivery> spec = Specification.allOf();
 
-        if (currentUser.getRoles().stream().noneMatch(role -> role.getName().equals("ADMIN"))) {
+        boolean isMerchant = currentUser.getRoles().stream().anyMatch(role -> role.getName().equals("MERCHANT"));
+        boolean isAgent = currentUser.getRoles().stream().anyMatch(role -> role.getName().equals("AGENT"));
+
+        if (isMerchant) {
             spec = spec.and(DeliverySpecification.hasUser(currentUser.getId()));
+        } else if (isAgent) {
+            spec = spec.and(DeliverySpecification.isLinkedToAgent(currentUser.getId()));
         }
 
         if (status != null && !status.isEmpty()) {
@@ -198,7 +228,6 @@ public class DeliveryService {
 
         return spec;
     }
-
 
     private String generateTrackingNumber() {
         LocalDateTime now = LocalDateTime.now();
@@ -278,7 +307,7 @@ public class DeliveryService {
                 "Dropped at Pickup Point",
                 delivery.getDroppedAtPickupAgentAt() != null ? delivery.getDroppedAtPickupAgentAt().format(formatter) : "Pending",
                 delivery.getFromAgent().getName(),
-                isStatusReached(currentStatus, DeliveryStatus.DROPPED_AT_PICKUP_AGENT)
+                isStatusReached(currentStatus, DeliveryStatus.AT_PICKUP_AGENT)
         ));
 
         // Event 3: At Hub
@@ -312,9 +341,10 @@ public class DeliveryService {
     private boolean isStatusReached(DeliveryStatus currentStatus, DeliveryStatus targetStatus) {
         List<DeliveryStatus> statusOrder = List.of(
                 DeliveryStatus.PENDING,
-                DeliveryStatus.DROPPED_AT_PICKUP_AGENT,
+                DeliveryStatus.AT_PICKUP_AGENT,
                 DeliveryStatus.AT_HUB,
                 DeliveryStatus.OUT_FOR_DELIVERY,
+                DeliveryStatus.AT_DESTINATION_AGENT,
                 DeliveryStatus.DELIVERED
         );
 

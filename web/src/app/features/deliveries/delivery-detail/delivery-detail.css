@@ -1,0 +1,41 @@
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.status-pending { background-color: color-mix(in srgb, var(--color-warning) 12%, transparent); color: var(--color-warning); }
+.status-in-transit { background-color: color-mix(in srgb, var(--color-info) 12%, transparent); color: var(--color-info); }
+.status-out-for-delivery { background-color: color-mix(in srgb, var(--color-primary) 12%, transparent); color: var(--color-primary); }
+.at-destination-agent { background-color: color-mix(in srgb, var(--color-info) 12%, transparent); color: var(--color-info); }
+.status-delivered { background-color: color-mix(in srgb, var(--color-success) 12%, transparent); color: var(--color-success); }
+.status-cancelled { background-color: color-mix(in srgb, var(--color-error) 12%, transparent); color: var(--color-error); }
+
+.action-card {
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--color-outline-variant);
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.action-card:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--color-primary) 6%, transparent);
+  border-color: var(--color-primary);
+}
+
+.action-card--danger:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--color-error) 6%, transparent);
+  border-color: var(--color-error);
+}
+
+.action-card:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

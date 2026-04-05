@@ -81,7 +81,8 @@ export class TrackDelivery {
   getStatusLabel(status: string): string {
     const statusMap: Record<string, string> = {
       'PENDING': 'Pending',
-      'DROPPED_AT_PICKUP_AGENT': 'At Pickup Point',
+      'AT_PICKUP_AGENT': 'At Pickup Point',
+      'AT_DESTINATION_AGENT': 'At Destination',
       'AT_HUB': 'At Hub',
       'OUT_FOR_DELIVERY': 'Out for Delivery',
       'DELIVERED': 'Delivered'

@@ -33,6 +33,8 @@ import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -62,12 +64,7 @@ public class AuthService {
         storeRefreshTokenSession(user, rawRefreshToken);
         setRefreshTokenCookie(response, rawRefreshToken);
 
-        return new AuthResponse(
-                user.getName(),
-                user.getRoles(),
-                user.getExternalId(),
-                accessToken.toString()
-        );
+        return buildAuthResponse(user, accessToken.toString());
     }
 
     @Transactional
@@ -88,12 +85,20 @@ public class AuthService {
         var user = session.getUser();
         var newAccessToken = jwtService.generateAccessToken(user);
 
-        return new AuthResponse(
-                user.getName(),
-                user.getRoles(),
-                user.getExternalId(),
-                newAccessToken.toString()
-        );
+        return buildAuthResponse(user, newAccessToken.toString());
+    }
+
+    private AuthResponse buildAuthResponse(User user, String accessToken) {
+        Set<String> roleNames = user.getRoles().stream()
+                .map(role -> role.getName())
+                .collect(Collectors.toSet());
+
+        Set<String> permissions = user.getRoles().stream()
+                .flatMap(role -> role.getPermissions().stream())
+                .map(permission -> permission.getName())
+                .collect(Collectors.toSet());
+
+        return new AuthResponse(user.getName(), roleNames, permissions, user.getExternalId(), accessToken);
     }
 
     @Transactional

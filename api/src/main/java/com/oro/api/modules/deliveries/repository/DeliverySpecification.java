@@ -25,4 +25,11 @@ public class DeliverySpecification {
             );
         };
     }
+
+    public static Specification<Delivery> isLinkedToAgent(Long userId) {
+        return (root, query, cb) -> cb.or(
+                cb.equal(root.get("fromAgent").get("user").get("id"), userId),
+                cb.equal(root.get("toAgent").get("user").get("id"), userId)
+        );
+    }
 }
