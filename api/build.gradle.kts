@@ -6,7 +6,7 @@ plugins {
 
 group = "com.parrcel"
 version = "1.0.0"
-description = "Backend API that power oro web application"
+description = "Backend API that powers the puuul chama management platform"
 
 java {
     toolchain {

@@ -4,34 +4,34 @@
 @theme {
 
   /* ═══════════════════════════════════════════════════════════
-     COLORS — map directly to Material / Oro tokens
+     COLORS — map directly to Material / Puuul tokens
      ═══════════════════════════════════════════════════════════ */
 
-  /* Primary — Oro Gold */
-  --color-primary:             var(--mat-sys-primary);           /* #D4900A */
+  /* Primary — Puuul Green */
+  --color-primary:             var(--mat-sys-primary);           /* #1B6B3A */
   --color-primary-foreground:  var(--mat-sys-on-primary);        /* #FFFFFF */
-  --color-primary-container:   var(--mat-sys-primary-container); /* #FDF3DC */
+  --color-primary-container:   var(--mat-sys-primary-container); /* #C8EDDA */
   --color-primary-container-foreground: var(--mat-sys-on-primary-container);
 
   /* Primary glow — for hover shadows, highlights */
-  --color-primary-glow:        rgba(212, 144, 10, 0.25);
+  --color-primary-glow:        rgba(27, 107, 58, 0.25);
 
-  /* Secondary — Oro Ink */
-  --color-secondary:            var(--mat-sys-secondary);           /* #0D0C0B */
+  /* Secondary — Puuul Forest */
+  --color-secondary:            var(--mat-sys-secondary);           /* #1C3529 */
   --color-secondary-foreground: var(--mat-sys-on-secondary);        /* #FFFFFF */
-  --color-secondary-container:  var(--mat-sys-secondary-container); /* #2A2825 */
+  --color-secondary-container:  var(--mat-sys-secondary-container); /* #2D4E3E */
   --color-secondary-container-foreground: var(--mat-sys-on-secondary-container);
 
-  /* Tertiary — warm muted */
+  /* Tertiary — sage muted */
   --color-tertiary:            var(--mat-sys-tertiary);
   --color-tertiary-foreground: var(--mat-sys-on-tertiary);
   --color-tertiary-container:  var(--mat-sys-tertiary-container);
 
   /* Background & page surfaces */
   --color-background:          var(--mat-sys-background);          /* #FFFFFF */
-  --color-foreground:          var(--mat-sys-on-background);       /* #0D0C0B */
+  --color-foreground:          var(--mat-sys-on-background);       /* #0F1F17 */
 
-  /* Surface scale — warm whites */
+  /* Surface scale — mint-tinted whites */
   --color-surface:                    var(--mat-sys-surface);
   --color-surface-dim:                var(--mat-sys-surface-dim);
   --color-surface-variant:            var(--mat-sys-surface-variant);
@@ -44,12 +44,12 @@
   --color-surface-variant-foreground: var(--mat-sys-on-surface-variant);
 
   /* Inverse */
-  --color-inverse-surface:     var(--mat-sys-inverse-surface);     /* #1C1A18 */
-  --color-inverse-foreground:  var(--mat-sys-inverse-on-surface);  /* #FAF8F4 */
+  --color-inverse-surface:     var(--mat-sys-inverse-surface);     /* #1A2E22 */
+  --color-inverse-foreground:  var(--mat-sys-inverse-on-surface);  /* #F0F9F3 */
 
   /* Borders */
-  --color-outline:             var(--mat-sys-outline);             /* #9E9589 */
-  --color-outline-variant:     var(--mat-sys-outline-variant);     /* #E2DDD5 */
+  --color-outline:             var(--mat-sys-outline);             /* #6A8F78 */
+  --color-outline-variant:     var(--mat-sys-outline-variant);     /* #C0D9CA */
 
   /* Error */
   --color-error:               var(--mat-sys-error);
@@ -68,7 +68,7 @@
 
   /* ═══════════════════════════════════════════════════════════
      TYPOGRAPHY
-     Matches landing page: Instrument Serif + Geist
+     Instrument Serif for brand display, Geist for UI
      ═══════════════════════════════════════════════════════════ */
 
   --font-sans:    var(--mat-sys-plain-font-family);   /* Geist */
@@ -80,7 +80,7 @@
   --font-weight-bold:    var(--mat-sys-bold-font-weight);    /* 700 */
 
   /* ═══════════════════════════════════════════════════════════
-     BORDER RADIUS — matches landing page + Material corners
+     BORDER RADIUS — matches Material corners
      ═══════════════════════════════════════════════════════════ */
 
   --radius-none:  var(--mat-sys-corner-none);         /* 0    */
@@ -92,7 +92,7 @@
   --radius-full:  var(--mat-sys-corner-full);         /* 9999px */
 
   /* ═══════════════════════════════════════════════════════════
-     SHADOWS — warm-tinted Material elevation
+     SHADOWS — green-tinted Material elevation
      ═══════════════════════════════════════════════════════════ */
 
   --shadow-elevation-1:
@@ -110,8 +110,8 @@
     0px 6px 16px var(--mat-sys-penumbra-color),
     0px 8px 24px var(--mat-sys-ambient-color);
 
-  /* Gold glow — for primary buttons (matches landing hover) */
+  /* Green glow — for primary buttons */
   --shadow-primary-glow:
-    0px 12px 32px rgba(212, 144, 10, 0.25);
+    0px 12px 32px rgba(27, 107, 58, 0.25);
 
 }
