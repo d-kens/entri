@@ -15,7 +15,7 @@ spring:
 
 logging:
   level:
-    com.oro.api: DEBUG
+    com.puuul.api: DEBUG
     org.springframework.web: DEBUG
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
@@ -30,10 +30,3 @@ jwt:
 
 cookie:
   secure: false
-
-mpesa:
-  base-url: ${MPESA_BASE_URL:https://sandbox.safaricom.co.ke}
-  callback-url: ${MPESA_CALLBACK_URL:https://your-ngrok-url.ngrok.io/api/mpesa/stk/callback}
-  endpoints:
-    auth: ${MPESA_AUTH_ENDPOINT:/oauth/v1/generate?grant_type=client_credentials}
-    stk-push: ${MPESA_STK_PUSH_ENDPOINT:/mpesa/stkpush/v1/processrequest}

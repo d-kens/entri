@@ -1,4 +1,5 @@
 export const environment = {
-  production: true,
-  apiBaseUrl: 'https://api.oro.co.ke'
+  production: false,
+  apiBaseUrl: 'http://localhost:8080'
 };
+

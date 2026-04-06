@@ -2,67 +2,66 @@ html {
   color-scheme: light;
 
   /* ═══════════════════════════════════════════════════════════
-     PRIMARY — Oro Gold
-     Base: #D4900A  (landing page --gold)
+     PRIMARY — Puuul Green
+     Base: #1B6B3A  (forest green — growth, savings, community)
      ═══════════════════════════════════════════════════════════ */
-  --mat-sys-primary:                    #D4900A;
+  --mat-sys-primary:                    #1B6B3A;
   --mat-sys-on-primary:                 #FFFFFF;
-  --mat-sys-primary-container:          #FDF3DC;  /* landing --gold-pale */
-  --mat-sys-on-primary-container:       #3D2600;
-  --mat-sys-inverse-primary:            #F0A500;  /* lighter gold for dark surfaces */
-  --mat-sys-primary-fixed:              #FDF3DC;
-  --mat-sys-primary-fixed-dim:          #F0A500;
-  --mat-sys-on-primary-fixed:           #3D2600;
-  --mat-sys-on-primary-fixed-variant:   #7A4F00;
+  --mat-sys-primary-container:          #C8EDDA;  /* light mint */
+  --mat-sys-on-primary-container:       #003918;
+  --mat-sys-inverse-primary:            #5DBF88;  /* lighter green for dark surfaces */
+  --mat-sys-primary-fixed:              #C8EDDA;
+  --mat-sys-primary-fixed-dim:          #5DBF88;
+  --mat-sys-on-primary-fixed:           #003918;
+  --mat-sys-on-primary-fixed-variant:   #0F4D28;
 
   /* ═══════════════════════════════════════════════════════════
-     SECONDARY — Oro Ink (near-black)
-     Base: #0D0C0B  (landing page --ink)
+     SECONDARY — Puuul Forest (deep green-black)
+     Base: #1C3529
      ═══════════════════════════════════════════════════════════ */
-  --mat-sys-secondary:                  #0D0C0B;
+  --mat-sys-secondary:                  #1C3529;
   --mat-sys-on-secondary:               #FFFFFF;
-  --mat-sys-secondary-container:        #2A2825;  /* warm dark container */
-  --mat-sys-on-secondary-container:     #F5F4F2;
-  --mat-sys-secondary-fixed:            #0D0C0B;
-  --mat-sys-secondary-fixed-dim:        #1C1A18;
+  --mat-sys-secondary-container:        #2D4E3E;  /* deep forest container */
+  --mat-sys-on-secondary-container:     #D4EDE0;
+  --mat-sys-secondary-fixed:            #1C3529;
+  --mat-sys-secondary-fixed-dim:        #2D4E3E;
   --mat-sys-on-secondary-fixed:         #FFFFFF;
-  --mat-sys-on-secondary-fixed-variant: #6B6259;
+  --mat-sys-on-secondary-fixed-variant: #7BA892;
 
   /* ═══════════════════════════════════════════════════════════
-     TERTIARY — Warm mid-tone (muted text / supporting UI)
+     TERTIARY — Sage (muted text / supporting UI)
      ═══════════════════════════════════════════════════════════ */
-  --mat-sys-tertiary:                   #9E9589;
+  --mat-sys-tertiary:                   #7A9E8A;
   --mat-sys-on-tertiary:                #FFFFFF;
-  --mat-sys-tertiary-container:         #EDE9E3;
-  --mat-sys-on-tertiary-container:      #2A2420;
-  --mat-sys-tertiary-fixed:             #EDE9E3;
-  --mat-sys-tertiary-fixed-dim:         #9E9589;
-  --mat-sys-on-tertiary-fixed:          #1A1714;
-  --mat-sys-on-tertiary-fixed-variant:  #6B6259;
+  --mat-sys-tertiary-container:         #E6F2EC;
+  --mat-sys-on-tertiary-container:      #1E3A2A;
+  --mat-sys-tertiary-fixed:             #E6F2EC;
+  --mat-sys-tertiary-fixed-dim:         #7A9E8A;
+  --mat-sys-on-tertiary-fixed:          #12291C;
+  --mat-sys-on-tertiary-fixed-variant:  #4E7260;
 
   /* ═══════════════════════════════════════════════════════════
-     NEUTRAL — Warm whites and surfaces
-     Mirrors the landing page's warm off-white system
+     NEUTRAL — Cool-warm whites and surfaces
      ═══════════════════════════════════════════════════════════ */
   --mat-sys-background:                 #FFFFFF;
-  --mat-sys-on-background:              #0D0C0B;
+  --mat-sys-on-background:              #0F1F17;
   --mat-sys-surface:                    #FFFFFF;
-  --mat-sys-surface-dim:                #E2DDD5;  /* landing --gray-200 */
+  --mat-sys-surface-dim:                #D8E4DC;
   --mat-sys-surface-bright:             #FFFFFF;
   --mat-sys-surface-container-lowest:   #FFFFFF;
-  --mat-sys-surface-container-low:      #FAF8F4;  /* landing --cream */
-  --mat-sys-surface-container:          #F5F4F0;
-  --mat-sys-surface-container-high:     #EDEAE4;
-  --mat-sys-surface-container-highest:  #E5E2DC;
-  --mat-sys-on-surface:                 #0D0C0B;
-  --mat-sys-shadow:                     #0D0C0B;
-  --mat-sys-scrim:                      #0D0C0B;
-  --mat-sys-surface-tint:               #D4900A;
-  --mat-sys-inverse-surface:            #1C1A18;
-  --mat-sys-inverse-on-surface:         #FAF8F4;
-  --mat-sys-outline:                    #9E9589;  /* landing --gray-400 */
-  --mat-sys-outline-variant:            #E2DDD5;  /* landing --gray-200 */
-  --mat-sys-neutral10:                  #0D0C0B;
+  --mat-sys-surface-container-low:      #F4FAF7;  /* very light mint-white */
+  --mat-sys-surface-container:          #EEF6F1;
+  --mat-sys-surface-container-high:     #E6F0EA;
+  --mat-sys-surface-container-highest:  #DDE9E3;
+  --mat-sys-on-surface:                 #0F1F17;
+  --mat-sys-shadow:                     #0F1F17;
+  --mat-sys-scrim:                      #0F1F17;
+  --mat-sys-surface-tint:               #1B6B3A;
+  --mat-sys-inverse-surface:            #1A2E22;
+  --mat-sys-inverse-on-surface:         #F0F9F3;
+  --mat-sys-outline:                    #6A8F78;
+  --mat-sys-outline-variant:            #C0D9CA;
+  --mat-sys-neutral10:                  #0F1F17;
 
   /* ═══════════════════════════════════════════════════════════
      ERROR
@@ -75,13 +74,13 @@ html {
   /* ═══════════════════════════════════════════════════════════
      NEUTRAL VARIANT
      ═══════════════════════════════════════════════════════════ */
-  --mat-sys-surface-variant:            #F0EEE9;
-  --mat-sys-on-surface-variant:         #6B6259;  /* landing --gray-600 */
-  --mat-sys-neutral-variant20:          #2A2420;
+  --mat-sys-surface-variant:            #E6F0EA;
+  --mat-sys-on-surface-variant:         #4E7260;
+  --mat-sys-neutral-variant20:          #1E3A2A;
 
   /* ═══════════════════════════════════════════════════════════
      TYPOGRAPHY
-     Instrument Serif for brand/display, Geist for UI
+     Inter for UI clarity, Instrument Serif for brand headings
      ═══════════════════════════════════════════════════════════ */
   --mat-sys-brand-font-family:   'Instrument Serif', Georgia, serif;
   --mat-sys-plain-font-family:   'Geist', -apple-system, sans-serif;
@@ -90,7 +89,7 @@ html {
   --mat-sys-regular-font-weight: 400;
 
   /* ═══════════════════════════════════════════════════════════
-     SHADOWS / ELEVATION — warm-tinted shadows
+     SHADOWS / ELEVATION — green-tinted shadows
      ═══════════════════════════════════════════════════════════ */
   --mat-sys-umbra-color:    color-mix(in srgb, var(--mat-sys-shadow), transparent 80%);
   --mat-sys-penumbra-color: color-mix(in srgb, var(--mat-sys-shadow), transparent 86%);
@@ -98,12 +97,12 @@ html {
 
   /* ═══════════════════════════════════════════════════════════
      SHAPE / CORNERS
-     Slightly tighter than default MD3 — matches landing's 8–10px radius
+     Slightly tighter than default MD3 — approachable yet structured
      ═══════════════════════════════════════════════════════════ */
   --mat-sys-corner-extra-large: 24px;
   --mat-sys-corner-large:       9px;
-  --mat-sys-corner-medium:      8px;  /* landing btn-radius */
-  --mat-sys-corner-small:        6px;  /* landing btn-nav radius */
+  --mat-sys-corner-medium:      8px;
+  --mat-sys-corner-small:        6px;
   --mat-sys-corner-extra-small:  4px;
   --mat-sys-corner-full:      9999px;
   --mat-sys-corner-none:          0;
@@ -119,10 +118,10 @@ html {
   /* ═══════════════════════════════════════════════════════════
      APP SEMANTIC — non-MD3, used for status colours
      ═══════════════════════════════════════════════════════════ */
-  --app-warning:    #F0A500;   /* lighter gold — repurposed as warning */
+  --app-warning:    #C9890A;   /* amber — chama contribution alerts */
   --app-on-warning: #3D2600;
 
-  --app-success:    #2E7D32;
+  --app-success:    #1B6B3A;
   --app-on-success: #FFFFFF;
 
   --app-info:       #1565C0;

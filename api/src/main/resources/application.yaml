@@ -1,6 +1,6 @@
 spring:
   application:
-    name: oro
+    name: puuul
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -19,11 +19,3 @@ jwt:
 
 novu:
   secret: ${NOVU_SECRET}
-
-mpesa:
-  base-url: ${MPESA_BASE_URL}
-  consumer-key: ${MPESA_CONSUMER_KEY}
-  consumer-secret: ${MPESA_CONSUMER_SECRET}
-  shortcode: ${MPESA_SHORTCODE}
-  passkey: ${MPESA_PASSKEY}
-  callback-url: ${MPESA_CALLBACK_URL}
