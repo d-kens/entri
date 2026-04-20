@@ -5,13 +5,6 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-  liquibase:
-    change-log: classpath:/db/changelog/changelog.xml
-    enabled: true
-
-app:
-  base-url: ${APP_BASE_URL}
-
 jwt:
   secret: ${JWT_SECRET}
   accessTokenExpiration: 900

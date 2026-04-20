@@ -1,6 +1,7 @@
 package com.puuul.api.common.exception;
 
 import com.puuul.api.common.dto.ErrorDto;
+import com.puuul.api.users.exception.EmailAlreadyExist;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -37,6 +38,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorDto> handleNotFoundException(NotFoundException exception) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new ErrorDto(exception.getMessage())
+        );
+    }
+
+    @ExceptionHandler(EmailAlreadyExist.class)
+    public ResponseEntity<ErrorDto> handleEmailAlreadyExist(EmailAlreadyExist exception) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(
                 new ErrorDto(exception.getMessage())
         );
     }

@@ -6,6 +6,8 @@ services:
       POSTGRES_DB: spicedb
       POSTGRES_USER: spicedb
       POSTGRES_PASSWORD: spicedb
+    volumes:
+      - spicedb-data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     healthcheck:
@@ -66,3 +68,25 @@ services:
       - --insecure
       - --token
       - devkey
+
+  db:
+    image: 'mysql:8.0.32'
+    environment:
+      MYSQL_DATABASE: 'puuuul'
+      MYSQL_USER: 'puuuul-db-user'
+      MYSQL_PASSWORD: 'secret'
+      MYSQL_ROOT_PASSWORD: 'secret'
+    volumes:
+      - puuuul-data:/var/lib/mysql
+    ports:
+      - '3306:3306'
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-psecret" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  puuuul-data:
+  spicedb-data:
