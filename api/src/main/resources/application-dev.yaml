@@ -1,13 +1,14 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/testing_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
-    username: ${SPRING_DATASOURCE_USERNAME:root}
-    password: ${SPRING_DATASOURCE_PASSWORD:root}
+    url: jdbc:mysql://localhost:3306/puuuul?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+    username: ${SPRING_DATASOURCE_USERNAME:puuuul-db-user}
+    password: ${SPRING_DATASOURCE_PASSWORD:secret}
+
 
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
@@ -30,3 +31,5 @@ jwt:
 
 cookie:
   secure: false
+server:
+  port: 9096
