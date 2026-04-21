@@ -1,35 +1,12 @@
 ### Merchant self-registration (public)
-POST http://localhost:8080/auth/register
+POST http://localhost:9096/auth/register
 Content-Type: application/json
 
 {
-  "phoneNumber": "254707127309",
-  "name": "Dickens"
+  "firstName": "Dickens",
+  "lastName": "Onyango",
+  "password": "123456789",
+  "email": "omondikens1@gmail.com",
+  "phoneNumber": "0707127309"
 }
 
-### Create user — admin only (RIDER / ADMIN / AGENT)
-POST http://localhost:8080/users
-Content-Type: application/json
-
-{
-  "phoneNumber": "254707127310",
-  "name": "John Doe",
-  "role": "RIDER"
-}
-
-### List users (paginated)
-GET http://localhost:8080/users?page=0&size=20
-
-### Get user by external ID
-GET http://localhost:8080/users/{{externalId}}
-
-### Update user
-PATCH http://localhost:8080/users/{{externalId}}
-Content-Type: application/json
-
-{
-  "name": "Jane Doe"
-}
-
-### Deactivate user
-DELETE http://localhost:8080/users/{{externalId}}
