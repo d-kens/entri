@@ -14,9 +14,9 @@ public class UserService {
     private final UserRepository userRepository;
 
     public UserResponse create(CreateUserDto userDto) {
-        userRepository.findByEmail(userDto.email()).orElseThrow(
-                () -> new EmailAlreadyExist()
-        );
+        if (userRepository.existsByEmail(userDto.email())) {
+            throw new EmailAlreadyExist();
+        }
 
         User user = User.builder()
                 .email(userDto.email())
