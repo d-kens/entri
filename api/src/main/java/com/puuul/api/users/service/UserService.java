@@ -6,12 +6,14 @@ import com.puuul.api.users.entity.User;
 import com.puuul.api.users.exception.EmailAlreadyExist;
 import com.puuul.api.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public UserResponse create(CreateUserDto userDto) {
         if (userRepository.existsByEmail(userDto.email())) {
@@ -22,8 +24,8 @@ public class UserService {
                 .email(userDto.email())
                 .lastName(userDto.lastName())
                 .firstName(userDto.firstName())
-                .passwordHash(userDto.password())
                 .phoneNumber(userDto.phoneNumber())
+                .passwordHash(passwordEncoder.encode(userDto.password()))
                 .build();
 
         userRepository.save(user);

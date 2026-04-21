@@ -1,10 +1,9 @@
 <div class="flex flex-col h-full">
   <!-- Logo & Brand Section with Close Button -->
-  <div class="h-16 px-4 border-b border-gray-200 flex items-center justify-between">
-    <div class="flex items-center gap-3">
-      <div class="flex-shrink-0">
-        <img src="puuul.png" alt="Puuul Logo" class="h-10 w-10 object-contain">
-      </div>
+  <div class="h-16 px-4 border-b border-outline-variant flex items-center justify-between">
+    <div class="flex items-center gap-1">
+      <span class="font-display text-2xl leading-none text-foreground">puuul</span>
+      <span class="w-1.5 h-1.5 rounded-full bg-primary mb-0.5 flex-shrink-0"></span>
     </div>
 
     <!-- Close button - only visible on mobile -->
@@ -29,7 +28,7 @@
           [routerLink]="item.route"
           routerLinkActive="active-route"
           [routerLinkActiveOptions]="{ exact: true }"
-          class="!rounded-none hover:bg-gray-50 transition-colors nav-item"
+          class="!rounded-none transition-colors nav-item"
           (click)="isMobile() ? onCloseSidenav() : null"
         >
           <mat-icon matListItemIcon class="nav-icon">{{ item.icon }}</mat-icon>

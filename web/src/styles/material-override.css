@@ -1,30 +1,102 @@
 /* --------------------------------------------------------------------------
-   Utility Classes
+   Global Form Field — tiny and neat
    -------------------------------------------------------------------------- */
 
-/* Compact Form Fields */
-.compact-field .mat-mdc-form-field-infix {
-  padding-top: 12px !important;
-  padding-bottom: 12px !important;
-  min-height: 48px !important;
+.mat-mdc-form-field .mat-mdc-form-field-infix {
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+  min-height: 44px !important;
 }
 
-.compact-field .mat-mdc-text-field-wrapper {
+.mat-mdc-form-field .mat-mdc-text-field-wrapper {
   padding-top: 0 !important;
   padding-bottom: 0 !important;
 }
 
-.compact-field .mat-mdc-form-field-subscript-wrapper {
-  margin-top: 4px !important;
+.mat-mdc-form-field .mat-mdc-form-field-subscript-wrapper {
+  margin-top: 3px !important;
 }
 
-.compact-field input.mat-mdc-input-element {
+.mat-mdc-form-field input.mat-mdc-input-element {
   height: 24px !important;
   line-height: 24px !important;
+  font-size: 14.5px !important;
 }
 
-.compact-field .mat-mdc-floating-label {
-  top: 24px !important;
+.mat-mdc-form-field .mat-mdc-floating-label {
+  top: 22px !important;
+}
+
+/* Label & hint text */
+.mat-mdc-form-field .mat-mdc-form-field-error,
+.mat-mdc-form-field .mat-mdc-form-field-hint {
+  font-size: 12px !important;
+  letter-spacing: 0 !important;
+}
+
+/* Input font styling */
+.mat-mdc-form-field {
+  font-size: 14.5px;
+  letter-spacing: 0;
+}
+
+/* Suffix icon alignment */
+.mat-mdc-form-field .mat-mdc-form-field-icon-suffix {
+  padding: 0 6px !important;
+}
+
+.mat-mdc-form-field .mat-mdc-form-field-icon-suffix .mat-icon {
+  font-size: 18px !important;
+  width: 18px !important;
+  height: 18px !important;
+  line-height: 18px !important;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+/* Icon button suffix (password toggle) */
+.mat-mdc-form-field .mat-mdc-icon-button.mat-mdc-button-base {
+  width: 32px !important;
+  height: 32px !important;
+  padding: 4px !important;
+}
+
+.mat-mdc-form-field .mat-mdc-icon-button .mat-icon {
+  font-size: 18px !important;
+  width: 18px !important;
+  height: 18px !important;
+  line-height: 18px !important;
+}
+
+/* --------------------------------------------------------------------------
+   Global button sizing — mat-flat-button and mat-raised-button
+   -------------------------------------------------------------------------- */
+
+.mat-mdc-unelevated-button.mat-mdc-button-base,
+.mat-mdc-raised-button.mat-mdc-button-base {
+  height: 40px !important;
+  border-radius: var(--mat-sys-corner-medium) !important;
+  font-size: 14px !important;
+  letter-spacing: 0.01em !important;
+}
+
+/* All filled buttons default to primary */
+.mat-mdc-unelevated-button:not([disabled]) {
+  --mdc-filled-button-container-color: var(--mat-sys-primary) !important;
+  --mdc-filled-button-label-text-color: var(--mat-sys-on-primary) !important;
+}
+
+.mat-mdc-unelevated-button[disabled] {
+  opacity: 0.5;
+}
+
+/* --------------------------------------------------------------------------
+   Utility — .compact-field kept for backwards compatibility
+   -------------------------------------------------------------------------- */
+
+.compact-field .mat-mdc-form-field-infix {
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+  min-height: 44px !important;
 }
 
 /* --------------------------------------------------------------------------

@@ -1,83 +1,109 @@
 <div class="w-full max-w-md mx-auto">
-  <div class="text-center mb-6">
-    <h2 class="text-2xl text-gray-900 font-semibold mb-2">Create an Account</h2>
-    <p class="text-sm text-gray-500">Sign up to get started</p>
+  <div class="text-center mb-5">
+    <h2 class="text-2xl mb-1">Create an Account</h2>
+    <p class="text-sm text-surface-variant-foreground">Fill in the details below to get started</p>
   </div>
 
-  <form [formGroup]="registerForm" class="space-y-2">
-    <mat-form-field appearance="outline" class="w-full compact-field">
-      <mat-label>Full Name</mat-label>
-      <input matInput type="text" placeholder="Enter your full name" formControlName="name">
-      <mat-icon matSuffix>account_circle</mat-icon>
+  <form [formGroup]="registerForm" class="space-y-3">
 
-      @if(registerForm.get('name')?.hasError('required')) {
-        <mat-error>Full name is required</mat-error>
+    <!-- Name row -->
+    <div class="grid grid-cols-2 gap-3">
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>First Name</mat-label>
+        <input matInput type="text" placeholder="John" formControlName="firstName" autocomplete="given-name">
+        @if (registerForm.get('firstName')?.hasError('required')) {
+          <mat-error>Required</mat-error>
+        } @else if (registerForm.get('firstName')?.hasError('minlength')) {
+          <mat-error>Too short</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Last Name</mat-label>
+        <input matInput type="text" placeholder="Doe" formControlName="lastName" autocomplete="family-name">
+        @if (registerForm.get('lastName')?.hasError('required')) {
+          <mat-error>Required</mat-error>
+        } @else if (registerForm.get('lastName')?.hasError('minlength')) {
+          <mat-error>Too short</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <!-- Email -->
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Email Address</mat-label>
+      <input matInput type="email" placeholder="john@example.com" formControlName="email" autocomplete="email">
+      <mat-icon matSuffix>mail_outline</mat-icon>
+      @if (registerForm.get('email')?.hasError('required')) {
+        <mat-error>Email is required</mat-error>
+      } @else if (registerForm.get('email')?.hasError('email')) {
+        <mat-error>Enter a valid email</mat-error>
       }
     </mat-form-field>
 
-    <mat-form-field appearance="outline" class="w-full compact-field">
+    <!-- Phone Number -->
+    <mat-form-field appearance="outline" class="w-full">
       <mat-label>Phone Number</mat-label>
-      <input matInput type="text" placeholder="e.g. 0707123567" formControlName="phoneNumber">
-      <mat-icon matSuffix>phone</mat-icon>
-
-      @if(registerForm.get('phoneNumber')?.hasError('required')) {
+      <input matInput type="tel" placeholder="0712 345 678" formControlName="phoneNumber" autocomplete="tel">
+      <mat-icon matSuffix>phone_iphone</mat-icon>
+      @if (registerForm.get('phoneNumber')?.hasError('required')) {
         <mat-error>Phone number is required</mat-error>
-      } @else if(registerForm.get('phoneNumber')?.hasError('minlength') || registerForm.get('phoneNumber')?.hasError('maxlength')) {
-        <mat-error>Invalid phone number</mat-error>
+      } @else if (registerForm.get('phoneNumber')?.hasError('pattern') || registerForm.get('phoneNumber')?.hasError('minlength') || registerForm.get('phoneNumber')?.hasError('maxlength')) {
+        <mat-error>Enter a valid Kenyan number (e.g. 0712345678)</mat-error>
       }
     </mat-form-field>
 
-    <mat-form-field appearance="outline" class="w-full compact-field">
+    <!-- Password -->
+    <mat-form-field appearance="outline" class="w-full">
       <mat-label>Password</mat-label>
-      <input matInput [type]="hidePassword() ? 'password' : 'text'" placeholder="At least 8 characters" formControlName="password">
+      <input matInput [type]="hidePassword() ? 'password' : 'text'" placeholder="At least 8 characters" formControlName="password" autocomplete="new-password">
       <button mat-icon-button matSuffix type="button" (mousedown)="$event.preventDefault()" (click)="togglePassword()">
         <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
       </button>
-      @if(registerForm.get('password')?.hasError('required')) {
+      @if (registerForm.get('password')?.hasError('required')) {
         <mat-error>Password is required</mat-error>
-      } @else if(registerForm.get('password')?.hasError('minlength')) {
-        <mat-error>Password must be at least 8 characters</mat-error>
+      } @else if (registerForm.get('password')?.hasError('minlength')) {
+        <mat-error>Must be at least 8 characters</mat-error>
       }
     </mat-form-field>
 
-    <mat-form-field appearance="outline" class="w-full compact-field">
+    <!-- Confirm Password -->
+    <mat-form-field appearance="outline" class="w-full">
       <mat-label>Confirm Password</mat-label>
-      <input matInput [type]="hideConfirmPassword() ? 'password' : 'text'" placeholder="Re-enter your password" formControlName="confirmPassword" [errorStateMatcher]="passwordMatcher">
+      <input matInput [type]="hideConfirmPassword() ? 'password' : 'text'" placeholder="Re-enter your password" formControlName="confirmPassword" autocomplete="new-password" [errorStateMatcher]="passwordMatcher">
       <button mat-icon-button matSuffix type="button" (mousedown)="$event.preventDefault()" (click)="toggleConfirmPassword()">
         <mat-icon>{{ hideConfirmPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
       </button>
-      @if(registerForm.get('confirmPassword')?.hasError('required')) {
+      @if (registerForm.get('confirmPassword')?.hasError('required')) {
         <mat-error>Please confirm your password</mat-error>
-      } @else if(registerForm.hasError('passwordsMismatch')) {
+      } @else if (registerForm.hasError('passwordsMismatch')) {
         <mat-error>Passwords do not match</mat-error>
       }
     </mat-form-field>
 
     <button
       mat-flat-button
-      class="w-full h-11 !rounded-lg"
+      class="w-full"
       type="button"
       (click)="createAccount()"
       [disabled]="isLoading()"
     >
       @if (isLoading()) {
         <div class="flex items-center justify-center gap-2">
-          <mat-progress-spinner
-            diameter="18"
-            mode="indeterminate"
-          ></mat-progress-spinner>
+          <mat-progress-spinner diameter="16" mode="indeterminate"></mat-progress-spinner>
           <span>Creating account...</span>
         </div>
       } @else {
         <span>Create Account</span>
       }
     </button>
+
   </form>
 
-  <div class="text-center mt-6">
-    <p class="text-sm text-gray-500">
+  <div class="text-center mt-5">
+    <p class="text-xs text-surface-variant-foreground">
       Already have an account?
-      <a [routerLink]="['/auth/login']" class="text-primary hover:underline cursor-pointer ml-1">Login</a>
+      <a [routerLink]="['/auth/login']" class="text-primary font-medium hover:underline cursor-pointer ml-1">Sign in</a>
     </p>
   </div>
 </div>
