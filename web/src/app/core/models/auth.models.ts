@@ -1,3 +1,11 @@
+export type RegisterUserRequest = {
+  firstName: string,
+  lastName: string,
+  email: string,
+  phoneNumber: string,
+  password: string
+}
+
 export type AuthRequest = {
   phoneNumber: string,
   password: string

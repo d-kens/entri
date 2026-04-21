@@ -1,24 +1,24 @@
 <div class="w-full max-w-md mx-auto">
-  <div class="text-center mb-6">
-    <h2 class="text-2xl text-gray-900 font-semibold mb-2">Welcome Back</h2>
-    <p class="text-sm text-gray-500">Enter your credentials to sign in</p>
+  <div class="text-center mb-5">
+    <h2 class="text-2xl mb-1">Welcome Back</h2>
+    <p class="text-sm text-surface-variant-foreground">Enter your credentials to sign in</p>
   </div>
 
-  <form [formGroup]="loginForm" class="space-y-2">
-    <mat-form-field appearance="outline" class="w-full compact-field">
+  <form [formGroup]="loginForm" class="space-y-3">
+    <mat-form-field appearance="outline" class="w-full">
       <mat-label>Phone Number</mat-label>
-      <input matInput type="tel" placeholder="e.g: 0707127309" formControlName="phoneNumber">
-      <mat-icon matSuffix>phone</mat-icon>
+      <input matInput type="tel" placeholder="e.g. 0712 345 678" formControlName="phoneNumber" autocomplete="tel">
+      <mat-icon matSuffix>phone_iphone</mat-icon>
       @if (loginForm.get('phoneNumber')?.hasError('required')) {
         <mat-error>Phone number is required</mat-error>
       } @else {
-        <mat-error>Enter a valid number (e.g. 0707127309)</mat-error>
+        <mat-error>Enter a valid number (e.g. 0712345678)</mat-error>
       }
     </mat-form-field>
 
-    <mat-form-field appearance="outline" class="w-full compact-field">
+    <mat-form-field appearance="outline" class="w-full">
       <mat-label>Password</mat-label>
-      <input matInput [type]="hidePassword() ? 'password' : 'text'" placeholder="Enter your password" formControlName="password">
+      <input matInput [type]="hidePassword() ? 'password' : 'text'" placeholder="Enter your password" formControlName="password" autocomplete="current-password">
       <button mat-icon-button matSuffix type="button" (mousedown)="$event.preventDefault()" (click)="togglePassword()">
         <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
       </button>
@@ -27,25 +27,25 @@
       }
     </mat-form-field>
 
-    <button mat-flat-button class="w-full h-11 !rounded-lg" type="button" (click)="login()" [disabled]="isLoading()">
+    <button mat-flat-button class="w-full" type="button" (click)="login()" [disabled]="isLoading()">
       @if (isLoading()) {
         <div class="flex items-center justify-center gap-2">
-          <mat-progress-spinner diameter="18" mode="indeterminate"></mat-progress-spinner>
+          <mat-progress-spinner diameter="16" mode="indeterminate"></mat-progress-spinner>
           <span>Signing in...</span>
         </div>
       } @else {
-        <span>Login</span>
+        <span>Sign In</span>
       }
     </button>
   </form>
 
-  <div class="text-center text-gray-500 mt-6 space-y-2">
+  <div class="text-center text-surface-variant-foreground mt-5 space-y-2">
     <p class="text-sm">
-      <a [routerLink]="['/auth/forgot-password']" class="text-primary hover:underline cursor-pointer">Forgot password?</a>
+      <a [routerLink]="['/auth/forgot-password']" class="text-primary font-medium hover:underline cursor-pointer">Forgot password?</a>
     </p>
     <p class="text-sm">
       Don't have an account?
-      <a [routerLink]="['/auth/register']" class="text-primary hover:underline cursor-pointer ml-1">Create one</a>
+      <a [routerLink]="['/auth/register']" class="text-primary font-medium hover:underline cursor-pointer ml-1">Create one</a>
     </p>
   </div>
 </div>

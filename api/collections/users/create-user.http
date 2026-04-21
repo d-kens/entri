@@ -1,4 +1,3 @@
-### Merchant self-registration (public)
 POST http://localhost:9096/auth/register
 Content-Type: application/json
 

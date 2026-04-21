@@ -19,11 +19,6 @@ export const FEATURE_ROUTES: Routes = [
         loadComponent: () => import('./support/support').then(m => m.Support)
       },
       {
-        path: 'profile',
-        canActivate: [authGuard],
-        loadComponent: () => import('./profile/profile').then(m => m.Profile)
-      },
-      {
         path: 'forbidden',
         canActivate: [authGuard],
         loadComponent: () => import('./forbidden/forbidden').then(m => m.Forbidden)

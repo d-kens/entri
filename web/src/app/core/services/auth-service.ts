@@ -2,7 +2,13 @@ import { inject, Injectable, signal } from '@angular/core';
 import { environment } from 'environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { catchError, finalize, Observable, tap, throwError } from 'rxjs';
-import {AuthResponse, AuthRequest, ForgotPasswordRequest, ResetPasswordRequest} from '../models/auth.models';
+import {
+  AuthResponse,
+  AuthRequest,
+  ForgotPasswordRequest,
+  ResetPasswordRequest,
+  RegisterUserRequest
+} from '../models/auth.models';
 import {UserResponse} from '@core/models/user.models';
 
 @Injectable({
@@ -25,6 +31,10 @@ export class AuthService {
 
   getToken(): string | null {
     return localStorage.getItem(this.ACCESS_TOKEN_KEY);
+  }
+
+  register(registerUserRequest: RegisterUserRequest): Observable<UserResponse> {
+    return this.http.post<UserResponse>(`${environment.apiBaseUrl}/auth/register`, registerUserRequest);
   }
 
   login(authRequest: AuthRequest): Observable<AuthResponse> {
