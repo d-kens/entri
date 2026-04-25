@@ -1,5 +1,6 @@
 package com.puuul.api.users.service;
 
+import com.puuul.api.common.exception.NotFoundException;
 import com.puuul.api.users.dto.CreateUserDto;
 import com.puuul.api.users.dto.UserResponseDto;
 import com.puuul.api.users.entity.Role;
