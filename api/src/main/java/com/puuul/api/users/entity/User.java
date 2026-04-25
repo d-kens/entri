@@ -26,8 +26,12 @@ public class User extends AbstractAuditableEntity {
     @Builder.Default
     private UUID externalKey = UUID.randomUUID();
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
+
+    @Column(name = "role", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
@@ -38,6 +42,6 @@ public class User extends AbstractAuditableEntity {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @Column(name = "phone_number", nullable = true)
+    @Column(name = "phone_number")
     private String phoneNumber;
 }

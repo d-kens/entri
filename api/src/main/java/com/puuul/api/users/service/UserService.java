@@ -1,7 +1,8 @@
 package com.puuul.api.users.service;
 
 import com.puuul.api.users.dto.CreateUserDto;
-import com.puuul.api.users.dto.UserResponse;
+import com.puuul.api.users.dto.UserResponseDto;
+import com.puuul.api.users.entity.Role;
 import com.puuul.api.users.entity.User;
 import com.puuul.api.users.exception.EmailAlreadyExist;
 import com.puuul.api.users.repository.UserRepository;
@@ -15,7 +16,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserResponse create(CreateUserDto userDto) {
+    public UserResponseDto create(CreateUserDto userDto) {
         if (userRepository.existsByEmail(userDto.email())) {
             throw new EmailAlreadyExist();
         }
@@ -26,6 +27,7 @@ public class UserService {
                 .firstName(userDto.firstName())
                 .phoneNumber(userDto.phoneNumber())
                 .passwordHash(passwordEncoder.encode(userDto.password()))
+                .role(Role.valueOf(userDto.role().toUpperCase()))
                 .build();
 
         userRepository.save(user);
@@ -33,13 +35,14 @@ public class UserService {
         return toResponse(user);
     }
 
-    private UserResponse toResponse(User user) {
-        return new UserResponse(
+    private UserResponseDto toResponse(User user) {
+        return new UserResponseDto(
+                user.getRole().toString(),
                 user.getEmail(),
-                user.getExternalKey().toString(),
-                user.getFirstName(),
                 user.getLastName(),
-                user.getPhoneNumber()
+                user.getFirstName(),
+                user.getPhoneNumber(),
+                user.getExternalKey().toString()
         );
     }
 }
