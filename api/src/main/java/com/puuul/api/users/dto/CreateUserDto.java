@@ -1,6 +1,7 @@
 package com.puuul.api.users.dto;
 
 import com.puuul.api.common.validators.ValidPhoneNumber;
+import com.puuul.api.users.validation.ValidRole;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -17,5 +18,7 @@ public record CreateUserDto(
         @NotBlank(message = "Last name os required")
         String lastName,
         @ValidPhoneNumber
-        String phoneNumber
+        String phoneNumber,
+        @ValidRole
+        String role
 ) {}

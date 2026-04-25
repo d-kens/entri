@@ -6,6 +6,7 @@ Content-Type: application/json
   "lastName": "Onyango",
   "password": "123456789",
   "email": "omondikens1@gmail.com",
-  "phoneNumber": "0707127309"
+  "phoneNumber": "0707127309",
+  "role": "PLATFORM_USER"
 }
 
