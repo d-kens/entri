@@ -17,7 +17,6 @@ import {UserResponse} from '@core/models/user.models';
 export class AuthService {
   private http: HttpClient = inject(HttpClient);
   private readonly ACCESS_TOKEN_KEY = 'access_token';
-  private readonly PERMISSIONS_KEY = 'permissions';
 
   private authStatusSignal = signal(!!this.getToken());
 
@@ -46,7 +45,6 @@ export class AuthService {
         tap((response) => {
           if (response?.accessToken) {
             localStorage.setItem(this.ACCESS_TOKEN_KEY, response.accessToken);
-            localStorage.setItem(this.PERMISSIONS_KEY, JSON.stringify(response.permissions ?? []));
             this.authStatusSignal.set(true);
           }
         }),
@@ -63,7 +61,6 @@ export class AuthService {
       .pipe(
         tap(response => {
           localStorage.setItem(this.ACCESS_TOKEN_KEY, response.accessToken);
-          localStorage.setItem(this.PERMISSIONS_KEY, JSON.stringify(response.permissions ?? []));
           this.authStatusSignal.set(true);
         })
       );
@@ -71,7 +68,6 @@ export class AuthService {
 
   clearSession(): void {
     localStorage.removeItem(this.ACCESS_TOKEN_KEY);
-    localStorage.removeItem(this.PERMISSIONS_KEY);
     this.authStatusSignal.set(false);
   }
 
@@ -82,7 +78,6 @@ export class AuthService {
       .pipe(
         finalize(() => {
           localStorage.removeItem(this.ACCESS_TOKEN_KEY);
-          localStorage.removeItem(this.PERMISSIONS_KEY);
           this.authStatusSignal.set(false);
         })
       );
@@ -101,18 +96,6 @@ export class AuthService {
     } catch {
       return null;
     }
-  }
-
-  getPermissions(): string[] {
-    try {
-      return JSON.parse(localStorage.getItem(this.PERMISSIONS_KEY) ?? '[]');
-    } catch {
-      return [];
-    }
-  }
-
-  hasPermission(permission: string): boolean {
-    return this.getPermissions().includes(permission);
   }
 
   getCurrentUser(): Observable<UserResponse> {

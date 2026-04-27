@@ -6,13 +6,13 @@
 
   <form [formGroup]="loginForm" class="space-y-3">
     <mat-form-field appearance="outline" class="w-full">
-      <mat-label>Phone Number</mat-label>
-      <input matInput type="tel" placeholder="e.g. 0712 345 678" formControlName="phoneNumber" autocomplete="tel">
-      <mat-icon matSuffix>phone_iphone</mat-icon>
-      @if (loginForm.get('phoneNumber')?.hasError('required')) {
-        <mat-error>Phone number is required</mat-error>
-      } @else {
-        <mat-error>Enter a valid number (e.g. 0712345678)</mat-error>
+      <mat-label>Email Address</mat-label>
+      <input matInput type="email" placeholder="john@example.com" formControlName="email" autocomplete="email">
+      <mat-icon matSuffix>mail_outline</mat-icon>
+      @if (loginForm.get('email')?.hasError('required')) {
+        <mat-error>Email is required</mat-error>
+      } @else if (loginForm.get('email')?.hasError('email')) {
+        <mat-error>Enter a valid email</mat-error>
       }
     </mat-form-field>
 
