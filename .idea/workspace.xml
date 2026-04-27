@@ -6,7 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="e66b95aa-e45c-409a-b67d-73a47c279024" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/src/main/java/com/puuul/api/users/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/puuul/api/users/controller/AuthController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/src/main/java/com/puuul/api/security/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/puuul/api/security/SecurityConfig.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -14,7 +14,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="187" />
+    <option name="cachedIndexableFilesCount" value="213" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="Git.Settings">
@@ -93,7 +93,9 @@
       <workItem from="1776707514341" duration="3642000" />
       <workItem from="1776787667694" duration="5238000" />
       <workItem from="1776881885738" duration="1752000" />
-      <workItem from="1777109596665" duration="1928000" />
+      <workItem from="1777109596665" duration="3219000" />
+      <workItem from="1777230354788" duration="1450000" />
+      <workItem from="1777309042251" duration="151000" />
     </task>
     <servers />
   </component>

@@ -36,6 +36,11 @@ public class UserService {
         return toResponse(user);
     }
 
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+    }
+
     private UserResponseDto toResponse(User user) {
         return new UserResponseDto(
                 user.getRole().toString(),

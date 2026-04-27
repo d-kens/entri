@@ -1,4 +1,4 @@
-package com.puuul.api.security;
+package com.puuul.api.config;
 
 
 import com.puuul.api.users.service.UserDetailsService;
@@ -18,7 +18,6 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
     @Bean
     AuthenticationManager authenticationManager(
             UserDetailsService userDetailsService,
@@ -42,7 +41,6 @@ public class SecurityConfig {
                         .requestMatchers("/auth/login").permitAll()
                         .anyRequest().authenticated()
                 );
-
         return httpSecurity.build();
     }
 }

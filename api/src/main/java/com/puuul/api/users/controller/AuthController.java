@@ -5,6 +5,7 @@ import com.puuul.api.users.dto.LoginRequestDto;
 import com.puuul.api.users.dto.LoginResponseDto;
 import com.puuul.api.users.dto.UserResponseDto;
 import com.puuul.api.users.service.AuthService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -32,8 +33,9 @@ public class AuthController {
 
     @PostMapping("/login")
     public LoginResponseDto login(
+            HttpServletResponse response,
             @Valid @RequestBody LoginRequestDto loginRequest
     ) {
-        return authService.login(loginRequest);
+        return authService.login(loginRequest, response);
     }
 }
