@@ -44,13 +44,8 @@ export class Login {
     private snackbarService: SnackbarService,
   ) {
     this.loginForm = fb.group({
-      phoneNumber: ['', [
-        Validators.required,
-        Validators.pattern(/^0[17]\d{8}$/),
-        Validators.minLength(10),
-        Validators.maxLength(10)
-      ]],
-      password: ['', Validators.required]
+      password: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
     });
 
     const fromQuery = this.route.snapshot.queryParamMap.get('returnUrl');
@@ -68,7 +63,7 @@ export class Login {
     this.isLoading.set(true);
 
     this.authService.login({
-      phoneNumber: this.loginForm.get('phoneNumber')!.value,
+      email: this.loginForm.get('email')!.value,
       password: this.loginForm.get('password')!.value
     }).subscribe({
       next: () => {
@@ -76,7 +71,7 @@ export class Login {
         this.router.navigateByUrl(this.returnUrl);
       },
       error: (err) => {
-        const errorMessage = err?.error?.message || 'Invalid phone number or password.';
+        const errorMessage = err?.error?.message || 'Invalid email or password.';
         this.snackbarService.showError(errorMessage);
         this.isLoading.set(false);
       }
