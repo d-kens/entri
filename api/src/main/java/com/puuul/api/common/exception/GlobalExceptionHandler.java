@@ -1,7 +1,7 @@
 package com.puuul.api.common.exception;
 
 import com.puuul.api.common.dto.ErrorDto;
-import com.puuul.api.users.exception.EmailAlreadyExist;
+import com.puuul.api.modules.users.exception.EmailAlreadyExist;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;

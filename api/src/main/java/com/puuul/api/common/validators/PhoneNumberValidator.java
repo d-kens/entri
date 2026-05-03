@@ -16,10 +16,10 @@ public class PhoneNumberValidator implements ConstraintValidator<ValidPhoneNumbe
             return false;
         }
 
-        if (!value.matches("^(07|01|2547|2541)\\d{8}$")) {
+        if (!value.matches("^(\\+?254[17]|07|01)\\d{8}$")) {
             constraintValidatorContext.disableDefaultConstraintViolation();
             constraintValidatorContext.buildConstraintViolationWithTemplate(
-                    "Invalid phone number format. Use 07XXXXXXXX, 01XXXXXXXX or 2547XXXXXXXX"
+                    "Invalid phone number format. Use 07XXXXXXXX, 01XXXXXXXX, 2547XXXXXXXX or +2547XXXXXXXX"
             ).addPropertyNode("phoneNumber").addConstraintViolation();
             return false;
         }
