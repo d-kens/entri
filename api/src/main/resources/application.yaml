@@ -11,4 +11,8 @@ jwt:
   refreshTokenExpiration: 604800
 
 novu:
-  secret: ${NOVU_SECRET}
+  api:
+    key: ${NOVU_SECRET:secret}
+  subscriber:
+    locale: ${NOVU_SUBSCRIBER_LOCALE:en-KE}
+    timezone: ${NOVU_SUBSCRIBER_TIMEZONE:Africa/Nairobi}

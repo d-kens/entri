@@ -3,7 +3,8 @@ export type RegisterUserRequest = {
   lastName: string,
   email: string,
   phoneNumber: string,
-  password: string
+  password: string,
+  role: string
 }
 
 export type AuthRequest = {
