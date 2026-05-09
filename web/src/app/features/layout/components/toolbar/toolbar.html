@@ -1,13 +1,47 @@
-<mat-toolbar class="border-b border-outline-variant !h-16 flex items-center justify-between px-4">
-  <div class="flex items-center gap-3">
+<mat-toolbar class="toolbar !bg-surface border-b border-outline-variant !h-16 flex items-center justify-between px-4">
+
+  <!-- Left: hamburger on mobile -->
+  <div class="flex items-center gap-2">
     @if (isMobile()) {
       <button mat-icon-button (click)="onToggleSidenav()" class="hamburger-btn">
-        <mat-icon class="hamburger-icon">menu</mat-icon>
+        <mat-icon>menu</mat-icon>
       </button>
     }
   </div>
 
-  <div class="flex items-center">
-    <app-user-profile [user]="user()" />
+  <!-- Right: user badge + logout -->
+  <div class="flex items-center gap-2">
+
+    @if (user(); as u) {
+      <!-- Greeting (hidden on very small screens) -->
+      <span class="greeting-text">
+        Hi, <span class="greeting-name">{{ u.firstName }}</span>
+      </span>
+
+      <!-- Pill badge: avatar + name -->
+      <div class="user-badge">
+        <div class="user-avatar">{{ initials() }}</div>
+        <span class="user-badge-name">{{ u.firstName }}</span>
+      </div>
+
+      <!-- Logout button -->
+      <button
+        mat-icon-button
+        class="logout-btn"
+        (click)="logout()"
+        matTooltip="Sign out"
+        matTooltipPosition="below"
+      >
+        <mat-icon class="logout-icon">logout</mat-icon>
+      </button>
+
+    } @else {
+      <!-- Loading skeleton -->
+      <div class="skeleton-badge">
+        <div class="skeleton-avatar"></div>
+        <div class="skeleton-name"></div>
+      </div>
+    }
+
   </div>
 </mat-toolbar>

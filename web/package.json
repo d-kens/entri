@@ -43,6 +43,7 @@
     "@tailwindcss/postcss": "^4.1.12",
     "@types/event-source-polyfill": "^1.0.5",
     "@types/eventsource": "^1.1.15",
+    "cypress": "^15.14.2",
     "jsdom": "^27.1.0",
     "postcss": "^8.5.3",
     "tailwindcss": "^4.1.12",

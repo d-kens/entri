@@ -14,10 +14,12 @@ export type AuthRequest = {
 
 export type AuthResponse = {
   accessToken: string,
-  externalId: string,
-  roles: string[],
-  permissions: string[],
-  name: string,
+  expiresIn: number,
+  user: {
+    role: string,
+    email: string,
+    externalKey: string,
+  }
 }
 
 export type ForgotPasswordRequest = {
