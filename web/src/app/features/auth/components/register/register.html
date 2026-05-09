@@ -101,10 +101,7 @@
 
   </form>
 
-  <div class="text-center mt-5">
-    <p class="text-xs text-surface-variant-foreground">
-      Already have an account?
-      <a [routerLink]="['/auth/login']" class="text-primary font-medium hover:underline cursor-pointer ml-1">Sign in</a>
-    </p>
+  <div class="mt-3">
+    <a mat-stroked-button class="w-full" [routerLink]="['/auth/login']">Sign in instead</a>
   </div>
 </div>

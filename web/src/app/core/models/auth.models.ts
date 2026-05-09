@@ -24,10 +24,6 @@ export type AccessTokenResponse = {
   expiresIn: number,
 }
 
-export type ForgotPasswordRequest = {
-  phoneNumber: string
-}
-
 export type ResetPasswordRequest = {
   phoneNumber: string,
   otp: string,

@@ -27,6 +27,10 @@
       }
     </mat-form-field>
 
+    <div class="flex justify-end -mt-5">
+      <a [routerLink]="['/auth/forgot-password']" class="text-xs text-primary font-medium hover:underline cursor-pointer">Forgot password?</a>
+    </div>
+
     <button mat-flat-button class="w-full" type="button" (click)="login()" [disabled]="isLoading()" data-cy="login-submit">
       @if (isLoading()) {
         <div class="flex items-center justify-center gap-2">
@@ -39,13 +43,7 @@
     </button>
   </form>
 
-  <div class="text-center text-surface-variant-foreground mt-5 space-y-2">
-    <p class="text-sm">
-      <a [routerLink]="['/auth/forgot-password']" class="text-primary font-medium hover:underline cursor-pointer">Forgot password?</a>
-    </p>
-    <p class="text-sm">
-      Don't have an account?
-      <a [routerLink]="['/auth/register']" class="text-primary font-medium hover:underline cursor-pointer ml-1">Create one</a>
-    </p>
+  <div class="mt-3">
+    <a mat-stroked-button class="w-full" [routerLink]="['/auth/register']">Create account</a>
   </div>
 </div>
