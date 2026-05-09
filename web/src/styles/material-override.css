@@ -72,7 +72,8 @@
    -------------------------------------------------------------------------- */
 
 .mat-mdc-unelevated-button.mat-mdc-button-base,
-.mat-mdc-raised-button.mat-mdc-button-base {
+.mat-mdc-raised-button.mat-mdc-button-base,
+.mat-mdc-outlined-button.mat-mdc-button-base {
   height: 40px !important;
   border-radius: var(--mat-sys-corner-medium) !important;
   font-size: 14px !important;

@@ -6,7 +6,6 @@ import {
   AuthResponse,
   AccessTokenResponse,
   AuthRequest,
-  ForgotPasswordRequest,
   ResetPasswordRequest,
   RegisterUserRequest
 } from '../models/auth.models';
@@ -105,8 +104,8 @@ export class AuthService {
     }
   }
 
-  forgotPassword(request: ForgotPasswordRequest): Observable<void> {
-    return this.http.post<void>(`${environment.apiBaseUrl}/auth/forgot-password`, request);
+  forgotPassword(email: string): Observable<void> {
+    return this.http.post<void>(`${environment.apiBaseUrl}/auth/forgot-password`, { email });
   }
 
   resetPassword(request: ResetPasswordRequest): Observable<void> {
