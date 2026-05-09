@@ -38,4 +38,13 @@ describe('Login page', () => {
 
     po.urlIncludes('/auth/register');
   });
+
+  it('navigates to the dashboard after a successful login', () => {
+    cy.env(['TEST_USER_EMAIL', 'TEST_USER_PASSWORD']).then(({ TEST_USER_EMAIL: email, TEST_USER_PASSWORD: password }) => {
+      po.typeEmail(email).typePassword(password).submit();
+    });
+
+    po.urlIncludes('/');
+    cy.url().should('not.include', '/auth');
+  });
 });
