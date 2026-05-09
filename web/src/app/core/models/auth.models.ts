@@ -1,3 +1,5 @@
+import { UserResponse } from './user.models';
+
 export type RegisterUserRequest = {
   firstName: string,
   lastName: string,
@@ -13,13 +15,13 @@ export type AuthRequest = {
 }
 
 export type AuthResponse = {
-  accessToken: string,
+  user: UserResponse,
+  accessToken: AccessTokenResponse,
+}
+
+export type AccessTokenResponse = {
+  token: string,
   expiresIn: number,
-  user: {
-    role: string,
-    email: string,
-    externalKey: string,
-  }
 }
 
 export type ForgotPasswordRequest = {
