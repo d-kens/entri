@@ -2,12 +2,7 @@ package com.puuul.api.modules.users.service;
 
 
 import com.puuul.api.config.JwtConfig;
-import com.puuul.api.modules.users.dto.CreateUserDto;
-import com.puuul.api.modules.users.dto.LoginRequestDto;
-import com.puuul.api.modules.users.dto.LoginResponseDto;
-import com.puuul.api.modules.users.dto.UserResponseDto;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
+import com.puuul.api.modules.users.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,7 +21,7 @@ public class AuthService {
         return userService.create(userDto);
     }
 
-    public LoginResponseDto login(LoginRequestDto loginRequest, HttpServletResponse response) {
+    public LoginResultDto login(LoginRequestDto loginRequest) {
         Authentication authRequest = UsernamePasswordAuthenticationToken.unauthenticated(
                 loginRequest.email(), loginRequest.password()
         );
@@ -37,9 +32,8 @@ public class AuthService {
 
         String accessToken = jwtService.generateAccessToken(user).toString();
         String refreshToken = jwtService.generateRefreshToken(user).toString();
-        setRefreshTokenCookie(response, refreshToken);
 
-        return new LoginResponseDto(
+        var loginResponse = new LoginResponseDto(
                 new LoginResponseDto.UserInfo(
                         user.getRole().toString(),
                         user.getEmail(),
@@ -48,14 +42,7 @@ public class AuthService {
                 jwtConfig.getAccessTokenExpiration(),
                 accessToken
         );
-    }
 
-    private void setRefreshTokenCookie(HttpServletResponse response, String refreshToken) {
-        Cookie cookie = new Cookie("refresh_token", refreshToken);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
-        cookie.setPath("/");
-        cookie.setMaxAge(jwtConfig.getRefreshTokenExpiration());
-        response.addCookie(cookie);
+        return new LoginResultDto(loginResponse, refreshToken);
     }
 }
