@@ -7,7 +7,7 @@
   <form [formGroup]="loginForm" class="space-y-3">
     <mat-form-field appearance="outline" class="w-full">
       <mat-label>Email Address</mat-label>
-      <input matInput type="email" placeholder="john@example.com" formControlName="email" autocomplete="email">
+      <input matInput type="email" placeholder="john@example.com" formControlName="email" autocomplete="email" data-cy="email-input">
       <mat-icon matSuffix>mail_outline</mat-icon>
       @if (loginForm.get('email')?.hasError('required')) {
         <mat-error>Email is required</mat-error>
@@ -18,7 +18,7 @@
 
     <mat-form-field appearance="outline" class="w-full">
       <mat-label>Password</mat-label>
-      <input matInput [type]="hidePassword() ? 'password' : 'text'" placeholder="Enter your password" formControlName="password" autocomplete="current-password">
+      <input matInput [type]="hidePassword() ? 'password' : 'text'" placeholder="Enter your password" formControlName="password" autocomplete="current-password" data-cy="password-input">
       <button mat-icon-button matSuffix type="button" (mousedown)="$event.preventDefault()" (click)="togglePassword()">
         <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
       </button>
@@ -27,7 +27,7 @@
       }
     </mat-form-field>
 
-    <button mat-flat-button class="w-full" type="button" (click)="login()" [disabled]="isLoading()">
+    <button mat-flat-button class="w-full" type="button" (click)="login()" [disabled]="isLoading()" data-cy="login-submit">
       @if (isLoading()) {
         <div class="flex items-center justify-center gap-2">
           <mat-progress-spinner diameter="16" mode="indeterminate"></mat-progress-spinner>

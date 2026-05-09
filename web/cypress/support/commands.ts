@@ -1,37 +1,48 @@
 /// <reference types="cypress" />
-// ***********************************************
-// This example commands.ts shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
-//
-//
-// -- This is a parent command --
-// Cypress.Commands.add('login', (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
-//
-// declare global {
-//   namespace Cypress {
-//     interface Chainable {
-//       login(email: string, password: string): Chainable<void>
-//       drag(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       dismiss(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       visit(originalFn: CommandOriginalFn, url: string, options: Partial<VisitOptions>): Chainable<Element>
-//     }
-//   }
-// }
+
+import type { MswHandler } from './msw/handler';
+
+/**
+ * cy.startMsw(handlers)
+ *
+ * Registers mock API responses for the current test using cy.intercept().
+ * Call this in beforeEach() before cy.visit() so intercepts are in place
+ * before the page makes any requests.
+ *
+ * Always pair with cy.resetMsw() in afterEach() to keep tests isolated.
+ */
+Cypress.Commands.add('startMsw', (handlers: MswHandler[]) => {
+  for (const handler of handlers) {
+    const intercept = cy.intercept(handler.method, handler.url, {
+      statusCode: handler.statusCode,
+      body: handler.body,
+    });
+    if (handler.alias) {
+      intercept.as(handler.alias);
+    }
+  }
+});
+
+/**
+ * cy.resetMsw()
+ *
+ * Semantic cleanup pair to cy.startMsw(). Call this in afterEach() to
+ * signal that mock overrides for this test are done.
+ *
+ * Cypress clears intercepts automatically between tests, so this is
+ * primarily a readability and intent marker — it makes it explicit that
+ * a test is cleaning up after itself.
+ */
+Cypress.Commands.add('resetMsw', () => {
+  // Intercepts are cleared automatically between Cypress tests.
+  // This command exists as an explicit, readable cleanup signal.
+});
+
+declare global {
+  namespace Cypress {
+    interface Chainable {
+      startMsw(handlers: MswHandler[]): void;
+      resetMsw(): void;
+    }
+  }
+}

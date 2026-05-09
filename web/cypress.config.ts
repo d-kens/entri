@@ -10,4 +10,11 @@ export default defineConfig({
     },
     specPattern: "**/*.cy.ts",
   },
+
+  e2e: {
+    baseUrl: 'http://localhost:4200',
+    specPattern: 'cypress/e2e/**/*.cy.ts',
+    supportFile: 'cypress/support/e2e.ts',
+    setupNodeEvents(_on, _config) {},
+  },
 });
