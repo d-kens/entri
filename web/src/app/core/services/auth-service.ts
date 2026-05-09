@@ -9,7 +9,7 @@ import {
   ResetPasswordRequest,
   RegisterUserRequest
 } from '../models/auth.models';
-import {UserResponse} from '@core/models/user.models';
+import { UserResponse } from '@core/models/user.models';
 
 @Injectable({
   providedIn: 'root',
@@ -17,6 +17,7 @@ import {UserResponse} from '@core/models/user.models';
 export class AuthService {
   private http: HttpClient = inject(HttpClient);
   private readonly ACCESS_TOKEN_KEY = 'access_token';
+  private readonly EXTERNAL_ID_KEY = 'external_id';
 
   private authStatusSignal = signal(!!this.getToken());
 
@@ -43,10 +44,9 @@ export class AuthService {
       })
       .pipe(
         tap((response) => {
-          if (response?.accessToken) {
-            localStorage.setItem(this.ACCESS_TOKEN_KEY, response.accessToken);
-            this.authStatusSignal.set(true);
-          }
+          localStorage.setItem(this.ACCESS_TOKEN_KEY, response.accessToken);
+          localStorage.setItem(this.EXTERNAL_ID_KEY, response.user.externalKey);
+          this.authStatusSignal.set(true);
         }),
         catchError((error) => {
           this.authStatusSignal.set(false);
@@ -66,8 +66,13 @@ export class AuthService {
       );
   }
 
+  getExternalId(): string | null {
+    return localStorage.getItem(this.EXTERNAL_ID_KEY);
+  }
+
   clearSession(): void {
     localStorage.removeItem(this.ACCESS_TOKEN_KEY);
+    localStorage.removeItem(this.EXTERNAL_ID_KEY);
     this.authStatusSignal.set(false);
   }
 
@@ -78,6 +83,7 @@ export class AuthService {
       .pipe(
         finalize(() => {
           localStorage.removeItem(this.ACCESS_TOKEN_KEY);
+          localStorage.removeItem(this.EXTERNAL_ID_KEY);
           this.authStatusSignal.set(false);
         })
       );
@@ -96,10 +102,6 @@ export class AuthService {
     } catch {
       return null;
     }
-  }
-
-  getCurrentUser(): Observable<UserResponse> {
-    return this.http.get<UserResponse>(`${environment.apiBaseUrl}/auth/me`);
   }
 
   forgotPassword(request: ForgotPasswordRequest): Observable<void> {
