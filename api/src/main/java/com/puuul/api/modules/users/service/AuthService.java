@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,13 +27,9 @@ public class AuthService {
                 loginRequest.email(), loginRequest.password()
         );
         Authentication authResponse = authenticationManager.authenticate(authRequest);
-
-        var principal = (org.springframework.security.core.userdetails.UserDetails) authResponse.getPrincipal();
-        var user = userService.findByEmail(principal.getUsername());
-
+        var user = userService.findByEmail(loginRequest.email());
         String accessToken = jwtService.generateAccessToken(user).toString();
         String refreshToken = jwtService.generateRefreshToken(user).toString();
-
         var loginResponse = new LoginResponseDto(
                 new LoginResponseDto.UserInfo(
                         user.getRole().toString(),
@@ -42,7 +39,6 @@ public class AuthService {
                 jwtConfig.getAccessTokenExpiration(),
                 accessToken
         );
-
         return new LoginResultDto(loginResponse, refreshToken);
     }
 }
