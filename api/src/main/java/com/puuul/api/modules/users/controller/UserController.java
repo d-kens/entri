@@ -15,9 +15,9 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/{externalKey}")
-    public UserResponseDto findByExternalKey(
+    public UserResponseDto getUserByExternalKey(
             @PathVariable String externalKey
     ) {
-        return userService.findByExternalKey(externalKey);
+        return userService.getUserByExternalKey(externalKey);
     }
 }

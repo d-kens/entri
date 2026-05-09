@@ -1,10 +1,7 @@
 package com.puuul.api.modules.users.controller;
 
 import com.puuul.api.config.JwtConfig;
-import com.puuul.api.modules.users.dto.CreateUserDto;
-import com.puuul.api.modules.users.dto.LoginRequestDto;
-import com.puuul.api.modules.users.dto.LoginResponseDto;
-import com.puuul.api.modules.users.dto.UserResponseDto;
+import com.puuul.api.modules.users.dto.*;
 import com.puuul.api.modules.users.service.AuthService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -46,6 +43,14 @@ public class AuthController {
                 jwtConfig.getRefreshTokenExpiration()
         );
         return result.loginResponseDto();
+    }
+
+    @PostMapping("refresh-token")
+    public AccessTokenDto refreshToken(
+            HttpServletResponse response,
+            @CookieValue(value = "refreshToken") String refreshToken
+    ) {
+        return authService.refreshToken(refreshToken);
     }
 
     @PostMapping("/logout")
