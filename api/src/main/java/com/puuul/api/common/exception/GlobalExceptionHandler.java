@@ -48,4 +48,11 @@ public class GlobalExceptionHandler {
                 new ErrorDto(exception.getMessage())
         );
     }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ErrorDto> handleUnauthorizedException(UnauthorizedException exception) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+                new ErrorDto(exception.getMessage())
+        );
+    }
 }

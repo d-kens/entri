@@ -38,10 +38,13 @@ public class UserService {
         return toResponse(user);
     }
 
-    public UserResponseDto findByExternalKey(String externalKey) {
-        var user = userRepository.findByExternalKey(externalKey)
+    public UserResponseDto getUserByExternalKey(String externalKey) {
+        return toResponse(findEntityByExternalKey(externalKey));
+    }
+
+    public User findEntityByExternalKey(String externalKey) {
+        return userRepository.findByExternalKey(externalKey)
                 .orElseThrow(() -> new NotFoundException("User not found"));
-        return toResponse(user);
     }
 
     public User findByEmail(String email) {
@@ -49,7 +52,7 @@ public class UserService {
                 .orElseThrow(() -> new NotFoundException("User not found"));
     }
 
-    private UserResponseDto toResponse(User user) {
+    public UserResponseDto toResponse(User user) {
         return new UserResponseDto(
                 user.getRole().toString(),
                 user.getEmail(),
