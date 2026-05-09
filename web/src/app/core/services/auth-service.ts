@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { catchError, finalize, Observable, tap, throwError } from 'rxjs';
 import {
   AuthResponse,
+  AccessTokenResponse,
   AuthRequest,
   ForgotPasswordRequest,
   ResetPasswordRequest,
@@ -44,7 +45,7 @@ export class AuthService {
       })
       .pipe(
         tap((response) => {
-          localStorage.setItem(this.ACCESS_TOKEN_KEY, response.accessToken);
+          localStorage.setItem(this.ACCESS_TOKEN_KEY, response.accessToken.token);
           localStorage.setItem(this.EXTERNAL_ID_KEY, response.user.externalKey);
           this.authStatusSignal.set(true);
         }),
@@ -55,12 +56,12 @@ export class AuthService {
       );
   }
 
-  refreshToken(): Observable<AuthResponse> {
+  refreshToken(): Observable<AccessTokenResponse> {
     return this.http
-      .post<AuthResponse>(`${environment.apiBaseUrl}/auth/refresh-token`, {}, {withCredentials: true})
+      .post<AccessTokenResponse>(`${environment.apiBaseUrl}/auth/refresh-token`, {}, {withCredentials: true})
       .pipe(
         tap(response => {
-          localStorage.setItem(this.ACCESS_TOKEN_KEY, response.accessToken);
+          localStorage.setItem(this.ACCESS_TOKEN_KEY, response.token);
           this.authStatusSignal.set(true);
         })
       );
