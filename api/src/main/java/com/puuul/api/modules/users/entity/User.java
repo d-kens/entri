@@ -24,7 +24,7 @@ public class User extends AbstractAuditableEntity {
 
     @Column(name = "external_key", nullable = false, unique = true)
     @Builder.Default
-    private UUID externalKey = UUID.randomUUID();
+    private String externalKey = UUID.randomUUID().toString();
 
     @Column(unique = true, nullable = false)
     private String email;

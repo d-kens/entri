@@ -19,7 +19,7 @@ public class UserDetailsService implements org.springframework.security.core.use
                 () -> new UsernameNotFoundException("User not found"));
 
         return User
-                .withUsername(user.getEmail())
+                .withUsername(user.getExternalKey())
                 .password(user.getPasswordHash())
                 .roles(user.getRole().toString())
                 .build();

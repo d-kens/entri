@@ -25,7 +25,6 @@ public class UserService {
         if (userRepository.existsByEmail(userDto.email())) {
             throw new EmailAlreadyExist();
         }
-
         User user = User.builder()
                 .email(userDto.email())
                 .lastName(userDto.lastName())
@@ -34,10 +33,14 @@ public class UserService {
                 .passwordHash(passwordEncoder.encode(userDto.password()))
                 .role(Role.valueOf(userDto.role().toUpperCase()))
                 .build();
-
         userRepository.save(user);
         eventPublisher.publishEvent(new UserCreatedEvent(user));
+        return toResponse(user);
+    }
 
+    public UserResponseDto findByExternalKey(String externalKey) {
+        var user = userRepository.findByExternalKey(externalKey)
+                .orElseThrow(() -> new NotFoundException("User not found"));
         return toResponse(user);
     }
 
