@@ -6,7 +6,11 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "cy:open": "cypress open",
+    "cy:run": "cypress run --e2e",
+    "cy:smoke": "cypress run --e2e --spec 'cypress/e2e/**/*.smoke.cy.ts'",
+    "cy:msw": "cypress run --e2e --spec 'cypress/e2e/**/*.msw.cy.ts'"
   },
   "prettier": {
     "printWidth": 100,
@@ -37,9 +41,11 @@
     "tslib": "^2.3.0"
   },
   "devDependencies": {
+    "@angular-devkit/build-angular": "^21.0.6",
     "@angular/build": "^21.0.2",
     "@angular/cli": "^21.1.4",
     "@angular/compiler-cli": "^21.0.0",
+    "@angular/platform-browser-dynamic": "^21.0.8",
     "@tailwindcss/postcss": "^4.1.12",
     "@types/event-source-polyfill": "^1.0.5",
     "@types/eventsource": "^1.1.15",
