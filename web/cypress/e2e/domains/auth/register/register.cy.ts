@@ -48,4 +48,20 @@ describe('Register page', () => {
 
     po.urlIncludes('/auth/login');
   });
+
+  it('registers a new account and redirects to the login page', () => {
+    const email = `testuser+${Date.now()}@example.com`;
+
+    cy.env(['TEST_REGISTER_PASSWORD']).then(({ TEST_REGISTER_PASSWORD: password }) => {
+      po.fillAndSubmit({
+        firstName: 'Test',
+        lastName: 'User',
+        email,
+        phone: '0712345678',
+        password,
+      });
+    });
+
+    po.urlIncludes('/auth/login');
+  });
 });
