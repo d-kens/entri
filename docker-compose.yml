@@ -15,6 +15,7 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+    restart: unless-stopped
 
   spicedb-migrate:
     image: authzed/spicedb:v1.51.0
@@ -36,6 +37,8 @@ services:
       --grpc-preshared-key "devkey"
       --datastore-engine postgres
       --datastore-conn-uri "postgres://spicedb:spicedb@postgres:5432/spicedb?sslmode=disable"
+      --datastore-conn-pool-read-max-open 10
+      --datastore-conn-pool-write-max-open 5
       --log-format json
     depends_on:
       postgres:
@@ -50,9 +53,10 @@ services:
       timeout: 10s
       retries: 15
       start_period: 10s
+    restart: unless-stopped
 
   spicedb-init:
-    image: authzed/zed:latest
+    image: authzed/zed:v0.21.3
     container_name: spicedb-init
     depends_on:
       spicedb:
@@ -68,6 +72,7 @@ services:
       - --insecure
       - --token
       - devkey
+    restart: on-failure
 
   db:
     image: 'mysql:8.0.32'
