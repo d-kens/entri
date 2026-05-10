@@ -31,11 +31,25 @@ describe('Login page', () => {
   });
 
   describe('success', () => {
-    it('navigates to the dashboard after a successful login', () => {
-      cy.env(['TEST_USER_EMAIL', 'TEST_USER_PASSWORD']).then(({ TEST_USER_EMAIL: email, TEST_USER_PASSWORD: password }) => {
-        po.visit().typeEmail(email).typePassword(password).submit();
-        cy.url().should('not.include', '/auth');
+    const email = `testlogin+${Date.now()}@example.com`;
+    const password = 'Password123!';
+
+    before(() => {
+      cy.env(['API_BASE_URL']).then(({ API_BASE_URL: apiBaseUrl }) => {
+        cy.request('POST', `${apiBaseUrl}/auth/register`, {
+          firstName: 'Test',
+          lastName: 'Login',
+          email,
+          phoneNumber: '0712345678',
+          password,
+          role: 'PLATFORM_USER',
+        });
       });
+    });
+
+    it('navigates to the dashboard after a successful login', () => {
+      po.visit().typeEmail(email).typePassword(password).submit();
+      cy.url().should('not.include', '/auth');
     });
   });
 });

@@ -95,9 +95,8 @@ export class AuthService {
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
       const roles: string[] = payload.roles ?? [];
-      if (roles.includes('ADMIN')) return 'ADMIN';
-      if (roles.includes('AGENT')) return 'AGENT';
-      if (roles.includes('MERCHANT')) return 'MERCHANT';
+      if (roles.includes('PLATFORM_ADMIN')) return 'PLATFORM_ADMIN';
+      if (roles.includes('PLATFORM_USER')) return 'PLATFORM_USER';
       return roles[0] ?? null;
     } catch {
       return null;
