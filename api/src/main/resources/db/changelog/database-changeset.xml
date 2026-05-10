@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="202605100001" author="d-kens">
+        <createTable tableName="users">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="external_key" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="email" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="role" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password_hash" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="first_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="phone_number" type="VARCHAR(50)"/>
+            <column name="created" type="DATETIME(6)"/>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="modified" type="DATETIME(6)"/>
+            <column name="modified_by" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="202605100002" author="d-kens">
+        <createTable tableName="password_reset_tokens">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="token_hash" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="expires_at" type="DATETIME(6)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="used" type="TINYINT(1)" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="password_reset_tokens"
+                baseColumnNames="user_id"
+                constraintName="fk_password_reset_tokens_user"
+                referencedTableName="users"
+                referencedColumnNames="id"/>
+    </changeSet>
+
+</databaseChangeLog>
