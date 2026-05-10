@@ -36,17 +36,37 @@ describe('Register page', () => {
       po.hasText('Passwords do not match');
     });
 
-    it('shows an error for an already-registered email', () => {
-      cy.env(['TEST_USER_EMAIL']).then(({ TEST_USER_EMAIL: email }) => {
-        po.visit()
-          .typeFirstName('Test')
-          .typeLastName('User')
-          .typeEmail(email)
-          .typePhone('0712345678')
-          .typePassword('Password123!')
-          .typeConfirmPassword('Password123!')
-          .submit();
-        po.urlIncludes('/auth/register');
+    describe('already-registered email', () => {
+      const existingEmail = `existing+${Date.now()}@example.com`;
+
+      before(() => {
+        cy.env(['API_BASE_URL', 'TEST_REGISTER_PASSWORD']).then(({
+          API_BASE_URL: apiBaseUrl,
+          TEST_REGISTER_PASSWORD: password,
+        }) => {
+          cy.request('POST', `${apiBaseUrl}/auth/register`, {
+            firstName: 'Test',
+            lastName: 'User',
+            email: existingEmail,
+            phoneNumber: '0712345678',
+            password,
+            role: 'PLATFORM_USER',
+          });
+        });
+      });
+
+      it('shows an error for an already-registered email', () => {
+        cy.env(['TEST_REGISTER_PASSWORD']).then(({ TEST_REGISTER_PASSWORD: password }) => {
+          po.visit()
+            .typeFirstName('Test')
+            .typeLastName('User')
+            .typeEmail(existingEmail)
+            .typePhone('0712345678')
+            .typePassword(password)
+            .typeConfirmPassword(password)
+            .submit();
+          po.urlIncludes('/auth/register');
+        });
       });
     });
   });
