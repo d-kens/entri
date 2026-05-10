@@ -1,6 +1,6 @@
 package com.puuul.api.modules.users.controller;
 
-import com.puuul.api.modules.users.dto.UserResponseDto;
+import com.puuul.api.modules.users.dto.UserResponse;
 import com.puuul.api.modules.users.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +15,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/{externalKey}")
-    public UserResponseDto getUserByExternalKey(
+    public UserResponse getUserByExternalKey(
             @PathVariable String externalKey
     ) {
         return userService.getUserByExternalKey(externalKey);

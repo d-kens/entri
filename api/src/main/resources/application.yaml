@@ -10,6 +10,11 @@ jwt:
   accessTokenExpiration: 900
   refreshTokenExpiration: 604800
 
+app:
+  base-url: ${APP_BASE_URL}
+  password-reset:
+    expiry-minutes: 15
+
 novu:
   api:
     key: ${NOVU_SECRET:secret}

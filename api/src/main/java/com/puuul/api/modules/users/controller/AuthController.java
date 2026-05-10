@@ -3,28 +3,35 @@ package com.puuul.api.modules.users.controller;
 import com.puuul.api.config.JwtConfig;
 import com.puuul.api.modules.users.dto.*;
 import com.puuul.api.modules.users.service.AuthService;
+import com.puuul.api.modules.users.service.PasswordResetService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Arrays;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
-    private final AuthService authService;
     private final JwtConfig jwtConfig;
+    private final AuthService authService;
+    private final PasswordResetService passwordResetService;
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponseDto> register(
+    public ResponseEntity<UserResponse> register(
             UriComponentsBuilder uriComponentsBuilder,
-            @Valid @RequestBody CreateUserDto userDto
+            @Valid @RequestBody CreateUserRequest userDto
     ) {
         var response = authService.register(userDto);
         var uri = uriComponentsBuilder.path("/users/{id}").buildAndExpand(response.externalKey()).toUri();
@@ -32,9 +39,9 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public LoginResponseDto login(
+    public LoginResponse login(
             HttpServletResponse response,
-            @Valid @RequestBody LoginRequestDto loginRequest
+            @Valid @RequestBody LoginRequest loginRequest
     ) {
         var result = authService.login(loginRequest);
         setRefreshTokenCookie(
@@ -42,11 +49,19 @@ public class AuthController {
                 result.refreshToken(),
                 jwtConfig.getRefreshTokenExpiration()
         );
-        return result.loginResponseDto();
+        return result.loginResponse();
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(
+            @RequestBody ForgotPasswordRequest request
+    ) {
+        passwordResetService.forgotPassword(request.email());
+        return ResponseEntity.ok(Map.of("message", "A reset link has successfully been sent to your email if it was found in our system"));
     }
 
     @PostMapping("refresh-token")
-    public AccessTokenDto refreshToken(
+    public AccessToken refreshToken(
             HttpServletResponse response,
             @CookieValue(value = "refreshToken") String refreshToken
     ) {
