@@ -41,8 +41,6 @@ npm start          # serves on http://localhost:4200
 | `npm test` | Unit tests |
 | `npm run cy:open` | Open Cypress in interactive mode |
 | `npm run cy:run` | Run all E2E tests headlessly |
-| `npm run cy:smoke` | Run only smoke tests |
-| `npm run cy:msw` | Run only MSW (mocked API) tests |
 
 ---
 

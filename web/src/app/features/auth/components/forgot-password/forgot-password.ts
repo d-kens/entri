@@ -55,6 +55,7 @@ export class ForgotPassword {
       next: () => {
         this.isLoading.set(false);
         this.snackbarService.showSuccess("A reset link has successfully been sent to your email if it was found in our system")
+        this.router.navigate(['/auth/login']);
       },
       error: (err) => {
         this.snackbarService.showError('Something went wrong. Please try again later.');

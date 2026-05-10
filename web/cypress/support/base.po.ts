@@ -8,12 +8,6 @@
  *   new LoginPo().visit().hasText('Welcome Back').urlIncludes('/auth/login');
  */
 export abstract class BasePo {
-  /** Assert the page body is visible (basic liveness check). */
-  isVisible() {
-    cy.get('body').should('be.visible');
-    return this;
-  }
-
   /** Assert that some text appears somewhere on the page. */
   hasText(text: string) {
     cy.contains(text).should('be.visible');
