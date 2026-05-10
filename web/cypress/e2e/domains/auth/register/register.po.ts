@@ -1,8 +1,5 @@
 import { BasePo } from '../../../../support/base.po';
 
-/**
- * Page Object for the Register page (/auth/register).
- */
 export class RegisterPo extends BasePo {
   visit() {
     cy.visit('/auth/register');
@@ -42,23 +39,5 @@ export class RegisterPo extends BasePo {
   submit() {
     cy.get('[data-cy="register-submit"]').click();
     return this;
-  }
-
-  /** Convenience: fill all valid fields and submit. */
-  fillAndSubmit(data: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    phone: string;
-    password: string;
-  }) {
-    return this.visit()
-      .typeFirstName(data.firstName)
-      .typeLastName(data.lastName)
-      .typeEmail(data.email)
-      .typePhone(data.phone)
-      .typePassword(data.password)
-      .typeConfirmPassword(data.password)
-      .submit();
   }
 }
