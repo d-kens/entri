@@ -1,1 +1,1 @@
-rootProject.name = "puuul-api"
+rootProject.name = "api"
