@@ -49,6 +49,7 @@ dependencies {
 
     runtimeOnly("com.mysql:mysql-connector-j")
     implementation("org.liquibase:liquibase-core")
+    implementation("org.springframework.boot:spring-boot-liquibase")
 
     implementation("io.jsonwebtoken:jjwt-api:0.12.6")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.6")

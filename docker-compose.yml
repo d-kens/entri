@@ -63,15 +63,13 @@ services:
         condition: service_healthy
     volumes:
       - ./spicedb:/schema
+      - ./spicedb/zed-config.yaml:/root/.zed/config.yaml
     command:
       - schema
       - write
       - /schema/schema.zed
-      - --endpoint
-      - spicedb:50051
-      - --insecure
-      - --token
-      - devkey
+      - --context
+      - local
     restart: on-failure
 
   db:
