@@ -3,7 +3,7 @@ package com.puuul.api.modules.users.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
-public record LoginRequestDto(
+public record LoginRequest(
         @Email(message = "Email must be valid")
         @NotBlank(message = "Email is required")
         String email,

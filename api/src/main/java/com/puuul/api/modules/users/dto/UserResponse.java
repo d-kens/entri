@@ -1,6 +1,6 @@
 package com.puuul.api.modules.users.dto;
 
-public record UserResponseDto(
+public record UserResponse(
         String role,
         String email,
         String lastName,

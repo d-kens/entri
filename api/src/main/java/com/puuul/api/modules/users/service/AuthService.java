@@ -3,7 +3,12 @@ package com.puuul.api.modules.users.service;
 
 import com.puuul.api.common.exception.UnauthorizedException;
 import com.puuul.api.config.JwtConfig;
-import com.puuul.api.modules.users.dto.*;
+import com.puuul.api.modules.users.dto.AccessToken;
+import com.puuul.api.modules.users.dto.CreateUserRequest;
+import com.puuul.api.modules.users.dto.LoginRequest;
+import com.puuul.api.modules.users.dto.LoginResponse;
+import com.puuul.api.modules.users.dto.LoginResult;
+import com.puuul.api.modules.users.dto.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,11 +23,11 @@ public class AuthService {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
 
-    public UserResponseDto register(CreateUserDto userDto) {
+    public UserResponse register(CreateUserRequest userDto) {
         return userService.create(userDto);
     }
 
-    public LoginResultDto login(LoginRequestDto loginRequest) {
+    public LoginResult login(LoginRequest loginRequest) {
         Authentication authRequest = UsernamePasswordAuthenticationToken.unauthenticated(
                 loginRequest.email(), loginRequest.password()
         );
@@ -30,20 +35,20 @@ public class AuthService {
         var user = userService.findByEmail(loginRequest.email());
         String accessToken = jwtService.generateAccessToken(user).toString();
         String refreshToken = jwtService.generateRefreshToken(user).toString();
-        var loginResponse = new LoginResponseDto(
+        var loginResponse = new LoginResponse(
                 userService.toResponse(user),
-                new AccessTokenDto(accessToken, jwtConfig.getAccessTokenExpiration())
+                new AccessToken(accessToken, jwtConfig.getAccessTokenExpiration())
         );
-        return new LoginResultDto(loginResponse, refreshToken);
+        return new LoginResult(loginResponse, refreshToken);
     }
 
-    public AccessTokenDto refreshToken(String refreshToken) {
+    public AccessToken refreshToken(String refreshToken) {
         var jwt = jwtService.parseToken(refreshToken);
         if (jwt == null || jwt.isExpired()) {
             throw new UnauthorizedException("Invalid or expired refresh token");
         }
         var user = userService.findEntityByExternalKey(jwt.getUserExternalKey());
         String accessToken = jwtService.generateAccessToken(user).toString();
-        return new AccessTokenDto(accessToken, jwtConfig.getAccessTokenExpiration());
+        return new AccessToken(accessToken, jwtConfig.getAccessTokenExpiration());
     }
 }
