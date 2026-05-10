@@ -11,6 +11,7 @@ import {
 } from '../models/auth.models';
 import { UserResponse } from '@core/models/user.models';
 
+
 @Injectable({
   providedIn: 'root',
 })
@@ -87,20 +88,6 @@ export class AuthService {
           this.authStatusSignal.set(false);
         })
       );
-  }
-
-  getRole(): string | null {
-    const token = this.getToken();
-    if (!token) return null;
-    try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      const roles: string[] = payload.roles ?? [];
-      if (roles.includes('PLATFORM_ADMIN')) return 'PLATFORM_ADMIN';
-      if (roles.includes('PLATFORM_USER')) return 'PLATFORM_USER';
-      return roles[0] ?? null;
-    } catch {
-      return null;
-    }
   }
 
   forgotPassword(email: string): Observable<void> {
