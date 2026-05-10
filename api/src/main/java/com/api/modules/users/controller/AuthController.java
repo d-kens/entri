@@ -2,7 +2,6 @@ package com.api.modules.users.controller;
 
 import com.api.config.JwtConfig;
 import com.api.modules.users.dto.*;
-import com.puuul.api.modules.users.dto.*;
 import com.api.modules.users.service.AuthService;
 import com.api.modules.users.service.PasswordResetService;
 import jakarta.servlet.http.Cookie;

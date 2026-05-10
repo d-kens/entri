@@ -3,7 +3,7 @@ spring:
     name: puuul
 
   liquibase:
-    change-log: classpath:db/changelog/database-changeset.xml
+    change-log: classpath:db/changelog/changelog.xml
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
