@@ -1,21 +1,24 @@
-package com.puuul.api.modules.notification;
+package com.puuul.api.client.novu;
 
 import co.novu.Novu;
 import co.novu.models.components.CreateSubscriberRequestDto;
+import co.novu.models.components.To2;
+import co.novu.models.components.TriggerEventRequestDto;
 import co.novu.models.errors.ErrorDto;
 import co.novu.models.errors.ValidationErrorDto;
 import com.puuul.api.modules.users.entity.User;
-import com.puuul.api.modules.users.event.UserCreatedEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.event.EventListener;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
+
+import java.util.Map;
+
 
 @Slf4j
-@Service
+@Component
 @RequiredArgsConstructor
-public class NovuService {
+public class NovuClient {
     private final Novu novu;
 
     @Value("${novu.subscriber.locale}")
@@ -24,12 +27,7 @@ public class NovuService {
     @Value("${novu.subscriber.timezone}")
     private String subscriberTimezone;
 
-    @EventListener
-    public void onUserCreated(UserCreatedEvent event) {
-        createSubscriber(event.user());
-    }
-
-    private void createSubscriber(User user) {
+    void createSubscriber(User user) {
         var subscriberRequest = toCreateSubscriberRequestDto(user);
 
         try {
@@ -42,6 +40,24 @@ public class NovuService {
             log.error("API error creating subscriber for subscriberId={}: {}", subscriberRequest.subscriberId(), e.getMessage());
         } catch (Exception e) {
             log.error("Unexpected error creating subscriber for subscriberId={}", subscriberRequest.subscriberId(), e);
+        }
+    }
+
+    public void triggerWorkflow(WorkflowType workflow, String subscriberId, Map<String, Object> payload) {
+        var request = TriggerEventRequestDto.builder()
+                .workflowId(workflow.getWorkflowId())
+                .to(To2.of(subscriberId))
+                .payload(payload)
+                .build();
+
+        try {
+            novu.trigger(request);
+        } catch (ValidationErrorDto e) {
+            log.error("Validation error triggering workflow={} for subscriberId={}: {}", workflow, subscriberId, e.getMessage());
+        } catch (ErrorDto e) {
+            log.error("API error triggering workflow={} for subscriberId={}: {}", workflow, subscriberId, e.getMessage());
+        } catch (Exception e) {
+            log.error("Unexpected error triggering workflow={} for subscriberId={}", workflow, subscriberId, e);
         }
     }
 
