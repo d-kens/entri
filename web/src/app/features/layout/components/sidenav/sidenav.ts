@@ -1,9 +1,9 @@
-import { Component, input, output, signal, OnInit } from '@angular/core';
+import { Component, effect, inject, input, output, signal } from '@angular/core';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router';
-import { AuthService } from '@core/services/auth-service';
+import { RouterLink, RouterLinkActive } from '@angular/router';
+import { UsersService } from '@features/users/services/users-service';
 
 interface MenuItem {
   icon: string;
@@ -24,29 +24,27 @@ interface MenuItem {
   styleUrl: './sidenav.css',
   standalone: true
 })
-export class Sidenav implements OnInit {
+export class Sidenav {
+  private usersService = inject(UsersService);
+
   isMobile = input<boolean>(false);
   closeSidenav = output<void>();
-
   menuItem = signal<MenuItem[]>([]);
 
-  constructor(private router: Router, private authService: AuthService) {}
-
-  ngOnInit() {
-    this.loadMenuByRole();
-  }
-
-  private loadMenuByRole() {
-    switch(this.authService.getRole()) {
-      case 'PLATFORM_ADMIN':
-        this.menuItem.set(this.getPlatformAdminMenu());
-        break;
-      case 'PLATFORM_USER':
-        this.menuItem.set(this.getPlatformUserMenu());
-        break;
-      default:
-        this.menuItem.set([]);
-    }
+  constructor() {
+    effect(() => {
+      const role = this.usersService.currentUser()?.role ?? null;
+      switch (role) {
+        case 'PLATFORM_ADMIN':
+          this.menuItem.set(this.getPlatformAdminMenu());
+          break;
+        case 'PLATFORM_USER':
+          this.menuItem.set(this.getPlatformUserMenu());
+          break;
+        default:
+          this.menuItem.set([]);
+      }
+    });
   }
 
   private getPlatformUserMenu(): MenuItem[] {

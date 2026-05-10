@@ -1,10 +1,9 @@
-import { Component, computed, inject, input, OnInit, output, signal } from '@angular/core';
+import { Component, computed, inject, input, OnInit, output } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Router } from '@angular/router';
-import { UserResponse } from '@core/models/user.models';
 import { AuthService } from '@core/services/auth-service';
 import { UsersService } from '@features/users/services/users-service';
 import { SnackbarService } from '@core/services/snackbar-service';
@@ -30,7 +29,7 @@ export class Toolbar implements OnInit {
   isMobile = input<boolean>(false);
   toggleSidenav = output<void>();
 
-  user = signal<UserResponse | undefined>(undefined);
+  user = this.usersService.currentUser;
 
   initials = computed(() => {
     const u = this.user();
@@ -42,7 +41,6 @@ export class Toolbar implements OnInit {
     const externalKey = this.authService.getExternalId();
     if (externalKey) {
       this.usersService.getUserByExternalKey(externalKey).subscribe({
-        next: (user: UserResponse) => this.user.set(user),
         error: (err) => console.error('Failed to fetch user:', err),
       });
     }
