@@ -2,8 +2,8 @@ package com.puuul.api.modules.users.service;
 
 import com.puuul.api.common.exception.NotFoundException;
 import com.puuul.api.common.utils.PhoneNumberUtils;
-import com.puuul.api.modules.users.dto.CreateUserDto;
-import com.puuul.api.modules.users.dto.UserResponseDto;
+import com.puuul.api.modules.users.dto.CreateUserRequest;
+import com.puuul.api.modules.users.dto.UserResponse;
 import com.puuul.api.modules.users.entity.Role;
 import com.puuul.api.modules.users.entity.User;
 import com.puuul.api.modules.users.event.UserCreatedEvent;
@@ -21,7 +21,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final ApplicationEventPublisher eventPublisher;
 
-    public UserResponseDto create(CreateUserDto userDto) {
+    public UserResponse create(CreateUserRequest userDto) {
         if (userRepository.existsByEmail(userDto.email())) {
             throw new EmailAlreadyExist();
         }
@@ -38,7 +38,7 @@ public class UserService {
         return toResponse(user);
     }
 
-    public UserResponseDto getUserByExternalKey(String externalKey) {
+    public UserResponse getUserByExternalKey(String externalKey) {
         return toResponse(findEntityByExternalKey(externalKey));
     }
 
@@ -52,8 +52,8 @@ public class UserService {
                 .orElseThrow(() -> new NotFoundException("User not found"));
     }
 
-    public UserResponseDto toResponse(User user) {
-        return new UserResponseDto(
+    public UserResponse toResponse(User user) {
+        return new UserResponse(
                 user.getRole().toString(),
                 user.getEmail(),
                 user.getLastName(),

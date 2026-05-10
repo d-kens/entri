@@ -3,7 +3,7 @@ import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} fr
 import {Router, RouterLink} from '@angular/router';
 import {AuthService} from '@core/services/auth-service';
 import {SnackbarService} from '@core/services/snackbar-service';
-import {MatButton, MatIconButton} from '@angular/material/button';
+import {MatButton} from '@angular/material/button';
 import {MatError, MatFormField, MatInput, MatLabel, MatSuffix} from '@angular/material/input';
 import {MatIcon} from '@angular/material/icon';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
@@ -57,8 +57,7 @@ export class ForgotPassword {
         this.snackbarService.showSuccess("A reset link has successfully been sent to your email if it was found in our system")
       },
       error: (err) => {
-        const errorMessage = err?.error?.message || 'Invalid email or password.';
-        this.snackbarService.showError(errorMessage);
+        this.snackbarService.showError('Something went wrong. Please try again later.');
         this.isLoading.set(false);
       }
     });
