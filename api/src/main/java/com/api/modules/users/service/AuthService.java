@@ -9,6 +9,7 @@ import com.api.modules.users.dto.LoginRequest;
 import com.api.modules.users.dto.LoginResponse;
 import com.api.modules.users.dto.LoginResult;
 import com.api.modules.users.dto.UserResponse;
+import com.api.modules.users.service.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,8 +19,9 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-    private final JwtService jwtService;
     private final JwtConfig jwtConfig;
+    private final UserMapper userMapper;
+    private final JwtService jwtService;
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
 
@@ -36,7 +38,7 @@ public class AuthService {
         String accessToken = jwtService.generateAccessToken(user).toString();
         String refreshToken = jwtService.generateRefreshToken(user).toString();
         var loginResponse = new LoginResponse(
-                userService.toResponse(user),
+                userMapper.toResponse(user),
                 new AccessToken(accessToken, jwtConfig.getAccessTokenExpiration())
         );
         return new LoginResult(loginResponse, refreshToken);

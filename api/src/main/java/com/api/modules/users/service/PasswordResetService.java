@@ -2,11 +2,14 @@ package com.api.modules.users.service;
 
 
 import com.api.common.exception.NotFoundException;
+import com.api.common.exception.UnauthorizedException;
+import com.api.modules.users.dto.ResetPasswordRequest;
 import com.api.modules.users.entity.PasswordResetToken;
 import com.api.modules.users.entity.User;
 import com.api.client.novu.WorkflowType;
 import com.api.modules.notification.event.NotificationEvent;
 import com.api.modules.users.repository.PasswordResetTokenRepository;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
@@ -21,6 +24,7 @@ import java.util.Base64;
 import java.util.Map;
 
 @Service
+@Transactional()
 @RequiredArgsConstructor
 public class PasswordResetService {
     private final UserService userService;
@@ -63,7 +67,26 @@ public class PasswordResetService {
         ));
     }
 
-
+    public void resetPassword(ResetPasswordRequest request) {
+        String tokenHash = hash(request.token());
+        PasswordResetToken token =
+                passwordResetTokenRepository.findByTokenHash(tokenHash)
+                        .orElseThrow(() -> new UnauthorizedException("Invalid password reset token"));
+        if (!token.isValid()) {
+            throw new UnauthorizedException("Password reset token expired or already used");
+        }
+        var user = token.getUser();
+        userService.changeUserPassword(user, request.password());
+        token.setUsed(true);
+        passwordResetTokenRepository.save(token);
+        eventPublisher.publishEvent(new NotificationEvent(
+                WorkflowType.PASSWORD_UPDATED,
+                user.getExternalKey().toString(),
+                Map.of(
+                        "firstName", user.getFirstName()
+                )
+        ));
+    }
 
     private String hash(String token) {
         try {
