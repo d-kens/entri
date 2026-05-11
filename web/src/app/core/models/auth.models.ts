@@ -25,7 +25,6 @@ export type AccessTokenResponse = {
 }
 
 export type ResetPasswordRequest = {
-  phoneNumber: string,
-  otp: string,
-  newPassword: string
+  token: string,
+  password: string
 }
