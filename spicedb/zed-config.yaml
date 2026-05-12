@@ -1,6 +1,0 @@
-current-context: local
-contexts:
-  local:
-    endpoint: spicedb:50051
-    token: devkey
-    insecure: true

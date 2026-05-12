@@ -55,7 +55,7 @@ public class PasswordResetService {
                 .build();
         passwordResetTokenRepository.save(token);
 
-        String resetUrl = appBaseUrl + "/reset-password?token=" + rawToken;
+        String resetUrl = appBaseUrl + "auth/reset-password?token=" + rawToken;
         eventPublisher.publishEvent(new NotificationEvent(
                 WorkflowType.PASSWORD_RESET,
                 user.getExternalKey().toString(),

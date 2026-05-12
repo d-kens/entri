@@ -6,34 +6,17 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {
-  AbstractControl,
   FormBuilder,
-  FormControl,
   FormGroup,
-  FormGroupDirective,
-  NgForm,
   ReactiveFormsModule,
-  ValidationErrors,
   Validators
 } from '@angular/forms';
 import {Router, RouterLink} from '@angular/router';
 import {SnackbarService} from '@core/services/snackbar-service';
 
-import {ErrorStateMatcher} from '@angular/material/core';
 import {RegisterUserRequest} from '@core/models/auth.models';
 import {AuthService} from '@core/services/auth-service';
-
-function passwordsMatch(group: AbstractControl): ValidationErrors | null {
-  const password = group.get('password')?.value;
-  const confirmPassword = group.get('confirmPassword')?.value;
-  return password === confirmPassword ? null : {passwordsMismatch: true};
-}
-
-class PasswordMismatchStateMatcher implements ErrorStateMatcher {
-  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
-    return !!(control?.touched && form?.hasError('passwordsMismatch'));
-  }
-}
+import {passwordsMatch, PasswordMismatchStateMatcher} from '../../validators/password.validators';
 
 @Component({
   selector: 'app-register',

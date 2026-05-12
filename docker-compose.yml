@@ -1,77 +1,4 @@
 services:
-  postgres:
-    image: postgres:15
-    container_name: spicedb-postgres
-    environment:
-      POSTGRES_DB: spicedb
-      POSTGRES_USER: spicedb
-      POSTGRES_PASSWORD: spicedb
-    volumes:
-      - spicedb-data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U spicedb"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-    restart: unless-stopped
-
-  spicedb-migrate:
-    image: authzed/spicedb:v1.51.0
-    container_name: spicedb-migrate
-    command: >
-      datastore migrate head
-      --datastore-engine postgres
-      --datastore-conn-uri "postgres://spicedb:spicedb@postgres:5432/spicedb?sslmode=disable"
-    depends_on:
-      postgres:
-        condition: service_healthy
-    restart: on-failure
-
-  spicedb:
-    image: authzed/spicedb:v1.51.0
-    container_name: spicedb
-    command: >
-      serve
-      --grpc-preshared-key "devkey"
-      --datastore-engine postgres
-      --datastore-conn-uri "postgres://spicedb:spicedb@postgres:5432/spicedb?sslmode=disable"
-      --datastore-conn-pool-read-max-open 10
-      --datastore-conn-pool-write-max-open 5
-      --log-format json
-    depends_on:
-      postgres:
-        condition: service_healthy
-      spicedb-migrate:
-        condition: service_completed_successfully
-    ports:
-      - "50051:50051"
-    healthcheck:
-      test: ["CMD", "grpc_health_probe", "-addr=:50051", "-rpc-timeout=5s"]
-      interval: 5s
-      timeout: 10s
-      retries: 15
-      start_period: 10s
-    restart: unless-stopped
-
-  spicedb-init:
-    image: authzed/zed:v0.21.3
-    container_name: spicedb-init
-    depends_on:
-      spicedb:
-        condition: service_healthy
-    volumes:
-      - ./spicedb:/schema
-      - ./spicedb/zed-config.yaml:/root/.zed/config.yaml
-    command:
-      - schema
-      - write
-      - /schema/schema.zed
-      - --context
-      - local
-    restart: on-failure
-
   db:
     image: 'mysql:8.0.32'
     environment:
@@ -92,4 +19,3 @@ services:
 
 volumes:
   puuuul-data:
-  spicedb-data:
