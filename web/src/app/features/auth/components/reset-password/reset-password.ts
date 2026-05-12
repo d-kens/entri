@@ -92,9 +92,16 @@ export class ResetPassword implements OnInit {
         this.router.navigateByUrl('/auth/login');
       },
       error: (err) => {
+        this.isLoading.set(false);
+
+        if (err.status === 401) {
+          this.router.navigateByUrl('/auth/forgot-password');
+          this.snackbarService.showError('This reset link has expired or already been used. Request a new one.');
+          return;
+        }
+
         const errorMessage = err?.error?.message || 'Password reset failed. Please try again.';
         this.snackbarService.showError(errorMessage);
-        this.isLoading.set(false);
       }
     });
   }

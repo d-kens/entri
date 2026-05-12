@@ -80,7 +80,7 @@ public class PasswordResetService {
         token.setUsed(true);
         passwordResetTokenRepository.save(token);
         eventPublisher.publishEvent(new NotificationEvent(
-                WorkflowType.PASSWORD_UPDATED,
+                WorkflowType.UPDATED_PASSWORD,
                 user.getExternalKey().toString(),
                 Map.of(
                         "firstName", user.getFirstName()
