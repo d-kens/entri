@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum WorkflowType {
     PASSWORD_RESET("RESET_PASSWORD"),
-    PASSWORD_UPDATED("PASSWORD_CHANGE");
+    UPDATED_PASSWORD("UPDATED_PASSWORD");
 
     private final String workflowId;
 }
