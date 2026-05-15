@@ -1,4 +1,4 @@
-# Puuul
+# Oro
 
 ## SpiceDB (Authorization)
 
