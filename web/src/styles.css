@@ -15,12 +15,11 @@
   }
 
   h1, h2, h3 {
-    font-family: var(--font-display);
+    font-family: var(--font-sans);
     color: var(--color-foreground);
-    font-weight: 400;
+    font-weight: 600;
   }
 
-  /* Links */
   a {
     color: inherit;
     text-decoration: none;
@@ -31,7 +30,6 @@
    Layout utilities
    -------------------------------------------------------------------------- */
 
-/* Standard page wrapper — use on top-level page containers */
 .page-content {
   max-width: 640px;
   margin-inline: auto;
@@ -44,97 +42,59 @@
 
 @theme {
 
-  /* ═══════════════════════════════════════════════════════════
-     COLORS — map directly to Material / Puuul tokens
-     ═══════════════════════════════════════════════════════════ */
+  /* ── Colors ──────────────────────────────────────────────── */
 
-  /* Primary — Puuul Green */
-  --color-primary:             var(--mat-sys-primary);           /* #1B6B3A */
-  --color-primary-foreground:  var(--mat-sys-on-primary);        /* #FFFFFF */
-  --color-primary-container:   var(--mat-sys-primary-container); /* #C8EDDA */
-  --color-primary-container-foreground: var(--mat-sys-on-primary-container);
+  --color-primary:            var(--mat-sys-primary);
+  --color-on-primary:         var(--mat-sys-on-primary);
+  --color-primary-container:  var(--mat-sys-primary-container);
 
-  /* Primary glow — for hover shadows, highlights */
-  --color-primary-glow:        rgba(27, 107, 58, 0.25);
+  --color-secondary:          var(--mat-sys-secondary);
+  --color-on-secondary:       var(--mat-sys-on-secondary);
 
-  /* Secondary — Puuul Forest */
-  --color-secondary:            var(--mat-sys-secondary);           /* #1C3529 */
-  --color-secondary-foreground: var(--mat-sys-on-secondary);        /* #FFFFFF */
-  --color-secondary-container:  var(--mat-sys-secondary-container); /* #2D4E3E */
-  --color-secondary-container-foreground: var(--mat-sys-on-secondary-container);
+  --color-background:         var(--mat-sys-background);
+  --color-foreground:         var(--mat-sys-on-background);
 
-  /* Tertiary — sage muted */
-  --color-tertiary:            var(--mat-sys-tertiary);
-  --color-tertiary-foreground: var(--mat-sys-on-tertiary);
-  --color-tertiary-container:  var(--mat-sys-tertiary-container);
+  --color-surface:                   var(--mat-sys-surface);
+  --color-surface-container-low:     var(--mat-sys-surface-container-low);
+  --color-surface-container:         var(--mat-sys-surface-container);
+  --color-surface-variant:           var(--mat-sys-surface-variant);
+  --color-on-surface:                var(--mat-sys-on-surface);
+  --color-on-surface-variant:        var(--mat-sys-on-surface-variant);
 
-  /* Background & page surfaces */
-  --color-background:          var(--mat-sys-background);          /* #FFFFFF */
-  --color-foreground:          var(--mat-sys-on-background);       /* #0F1F17 */
+  --color-outline:            var(--mat-sys-outline);
+  --color-outline-variant:    var(--mat-sys-outline-variant);
 
-  /* Surface scale — mint-tinted whites */
-  --color-surface:                    var(--mat-sys-surface);
-  --color-surface-dim:                var(--mat-sys-surface-dim);
-  --color-surface-variant:            var(--mat-sys-surface-variant);
-  --color-surface-container-lowest:   var(--mat-sys-surface-container-lowest);
-  --color-surface-container-low:      var(--mat-sys-surface-container-low);
-  --color-surface-container:          var(--mat-sys-surface-container);
-  --color-surface-container-high:     var(--mat-sys-surface-container-high);
-  --color-surface-container-highest:  var(--mat-sys-surface-container-highest);
-  --color-surface-foreground:         var(--mat-sys-on-surface);
-  --color-surface-variant-foreground: var(--mat-sys-on-surface-variant);
+  --color-error:              var(--mat-sys-error);
+  --color-on-error:           var(--mat-sys-on-error);
+  --color-error-container:    var(--mat-sys-error-container);
 
-  /* Inverse */
-  --color-inverse-surface:     var(--mat-sys-inverse-surface);     /* #1A2E22 */
-  --color-inverse-foreground:  var(--mat-sys-inverse-on-surface);  /* #F0F9F3 */
+  --color-paid:               var(--app-paid);
+  --color-on-paid:            var(--app-on-paid);
+  --color-pending:            var(--app-pending);
+  --color-on-pending:         var(--app-on-pending);
+  --color-overdue:            var(--app-overdue);
+  --color-on-overdue:         var(--app-on-overdue);
 
-  /* Borders */
-  --color-outline:             var(--mat-sys-outline);             /* #6A8F78 */
-  --color-outline-variant:     var(--mat-sys-outline-variant);     /* #C0D9CA */
+  /* ── Typography ──────────────────────────────────────────── */
 
-  /* Error */
-  --color-error:               var(--mat-sys-error);
-  --color-error-foreground:    var(--mat-sys-on-error);
-  --color-error-container:     var(--mat-sys-error-container);
+  --font-sans:    var(--mat-sys-plain-font-family);
+  --font-display: var(--mat-sys-brand-font-family);
+  --font-mono:    'Fira Code', monospace;
 
-  /* Status — semantic app colours */
-  --color-success:             var(--app-success);
-  --color-success-foreground:  var(--app-on-success);
+  --font-weight-regular: var(--mat-sys-regular-font-weight);
+  --font-weight-medium:  var(--mat-sys-medium-font-weight);
+  --font-weight-bold:    var(--mat-sys-bold-font-weight);
 
-  --color-warning:             var(--app-warning);
-  --color-warning-foreground:  var(--app-on-warning);
+  /* ── Border radius ───────────────────────────────────────── */
 
-  --color-info:                var(--app-info);
-  --color-info-foreground:     var(--app-on-info);
+  --radius-xs:   var(--mat-sys-corner-extra-small);
+  --radius-sm:   var(--mat-sys-corner-small);
+  --radius-md:   var(--mat-sys-corner-medium);
+  --radius-lg:   var(--mat-sys-corner-large);
+  --radius-xl:   var(--mat-sys-corner-extra-large);
+  --radius-full: var(--mat-sys-corner-full);
 
-  /* ═══════════════════════════════════════════════════════════
-     TYPOGRAPHY
-     Instrument Serif for brand display, Geist for UI
-     ═══════════════════════════════════════════════════════════ */
-
-  --font-sans:    var(--mat-sys-plain-font-family);   /* Geist */
-  --font-display: var(--mat-sys-brand-font-family);   /* Instrument Serif */
-  --font-mono:    'Geist Mono', 'Fira Code', monospace;
-
-  --font-weight-regular: var(--mat-sys-regular-font-weight); /* 400 */
-  --font-weight-medium:  var(--mat-sys-medium-font-weight);  /* 500 */
-  --font-weight-bold:    var(--mat-sys-bold-font-weight);    /* 700 */
-
-  /* ═══════════════════════════════════════════════════════════
-     BORDER RADIUS — matches Material corners
-     ═══════════════════════════════════════════════════════════ */
-
-  --radius-none:  var(--mat-sys-corner-none);         /* 0    */
-  --radius-xs:    var(--mat-sys-corner-extra-small);  /* 4px  */
-  --radius-sm:    var(--mat-sys-corner-small);        /* 8px  */
-  --radius-md:    var(--mat-sys-corner-medium);       /* 10px */
-  --radius-lg:    var(--mat-sys-corner-large);        /* 16px */
-  --radius-xl:    var(--mat-sys-corner-extra-large);  /* 24px */
-  --radius-full:  var(--mat-sys-corner-full);         /* 9999px */
-
-  /* ═══════════════════════════════════════════════════════════
-     SHADOWS — green-tinted Material elevation
-     ═══════════════════════════════════════════════════════════ */
+  /* ── Shadows ─────────────────────────────────────────────── */
 
   --shadow-elevation-1:
     0px 1px 2px  var(--mat-sys-umbra-color),
@@ -150,9 +110,5 @@
     0px 4px 8px  var(--mat-sys-umbra-color),
     0px 6px 16px var(--mat-sys-penumbra-color),
     0px 8px 24px var(--mat-sys-ambient-color);
-
-  /* Green glow — for primary buttons */
-  --shadow-primary-glow:
-    0px 12px 32px rgba(27, 107, 58, 0.25);
 
 }

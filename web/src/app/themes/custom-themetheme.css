@@ -2,94 +2,60 @@ html {
   color-scheme: light;
 
   /* ═══════════════════════════════════════════════════════════
-     PRIMARY — Puuul Green
-     Base: #1B6B3A  (forest green — growth, savings, community)
+     PRIMARY — Deep Forest #0D1F16
      ═══════════════════════════════════════════════════════════ */
-  --mat-sys-primary:                    #1B6B3A;
-  --mat-sys-on-primary:                 #FFFFFF;
-  --mat-sys-primary-container:          #C8EDDA;  /* light mint */
-  --mat-sys-on-primary-container:       #003918;
-  --mat-sys-inverse-primary:            #5DBF88;  /* lighter green for dark surfaces */
-  --mat-sys-primary-fixed:              #C8EDDA;
-  --mat-sys-primary-fixed-dim:          #5DBF88;
-  --mat-sys-on-primary-fixed:           #003918;
-  --mat-sys-on-primary-fixed-variant:   #0F4D28;
+  --mat-sys-primary:               #0D1F16;
+  --mat-sys-on-primary:            #FFFFFF;
+  --mat-sys-primary-container:     #C8E6D4;
+  --mat-sys-on-primary-container:  #0D1F16;
+  --mat-sys-inverse-primary:       #059669;  /* emerald — active/accent */
 
   /* ═══════════════════════════════════════════════════════════
-     SECONDARY — Puuul Forest (deep green-black)
-     Base: #1C3529
+     SECONDARY — Slate Gray #334155
      ═══════════════════════════════════════════════════════════ */
-  --mat-sys-secondary:                  #1C3529;
-  --mat-sys-on-secondary:               #FFFFFF;
-  --mat-sys-secondary-container:        #2D4E3E;  /* deep forest container */
-  --mat-sys-on-secondary-container:     #D4EDE0;
-  --mat-sys-secondary-fixed:            #1C3529;
-  --mat-sys-secondary-fixed-dim:        #2D4E3E;
-  --mat-sys-on-secondary-fixed:         #FFFFFF;
-  --mat-sys-on-secondary-fixed-variant: #7BA892;
+  --mat-sys-secondary:             #334155;
+  --mat-sys-on-secondary:          #FFFFFF;
+  --mat-sys-secondary-container:   #475569;
+  --mat-sys-on-secondary-container:#E2E8F0;
 
   /* ═══════════════════════════════════════════════════════════
-     TERTIARY — Sage (muted text / supporting UI)
+     SURFACES
      ═══════════════════════════════════════════════════════════ */
-  --mat-sys-tertiary:                   #7A9E8A;
-  --mat-sys-on-tertiary:                #FFFFFF;
-  --mat-sys-tertiary-container:         #E6F2EC;
-  --mat-sys-on-tertiary-container:      #1E3A2A;
-  --mat-sys-tertiary-fixed:             #E6F2EC;
-  --mat-sys-tertiary-fixed-dim:         #7A9E8A;
-  --mat-sys-on-tertiary-fixed:          #12291C;
-  --mat-sys-on-tertiary-fixed-variant:  #4E7260;
-
-  /* ═══════════════════════════════════════════════════════════
-     NEUTRAL — Cool-warm whites and surfaces
-     ═══════════════════════════════════════════════════════════ */
-  --mat-sys-background:                 #FFFFFF;
-  --mat-sys-on-background:              #0F1F17;
-  --mat-sys-surface:                    #FFFFFF;
-  --mat-sys-surface-dim:                #D8E4DC;
-  --mat-sys-surface-bright:             #FFFFFF;
-  --mat-sys-surface-container-lowest:   #FFFFFF;
-  --mat-sys-surface-container-low:      #F4FAF7;  /* very light mint-white */
-  --mat-sys-surface-container:          #EEF6F1;
-  --mat-sys-surface-container-high:     #E6F0EA;
-  --mat-sys-surface-container-highest:  #DDE9E3;
-  --mat-sys-on-surface:                 #0F1F17;
-  --mat-sys-shadow:                     #0F1F17;
-  --mat-sys-scrim:                      #0F1F17;
-  --mat-sys-surface-tint:               #1B6B3A;
-  --mat-sys-inverse-surface:            #1A2E22;
-  --mat-sys-inverse-on-surface:         #F0F9F3;
-  --mat-sys-outline:                    #6A8F78;
-  --mat-sys-outline-variant:            #C0D9CA;
-  --mat-sys-neutral10:                  #0F1F17;
+  --mat-sys-background:            #F8FAFC;
+  --mat-sys-on-background:         #0F172A;
+  --mat-sys-surface:               #F8FAFC;
+  --mat-sys-surface-container-low: #F1F5F9;
+  --mat-sys-surface-container:     #E2E8F0;
+  --mat-sys-surface-variant:       #E2E8F0;
+  --mat-sys-on-surface:            #0F172A;
+  --mat-sys-on-surface-variant:    #475569;
+  --mat-sys-inverse-surface:       #1E293B;
+  --mat-sys-inverse-on-surface:    #F1F5F9;
+  --mat-sys-surface-tint:          #0D1F16;
+  --mat-sys-outline:               #64748B;
+  --mat-sys-outline-variant:       #CBD5E1;
+  --mat-sys-shadow:                #0F172A;
+  --mat-sys-scrim:                 #0F172A;
 
   /* ═══════════════════════════════════════════════════════════
      ERROR
      ═══════════════════════════════════════════════════════════ */
-  --mat-sys-error:                      #BA1A1A;
-  --mat-sys-on-error:                   #FFFFFF;
-  --mat-sys-error-container:            #FFDAD6;
-  --mat-sys-on-error-container:         #410002;
+  --mat-sys-error:                 #DC2626;
+  --mat-sys-on-error:              #FFFFFF;
+  --mat-sys-error-container:       #FEE2E2;
+  --mat-sys-on-error-container:    #7F1D1D;
 
   /* ═══════════════════════════════════════════════════════════
-     NEUTRAL VARIANT
+     TYPOGRAPHY — Inter
      ═══════════════════════════════════════════════════════════ */
-  --mat-sys-surface-variant:            #E6F0EA;
-  --mat-sys-on-surface-variant:         #4E7260;
-  --mat-sys-neutral-variant20:          #1E3A2A;
+  --mat-sys-brand-font-family:     'Inter', -apple-system, sans-serif;
+  --mat-sys-plain-font-family:     'Inter', -apple-system, sans-serif;
+  --mat-sys-bold-font-weight:      700;
+  --mat-sys-medium-font-weight:    500;
+  --mat-sys-regular-font-weight:   400;
 
   /* ═══════════════════════════════════════════════════════════
-     TYPOGRAPHY
-     Inter for UI clarity, Instrument Serif for brand headings
-     ═══════════════════════════════════════════════════════════ */
-  --mat-sys-brand-font-family:   'Instrument Serif', Georgia, serif;
-  --mat-sys-plain-font-family:   'Geist', -apple-system, sans-serif;
-  --mat-sys-bold-font-weight:    700;
-  --mat-sys-medium-font-weight:  500;
-  --mat-sys-regular-font-weight: 400;
-
-  /* ═══════════════════════════════════════════════════════════
-     SHADOWS / ELEVATION — green-tinted shadows
+     SHADOWS / ELEVATION
      ═══════════════════════════════════════════════════════════ */
   --mat-sys-umbra-color:    color-mix(in srgb, var(--mat-sys-shadow), transparent 80%);
   --mat-sys-penumbra-color: color-mix(in srgb, var(--mat-sys-shadow), transparent 86%);
@@ -97,11 +63,10 @@ html {
 
   /* ═══════════════════════════════════════════════════════════
      SHAPE / CORNERS
-     Slightly tighter than default MD3 — approachable yet structured
      ═══════════════════════════════════════════════════════════ */
   --mat-sys-corner-extra-large: 24px;
-  --mat-sys-corner-large:       9px;
-  --mat-sys-corner-medium:      8px;
+  --mat-sys-corner-large:        9px;
+  --mat-sys-corner-medium:       8px;
   --mat-sys-corner-small:        6px;
   --mat-sys-corner-extra-small:  4px;
   --mat-sys-corner-full:      9999px;
@@ -116,14 +81,14 @@ html {
   --mat-sys-pressed-state-layer-opacity: 0.12;
 
   /* ═══════════════════════════════════════════════════════════
-     APP SEMANTIC — non-MD3, used for status colours
+     APP SEMANTIC — payment status
      ═══════════════════════════════════════════════════════════ */
-  --app-warning:    #C9890A;   /* amber — chama contribution alerts */
-  --app-on-warning: #3D2600;
+  --app-paid:       #059669;
+  --app-on-paid:    #FFFFFF;
 
-  --app-success:    #1B6B3A;
-  --app-on-success: #FFFFFF;
+  --app-pending:    #F59E0B;
+  --app-on-pending: #3D2600;
 
-  --app-info:       #1565C0;
-  --app-on-info:    #FFFFFF;
+  --app-overdue:    #DC2626;
+  --app-on-overdue: #FFFFFF;
 }

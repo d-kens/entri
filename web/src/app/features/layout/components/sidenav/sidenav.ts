@@ -50,10 +50,9 @@ export class Sidenav {
   private getPlatformUserMenu(): MenuItem[] {
     return [
       { icon: 'dashboard', label: 'Dashboard', route: '/dashboard' },
-      { icon: 'groups', label: 'My Chamas', route: '/chamas' },
-      { icon: 'payments', label: 'Contributions', route: '/contributions' },
-      { icon: 'account_balance_wallet', label: 'Payouts', route: '/payouts' },
-      { icon: 'receipt_long', label: 'Transactions', route: '/transactions' },
+      { icon: 'apartment', label: 'Properties', route: '/properties' },
+      { icon: 'people', label: 'Tenants', route: '/tenants' },
+      { icon: 'payments', label: 'Payments', route: '/payments' },
       { icon: 'account_circle', label: 'Profile', route: '/profile' },
     ];
   }
@@ -61,13 +60,10 @@ export class Sidenav {
   private getPlatformAdminMenu(): MenuItem[] {
     return [
       { icon: 'dashboard', label: 'Dashboard', route: '/dashboard' },
-      { icon: 'groups', label: 'Chamas', route: '/chamas' },
-      { icon: 'people', label: 'Members', route: '/members' },
-      { icon: 'payments', label: 'Contributions', route: '/contributions' },
-      { icon: 'account_balance_wallet', label: 'Payouts', route: '/payouts' },
-      { icon: 'receipt_long', label: 'Transactions', route: '/transactions' },
-      { icon: 'analytics', label: 'Reports', route: '/reports' },
-      { icon: 'tune', label: 'Settings', route: '/settings' },
+      { icon: 'apartment', label: 'Properties', route: '/properties' },
+      { icon: 'people', label: 'Landlords', route: '/landlords' },
+      { icon: 'payments', label: 'Payments', route: '/payments' },
+      { icon: 'account_circle', label: 'Profile', route: '/profile' },
     ];
   }
 

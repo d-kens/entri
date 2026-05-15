@@ -31,7 +31,7 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--mat-sys-primary), var(--mat-sys-tertiary, var(--mat-sys-primary)));
+  background: var(--mat-sys-primary);
   color: var(--mat-sys-on-primary);
   display: flex;
   align-items: center;
