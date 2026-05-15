@@ -2,12 +2,12 @@ services:
   db:
     image: 'mysql:8.0.32'
     environment:
-      MYSQL_DATABASE: 'puuuul'
-      MYSQL_USER: 'puuuul-db-user'
+      MYSQL_DATABASE: 'oro'
+      MYSQL_USER: 'oro-db-user'
       MYSQL_PASSWORD: 'secret'
       MYSQL_ROOT_PASSWORD: 'secret'
     volumes:
-      - puuuul-data:/var/lib/mysql
+      - oro-data:/var/lib/mysql
     ports:
       - '3306:3306'
     healthcheck:
@@ -18,4 +18,4 @@ services:
       start_period: 30s
 
 volumes:
-  puuuul-data:
+  oro-data:

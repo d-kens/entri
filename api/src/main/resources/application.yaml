@@ -1,6 +1,6 @@
 spring:
   application:
-    name: puuul
+    name: oro
 
   liquibase:
     change-log: classpath:db/changelog/changelog.xml
