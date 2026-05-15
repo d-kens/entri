@@ -1,29 +1,33 @@
 <div class="flex min-h-screen">
 
   <!-- Left marketing panel -->
-  <div class="hidden lg:flex lg:flex-[2] bg-secondary text-secondary-foreground items-center justify-center p-16 relative overflow-hidden">
-
-    <!-- Decorative rings -->
-    <div class="absolute top-1/2 right-0 translate-x-1/3 -translate-y-1/2 w-[520px] h-[520px] rounded-full border border-secondary-foreground/[0.06] pointer-events-none"></div>
-    <div class="absolute top-1/2 right-0 translate-x-1/3 -translate-y-1/2 w-[340px] h-[340px] rounded-full border border-secondary-foreground/[0.06] pointer-events-none"></div>
-    <div class="absolute top-1/2 right-0 translate-x-1/3 -translate-y-1/2 w-[180px] h-[180px] rounded-full border border-primary/20 pointer-events-none"></div>
+  <div class="hidden lg:flex lg:flex-[2] bg-[#0D1F16] items-center justify-center p-16">
 
     <!-- Content -->
-    <div class="relative z-10 flex flex-col items-center gap-8">
-      <div class="flex items-center gap-1.5">
-        <span class="font-display text-[10rem] tracking-tight text-secondary-foreground leading-none select-none">oro</span>
-        <span class="w-2.5 h-2.5 rounded-full bg-primary mb-2 flex-shrink-0"></span>
+    <div class="flex flex-col gap-4 max-w-sm">
+      <div class="flex items-center gap-2">
+        <span class="font-display text-6xl font-bold tracking-tight text-white leading-none select-none">Oro</span>
+        <span class="w-2 h-2 rounded-full bg-primary flex-shrink-0"></span>
       </div>
-      <h1 class="font-display text-5xl tracking-tight text-primary">
-        Collect. Track. <span class="italic">Trust.</span>
-      </h1>
+      <p class="text-white/50 text-xl leading-snug">
+        Every Unit. Every Payment. One Place.
+      </p>
     </div>
 
   </div>
 
   <!-- Right panel -->
-  <div class="flex-1 flex flex-col justify-center bg-surface-container-low p-4 md:p-8 !w-full !border-4 !border-b-blue-950">
-    <router-outlet />
+  <div class="flex-1 flex flex-col bg-surface-container-low p-4 md:p-8 !w-full">
+
+    <!-- Mobile branding — hidden on large screens -->
+    <div class="flex items-center gap-2 lg:hidden">
+      <span class="font-display text-2xl font-bold tracking-tight text-on-surface leading-none select-none">Oro</span>
+      <span class="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0"></span>
+    </div>
+
+    <div class="flex-1 flex flex-col justify-center">
+      <router-outlet />
+    </div>
   </div>
 
 </div>

@@ -1,7 +1,6 @@
-import {Routes} from '@angular/router';
-import {Layout} from '@features/layout/layout';
-import {Welcome} from '@features/layout/components/welcome/welcome';
-import {authGuard} from '@core/guards/auth-guard';
+import { Routes } from '@angular/router';
+import { Layout } from '@features/layout/layout';
+import { authGuard } from '@core/guards/auth-guard';
 
 export const FEATURE_ROUTES: Routes = [
   {
@@ -10,8 +9,13 @@ export const FEATURE_ROUTES: Routes = [
     children: [
       {
         path: '',
+        redirectTo: 'dashboard',
+        pathMatch: 'full'
+      },
+      {
+        path: 'dashboard',
         canActivate: [authGuard],
-        component: Welcome
+        loadComponent: () => import('./dashboard/dashboard').then(m => m.Dashboard)
       },
       {
         path: 'support',
