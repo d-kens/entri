@@ -20,6 +20,6 @@ public class PropertyController {
     public Property createProperty(
             @Valid @RequestBody CreatePropertyRequest request
     ) {
-        return createProperty(request);
+        return propertyService.createProperty(request);
     }
 }
