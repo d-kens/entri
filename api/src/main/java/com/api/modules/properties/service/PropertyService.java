@@ -1,5 +1,6 @@
 package com.api.modules.properties.service;
 
+import com.api.common.storage.FirebaseStorageService;
 import com.api.common.utils.SecurityUtils;
 import com.api.modules.properties.dto.CreatePropertyRequest;
 import com.api.modules.properties.entity.Property;
@@ -9,16 +10,26 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.api.common.exception.FileUploadException;
+
+import java.io.IOException;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class PropertyService {
     private final UserService userService;
     private final PropertyRepository propertyRepository;
+    private final FirebaseStorageService firebaseStorageService;
 
     public Property createProperty(CreatePropertyRequest request) {
-        var userExternalKey = SecurityUtils.getCurrentUserExternalKey();
-        var user = userService.findEntityByExternalKey(userExternalKey);
+        var user = userService.findEntityByExternalKey(SecurityUtils.getCurrentUserExternalKey());
+        String coverImageUrl;
+        try {
+            coverImageUrl = firebaseStorageService.upload(request.coverImage());
+        } catch (IOException e) {
+            throw new FileUploadException("Failed to upload cover image", e);
+        }
         Property property = Property.builder()
                 .propertyName(request.propertyName())
                 .description(request.description())
@@ -29,7 +40,7 @@ public class PropertyService {
                 .area(request.area())
                 .latitude(request.latitude())
                 .longitude(request.longitude())
-                .coverImageUrl("https://api.coolapp.net/property-image")
+                .coverImageUrl(coverImageUrl)
                 .build();
         propertyRepository.save(property);
         return property;

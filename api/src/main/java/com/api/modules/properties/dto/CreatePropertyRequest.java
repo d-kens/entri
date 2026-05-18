@@ -4,6 +4,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 
@@ -27,7 +28,7 @@ public record CreatePropertyRequest(
         BigDecimal latitude,
         @NotNull(message = "Longitude is required")
         BigDecimal longitude,
-//        @NotNull(message = "Cover image is required")
-//        MultipartFile coverImage,
+        @NotNull(message = "Cover image is required")
+        MultipartFile coverImage,
         Boolean isListed
 ) {}
