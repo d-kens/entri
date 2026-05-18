@@ -25,13 +25,14 @@ public class PropertyService {
                 .rentDueDate(request.rentDueDate())
                 .propertyOwner(user)
                 .country(request.country())
+                .city(request.city())
                 .area(request.area())
                 .latitude(request.latitude())
                 .longitude(request.longitude())
                 .coverImageUrl("https://api.coolapp.net/property-image")
                 .build();
         propertyRepository.save(property);
-        return new Property();
+        return property;
     }
 }
 
