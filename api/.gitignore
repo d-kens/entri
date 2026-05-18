@@ -39,3 +39,4 @@ out/
 /misc
 
 .env
+*firebase-adminsdk*.json

@@ -5,8 +5,9 @@ import com.api.modules.properties.entity.Property;
 import com.api.modules.properties.service.PropertyService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,9 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class PropertyController {
     private final PropertyService propertyService;
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Property createProperty(
-            @Valid @RequestBody CreatePropertyRequest request
+            @Valid @ModelAttribute CreatePropertyRequest request
     ) {
         return propertyService.createProperty(request);
     }

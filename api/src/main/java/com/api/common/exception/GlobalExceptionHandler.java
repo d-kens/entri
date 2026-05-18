@@ -55,4 +55,11 @@ public class GlobalExceptionHandler {
                 new ErrorDto(exception.getMessage())
         );
     }
+
+    @ExceptionHandler(FileUploadException.class)
+    public ResponseEntity<ErrorDto> handleFileUploadException(FileUploadException exception) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                new ErrorDto(exception.getMessage())
+        );
+    }
 }

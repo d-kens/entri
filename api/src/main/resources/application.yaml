@@ -20,6 +20,11 @@ app:
   password-reset:
     expiry-minutes: 15
 
+firebase:
+  service-account-path: ${FIREBASE_SERVICE_ACCOUNT_PATH}
+  storage:
+    bucket: ${FIREBASE_STORAGE_BUCKET}
+
 novu:
   api:
     key: ${NOVU_SECRET:secret}

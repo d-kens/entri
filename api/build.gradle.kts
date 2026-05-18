@@ -56,6 +56,7 @@ dependencies {
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.6")
 
     implementation("co.novu:novu-java:3.15.0")
+    implementation("com.google.firebase:firebase-admin:9.4.2")
 
     testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
     testImplementation("org.springframework.boot:spring-boot-starter-security-test")
