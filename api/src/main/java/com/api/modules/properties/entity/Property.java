@@ -45,9 +45,6 @@ public class Property extends AbstractAuditableEntity {
     @Column(name = "rent_due_date")
     private Integer rentDueDate;
 
-    @Column(name = "grace_period_days")
-    private Integer gracePeriodDate;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id", nullable = false)
     private User propertyOwner;
@@ -57,8 +54,6 @@ public class Property extends AbstractAuditableEntity {
     private String city;
 
     private String area;
-
-    private String address;
 
     private BigDecimal latitude;
 

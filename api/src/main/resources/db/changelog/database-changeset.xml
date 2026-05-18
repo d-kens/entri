@@ -78,19 +78,33 @@
             <column name="property_name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="description" type="TEXT"/>
-            <column name="rent_due_date" type="TINYINT UNSIGNED"/>
-            <column name="grace_period_days" type="TINYINT UNSIGNED"/>
+            <column name="description" type="TEXT">
+                <constraints nullable="false" />
+            </column>
+            <column name="rent_due_date" type="TINYINT UNSIGNED">
+                <constraints nullable="false" />
+            </column>
             <column name="owner_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="country" type="VARCHAR(100)"/>
-            <column name="city" type="VARCHAR(100)"/>
-            <column name="area" type="VARCHAR(150)"/>
-            <column name="address" type="TEXT"/>
-            <column name="latitude" type="DECIMAL(10,7)"/>
-            <column name="longitude" type="DECIMAL(10,7)"/>
-            <column name="cover_image_url" type="TEXT"/>
+            <column name="country" type="VARCHAR(100)">
+                <constraints nullable="false" />
+            </column>
+            <column name="city" type="VARCHAR(100)">
+                <constraints nullable="false" />
+            </column>
+            <column name="area" type="VARCHAR(150)">
+                <constraints nullable="false" />
+            </column>
+            <column name="latitude" type="DECIMAL(10,7)">
+                <constraints nullable="false" />
+            </column>
+            <column name="longitude" type="DECIMAL(10,7)">
+                <constraints nullable="false" />
+            </column>
+            <column name="cover_image_url" type="TEXT">
+                <constraints nullable="false" />
+            </column>
             <column name="is_listed" type="BOOLEAN" defaultValueBoolean="false">
                 <constraints nullable="false"/>
             </column>
