@@ -31,11 +31,6 @@ jwt:
   access-token-expiration: 120
   refresh-token-expiration: 300
 
-firebase:
-  service-account-path: ${FIREBASE_SERVICE_ACCOUNT_PATH:oro-web-app-firebase-adminsdk-fbsvc-8f2ea245fd.json}
-  storage:
-    bucket: ${FIREBASE_STORAGE_BUCKET:oro-web-app.firebasestorage.app}
-
 cookie:
   secure: false
 server:

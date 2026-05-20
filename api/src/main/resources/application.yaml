@@ -27,7 +27,7 @@ firebase:
 
 novu:
   api:
-    key: ${NOVU_SECRET:secret}
+    key: ${NOVU_SECRET}
   subscriber:
     locale: ${NOVU_SUBSCRIBER_LOCALE:en-KE}
     timezone: ${NOVU_SUBSCRIBER_TIMEZONE:Africa/Nairobi}
