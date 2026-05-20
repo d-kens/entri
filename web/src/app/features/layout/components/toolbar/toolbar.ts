@@ -3,10 +3,21 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
+import { filter, map, startWith } from 'rxjs/operators';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { AuthService } from '@core/services/auth-service';
 import { UsersService } from '@features/users/services/users-service';
 import { SnackbarService } from '@core/services/snackbar-service';
+
+const ROUTE_TITLES: Record<string, string> = {
+  '/dashboard':   'Dashboard',
+  '/properties':  'Properties',
+  '/tenants':     'Tenants',
+  '/landlords':   'Landlords',
+  '/payments':    'Payments',
+  '/profile':     'Profile',
+};
 
 @Component({
   selector: 'app-toolbar',
@@ -30,6 +41,18 @@ export class Toolbar implements OnInit {
   toggleSidenav = output<void>();
 
   user = this.usersService.currentUser;
+
+  pageTitle = toSignal(
+    this.router.events.pipe(
+      filter(e => e instanceof NavigationEnd),
+      map((e: NavigationEnd) => {
+        const base = '/' + e.urlAfterRedirects.split('/')[1];
+        return ROUTE_TITLES[base] ?? '';
+      }),
+      startWith(ROUTE_TITLES['/' + this.router.url.split('/')[1]] ?? ''),
+    ),
+    { initialValue: '' },
+  );
 
   initials = computed(() => {
     const u = this.user();

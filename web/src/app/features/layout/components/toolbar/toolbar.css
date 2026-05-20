@@ -1,13 +1,9 @@
-/* ── Greeting ──────────────────────────────────────────── */
-.greeting-text {
-  font-size: 0.8125rem;
-  color: var(--mat-sys-on-surface-variant);
-  white-space: nowrap;
-}
-
-.greeting-name {
+/* ── Page title ────────────────────────────────────────── */
+.page-title {
+  font-size: 1rem;
   font-weight: 600;
   color: var(--mat-sys-on-surface);
+  white-space: nowrap;
 }
 
 /* ── User badge pill ───────────────────────────────────── */
@@ -105,10 +101,6 @@
 
 /* ── Responsive ────────────────────────────────────────── */
 @media (max-width: 480px) {
-  .greeting-text {
-    display: none;
-  }
-
   .user-badge-name {
     display: none;
   }
