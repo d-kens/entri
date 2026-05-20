@@ -2,6 +2,10 @@ spring:
   application:
     name: oro
 
+server:
+  servlet:
+    context-path: /api
+
   liquibase:
     change-log: classpath:db/changelog/changelog.xml
 
