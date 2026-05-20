@@ -43,7 +43,7 @@ Note down the IP — you'll use it in DNS and for SSH.
 
 ### 3. Point the Domain to the EC2 IP
 
-In your DNS provider (Truehost for `oro.co.ke`), update the A record:
+In your DNS provider, update the A record:
 
 | Field | Value |
 |---|---|
@@ -55,7 +55,7 @@ In your DNS provider (Truehost for `oro.co.ke`), update the A record:
 DNS propagation can take anywhere from a few minutes to a few hours. Verify with:
 
 ```bash
-dig oro.co.ke +short
+dig YOUR_DOMAIN +short
 ```
 
 When it returns your Elastic IP, propagation is complete.
@@ -67,7 +67,7 @@ When it returns your Elastic IP, propagation is complete.
 ### 4. SSH into the Instance
 
 The key file permissions must be restricted — SSH will refuse to use a key that is readable by others:
-
+Lik
 ```bash
 chmod 400 ~/Downloads/oro-key.pem
 ssh -i ~/Downloads/oro-key.pem ubuntu@<your-elastic-ip>
@@ -112,14 +112,14 @@ Without this, every `docker` command would need `sudo`, and `docker compose` wou
 At this point nothing is running on port 80, so certbot can spin up its own temporary web server to complete the domain ownership challenge:
 
 ```bash
-sudo certbot certonly --standalone -d oro.co.ke
+sudo certbot certonly --standalone -d YOUR_DOMAIN
 ```
 
-Let's Encrypt verifies you own the domain by making an HTTP request to `http://oro.co.ke/.well-known/acme-challenge/<token>`. Once verified, it issues a 90-day certificate and saves it to:
+Let's Encrypt verifies you own the domain by making an HTTP request to `http://YOUR_DOMAIN/.well-known/acme-challenge/<token>`. Once verified, it issues a 90-day certificate and saves it to:
 
 ```
-/etc/letsencrypt/live/oro.co.ke/fullchain.pem
-/etc/letsencrypt/live/oro.co.ke/privkey.pem
+/etc/letsencrypt/live/YOUR_DOMAIN/fullchain.pem
+/etc/letsencrypt/live/YOUR_DOMAIN/privkey.pem
 ```
 
 Certbot also sets up automatic renewal via a systemd timer — you don't need to manually renew.
@@ -182,7 +182,7 @@ The `docker-compose.yml` mounts this file into the API container at `/secrets/fi
 The Docker images are private on GitHub Container Registry. Docker needs to authenticate before it can pull them:
 
 ```bash
-echo YOUR_GHCR_TOKEN | docker login ghcr.io -u d-kens --password-stdin
+echo YOUR_GHCR_TOKEN | docker login ghcr.io -u YOUR_GITHUB_USERNAME --password-stdin
 ```
 
 This stores the credentials in `~/.docker/config.json`, which Docker uses automatically for all subsequent pulls.
