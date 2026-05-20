@@ -10,6 +10,7 @@ services:
       - oro-data:/var/lib/mysql
     ports:
       - '127.0.0.1:3306:3306'
+    mem_limit: 512m
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${MYSQL_ROOT_PASSWORD}" ]
       interval: 10s
@@ -31,6 +32,7 @@ services:
       NOVU_SECRET: ${NOVU_SECRET}
     volumes:
       - /etc/oro/firebase.json:/secrets/firebase.json:ro
+    mem_limit: 768m
     expose:
       - '8080'
     depends_on:
@@ -47,7 +49,7 @@ services:
     restart: unless-stopped
 
   watchtower:
-    image: containrrr/watchtower:1.4.0
+    image: containrrr/watchtower
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
