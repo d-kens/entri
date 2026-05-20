@@ -26,9 +26,11 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       APP_BASE_URL: ${APP_BASE_URL}
       APP_CORS_ALLOWED_ORIGIN: ${APP_CORS_ALLOWED_ORIGIN}
-      FIREBASE_SERVICE_ACCOUNT_PATH: ${FIREBASE_SERVICE_ACCOUNT_PATH}
+      FIREBASE_SERVICE_ACCOUNT_PATH: /secrets/firebase.json
       FIREBASE_STORAGE_BUCKET: ${FIREBASE_STORAGE_BUCKET}
       NOVU_SECRET: ${NOVU_SECRET}
+    volumes:
+      - /etc/oro/firebase.json:/secrets/firebase.json:ro
     expose:
       - '8080'
     depends_on:
@@ -45,7 +47,7 @@ services:
     restart: unless-stopped
 
   watchtower:
-    image: containrrr/watchtower
+    image: containrrr/watchtower:1.4.0
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
