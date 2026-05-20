@@ -58,6 +58,8 @@ dependencies {
     implementation("co.novu:novu-java:3.15.0")
     implementation("com.google.firebase:firebase-admin:9.4.2")
 
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+
     testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
     testImplementation("org.springframework.boot:spring-boot-starter-security-test")
     testImplementation("org.springframework.boot:spring-boot-starter-validation-test")
