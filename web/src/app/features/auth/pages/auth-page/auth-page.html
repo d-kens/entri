@@ -1,17 +1,69 @@
 <div class="flex min-h-screen">
 
   <!-- Left marketing panel -->
-  <div class="hidden lg:flex lg:flex-[2] bg-[#0D1F16] items-center justify-center p-16">
+  <div class="hidden lg:flex lg:flex-[2] bg-[#0D1F16] items-center justify-center p-16 relative overflow-hidden">
+
+    <!-- Background pattern -->
+    <svg class="absolute inset-0 w-full h-full opacity-[0.04]" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" stroke-width="1"/>
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#grid)"/>
+    </svg>
+
+    <!-- Radial glow -->
+    <div class="absolute inset-0 bg-radial-[ellipse_at_30%_50%] from-primary/10 to-transparent"></div>
 
     <!-- Content -->
-    <div class="flex flex-col gap-4 max-w-sm">
-      <div class="flex items-center gap-2">
-        <span class="font-display text-6xl font-bold tracking-tight text-white leading-none select-none">Oro</span>
-        <span class="w-2 h-2 rounded-full bg-primary flex-shrink-0"></span>
+    <div class="relative flex flex-col gap-10 max-w-sm">
+
+      <!-- Logo -->
+      <div class="flex flex-col gap-3">
+        <div class="flex items-center gap-2">
+          <span class="font-display text-6xl font-bold tracking-tight text-white leading-none select-none">Oro</span>
+          <span class="w-2 h-2 rounded-full bg-primary flex-shrink-0"></span>
+        </div>
+        <p class="text-white/50 text-xl leading-snug">
+          Every Unit. Every Payment. One Place.
+        </p>
       </div>
-      <p class="text-white/50 text-xl leading-snug">
-        Every Unit. Every Payment. One Place.
-      </p>
+
+      <!-- Feature highlights -->
+      <div class="flex flex-col gap-5">
+
+        <div class="flex items-start gap-4">
+          <div class="w-9 h-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center flex-shrink-0">
+            <mat-icon class="feature-icon !text-[20px] !w-5 !h-5 !leading-none">home_work</mat-icon>
+          </div>
+          <div>
+            <p class="text-white text-sm font-medium">Manage your properties</p>
+            <p class="text-white/40 text-sm mt-0.5">Track all your units, tenants, and occupancy in one place.</p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-4">
+          <div class="w-9 h-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center flex-shrink-0">
+            <mat-icon class="feature-icon !text-[20px] !w-5 !h-5 !leading-none">payments</mat-icon>
+          </div>
+          <div>
+            <p class="text-white text-sm font-medium">Rent collection, simplified</p>
+            <p class="text-white/40 text-sm mt-0.5">Record payments, send reminders, and stay on top of arrears.</p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-4">
+          <div class="w-9 h-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center flex-shrink-0">
+            <mat-icon class="feature-icon !text-[20px] !w-5 !h-5 !leading-none">notifications_active</mat-icon>
+          </div>
+          <div>
+            <p class="text-white text-sm font-medium">Instant notifications</p>
+            <p class="text-white/40 text-sm mt-0.5">Tenants and landlords get notified automatically on key events.</p>
+          </div>
+        </div>
+
+      </div>
     </div>
 
   </div>
