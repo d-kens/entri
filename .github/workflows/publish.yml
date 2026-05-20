@@ -80,7 +80,7 @@ jobs:
         with:
           working-directory: ./web
           start: npm start
-          wait-on: 'http://localhost:4200, http://localhost:9096'
+          wait-on: 'http://localhost:4200, http://localhost:9096/actuator/health'
           wait-on-timeout: 180
           command: npm run cy:run
         env:
