@@ -57,6 +57,10 @@ jobs:
       - name: Write Firebase service account
         run: echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}' > /tmp/firebase.json
 
+      - name: Build API
+        working-directory: ./api
+        run: ./gradlew bootJar --no-daemon
+
       - name: Start API in background
         working-directory: ./api
         env:
@@ -69,7 +73,7 @@ jobs:
           FIREBASE_SERVICE_ACCOUNT_PATH: /tmp/firebase.json
           FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
           NOVU_SECRET: dummy
-        run: ./gradlew bootRun --no-daemon &
+        run: java -jar build/libs/api-1.0.0.jar &
 
       - name: Run Cypress tests
         uses: cypress-io/github-action@v6
