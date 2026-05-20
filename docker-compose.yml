@@ -55,8 +55,9 @@ services:
     environment:
       REPO_USER: ${GHCR_USERNAME}
       REPO_PASS: ${GHCR_TOKEN}
-      WATCHTOWER_POLL_INTERVAL: 300       # check for new images every 5 minutes
-      WATCHTOWER_CLEANUP: 'true'          # remove old images after update
+      WATCHTOWER_POLL_INTERVAL: 300
+      WATCHTOWER_CLEANUP: 'true'
+      DOCKER_API_VERSION: '1.41'
     restart: unless-stopped
 
   nginx:
