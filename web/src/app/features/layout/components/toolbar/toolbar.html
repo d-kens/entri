@@ -1,11 +1,13 @@
 <mat-toolbar class="toolbar !bg-surface border-b border-outline-variant !h-16 flex items-center justify-between px-4">
 
-  <!-- Left: hamburger on mobile -->
+  <!-- Left: hamburger (mobile) or page title (desktop) -->
   <div class="flex items-center gap-2">
     @if (isMobile()) {
       <button mat-icon-button (click)="onToggleSidenav()" class="hamburger-btn">
         <mat-icon>menu</mat-icon>
       </button>
+    } @else {
+      <span class="page-title">{{ pageTitle() }}</span>
     }
   </div>
 
@@ -13,15 +15,10 @@
   <div class="flex items-center gap-2">
 
     @if (user(); as u) {
-      <!-- Greeting (hidden on very small screens) -->
-      <span class="greeting-text">
-        Hi, <span class="greeting-name">{{ u.firstName }}</span>
-      </span>
-
-      <!-- Pill badge: avatar + name -->
+      <!-- Pill badge: avatar + full name -->
       <div class="user-badge">
         <div class="user-avatar">{{ initials() }}</div>
-        <span class="user-badge-name">{{ u.firstName }}</span>
+        <span class="user-badge-name">{{ u.firstName }} {{ u.lastName }}</span>
       </div>
 
       <!-- Logout button -->

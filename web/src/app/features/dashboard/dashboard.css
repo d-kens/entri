@@ -1,7 +1,7 @@
 /* ── Stat cards ─────────────────────────────────────────── */
 
 .stat-card {
-  background: #ffffff;
+  background: var(--mat-sys-surface);
   border: 1px solid var(--mat-sys-outline-variant);
   border-radius: var(--mat-sys-corner-large);
   padding: 1.25rem 1.25rem 1rem;
@@ -63,7 +63,7 @@
 /* ── Table card ─────────────────────────────────────────── */
 
 .table-card {
-  background: #ffffff;
+  background: var(--mat-sys-surface);
   border: 1px solid var(--mat-sys-outline-variant);
   border-radius: var(--mat-sys-corner-large);
   overflow: hidden;
@@ -107,7 +107,7 @@
 }
 
 .table-scroll .mat-mdc-row:hover {
-  background: var(--mat-sys-surface-container-low);
+  background: var(--mat-sys-surface-container);
 }
 
 .table-scroll .mat-mdc-cell {
@@ -159,17 +159,17 @@
   font-size: 0.8125rem;
   font-weight: 500;
   color: var(--mat-sys-primary);
-  transition: gap 0.15s ease;
-}
-
-.view-all-link:hover {
-  gap: 0.5rem;
 }
 
 .view-all-link mat-icon {
   font-size: 16px;
   width: 16px;
   height: 16px;
+  transition: transform 0.15s ease;
+}
+
+.view-all-link:hover mat-icon {
+  transform: translateX(3px);
 }
 
 /* ── Status badges ──────────────────────────────────────── */
@@ -185,16 +185,16 @@
 }
 
 .status-badge--paid {
-  background: #dcfce7;
-  color: #166534;
+  background: color-mix(in srgb, var(--app-paid) 15%, transparent);
+  color: color-mix(in srgb, var(--app-paid) 80%, #000);
 }
 
 .status-badge--pending {
-  background: #fef3c7;
-  color: #92400e;
+  background: color-mix(in srgb, var(--app-pending) 15%, transparent);
+  color: color-mix(in srgb, var(--app-pending) 70%, #000);
 }
 
 .status-badge--overdue {
-  background: #fee2e2;
-  color: #991b1b;
+  background: var(--mat-sys-error-container);
+  color: var(--mat-sys-on-error-container);
 }
