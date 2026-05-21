@@ -2,9 +2,11 @@ package com.api.common.exception;
 
 import com.api.common.dto.ErrorDto;
 import com.api.modules.users.exception.EmailAlreadyExist;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -60,6 +62,16 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorDto> handleFileUploadException(FileUploadException exception) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                 new ErrorDto(exception.getMessage())
+        );
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ErrorDto> handleMethodNotAllowed(
+            HttpRequestMethodNotSupportedException exception,
+            HttpServletRequest request
+    ) {
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(
+                new ErrorDto("Request method '" + exception.getMethod() + "' is not supported on endpoint " + request.getRequestURI())
         );
     }
 }

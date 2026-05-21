@@ -23,9 +23,9 @@ app:
     expiry-minutes: 15
 
 firebase:
-  service-account-path: ${FIREBASE_SERVICE_ACCOUNT_PATH}
+  service-account-path: ${FIREBASE_SERVICE_ACCOUNT_PATH:oro-web-app-firebase-adminsdk-fbsvc-8f2ea245fd.json}
   storage:
-    bucket: ${FIREBASE_STORAGE_BUCKET}
+    bucket: ${FIREBASE_STORAGE_BUCKET:oro-web-app.firebasestorage.app}
 
 novu:
   api:

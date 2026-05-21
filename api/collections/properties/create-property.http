@@ -6,7 +6,6 @@ Authorization:  Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjYWYzYTkxMC1lMzlhLTQwZTUt
   "propertyName": "Sunset Apartments",
   "description": "Modern two bedroom apartments with ample parking and security.",
   "rentDueDate": 5,
-  "gracePeriodDate": 10,
   "country": "Kenya",
   "city": "Nairobi",
   "area": "Kilimani",
