@@ -17,7 +17,6 @@ public record CreatePropertyRequest(
         @Min(value = 1, message = "Rent due date must be between 1 and 31")
         @Max(value = 31, message = "Rent due date must be between 1 and 31")
         Integer rentDueDate,
-        Integer gracePeriodDate,
         @NotBlank(message ="Country is required")
         String country,
         @NotBlank(message ="City is required")

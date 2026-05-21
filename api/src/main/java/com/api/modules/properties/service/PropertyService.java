@@ -1,10 +1,11 @@
 package com.api.modules.properties.service;
 
 import com.api.common.storage.FirebaseStorageService;
-import com.api.common.utils.SecurityUtils;
 import com.api.modules.properties.dto.CreatePropertyRequest;
+import com.api.modules.properties.dto.PropertyResponse;
 import com.api.modules.properties.entity.Property;
 import com.api.modules.properties.repository.PropertyRepository;
+import com.api.modules.properties.service.mapper.PropertyMapper;
 import com.api.modules.users.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,11 +20,12 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class PropertyService {
     private final UserService userService;
+    private final PropertyMapper propertyMapper;
     private final PropertyRepository propertyRepository;
     private final FirebaseStorageService firebaseStorageService;
 
-    public Property createProperty(CreatePropertyRequest request) {
-        var user = userService.findEntityByExternalKey(SecurityUtils.getCurrentUserExternalKey());
+    public PropertyResponse createProperty(final CreatePropertyRequest request, final String currentUserExternalKey) {
+        var user = userService.findEntityByExternalKey(currentUserExternalKey);
         String coverImageUrl;
         try {
             coverImageUrl = firebaseStorageService.upload(request.coverImage());
@@ -43,7 +45,7 @@ public class PropertyService {
                 .coverImageUrl(coverImageUrl)
                 .build();
         propertyRepository.save(property);
-        return property;
+        return propertyMapper.toPropertyresponse(property);
     }
 }
 
