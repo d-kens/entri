@@ -213,6 +213,43 @@ docker compose ps
 
 ---
 
+## Phase 4 — www Support
+
+### 12. Expand the SSL Certificate to Include www
+
+The initial certificate only covers the apex domain. To support `www`, the cert must be expanded using the same standalone method used in step 6.
+
+Certbot's standalone authenticator spins up its own temporary HTTP server on port 80 to complete the Let's Encrypt challenge. This means port 80 must be free — nginx must be stopped first, otherwise certbot cannot bind to the port and the challenge will fail.
+
+```bash
+docker stop oro-nginx-1
+sudo certbot certonly --standalone -d YOUR_DOMAIN -d www.YOUR_DOMAIN
+docker start oro-nginx-1
+```
+
+When prompted, choose **Expand** to add the new domain to the existing certificate.
+
+Verify both domains are covered:
+
+```bash
+sudo certbot certificates
+```
+
+---
+
+### 13. Redirect www → non-www in Nginx
+
+Add a server block to `nginx/nginx.conf` that redirects all `www` traffic to the apex domain. This keeps a single canonical URL, avoids duplicate SEO indexing, and simplifies cookie and auth scope.
+
+Pull the updated config on EC2 and restart the nginx container:
+
+```bash
+git pull
+docker restart oro-nginx-1
+```
+
+---
+
 ## Troubleshooting
 
 ### Docker apt source malformed entry
