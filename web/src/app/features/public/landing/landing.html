@@ -1,0 +1,366 @@
+<!-- ── Hero ──────────────────────────────────────────────────────── -->
+<section class="hero relative overflow-hidden">
+  <div class="dot-pattern"></div>
+
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-24 lg:pt-32 lg:pb-36">
+    <div class="lg:grid lg:grid-cols-[54%_46%] lg:gap-16 lg:items-center">
+
+      <!-- Copy -->
+      <div class="text-center lg:text-left">
+
+        <h1 class="font-display text-5xl sm:text-6xl lg:text-7xl font-black text-[#1A1A1A] leading-[1.05]">
+          The simplest way to
+          <span class="relative inline-block mx-1">
+            sell tickets
+            <svg class="absolute -bottom-1.5 left-0 w-full overflow-visible" height="10" viewBox="0 0 200 10" preserveAspectRatio="none" fill="none">
+              <path d="M2 7.5C40 2 80 1 100 4C120 7 160 8.5 198 5" stroke="#E8572A" stroke-width="4" stroke-linecap="round"/>
+            </svg>
+          </span>
+          for any event.
+        </h1>
+
+        <p class="mt-6 text-[#6B6B6B] text-lg leading-relaxed max-w-lg mx-auto lg:mx-0">
+          Create your event, publish ticket types, and start selling in under 5 minutes.
+          No approval process. No complicated setup.
+        </p>
+
+        <div class="mt-10 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+          <a [routerLink]="['/auth/register']" class="cta-primary">
+            Start selling tickets
+            <mat-icon class="!text-base ml-1.5">arrow_forward</mat-icon>
+          </a>
+          <a [routerLink]="['/events']" class="cta-secondary">
+            Browse events
+          </a>
+        </div>
+
+      </div>
+
+      <!-- Product mockup -->
+      <div class="hidden lg:block relative">
+
+        <div class="mockup-card">
+          <!-- Event cover -->
+          <div class="mockup-cover" style="background: linear-gradient(135deg, #2D1B4E 0%, #7C3AED 100%)">
+            <span class="mockup-cover-emoji">🎵</span>
+            <div class="mockup-cover-footer">
+              <div>
+                <p class="mockup-event-title">Afro Fusion Night</p>
+                <p class="mockup-event-meta">Sat 7 Jun · Alchemist Bar, Nairobi</p>
+              </div>
+              <span class="mockup-live-pill">
+                <span class="mockup-live-dot"></span>
+                Live
+              </span>
+            </div>
+          </div>
+
+          <!-- Stats -->
+          <div class="mockup-stats">
+            <div class="mockup-stat">
+              <p class="mockup-stat-value">248</p>
+              <p class="mockup-stat-label">Tickets sold</p>
+            </div>
+            <div class="mockup-divider"></div>
+            <div class="mockup-stat">
+              <p class="mockup-stat-value">KES 372k</p>
+              <p class="mockup-stat-label">Revenue</p>
+            </div>
+            <div class="mockup-divider"></div>
+            <div class="mockup-stat">
+              <p class="mockup-stat-value">67%</p>
+              <p class="mockup-stat-label">Capacity</p>
+            </div>
+          </div>
+
+          <!-- Ticket types -->
+          <div class="mockup-tickets">
+            <div class="mockup-ticket">
+              <span class="mockup-ticket-name">General</span>
+              <div class="mockup-bar-track"><div class="mockup-bar-fill" style="width: 73%"></div></div>
+              <span class="mockup-ticket-count">182</span>
+              <span class="mockup-ticket-price">KES 1,500</span>
+            </div>
+            <div class="mockup-ticket">
+              <span class="mockup-ticket-name">VIP</span>
+              <div class="mockup-bar-track"><div class="mockup-bar-fill" style="width: 44%"></div></div>
+              <span class="mockup-ticket-count">66</span>
+              <span class="mockup-ticket-price">KES 3,500</span>
+            </div>
+            <div class="mockup-ticket">
+              <span class="mockup-ticket-name">Early Bird</span>
+              <div class="mockup-bar-track"><div class="mockup-bar-fill mockup-bar-full"></div></div>
+              <span class="mockup-ticket-soldout">Sold out</span>
+              <span class="mockup-ticket-price">KES 800</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Floating toasts -->
+        <div class="mockup-toast mockup-toast--sale">
+          <div class="mockup-toast-icon">🎟</div>
+          <div>
+            <p class="mockup-toast-title">New ticket sold</p>
+            <p class="mockup-toast-sub">General · KES 1,500</p>
+          </div>
+        </div>
+
+        <div class="mockup-toast mockup-toast--checkin">
+          <div class="mockup-toast-icon mockup-toast-check">
+            <mat-icon class="!text-sm text-[#16A34A]">check</mat-icon>
+          </div>
+          <div>
+            <p class="mockup-toast-title">Ticket validated</p>
+            <p class="mockup-toast-sub">John K. · Gate 1</p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── Event types bar ────────────────────────────────────────── -->
+<div class="bg-white border-y border-[#F0E8DF] py-5">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center gap-3 overflow-x-auto no-scrollbar">
+      <p class="text-[10px] font-bold text-[#B0A49A] uppercase tracking-widest flex-shrink-0 pr-3 border-r border-[#E0D5CC]">For every event</p>
+      @for (type of eventTypes; track type.label) {
+        <span class="type-pill flex-shrink-0">{{ type.emoji }} {{ type.label }}</span>
+      }
+    </div>
+  </div>
+</div>
+
+<!-- ── Stats ─────────────────────────────────────────────────────── -->
+<section class="bg-[#1A1A1A] py-16">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 sm:grid-cols-4 gap-10 text-center">
+    @for (stat of stats; track stat.label) {
+      <div>
+        <p class="font-display text-4xl font-black text-white tracking-tight">{{ stat.value }}</p>
+        <p class="text-white/40 text-sm mt-2 font-medium">{{ stat.label }}</p>
+      </div>
+    }
+  </div>
+</section>
+
+<!-- ── How it works ───────────────────────────────────────────────── -->
+<section class="bg-white py-28">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <div class="mb-16">
+      <p class="text-[#E8572A] text-xs font-bold uppercase tracking-[0.15em] mb-4">For organisers</p>
+      <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
+        <div>
+          <h2 class="font-display text-4xl sm:text-5xl font-black text-[#1A1A1A]">Up and running<br>in minutes</h2>
+          <p class="text-[#6B6B6B] mt-4 text-lg max-w-md">No complicated setup. No waiting for approval. Just create, publish, and sell.</p>
+        </div>
+        <a [routerLink]="['/auth/register']" class="steps-cta inline-flex items-center gap-3 self-start sm:self-auto flex-shrink-0">
+          Create your first event
+          <span class="steps-cta-arrow">
+            <mat-icon class="!text-base">arrow_forward</mat-icon>
+          </span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Steps panel -->
+    <div class="steps-panel grid grid-cols-1 sm:grid-cols-3">
+      @for (step of steps; track step.title; let i = $index) {
+        <div class="step-tile">
+          <p class="step-tile-num">0{{ i + 1 }}</p>
+          <div class="step-icon-wrap">
+            <mat-icon class="!text-xl text-[#E8572A]">{{ step.icon }}</mat-icon>
+          </div>
+          <h3 class="font-display text-xl font-black text-[#1A1A1A] mt-6 mb-2">{{ step.title }}</h3>
+          <p class="text-[#6B6B6B] text-sm leading-relaxed">{{ step.desc }}</p>
+        </div>
+      }
+    </div>
+
+  </div>
+</section>
+
+<!-- ── Features ───────────────────────────────────────────────────── -->
+<section class="bg-[#FFF7F0] py-28">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <div class="text-center mb-20">
+      <p class="text-[#E8572A] text-xs font-bold uppercase tracking-[0.15em] mb-4">Everything you need</p>
+      <h2 class="font-display text-4xl sm:text-5xl font-black text-[#1A1A1A]">Built for real events</h2>
+      <p class="text-[#6B6B6B] mt-4 text-lg max-w-lg mx-auto">Every feature you need to run a smooth event, nothing you don't.</p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      @for (feature of features; track feature.title) {
+        <div class="feature-card">
+          <div class="feature-icon-wrap">
+            <mat-icon class="!text-xl text-[#E8572A]">{{ feature.icon }}</mat-icon>
+          </div>
+          <h3 class="font-display text-lg font-black text-[#1A1A1A] mt-5 mb-2">{{ feature.title }}</h3>
+          <p class="text-[#6B6B6B] text-sm leading-relaxed">{{ feature.desc }}</p>
+        </div>
+      }
+    </div>
+
+  </div>
+</section>
+
+<!-- ── Pricing ────────────────────────────────────────────────────── -->
+<section id="pricing" class="bg-white py-28">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <div class="text-center mb-16">
+      <p class="text-[#E8572A] text-xs font-bold uppercase tracking-[0.15em] mb-4">Pricing</p>
+      <h2 class="font-display text-4xl sm:text-5xl font-black text-[#1A1A1A]">Simple, honest pricing</h2>
+      <p class="text-[#6B6B6B] mt-4 text-lg max-w-md mx-auto">Start free. Upgrade when you need to. No hidden fees.</p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 items-start">
+      @for (plan of plans; track plan.name) {
+        <div class="plan-card" [class.plan-card--highlight]="plan.highlight">
+          @if (plan.highlight) {
+            <span class="plan-popular">Most popular</span>
+          }
+          <span class="plan-tag">{{ plan.tag }}</span>
+          <p class="plan-name">{{ plan.name }}</p>
+          <div class="flex items-end gap-1 mt-3 mb-1">
+            <p class="plan-price">{{ plan.price }}</p>
+            @if (plan.period) {
+              <span class="plan-period">{{ plan.period }}</span>
+            }
+          </div>
+          <p class="plan-desc">{{ plan.desc }}</p>
+
+          <ul class="plan-features">
+            @for (f of plan.features; track f) {
+              <li class="plan-feature">
+                <span class="plan-check"><mat-icon>check</mat-icon></span>
+                {{ f }}
+              </li>
+            }
+          </ul>
+
+          <a [routerLink]="['/auth/register']" class="plan-cta">{{ plan.cta }}</a>
+        </div>
+      }
+    </div>
+
+  </div>
+</section>
+
+<!-- ── FAQ ────────────────────────────────────────────────────────── -->
+<section id="faq" class="bg-[#FFF7F0] py-28">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <div class="text-center mb-14">
+      <p class="text-[#E8572A] text-xs font-bold uppercase tracking-[0.15em] mb-4">FAQ</p>
+      <h2 class="font-display text-4xl sm:text-5xl font-black text-[#1A1A1A]">Common questions</h2>
+    </div>
+
+    <div>
+      @for (faq of faqs; track faq.q; let i = $index) {
+        <div class="faq-item">
+          <button class="faq-question" (click)="toggleFaq(i)">
+            <span>{{ faq.q }}</span>
+            <mat-icon class="!text-xl flex-shrink-0 transition-transform duration-200"
+              [style.transform]="openFaq() === i ? 'rotate(180deg)' : 'rotate(0)'">
+              expand_more
+            </mat-icon>
+          </button>
+          @if (openFaq() === i) {
+            <div class="faq-answer">{{ faq.a }}</div>
+          }
+        </div>
+      }
+    </div>
+
+  </div>
+</section>
+
+<!-- ── Bottom CTA ─────────────────────────────────────────────────── -->
+<section class="bg-[#1A1A1A] py-28">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid lg:grid-cols-2 gap-12 lg:gap-24 items-center">
+
+      <!-- Left: copy + CTA -->
+      <div>
+        <p class="text-[#E8572A] text-xs font-bold uppercase tracking-[0.15em] mb-6">Get started</p>
+        <h2 class="font-display text-5xl sm:text-6xl font-black text-white leading-[1.05] mb-6">
+          Your next event<br>starts here.
+        </h2>
+        <p class="text-white/45 text-lg mb-10 max-w-md">
+          Set up your page, publish tickets, and go live - in the time it takes to brew a cup of tea.
+        </p>
+        <div class="flex items-center gap-7 flex-wrap">
+          <a [routerLink]="['/auth/register']" class="cta-circle inline-flex items-center gap-3">
+            Get started free
+            <span class="cta-circle-arrow">
+              <mat-icon class="!text-base">arrow_forward</mat-icon>
+            </span>
+          </a>
+          <a [routerLink]="['/events']" class="text-white/35 text-sm font-medium hover:text-white/65 transition-colors">
+            Browse events
+          </a>
+        </div>
+      </div>
+
+      <!-- Right: testimonials -->
+      <div class="flex flex-col gap-5">
+        @for (t of testimonials; track t.name) {
+          <div class="testimonial-card">
+            <p class="testimonial-quote">"{{ t.quote }}"</p>
+            <div class="mt-5 flex items-center gap-3">
+              <div class="testimonial-avatar">{{ t.name[0] }}</div>
+              <div>
+                <p class="text-white text-sm font-semibold leading-none">{{ t.name }}</p>
+                <p class="text-white/40 text-xs mt-1">{{ t.role }}</p>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ─────────────────────────────────────────────────────── -->
+<footer class="bg-[#111111] pt-16 pb-10">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <!-- Top row -->
+    <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-10 pb-12 border-b border-white/8">
+
+      <!-- Brand -->
+      <div>
+        <div class="flex items-center gap-1.5 mb-3">
+          <span class="font-display text-2xl font-black text-white leading-none">Entri</span>
+          <span class="w-1.5 h-1.5 rounded-full bg-[#E8572A] flex-shrink-0"></span>
+        </div>
+        <p class="text-white/35 text-sm max-w-xs leading-relaxed">The simplest way to sell tickets for any event.</p>
+      </div>
+
+      <!-- Contact -->
+      <div>
+        <p class="text-white/25 text-xs font-semibold uppercase tracking-widest mb-3">Contact</p>
+        <a href="tel:0798321468" class="text-white/55 text-sm hover:text-white/80 transition-colors">+254 798 321 468</a>
+      </div>
+
+      <!-- Legal -->
+      <div>
+        <p class="text-white/25 text-xs font-semibold uppercase tracking-widest mb-3">Legal</p>
+        <div class="flex flex-col gap-2 text-sm text-white/55">
+          <a href="#" class="hover:text-white/80 transition-colors">Privacy Policy</a>
+          <a href="#" class="hover:text-white/80 transition-colors">Terms of Service</a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Bottom row -->
+    <p class="text-white/20 text-sm mt-8">© 2026 Entri. All rights reserved.</p>
+
+  </div>
+</footer>

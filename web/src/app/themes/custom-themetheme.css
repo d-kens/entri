@@ -2,40 +2,40 @@ html {
   color-scheme: light;
 
   /* ═══════════════════════════════════════════════════════════
-     PRIMARY — Deep Forest #0D1F16
+     PRIMARY — Orange #E8572A
      ═══════════════════════════════════════════════════════════ */
-  --mat-sys-primary:               #0D1F16;
+  --mat-sys-primary:               #E8572A;
   --mat-sys-on-primary:            #FFFFFF;
-  --mat-sys-primary-container:     #C8E6D4;
-  --mat-sys-on-primary-container:  #0D1F16;
-  --mat-sys-inverse-primary:       #059669;  /* emerald — active/accent */
+  --mat-sys-primary-container:     #FFE0D4;
+  --mat-sys-on-primary-container:  #5A1500;
+  --mat-sys-inverse-primary:       #FFB59A;
 
   /* ═══════════════════════════════════════════════════════════
-     SECONDARY — Slate Gray #334155
+     SECONDARY — Warm gray
      ═══════════════════════════════════════════════════════════ */
-  --mat-sys-secondary:             #334155;
+  --mat-sys-secondary:             #6B6B6B;
   --mat-sys-on-secondary:          #FFFFFF;
-  --mat-sys-secondary-container:   #475569;
-  --mat-sys-on-secondary-container:#E2E8F0;
+  --mat-sys-secondary-container:   #F0EDE8;
+  --mat-sys-on-secondary-container:#2A2A2A;
 
   /* ═══════════════════════════════════════════════════════════
-     SURFACES
+     SURFACES — Warm cream
      ═══════════════════════════════════════════════════════════ */
-  --mat-sys-background:            #F8FAFC;
-  --mat-sys-on-background:         #0F172A;
-  --mat-sys-surface:               #F8FAFC;
-  --mat-sys-surface-container-low: #F1F5F9;
-  --mat-sys-surface-container:     #E2E8F0;
-  --mat-sys-surface-variant:       #E2E8F0;
-  --mat-sys-on-surface:            #0F172A;
-  --mat-sys-on-surface-variant:    #475569;
-  --mat-sys-inverse-surface:       #1E293B;
-  --mat-sys-inverse-on-surface:    #F1F5F9;
-  --mat-sys-surface-tint:          #0D1F16;
-  --mat-sys-outline:               #64748B;
-  --mat-sys-outline-variant:       #CBD5E1;
-  --mat-sys-shadow:                #0F172A;
-  --mat-sys-scrim:                 #0F172A;
+  --mat-sys-background:            #FFF7F0;
+  --mat-sys-on-background:         #1A1A1A;
+  --mat-sys-surface:               #FFFFFF;
+  --mat-sys-surface-container-low: #FFF3E8;
+  --mat-sys-surface-container:     #F5EDE4;
+  --mat-sys-surface-variant:       #F0E8DF;
+  --mat-sys-on-surface:            #1A1A1A;
+  --mat-sys-on-surface-variant:    #6B6B6B;
+  --mat-sys-inverse-surface:       #1A1A1A;
+  --mat-sys-inverse-on-surface:    #FFF7F0;
+  --mat-sys-surface-tint:          #E8572A;
+  --mat-sys-outline:               #B0A49A;
+  --mat-sys-outline-variant:       #E0D5CC;
+  --mat-sys-shadow:                #1A1A1A;
+  --mat-sys-scrim:                 #1A1A1A;
 
   /* ═══════════════════════════════════════════════════════════
      ERROR
@@ -46,9 +46,9 @@ html {
   --mat-sys-on-error-container:    #7F1D1D;
 
   /* ═══════════════════════════════════════════════════════════
-     TYPOGRAPHY — Inter
+     TYPOGRAPHY — Outfit (display) + Inter (body)
      ═══════════════════════════════════════════════════════════ */
-  --mat-sys-brand-font-family:     'Inter', -apple-system, sans-serif;
+  --mat-sys-brand-font-family:     'Coustard', Georgia, serif;
   --mat-sys-plain-font-family:     'Inter', -apple-system, sans-serif;
   --mat-sys-bold-font-weight:      700;
   --mat-sys-medium-font-weight:    500;
@@ -65,10 +65,10 @@ html {
      SHAPE / CORNERS
      ═══════════════════════════════════════════════════════════ */
   --mat-sys-corner-extra-large: 24px;
-  --mat-sys-corner-large:        9px;
-  --mat-sys-corner-medium:       8px;
-  --mat-sys-corner-small:        6px;
-  --mat-sys-corner-extra-small:  4px;
+  --mat-sys-corner-large:       12px;
+  --mat-sys-corner-medium:      10px;
+  --mat-sys-corner-small:        8px;
+  --mat-sys-corner-extra-small:  6px;
   --mat-sys-corner-full:      9999px;
   --mat-sys-corner-none:          0;
 
@@ -81,9 +81,9 @@ html {
   --mat-sys-pressed-state-layer-opacity: 0.12;
 
   /* ═══════════════════════════════════════════════════════════
-     APP SEMANTIC — payment status
+     APP SEMANTIC — ticket/payment status
      ═══════════════════════════════════════════════════════════ */
-  --app-paid:       #059669;
+  --app-paid:       #16A34A;
   --app-on-paid:    #FFFFFF;
 
   --app-pending:    #F59E0B;

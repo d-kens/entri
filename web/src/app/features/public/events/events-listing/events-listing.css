@@ -1,0 +1,110 @@
+/* ── Hero ───────────────────────────────────────────────────── */
+
+.hero-section {
+  background-color: #FFF7F0;
+}
+
+.dot-pattern {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(#E0D5CC 1.5px, transparent 1.5px);
+  background-size: 28px 28px;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.search-bar {
+  cursor: text;
+}
+
+/* ── Categories ──────────────────────────────────────────────── */
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+.category-pill {
+  background: white;
+  color: #1A1A1A;
+  border-color: #E0D5CC;
+}
+
+.category-pill:hover {
+  border-color: #1A1A1A;
+}
+
+.category-pill.active {
+  background: #1A1A1A;
+  color: white;
+  border-color: #1A1A1A;
+}
+
+/* ── Featured card ───────────────────────────────────────────── */
+
+.featured-card {
+  box-shadow: 0 4px 24px rgba(26, 26, 26, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.featured-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(26, 26, 26, 0.12);
+}
+
+.featured-cover {
+  height: 160px;
+  overflow: hidden;
+}
+
+@media (min-width: 640px) {
+  .featured-cover { height: 220px; }
+}
+
+/* ── Event card ──────────────────────────────────────────────── */
+
+.event-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.event-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(26, 26, 26, 0.1);
+}
+
+.card-cover {
+  height: 180px;
+  overflow: hidden;
+}
+
+/* ── Cover emoji background ──────────────────────────────────── */
+
+.cover-emoji-bg {
+  position: absolute;
+  right: -16px;
+  bottom: -16px;
+  font-size: 110px;
+  opacity: 0.12;
+  transform: rotate(-12deg);
+  pointer-events: none;
+  user-select: none;
+  line-height: 1;
+}
+
+/* ── Get tickets button ──────────────────────────────────────── */
+
+.get-tickets-btn {
+  display: inline-flex;
+  align-items: center;
+  background: #1A1A1A;
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 0.625rem 1.25rem;
+  border-radius: 9999px;
+  transition: background 0.15s ease, transform 0.15s ease;
+  white-space: nowrap;
+}
+
+.get-tickets-btn:hover {
+  background: #E8572A;
+  transform: translateX(2px);
+}

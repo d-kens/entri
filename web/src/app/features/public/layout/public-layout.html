@@ -1,0 +1,59 @@
+<div class="min-h-screen bg-[#FFF7F0]">
+
+  <!-- Navbar -->
+  <header class="sticky top-0 z-50 bg-[#FFF7F0]/95 backdrop-blur-sm border-b border-[#E0D5CC]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+
+      <!-- Logo -->
+      <a [routerLink]="['/']" (click)="closeMenu()" class="flex items-center gap-1.5 flex-shrink-0">
+        <span class="font-display text-2xl font-black tracking-tight text-[#1A1A1A] leading-none select-none">Entri</span>
+        <span class="w-1.5 h-1.5 rounded-full bg-[#E8572A] flex-shrink-0 mb-0.5"></span>
+      </a>
+
+      <!-- Desktop nav -->
+      <nav class="hidden md:flex items-center gap-8">
+        <a [routerLink]="['/events']" class="nav-link">Events</a>
+        <a [routerLink]="['/']" fragment="pricing" class="nav-link">Pricing</a>
+        <a [routerLink]="['/']" fragment="faq" class="nav-link">FAQ</a>
+      </nav>
+
+      <!-- Desktop actions -->
+      <div class="hidden md:flex items-center gap-4">
+        <a [routerLink]="['/auth/login']" class="nav-link">Sign in</a>
+        <a [routerLink]="['/auth/register']">
+          <button mat-flat-button class="nav-cta">Get started</button>
+        </a>
+      </div>
+
+      <!-- Mobile hamburger -->
+      <button class="md:hidden p-2 text-[#1A1A1A]" (click)="toggleMenu()" aria-label="Toggle menu">
+        <mat-icon>{{ menuOpen() ? 'close' : 'menu' }}</mat-icon>
+      </button>
+
+    </div>
+
+    <!-- Mobile menu -->
+    @if (menuOpen()) {
+      <div class="md:hidden border-t border-[#E0D5CC] bg-[#FFF7F0]">
+        <nav class="max-w-7xl mx-auto px-4 py-4 flex flex-col">
+          <a [routerLink]="['/events']" (click)="closeMenu()" class="mobile-nav-link">Events</a>
+          <a [routerLink]="['/']" fragment="pricing" (click)="closeMenu()" class="mobile-nav-link">Pricing</a>
+          <a [routerLink]="['/']" fragment="faq" (click)="closeMenu()" class="mobile-nav-link">FAQ</a>
+          <a [routerLink]="['/auth/login']" (click)="closeMenu()" class="mobile-nav-link">Sign in</a>
+          <div class="pt-4 border-t border-[#E0D5CC] mt-2">
+            <a [routerLink]="['/auth/register']" (click)="closeMenu()">
+              <button mat-flat-button class="nav-cta w-full">Get started</button>
+            </a>
+          </div>
+        </nav>
+      </div>
+    }
+
+  </header>
+
+  <!-- Page content -->
+  <main>
+    <router-outlet />
+  </main>
+
+</div>
