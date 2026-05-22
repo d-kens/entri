@@ -23,12 +23,12 @@
 
 /* Active route */
 .active-route {
-  background-color: rgba(255, 255, 255, 0.08) !important;
-  border-left: 3px solid #ffffff !important;
+  background-color: rgba(232, 87, 42, 0.15) !important;
+  border-left: 3px solid #E8572A !important;
 }
 
 .active-route .nav-icon {
-  color: #ffffff !important;
+  color: #E8572A !important;
 }
 
 .active-route .nav-label {

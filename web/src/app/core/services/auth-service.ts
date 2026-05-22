@@ -1,4 +1,5 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { environment } from 'environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { catchError, finalize, Observable, tap, throwError } from 'rxjs';
@@ -17,6 +18,7 @@ import { UserResponse } from '@core/models/user.models';
 })
 export class AuthService {
   private http: HttpClient = inject(HttpClient);
+  private readonly platformId = inject(PLATFORM_ID);
   private readonly ACCESS_TOKEN_KEY = 'access_token';
   private readonly EXTERNAL_ID_KEY = 'external_id';
 
@@ -31,6 +33,7 @@ export class AuthService {
   }
 
   getToken(): string | null {
+    if (!isPlatformBrowser(this.platformId)) return null;
     return localStorage.getItem(this.ACCESS_TOKEN_KEY);
   }
 
@@ -68,12 +71,15 @@ export class AuthService {
   }
 
   getExternalId(): string | null {
+    if (!isPlatformBrowser(this.platformId)) return null;
     return localStorage.getItem(this.EXTERNAL_ID_KEY);
   }
 
   clearSession(): void {
-    localStorage.removeItem(this.ACCESS_TOKEN_KEY);
-    localStorage.removeItem(this.EXTERNAL_ID_KEY);
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.removeItem(this.ACCESS_TOKEN_KEY);
+      localStorage.removeItem(this.EXTERNAL_ID_KEY);
+    }
     this.authStatusSignal.set(false);
   }
 

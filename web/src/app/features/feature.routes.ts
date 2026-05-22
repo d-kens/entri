@@ -9,11 +9,11 @@ export const FEATURE_ROUTES: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'dashboard',
+        redirectTo: 'overview',
         pathMatch: 'full'
       },
       {
-        path: 'dashboard',
+        path: 'overview',
         canActivate: [authGuard],
         loadComponent: () => import('./dashboard/dashboard').then(m => m.Dashboard)
       },
