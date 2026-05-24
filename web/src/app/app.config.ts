@@ -5,11 +5,14 @@ import { routes } from './app.routes';
 import {authInterceptor} from './core/intercetors/auth-interceptor';
 import {provideHttpClient, withFetch, withInterceptors} from '@angular/common/http';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
+import { provideNativeDateAdapter } from '@angular/material/core';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes, withInMemoryScrolling({ anchorScrolling: 'enabled', scrollPositionRestoration: 'enabled' })),
     provideBrowserGlobalErrorListeners(),
-    provideHttpClient(withFetch(), withInterceptors([authInterceptor])), provideClientHydration(withEventReplay())
+    provideNativeDateAdapter(),
+    provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
+    provideClientHydration(withEventReplay()),
   ]
 };
