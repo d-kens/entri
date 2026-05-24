@@ -49,6 +49,7 @@ export class CreateEvent {
   bannerFile = signal<File | null>(null);
   bannerPreview = signal<string | null>(null);
   currentStep = signal(0);
+  expandedTickets = signal(new Set<number>());
 
   readonly steps = [
     { index: 0, name: 'Event Details', desc: 'Title, category & visibility' },
@@ -127,10 +128,27 @@ export class CreateEvent {
 
   removeTicketType(index: number): void {
     this.ticketTypes.removeAt(index);
+    this.expandedTickets.update(set => {
+      const next = new Set<number>();
+      set.forEach(i => { if (i !== index) next.add(i > index ? i - 1 : i); });
+      return next;
+    });
   }
 
   ticketGroup(index: number): FormGroup {
     return this.ticketTypes.at(index) as FormGroup;
+  }
+
+  toggleAdvanced(index: number): void {
+    this.expandedTickets.update(set => {
+      const next = new Set(set);
+      next.has(index) ? next.delete(index) : next.add(index);
+      return next;
+    });
+  }
+
+  isExpanded(index: number): boolean {
+    return this.expandedTickets().has(index);
   }
 
   onBannerSelected(event: Event): void {

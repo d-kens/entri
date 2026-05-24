@@ -151,19 +151,17 @@
   padding: 1.75rem 2rem;
 }
 
-.section-label {
-  font-size: 0.6875rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--mat-sys-on-surface-variant);
+.form-group-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--mat-sys-on-surface);
   margin: 0;
 }
 
-.section-hint {
+.form-group-hint {
   font-size: 0.8125rem;
   color: var(--mat-sys-on-surface-variant);
-  margin: 0.125rem 0 0;
+  margin: 0.2rem 0 0;
 }
 
 .section-header-row {
@@ -177,39 +175,6 @@
 .section-divider {
   height: 1px;
   background: var(--mat-sys-outline-variant);
-}
-
-/* ── Field groups ──────────────────────────────────────────── */
-
-.field-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.375rem;
-}
-
-.field-label {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--mat-sys-on-surface);
-  margin: 0;
-}
-
-.field-sub {
-  font-size: 0.8125rem;
-  color: var(--mat-sys-on-surface-variant);
-  margin: 0;
-}
-
-.req {
-  color: var(--mat-sys-error);
-  margin-left: 1px;
-}
-
-.opt {
-  font-size: 0.75rem;
-  font-weight: 400;
-  color: var(--mat-sys-on-surface-variant);
-  margin-left: 0.25rem;
 }
 
 /* ── Visibility row ────────────────────────────────────────── */
@@ -407,15 +372,54 @@
   color: var(--mat-sys-on-surface-variant);
 }
 
-.ticket-hidden-field {
-  justify-content: center;
+/* ── Ticket advanced options ───────────────────────────────── */
+
+.ticket-advanced-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  color: var(--mat-sys-primary);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  font-family: inherit;
+  transition: opacity 0.15s;
+  align-self: flex-start;
+}
+
+.ticket-advanced-toggle:hover {
+  opacity: 0.75;
+}
+
+.ticket-advanced-icon {
+  font-size: 16px !important;
+  width: 16px !important;
+  height: 16px !important;
+  line-height: 16px !important;
+}
+
+.ticket-advanced {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
   padding-top: 0.625rem;
+  border-top: 1px solid var(--mat-sys-outline-variant);
+}
+
+.ticket-hidden-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding-top: 0.5rem;
 }
 
 .ticket-hidden-hint {
   font-size: 0.75rem;
   color: var(--mat-sys-on-surface-variant);
-  margin: 0.25rem 0 0 1.75rem;
+  margin: 0 0 0 1.75rem;
 }
 
 /* ── Responsive ────────────────────────────────────────────── */
