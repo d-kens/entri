@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { PublicLayout } from './layout/public-layout';
+import { noAuthGuard } from '@core/guards/no-auth-guard';
 
 export const PUBLIC_ROUTES: Routes = [
   {
@@ -12,7 +13,7 @@ export const PUBLIC_ROUTES: Routes = [
       },
       {
         path: 'events',
-        loadComponent: () => import('./events/events-listing/events-listing').then(m => m.EventsListing),
+        loadComponent: () => import('@features/events/pages/events-listing/events-listing').then(m => m.EventsListing),
       },
     ],
   },

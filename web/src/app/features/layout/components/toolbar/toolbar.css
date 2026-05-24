@@ -27,8 +27,8 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: var(--mat-sys-primary);
-  color: var(--mat-sys-on-primary);
+  background: #1A1A1A;
+  color: #FFFFFF;
   display: flex;
   align-items: center;
   justify-content: center;
