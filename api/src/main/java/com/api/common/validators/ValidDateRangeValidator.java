@@ -27,9 +27,9 @@ public class ValidDateRangeValidator implements ConstraintValidator<ValidDateRan
             return true; // handled by @NotNull on each field
         }
 
-        if (!end.isAfter(start)) {
+        if (end.isBefore(start)) {
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate("End time must be after start time")
+            context.buildConstraintViolationWithTemplate("End time must be on or after start time")
                     .addPropertyNode(endField)
                     .addConstraintViolation();
             return false;

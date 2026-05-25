@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -13,11 +13,39 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { EventsService } from '../../services/events-service';
 import { SnackbarService } from '@core/services/snackbar-service';
+import { CreateEventRequest } from '@core/models/event.models';
 
 interface Category {
   id: number;
   name: string;
 }
+
+type InfoForm = {
+  title: FormControl<string>;
+  description: FormControl<string>;
+  categoryId: FormControl<number | null>;
+  isPublic: FormControl<boolean>;
+};
+
+type VenueForm = {
+  venueName: FormControl<string>;
+  venueCity: FormControl<string>;
+  venueCountry: FormControl<string>;
+  startDate: FormControl<Date | null>;
+  endDate: FormControl<Date | null>;
+};
+
+type TicketTypeForm = {
+  name: FormControl<string>;
+  description: FormControl<string>;
+  price: FormControl<number>;
+  currency: FormControl<string>;
+  quantity: FormControl<number>;
+  maxPerOrder: FormControl<number | null>;
+  saleStartDate: FormControl<Date | null>;
+  saleEndDate: FormControl<Date | null>;
+  isHidden: FormControl<boolean>;
+};
 
 @Component({
   selector: 'app-create-event',
@@ -46,8 +74,11 @@ export class CreateEvent {
   private snackbarService = inject(SnackbarService);
 
   isLoading = signal(false);
+  isUploadingBanner = signal(false);
+  isDeletingBanner = signal(false);
   bannerFile = signal<File | null>(null);
   bannerPreview = signal<string | null>(null);
+  bannerUrl = signal<string | null>(null);
   currentStep = signal(0);
   expandedTickets = signal(new Set<number>());
 
@@ -72,27 +103,27 @@ export class CreateEvent {
 
   readonly currencies = ['KES', 'USD', 'EUR', 'GBP', 'TZS', 'UGX'];
 
-  infoForm = this.fb.group({
+  infoForm: FormGroup<InfoForm> = this.fb.nonNullable.group({
     title: ['', [Validators.required, Validators.minLength(3)]],
     description: ['', [Validators.required, Validators.minLength(20)]],
-    categoryId: [null as number | null, Validators.required],
+    categoryId: this.fb.control<number | null>(null, Validators.required),
     isPublic: [true],
   });
 
-  venueForm = this.fb.group({
+  venueForm: FormGroup<VenueForm> = this.fb.nonNullable.group({
     venueName: ['', Validators.required],
     venueCity: ['', Validators.required],
     venueCountry: ['', Validators.required],
-    startDate: [null as Date | null, Validators.required],
-    endDate: [null as Date | null, Validators.required],
+    startDate: this.fb.control<Date | null>(null, Validators.required),
+    endDate: this.fb.control<Date | null>(null, Validators.required),
   });
 
   ticketsForm = this.fb.group({
-    ticketTypes: this.fb.array([]),
+    ticketTypes: this.fb.array<FormGroup<TicketTypeForm>>([]),
   });
 
-  get ticketTypes(): FormArray {
-    return this.ticketsForm.get('ticketTypes') as FormArray;
+  get ticketTypes(): FormArray<FormGroup<TicketTypeForm>> {
+    return this.ticketsForm.get('ticketTypes') as FormArray<FormGroup<TicketTypeForm>>;
   }
 
   readonly minDate = new Date();
@@ -113,17 +144,19 @@ export class CreateEvent {
   }
 
   addTicketType(): void {
-    this.ticketTypes.push(this.fb.group({
-      name: ['', Validators.required],
-      description: [''],
-      price: [0, [Validators.required, Validators.min(0)]],
-      currency: ['KES', Validators.required],
-      quantity: [100, [Validators.required, Validators.min(1)]],
-      maxPerOrder: [null],
-      saleStartDate: [null as Date | null],
-      saleEndDate: [null as Date | null],
-      isHidden: [false],
-    }));
+    this.ticketTypes.push(
+      this.fb.nonNullable.group<TicketTypeForm>({
+        name: this.fb.nonNullable.control('', Validators.required),
+        description: this.fb.nonNullable.control(''),
+        price: this.fb.nonNullable.control(0, [Validators.required, Validators.min(0)]),
+        currency: this.fb.nonNullable.control('KES', Validators.required),
+        quantity: this.fb.nonNullable.control(100, [Validators.required, Validators.min(1)]),
+        maxPerOrder: this.fb.control<number | null>(null),
+        saleStartDate: this.fb.control<Date | null>(null),
+        saleEndDate: this.fb.control<Date | null>(null),
+        isHidden: this.fb.nonNullable.control(false),
+      })
+    );
   }
 
   removeTicketType(index: number): void {
@@ -135,8 +168,8 @@ export class CreateEvent {
     });
   }
 
-  ticketGroup(index: number): FormGroup {
-    return this.ticketTypes.at(index) as FormGroup;
+  ticketGroup(index: number): FormGroup<TicketTypeForm> {
+    return this.ticketTypes.at(index);
   }
 
   toggleAdvanced(index: number): void {
@@ -154,19 +187,51 @@ export class CreateEvent {
   onBannerSelected(event: Event): void {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
+
     this.bannerFile.set(file);
+    this.bannerUrl.set(null);
+
     const reader = new FileReader();
     reader.onload = (e) => this.bannerPreview.set(e.target?.result as string);
     reader.readAsDataURL(file);
+
+    this.isUploadingBanner.set(true);
+    this.eventsService.uploadBanner(file).subscribe({
+      next: ({ url }) => {
+        this.bannerUrl.set(url);
+        this.isUploadingBanner.set(false);
+      },
+      error: () => {
+        this.snackbarService.showError('Failed to upload banner image. Please try again.');
+        this.bannerFile.set(null);
+        this.bannerPreview.set(null);
+        this.isUploadingBanner.set(false);
+      },
+    });
   }
 
   removeBanner(): void {
+    const url = this.bannerUrl();
     this.bannerFile.set(null);
     this.bannerPreview.set(null);
+    this.bannerUrl.set(null);
+
+    if (url) {
+      this.isDeletingBanner.set(true);
+      this.eventsService.deleteBanner(url).subscribe({
+        next: () => this.isDeletingBanner.set(false),
+        error: () => this.isDeletingBanner.set(false),
+      });
+    }
   }
 
   submit(): void {
-    if (!this.bannerFile()) {
+    if (this.isUploadingBanner()) {
+      this.snackbarService.showError('Please wait for the banner to finish uploading');
+      return;
+    }
+
+    if (!this.bannerUrl()) {
       this.snackbarService.showError('Please upload a banner image');
       return;
     }
@@ -189,7 +254,7 @@ export class CreateEvent {
 
     this.isLoading.set(true);
 
-    this.eventsService.createEvent(this.buildFormData()).subscribe({
+    this.eventsService.createEvent(this.buildPayload()).subscribe({
       next: () => {
         this.isLoading.set(false);
         this.snackbarService.showSuccess('Event created successfully!');
@@ -203,37 +268,35 @@ export class CreateEvent {
     });
   }
 
-  private buildFormData(): FormData {
-    const fd = new FormData();
-    const info = this.infoForm.value;
-    const venue = this.venueForm.value;
+  private buildPayload(): CreateEventRequest {
+    const info = this.infoForm.getRawValue();
+    const venue = this.venueForm.getRawValue();
 
-    fd.append('title', info.title!);
-    fd.append('description', info.description!);
-    fd.append('categoryId', info.categoryId!.toString());
-    fd.append('isPublic', (info.isPublic ?? true).toString());
-
-    fd.append('venueName', venue.venueName!);
-    fd.append('venueCity', venue.venueCity!);
-    fd.append('venueCountry', venue.venueCountry!);
-    fd.append('startTime', (venue.startDate as Date).toISOString());
-    fd.append('endTime', (venue.endDate as Date).toISOString());
-
-    fd.append('bannerImage', this.bannerFile()!);
-
-    this.ticketTypes.controls.forEach((ctrl, i) => {
-      const t = ctrl.value;
-      fd.append(`ticketTypes[${i}].name`, t.name);
-      if (t.description) fd.append(`ticketTypes[${i}].description`, t.description);
-      fd.append(`ticketTypes[${i}].price`, t.price.toString());
-      fd.append(`ticketTypes[${i}].currency`, t.currency);
-      fd.append(`ticketTypes[${i}].quantity`, t.quantity.toString());
-      if (t.maxPerOrder) fd.append(`ticketTypes[${i}].maxPerOrder`, t.maxPerOrder.toString());
-      if (t.saleStartDate) fd.append(`ticketTypes[${i}].saleStartDate`, (t.saleStartDate as Date).toISOString());
-      if (t.saleEndDate) fd.append(`ticketTypes[${i}].saleEndDate`, (t.saleEndDate as Date).toISOString());
-      fd.append(`ticketTypes[${i}].isHidden`, (t.isHidden ?? false).toString());
-    });
-
-    return fd;
+    return {
+      title: info.title,
+      description: info.description,
+      categoryId: info.categoryId as number,
+      isPublic: info.isPublic,
+      venueName: venue.venueName,
+      venueCity: venue.venueCity,
+      venueCountry: venue.venueCountry,
+      startTime: (venue.startDate as Date).toISOString(),
+      endTime: (venue.endDate as Date).toISOString(),
+      bannerUrl: this.bannerUrl() as string,
+      ticketTypes: this.ticketTypes.controls.map(ctrl => {
+        const t = ctrl.getRawValue();
+        return {
+          name: t.name,
+          description: t.description || null,
+          price: t.price,
+          currency: t.currency,
+          quantity: t.quantity,
+          maxPerOrder: t.maxPerOrder,
+          saleStartDate: t.saleStartDate ? t.saleStartDate.toISOString() : null,
+          saleEndDate: t.saleEndDate ? t.saleEndDate.toISOString() : null,
+          isHidden: t.isHidden,
+        };
+      }),
+    };
   }
 }

@@ -2,10 +2,8 @@ package com.api.modules.events.dto;
 
 import com.api.common.validators.ValidDateRange;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Instant;
 import java.util.List;
@@ -31,15 +29,13 @@ public record CreateEventRequest(
         String venueCity,
 
         @NotNull(message = "Start time is required")
-        @Future(message = "Start time must be in the future")
         Instant startTime,
 
         @NotNull(message = "End time is required")
-        @Future(message = "End time must be in the future")
         Instant endTime,
 
-        @NotNull(message = "Banner image is required")
-        MultipartFile bannerImage,
+        @NotBlank(message = "Banner image is required")
+        String bannerUrl,
 
         Boolean isPublic,
 
