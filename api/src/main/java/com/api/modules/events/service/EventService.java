@@ -1,7 +1,5 @@
 package com.api.modules.events.service;
 
-import com.api.common.exception.FileUploadException;
-import com.api.common.storage.FirebaseStorageService;
 import com.api.modules.events.dto.CreateEventRequest;
 import com.api.modules.events.dto.CreateTicketTypeRequest;
 import com.api.modules.events.dto.EventResponse;
@@ -16,15 +14,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-
 @Service
 @RequiredArgsConstructor
 public class EventService {
     private final EventMapper eventMapper;
     private final UserService userService;
-    private final FirebaseStorageService firebaseStorageService;
-
     private final EventRepository eventRepository;
     private final EventCategoryService eventCategoryService;
 
@@ -32,7 +26,6 @@ public class EventService {
     public EventResponse createEvent(CreateEventRequest request, String currentUserKey) {
         var user = userService.findEntityByExternalKey(currentUserKey);
         var category = eventCategoryService.findById(request.categoryId());
-        var bannerUrl = uploadBanner(request);
 
         Event event = Event.builder()
                 .organizer(user)
@@ -44,7 +37,7 @@ public class EventService {
                 .venueCountry(request.venueCountry())
                 .startTime(request.startTime())
                 .endTime(request.endTime())
-                .bannerUrl(bannerUrl)
+                .bannerUrl(request.bannerUrl())
                 .status(EventStatus.DRAFT)
                 .isPublic(request.isPublic() == null || request.isPublic())
                 .build();
@@ -57,14 +50,6 @@ public class EventService {
 
         eventRepository.save(event);
         return eventMapper.toEventResponse(event);
-    }
-
-    private String uploadBanner(CreateEventRequest request) {
-        try {
-            return firebaseStorageService.upload(request.bannerImage());
-        } catch (IOException e) {
-            throw new FileUploadException("Image upload failed", e);
-        }
     }
 
     private TicketType toTicketType(CreateTicketTypeRequest t, Event event) {

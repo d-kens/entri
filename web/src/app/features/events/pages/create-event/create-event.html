@@ -193,9 +193,21 @@
             @if (bannerPreview()) {
               <div class="banner-preview">
                 <img [src]="bannerPreview()" alt="Event banner">
-                <button mat-icon-button class="banner-remove" type="button" (click)="removeBanner()">
-                  <mat-icon>close</mat-icon>
-                </button>
+                @if (isUploadingBanner()) {
+                  <div class="banner-uploading">
+                    <mat-progress-spinner diameter="28" mode="indeterminate"></mat-progress-spinner>
+                    <span>Uploading…</span>
+                  </div>
+                } @else if (isDeletingBanner()) {
+                  <div class="banner-uploading">
+                    <mat-progress-spinner diameter="28" mode="indeterminate"></mat-progress-spinner>
+                    <span>Removing…</span>
+                  </div>
+                } @else {
+                  <button mat-icon-button class="banner-remove" type="button" (click)="removeBanner()">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                }
               </div>
             } @else {
               <label class="banner-drop" for="bannerInput">
@@ -250,14 +262,6 @@
                       @if (ticketGroup($index).get('name')?.hasError('required')) {
                         <mat-error>Required</mat-error>
                       }
-                    </mat-form-field>
-                    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
-                      <mat-label>Currency</mat-label>
-                      <mat-select formControlName="currency">
-                        @for (c of currencies; track c) {
-                          <mat-option [value]="c">{{ c }}</mat-option>
-                        }
-                      </mat-select>
                     </mat-form-field>
                   </div>
 

@@ -7,8 +7,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -19,11 +19,11 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class EventController {
     private final EventService eventService;
 
-    @PostMapping(consumes = "multipart/form-data")
+    @PostMapping
     public ResponseEntity<EventResponse> createEvent(
             UriComponentsBuilder uriComponentsBuilder,
             @AuthenticationPrincipal String currentUserKey,
-            @Valid @ModelAttribute CreateEventRequest request
+            @Valid @RequestBody CreateEventRequest request
     ) {
         var response = eventService.createEvent(request, currentUserKey);
         var uri = uriComponentsBuilder.path("/events/{external_id}").buildAndExpand(response.externalId()).toUri();

@@ -1,3 +1,29 @@
+export type CreateTicketTypeRequest = {
+  name: string;
+  description?: string | null;
+  price: number;
+  currency: string;
+  quantity: number;
+  maxPerOrder?: number | null;
+  saleStartDate?: string | null;
+  saleEndDate?: string | null;
+  isHidden: boolean;
+}
+
+export type CreateEventRequest = {
+  title: string;
+  description: string;
+  categoryId: number;
+  isPublic: boolean;
+  venueName: string;
+  venueCity: string;
+  venueCountry: string;
+  startTime: string;
+  endTime: string;
+  bannerUrl: string;
+  ticketTypes: CreateTicketTypeRequest[];
+}
+
 export type TicketTypeResponse = {
   externalId: string;
   name: string;
