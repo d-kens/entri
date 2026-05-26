@@ -19,21 +19,23 @@ html {
   --mat-sys-on-secondary-container:#2A2A2A;
 
   /* ═══════════════════════════════════════════════════════════
-     SURFACES — Warm cream
+     SURFACES — Clean neutral
      ═══════════════════════════════════════════════════════════ */
-  --mat-sys-background:            #FFF7F0;
+  --mat-sys-background:            #F8F9FA;
   --mat-sys-on-background:         #1A1A1A;
   --mat-sys-surface:               #FFFFFF;
-  --mat-sys-surface-container-low: #FFF3E8;
-  --mat-sys-surface-container:     #F5EDE4;
-  --mat-sys-surface-variant:       #F0E8DF;
+  --mat-sys-surface-container-low:  #F4F4F5;
+  --mat-sys-surface-container:      #EFEFEF;
+  --mat-sys-surface-container-high: #E8E8EA;
+
+  --mat-sys-surface-variant:       #F0F0F0;
   --mat-sys-on-surface:            #1A1A1A;
-  --mat-sys-on-surface-variant:    #6B6B6B;
+  --mat-sys-on-surface-variant:    #71717A;
   --mat-sys-inverse-surface:       #1A1A1A;
-  --mat-sys-inverse-on-surface:    #FFF7F0;
+  --mat-sys-inverse-on-surface:    #F8F9FA;
   --mat-sys-surface-tint:          #E8572A;
-  --mat-sys-outline:               #B0A49A;
-  --mat-sys-outline-variant:       #E0D5CC;
+  --mat-sys-outline:               #A1A1AA;
+  --mat-sys-outline-variant:       #E4E4E7;
   --mat-sys-shadow:                #1A1A1A;
   --mat-sys-scrim:                 #1A1A1A;
 
@@ -79,6 +81,23 @@ html {
   --mat-sys-focus-state-layer-opacity:   0.12;
   --mat-sys-hover-state-layer-opacity:   0.08;
   --mat-sys-pressed-state-layer-opacity: 0.12;
+
+  /* ═══════════════════════════════════════════════════════════
+     FORM FIELD — Angular Material 21 tokens for outlined text fields
+     ═══════════════════════════════════════════════════════════ */
+
+  /* Default */
+  --mat-form-field-outlined-outline-color:          #A1A1AA;
+  --mat-form-field-outlined-hover-outline-color:    #71717A;
+  --mat-form-field-outlined-label-text-color:       #71717A;
+
+  /* Error — border and floated label go red, resting label stays gray */
+  --mat-form-field-outlined-error-outline-color:          #DC2626;
+  --mat-form-field-outlined-error-hover-outline-color:    #DC2626;
+  --mat-form-field-outlined-error-focus-outline-color:    #DC2626;
+  --mat-form-field-outlined-error-label-text-color:       #71717A;
+  --mat-form-field-outlined-error-focus-label-text-color: #DC2626;
+  --mat-form-field-outlined-error-caret-color:            #DC2626;
 
   /* ═══════════════════════════════════════════════════════════
      APP SEMANTIC — ticket/payment status

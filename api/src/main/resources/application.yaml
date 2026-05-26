@@ -22,6 +22,9 @@ app:
   password-reset:
     expiry-minutes: 15
 
+cookie:
+  secure: true
+
 firebase:
   service-account-path: ${FIREBASE_SERVICE_ACCOUNT_PATH:oro-web-app-firebase-adminsdk-fbsvc-8f2ea245fd.json}
   storage:

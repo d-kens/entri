@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,6 +29,9 @@ public class AuthController {
     private final AuthService authService;
     private final PasswordResetService passwordResetService;
 
+    @Value("${cookie.secure}")
+    private boolean cookieSecure;
+
     @PostMapping("/register")
     public ResponseEntity<UserResponse> register(
             UriComponentsBuilder uriComponentsBuilder,
@@ -44,11 +48,7 @@ public class AuthController {
             @Valid @RequestBody LoginRequest loginRequest
     ) {
         var result = authService.login(loginRequest);
-        setRefreshTokenCookie(
-                response,
-                result.refreshToken(),
-                jwtConfig.getRefreshTokenExpiration()
-        );
+        setRefreshTokenCookie(response, result.refreshToken(), jwtConfig.getRefreshTokenExpiration());
         return result.loginResponse();
     }
 
@@ -71,7 +71,7 @@ public class AuthController {
     @PostMapping("refresh-token")
     public AccessToken refreshToken(
             HttpServletResponse response,
-            @CookieValue(value = "refreshToken") String refreshToken
+            @CookieValue(value = "refresh_token") String refreshToken
     ) {
         return authService.refreshToken(refreshToken);
     }
@@ -90,7 +90,7 @@ public class AuthController {
     private void setRefreshTokenCookie(HttpServletResponse response, String value, int maxAge) {
         Cookie cookie = new Cookie("refresh_token", value);
         cookie.setHttpOnly(true);
-        cookie.setSecure(true);
+        cookie.setSecure(cookieSecure);
         cookie.setPath("/");
         cookie.setMaxAge(maxAge);
         response.addCookie(cookie);

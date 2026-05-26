@@ -26,6 +26,10 @@ export const FEATURE_ROUTES: Routes = [
         path: 'forbidden',
         canActivate: [authGuard],
         loadComponent: () => import('./forbidden/forbidden').then(m => m.Forbidden)
+      },
+      {
+        path: 'events',
+        loadChildren: () => import('./events/events.routes').then(m => m.EVENTS_ROUTES)
       }
     ]
   }
