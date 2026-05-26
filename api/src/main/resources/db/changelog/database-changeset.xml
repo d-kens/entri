@@ -67,4 +67,214 @@
                 referencedColumnNames="id"/>
     </changeSet>
 
+    <changeSet id="202605240001" author="d-kens">
+        <createTable tableName="event_categories">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="description" type="TEXT"/>
+            <column name="date_created" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_modified" type="DATETIME"/>
+            <column name="modified_by" type="VARCHAR(100)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="202605240002" author="d-kens">
+        <insert tableName="event_categories">
+            <column name="name" value="Music"/>
+            <column name="description" value="Concerts, festivals, and live music events"/>
+            <column name="date_created" valueDate="2026-05-24T00:00:00"/>
+            <column name="created_by" value="system"/>
+        </insert>
+        <insert tableName="event_categories">
+            <column name="name" value="Sports"/>
+            <column name="description" value="Sporting events, tournaments, and athletic competitions"/>
+            <column name="date_created" valueDate="2026-05-24T00:00:00"/>
+            <column name="created_by" value="system"/>
+        </insert>
+        <insert tableName="event_categories">
+            <column name="name" value="Arts &amp; Theatre"/>
+            <column name="description" value="Plays, exhibitions, performances, and cultural events"/>
+            <column name="date_created" valueDate="2026-05-24T00:00:00"/>
+            <column name="created_by" value="system"/>
+        </insert>
+        <insert tableName="event_categories">
+            <column name="name" value="Food &amp; Drink"/>
+            <column name="description" value="Food festivals, wine tastings, and culinary experiences"/>
+            <column name="date_created" valueDate="2026-05-24T00:00:00"/>
+            <column name="created_by" value="system"/>
+        </insert>
+        <insert tableName="event_categories">
+            <column name="name" value="Business &amp; Networking"/>
+            <column name="description" value="Conferences, seminars, workshops, and professional networking"/>
+            <column name="date_created" valueDate="2026-05-24T00:00:00"/>
+            <column name="created_by" value="system"/>
+        </insert>
+        <insert tableName="event_categories">
+            <column name="name" value="Technology"/>
+            <column name="description" value="Tech meetups, hackathons, and developer conferences"/>
+            <column name="date_created" valueDate="2026-05-24T00:00:00"/>
+            <column name="created_by" value="system"/>
+        </insert>
+        <insert tableName="event_categories">
+            <column name="name" value="Health &amp; Wellness"/>
+            <column name="description" value="Fitness classes, wellness retreats, and health workshops"/>
+            <column name="date_created" valueDate="2026-05-24T00:00:00"/>
+            <column name="created_by" value="system"/>
+        </insert>
+        <insert tableName="event_categories">
+            <column name="name" value="Education"/>
+            <column name="description" value="Lectures, training courses, and educational workshops"/>
+            <column name="date_created" valueDate="2026-05-24T00:00:00"/>
+            <column name="created_by" value="system"/>
+        </insert>
+        <insert tableName="event_categories">
+            <column name="name" value="Community &amp; Causes"/>
+            <column name="description" value="Charity events, fundraisers, and community gatherings"/>
+            <column name="date_created" valueDate="2026-05-24T00:00:00"/>
+            <column name="created_by" value="system"/>
+        </insert>
+        <insert tableName="event_categories">
+            <column name="name" value="Other"/>
+            <column name="description" value="Events that do not fit into any other category"/>
+            <column name="date_created" valueDate="2026-05-24T00:00:00"/>
+            <column name="created_by" value="system"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="202605240003" author="d-kens">
+        <createTable tableName="events">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="external_id" type="VARCHAR(36)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="organizer_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="title" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="venue_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="venue_city" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="venue_country" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="start_time" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="end_time" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="banner_url" type="VARCHAR(500)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_public" type="TINYINT(1)" defaultValueNumeric="1">
+                <constraints nullable="false"/>
+            </column>
+            <column name="published_at" type="DATETIME"/>
+            <column name="date_created" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_modified" type="DATETIME"/>
+            <column name="modified_by" type="VARCHAR(100)"/>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="events"
+                baseColumnNames="organizer_id"
+                constraintName="fk_events_organizer"
+                referencedTableName="users"
+                referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint
+                baseTableName="events"
+                baseColumnNames="category_id"
+                constraintName="fk_events_category"
+                referencedTableName="event_categories"
+                referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="202605240004" author="d-kens">
+        <createTable tableName="ticket_types">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="event_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="TEXT"/>
+            <column name="price" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="currency" type="VARCHAR(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quantity" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sold_quantity" type="INT" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reserved_quantity" type="INT" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="max_per_order" type="INT"/>
+            <column name="sale_start_date" type="DATETIME"/>
+            <column name="sale_end_date" type="DATETIME"/>
+            <column name="display_order" type="INT" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_hidden" type="TINYINT(1)" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_created" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_modified" type="DATETIME"/>
+            <column name="modified_by" type="VARCHAR(100)"/>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="ticket_types"
+                baseColumnNames="event_id"
+                constraintName="fk_ticket_types_event"
+                referencedTableName="events"
+                referencedColumnNames="id"/>
+    </changeSet>
+
 </databaseChangeLog>

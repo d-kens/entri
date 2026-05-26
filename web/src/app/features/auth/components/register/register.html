@@ -4,11 +4,11 @@
     <p class="text-sm text-surface-variant-foreground">Fill in the details below to get started</p>
   </div>
 
-  <form [formGroup]="registerForm" class="space-y-3">
+  <form [formGroup]="registerForm" class="space-y-4">
 
     <!-- Name row -->
-    <div class="grid grid-cols-2 gap-3">
-      <mat-form-field appearance="outline" class="w-full">
+    <div class="grid grid-cols-2 gap-3 items-start">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
         <mat-label>First Name</mat-label>
         <input matInput type="text" placeholder="John" formControlName="firstName" autocomplete="given-name" data-cy="first-name-input">
         @if (registerForm.get('firstName')?.hasError('required')) {
@@ -18,7 +18,7 @@
         }
       </mat-form-field>
 
-      <mat-form-field appearance="outline" class="w-full">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
         <mat-label>Last Name</mat-label>
         <input matInput type="text" placeholder="Doe" formControlName="lastName" autocomplete="family-name" data-cy="last-name-input">
         @if (registerForm.get('lastName')?.hasError('required')) {
@@ -30,7 +30,7 @@
     </div>
 
     <!-- Email -->
-    <mat-form-field appearance="outline" class="w-full">
+    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
       <mat-label>Email Address</mat-label>
       <input matInput type="email" placeholder="john@example.com" formControlName="email" autocomplete="email" data-cy="email-input">
       <mat-icon matSuffix>mail_outline</mat-icon>
@@ -42,7 +42,7 @@
     </mat-form-field>
 
     <!-- Phone Number -->
-    <mat-form-field appearance="outline" class="w-full">
+    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
       <mat-label>Phone Number</mat-label>
       <input matInput type="tel" placeholder="0712 345 678" formControlName="phoneNumber" autocomplete="tel" data-cy="phone-input">
       <mat-icon matSuffix>phone_iphone</mat-icon>
@@ -54,7 +54,7 @@
     </mat-form-field>
 
     <!-- Password -->
-    <mat-form-field appearance="outline" class="w-full">
+    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
       <mat-label>Password</mat-label>
       <input matInput [type]="hidePassword() ? 'password' : 'text'" placeholder="At least 8 characters" formControlName="password" autocomplete="new-password" data-cy="password-input">
       <button mat-icon-button matSuffix type="button" (mousedown)="$event.preventDefault()" (click)="togglePassword()">
@@ -68,7 +68,7 @@
     </mat-form-field>
 
     <!-- Confirm Password -->
-    <mat-form-field appearance="outline" class="w-full">
+    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
       <mat-label>Confirm Password</mat-label>
       <input matInput [type]="hideConfirmPassword() ? 'password' : 'text'" placeholder="Re-enter your password" formControlName="confirmPassword" autocomplete="new-password" [errorStateMatcher]="passwordMatcher" data-cy="confirm-password-input">
       <button mat-icon-button matSuffix type="button" (mousedown)="$event.preventDefault()" (click)="toggleConfirmPassword()">
