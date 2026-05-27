@@ -2,7 +2,7 @@ import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
 
 import { routes } from './app.routes';
-import {authInterceptor} from './core/intercetors/auth-interceptor';
+import {authInterceptor} from './core/interceptors/auth-interceptor';
 import {provideHttpClient, withFetch, withInterceptors} from '@angular/common/http';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { provideNativeDateAdapter } from '@angular/material/core';

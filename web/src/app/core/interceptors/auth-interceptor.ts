@@ -34,9 +34,11 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
             return next(retryReq);
           }),
           catchError((refreshError) => {
-            authService.clearSession();
-            snackbar.showError('Your session has expired. Please log in again.');
-            router.navigate(['/auth/login']);
+            if (refreshError.status === 401 || refreshError.status === 403) {
+              authService.clearSession();
+              snackbar.showError('Your session has expired. Please log in again.');
+              router.navigate(['/auth/login']);
+            }
             return throwError(() => refreshError);
           })
         );

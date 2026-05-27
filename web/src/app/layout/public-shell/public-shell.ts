@@ -7,8 +7,8 @@ import { MatIconModule } from '@angular/material/icon';
   selector: 'app-public-layout',
   standalone: true,
   imports: [RouterOutlet, RouterLink, MatButtonModule, MatIconModule],
-  templateUrl: './public-layout.html',
-  styleUrl: './public-layout.css',
+  templateUrl: './public-shell.html',
+  styleUrl: './public-shell.css',
 })
 export class PublicLayout {
   menuOpen = signal(false);
