@@ -1,7 +1,9 @@
 package com.api.modules.events.service;
 
+import com.api.common.exception.NotFoundException;
 import com.api.modules.events.dto.CreateEventRequest;
 import com.api.modules.events.dto.CreateTicketTypeRequest;
+import com.api.modules.events.dto.EventDetailResponse;
 import com.api.modules.events.dto.EventResponse;
 import com.api.modules.events.entity.Event;
 import com.api.modules.events.entity.EventStatus;
@@ -50,6 +52,12 @@ public class EventService {
 
         eventRepository.save(event);
         return eventMapper.toEventResponse(event);
+    }
+
+    public EventDetailResponse getEventByExternalId(String externalId) {
+        var event = eventRepository.findByExternalId(externalId)
+                .orElseThrow(() -> new NotFoundException("Event with external ID: " + externalId + " not found"));
+        return eventMapper.toEventDetailResponse(event);
     }
 
     private TicketType toTicketType(CreateTicketTypeRequest t, Event event) {

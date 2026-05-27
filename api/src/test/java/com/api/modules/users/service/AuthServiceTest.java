@@ -36,8 +36,6 @@ class AuthServiceTest {
 
     @InjectMocks AuthService authService;
 
-    // ── register ─────────────────────────────────────────────────────────────
-
     @Test
     void register_delegatesToUserServiceAndReturnsResult() {
         var request = new CreateUserRequest("john@example.com", "Password123!", "John", "Doe", "0712345678", "PLATFORM_USER");
@@ -49,8 +47,6 @@ class AuthServiceTest {
         assertThat(result).isEqualTo(expected);
         verify(userService).create(request);
     }
-
-    // ── login ─────────────────────────────────────────────────────────────────
 
     @Test
     void login_authenticatesAndReturnsTokens() {
