@@ -2,7 +2,7 @@ import { Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
-import { UsersService } from '@features/users/services/users-service';
+import { UsersService } from '@core/services/users-service';
 
 interface StatCard {
   icon: string;
@@ -25,10 +25,10 @@ export interface RecentPayment {
   selector: 'app-dashboard',
   standalone: true,
   imports: [RouterLink, MatIconModule, MatTableModule],
-  templateUrl: './dashboard.html',
-  styleUrl: './dashboard.css',
+  templateUrl: './overview.html',
+  styleUrl: './overview.css',
 })
-export class Dashboard {
+export class Overview {
   private usersService = inject(UsersService);
 
   user = this.usersService.currentUser;

@@ -53,5 +53,22 @@ export type EventResponse = {
   isPublic: boolean;
   publishedAt?: string;
   dateCreated: string;
+}
+
+export type EventDetailResponse = {
+  externalId: string;
+  title: string;
+  description: string;
+  categoryName: string;
+  venueName: string;
+  venueCity: string;
+  venueCountry: string;
+  startTime: string;
+  endTime: string;
+  bannerUrl: string;
+  status: 'DRAFT' | 'PUBLISHED' | 'CANCELLED';
+  isPublic: boolean;
+  publishedAt?: string;
+  dateCreated: string;
   ticketTypes: TicketTypeResponse[];
 }

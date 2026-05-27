@@ -1,17 +1,44 @@
 import { Routes } from '@angular/router';
-import { FEATURE_ROUTES } from '@features/feature.routes';
+import { Layout } from '@layout/app-shell/app-shell';
+import { PublicLayout } from '@layout/public-shell/public-shell';
+import { authGuard } from '@core/guards/auth-guard';
 
 export const routes: Routes = [
   {
-    path: 'auth',
-    loadChildren: () => import('./features/auth/auth.routes').then(m => m.AUTH_ROUTES)
+    path: '',
+    component: PublicLayout,
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./features/public/landing/landing').then(m => m.Landing),
+      },
+      {
+        path: 'discover',
+        loadComponent: () => import('./features/events/pages/events-listing/events-listing').then(m => m.EventsListing),
+      },
+    ],
   },
   {
-    path: 'dashboard',
-    children: FEATURE_ROUTES
+    path: 'auth',
+    loadChildren: () => import('./features/auth/auth.routes').then(m => m.AUTH_ROUTES),
   },
   {
     path: '',
-    loadChildren: () => import('./features/public/public.routes').then(m => m.PUBLIC_ROUTES)
-  }
+    component: Layout,
+    canActivate: [authGuard],
+    children: [
+      {
+        path: 'overview',
+        loadComponent: () => import('./features/overview/overview').then(m => m.Overview),
+      },
+      {
+        path: 'support',
+        loadComponent: () => import('./features/support/support').then(m => m.Support),
+      },
+      {
+        path: 'events',
+        loadChildren: () => import('./features/events/events.routes').then(m => m.EVENTS_ROUTES),
+      },
+    ],
+  },
 ];

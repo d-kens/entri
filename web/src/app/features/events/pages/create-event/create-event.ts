@@ -32,7 +32,9 @@ type VenueForm = {
   venueCity: FormControl<string>;
   venueCountry: FormControl<string>;
   startDate: FormControl<Date | null>;
+  startTime: FormControl<string>;
   endDate: FormControl<Date | null>;
+  endTime: FormControl<string>;
 };
 
 type TicketTypeForm = {
@@ -115,7 +117,9 @@ export class CreateEvent {
     venueCity: ['', Validators.required],
     venueCountry: ['', Validators.required],
     startDate: this.fb.control<Date | null>(null, Validators.required),
+    startTime: ['', Validators.required],
     endDate: this.fb.control<Date | null>(null, Validators.required),
+    endTime: ['', Validators.required],
   });
 
   ticketsForm = this.fb.group({
@@ -237,7 +241,7 @@ export class CreateEvent {
     }
 
     if (this.ticketTypes.length === 0) {
-      this.snackbarService.showError('Add at least one ticket type before publishing');
+      this.snackbarService.showError('Add at least one ticket type before saving');
       return;
     }
 
@@ -255,10 +259,10 @@ export class CreateEvent {
     this.isLoading.set(true);
 
     this.eventsService.createEvent(this.buildPayload()).subscribe({
-      next: () => {
+      next: (event) => {
         this.isLoading.set(false);
-        this.snackbarService.showSuccess('Event created successfully!');
-        this.router.navigateByUrl('/dashboard/events');
+        this.snackbarService.showSuccess('Event saved successfully!');
+        this.router.navigate(['/events', event.externalId]);
       },
       error: (err) => {
         const msg = err?.error?.message || 'Failed to create event. Please try again.';
@@ -266,6 +270,13 @@ export class CreateEvent {
         this.isLoading.set(false);
       },
     });
+  }
+
+  private combineDateTime(date: Date, time: string): string {
+    const [hours, minutes] = time.split(':').map(Number);
+    const dt = new Date(date);
+    dt.setHours(hours, minutes, 0, 0);
+    return dt.toISOString();
   }
 
   private buildPayload(): CreateEventRequest {
@@ -280,8 +291,8 @@ export class CreateEvent {
       venueName: venue.venueName,
       venueCity: venue.venueCity,
       venueCountry: venue.venueCountry,
-      startTime: (venue.startDate as Date).toISOString(),
-      endTime: (venue.endDate as Date).toISOString(),
+      startTime: this.combineDateTime(venue.startDate as Date, venue.startTime),
+      endTime: this.combineDateTime(venue.endDate as Date, venue.endTime),
       bannerUrl: this.bannerUrl() as string,
       ticketTypes: this.ticketTypes.controls.map(ctrl => {
         const t = ctrl.getRawValue();

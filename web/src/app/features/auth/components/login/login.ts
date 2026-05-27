@@ -34,7 +34,7 @@ export class Login {
 
   togglePassword() { this.hidePassword.update(v => !v); }
 
-  returnUrl: string = '/dashboard';
+  returnUrl: string = '/overview';
 
   constructor(
     private router: Router,

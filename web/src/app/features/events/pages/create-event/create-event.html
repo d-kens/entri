@@ -2,7 +2,7 @@
 
   <!-- Header -->
   <header class="create-header">
-    <a mat-icon-button [routerLink]="['/dashboard/events']">
+    <a mat-icon-button [routerLink]="['/events']">
       <mat-icon>arrow_back</mat-icon>
     </a>
     <div>
@@ -149,7 +149,7 @@
               <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
                 <mat-label>Start date</mat-label>
                 <input matInput [matDatepicker]="startPicker" formControlName="startDate"
-                  placeholder="Select date" [min]="minDate" readonly>
+                  placeholder="Select date" [min]="minDate" readonly (click)="startPicker.open()">
                 <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
                 <mat-datepicker #startPicker></mat-datepicker>
                 @if (venueForm.get('startDate')?.hasError('required')) {
@@ -157,12 +157,37 @@
                 }
               </mat-form-field>
               <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
+                <mat-label>Start time</mat-label>
+                <input matInput type="time" formControlName="startTime" #startTimeInput
+                  (click)="startTimeInput.showPicker()" (keydown)="$event.preventDefault()">
+                <button mat-icon-button matSuffix type="button" (click)="startTimeInput.showPicker()">
+                  <mat-icon>schedule</mat-icon>
+                </button>
+                @if (venueForm.get('startTime')?.hasError('required')) {
+                  <mat-error>Required</mat-error>
+                }
+              </mat-form-field>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-start">
+              <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
                 <mat-label>End date</mat-label>
                 <input matInput [matDatepicker]="endPicker" formControlName="endDate"
-                  placeholder="Select date" [min]="minDate" readonly>
+                  placeholder="Select date" [min]="minDate" readonly (click)="endPicker.open()">
                 <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
                 <mat-datepicker #endPicker></mat-datepicker>
                 @if (venueForm.get('endDate')?.hasError('required')) {
+                  <mat-error>Required</mat-error>
+                }
+              </mat-form-field>
+              <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
+                <mat-label>End time</mat-label>
+                <input matInput type="time" formControlName="endTime" #endTimeInput
+                  (click)="endTimeInput.showPicker()" (keydown)="$event.preventDefault()">
+                <button mat-icon-button matSuffix type="button" (click)="endTimeInput.showPicker()">
+                  <mat-icon>schedule</mat-icon>
+                </button>
+                @if (venueForm.get('endTime')?.hasError('required')) {
                   <mat-error>Required</mat-error>
                 }
               </mat-form-field>
@@ -240,7 +265,7 @@
               <div class="tickets-empty">
                 <mat-icon>confirmation_number</mat-icon>
                 <p class="tickets-empty-label">No ticket types yet</p>
-                <p class="tickets-empty-sub">Add at least one before publishing</p>
+                <p class="tickets-empty-sub">Add at least one before saving</p>
               </div>
             }
 
@@ -342,10 +367,10 @@
               @if (isLoading()) {
                 <div class="flex items-center gap-2">
                   <mat-progress-spinner diameter="16" mode="indeterminate"></mat-progress-spinner>
-                  <span>Publishing...</span>
+                  <span>Saving...</span>
                 </div>
               } @else {
-                <span>Publish Event</span>
+                <span>Save</span>
               }
             </button>
           </div>
