@@ -3,8 +3,9 @@ package com.api.modules.events.dto;
 import com.api.modules.events.entity.EventStatus;
 
 import java.time.Instant;
+import java.util.List;
 
-public record EventResponse(
+public record EventDetailResponse(
         String externalId,
         String title,
         String description,
@@ -18,6 +19,7 @@ public record EventResponse(
         EventStatus status,
         boolean isPublic,
         Instant publishedAt,
-        Instant dateCreated
+        Instant dateCreated,
+        List<TicketTypeResponse> ticketTypes
 ) {
 }
