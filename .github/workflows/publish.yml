@@ -53,8 +53,8 @@ jobs:
           context: ./api
           push: true
           tags: |
-            ghcr.io/d-kens/oro-api:latest
-            ghcr.io/d-kens/oro-api:${{ github.sha }}
+            ghcr.io/d-kens/entri-api:latest
+            ghcr.io/d-kens/entri-api:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -85,7 +85,7 @@ jobs:
           context: ./web
           push: true
           tags: |
-            ghcr.io/d-kens/oro-web:latest
-            ghcr.io/d-kens/oro-web:${{ github.sha }}
+            ghcr.io/d-kens/entri-web:latest
+            ghcr.io/d-kens/entri-web:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
