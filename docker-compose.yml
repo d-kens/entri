@@ -2,12 +2,12 @@ services:
   db:
     image: 'mysql:8.0.32'
     environment:
-      MYSQL_DATABASE: oro
+      MYSQL_DATABASE: entri
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     volumes:
-      - oro-data:/var/lib/mysql
+      - entri-data:/var/lib/mysql
     ports:
       - '127.0.0.1:3306:3306'
     mem_limit: 512m
@@ -19,9 +19,9 @@ services:
       start_period: 30s
 
   api:
-    image: ghcr.io/d-kens/oro-api:latest
+    image: ghcr.io/d-kens/entri-api:latest
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/oro?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/entri?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
       SPRING_DATASOURCE_USERNAME: ${MYSQL_USER}
       SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}
       JWT_SECRET: ${JWT_SECRET}
@@ -31,7 +31,7 @@ services:
       FIREBASE_STORAGE_BUCKET: ${FIREBASE_STORAGE_BUCKET}
       NOVU_SECRET: ${NOVU_SECRET}
     volumes:
-      - /etc/oro/firebase.json:/secrets/firebase.json:ro
+      - /etc/entri/firebase.json:/secrets/firebase.json:ro
     mem_limit: 768m
     expose:
       - '8080'
@@ -41,7 +41,7 @@ services:
     restart: unless-stopped
 
   web:
-    image: ghcr.io/d-kens/oro-web:latest
+    image: ghcr.io/d-kens/entri-web:latest
     expose:
       - '80'
     depends_on:
@@ -75,5 +75,5 @@ services:
     restart: unless-stopped
 
 volumes:
-  oro-data:
+  entri-data:
   certbot-webroot:
