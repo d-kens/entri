@@ -15,9 +15,9 @@
         <a [routerLink]="['/events']" class="nav-link">Events</a>
         <a [routerLink]="['/']" fragment="pricing" class="nav-link">Pricing</a>
         <a [routerLink]="['/']" fragment="faq" class="nav-link">FAQ</a>
-        <a [routerLink]="['/auth/login']" class="nav-link">Sign in</a>
+        <a [routerLink]="['/auth/login']" class="nav-link">Organizer Sign In</a>
         <a [routerLink]="['/auth/register']">
-          <button mat-flat-button class="nav-cta">Get started</button>
+          <button mat-flat-button class="nav-cta">Organizer Sign Up</button>
         </a>
       </nav>
 
@@ -42,11 +42,11 @@
           <a [routerLink]="['/events']" (click)="closeMenu()" class="mobile-nav-link">Events</a>
           <a [routerLink]="['/']" fragment="pricing" (click)="closeMenu()" class="mobile-nav-link">Pricing</a>
           <a [routerLink]="['/']" fragment="faq" (click)="closeMenu()" class="mobile-nav-link">FAQ</a>
-          <a [routerLink]="['/auth/login']" (click)="closeMenu()" class="mobile-nav-link">Sign in</a>
+          <a [routerLink]="['/auth/login']" (click)="closeMenu()" class="mobile-nav-link">Organizer Sign In</a>
         </div>
         <div class="px-6 py-6 border-t border-[#E0D5CC]">
           <a [routerLink]="['/auth/register']" (click)="closeMenu()">
-            <button mat-flat-button class="nav-cta w-full">Get started</button>
+            <button mat-flat-button class="nav-cta w-full">Organizer Sign Up</button>
           </a>
         </div>
       </nav>
