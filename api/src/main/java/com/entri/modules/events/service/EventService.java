@@ -16,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class EventService {
@@ -23,6 +25,11 @@ public class EventService {
     private final UserService userService;
     private final EventRepository eventRepository;
     private final EventCategoryService eventCategoryService;
+
+    public List<EventResponse>  getEvents() {
+        return null;
+    }
+
 
     @Transactional
     public EventResponse createEvent(CreateEventRequest request, String currentUserKey) {

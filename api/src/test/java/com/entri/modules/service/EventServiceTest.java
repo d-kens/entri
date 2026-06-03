@@ -216,6 +216,13 @@ class EventServiceTest {
     }
 
     @Test
+    void getEvents_noEventsExist_returnsEmptyList() {
+        when(eventRepository.findAll()).thenReturn(List.of());
+        List<EventResponse> result = eventService.getEvents();
+        assertThat(result).isEmpty();
+    }
+
+    @Test
     void getEventByExternalId_eventExists_returnsEventDetailResponse() {
         Event event = Event.builder().build();
         EventDetailResponse expected = new EventDetailResponse(
