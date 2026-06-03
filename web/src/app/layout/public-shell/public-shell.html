@@ -12,7 +12,7 @@
 
       <!-- Desktop nav + actions -->
       <nav class="hidden md:flex items-center gap-6">
-        <a [routerLink]="['/events']" class="nav-link">Events</a>
+        <a [routerLink]="['/discover']" class="nav-link">Events</a>
         <a [routerLink]="['/']" fragment="pricing" class="nav-link">Pricing</a>
         <a [routerLink]="['/']" fragment="faq" class="nav-link">FAQ</a>
         <a [routerLink]="['/auth/login']" class="nav-link">Organizer Sign In</a>
@@ -39,7 +39,7 @@
     <div class="mobile-drawer md:hidden">
       <nav class="flex flex-col h-full">
         <div class="flex flex-col flex-1 px-6 pt-4">
-          <a [routerLink]="['/events']" (click)="closeMenu()" class="mobile-nav-link">Events</a>
+          <a [routerLink]="['/discover']" (click)="closeMenu()" class="mobile-nav-link">Events</a>
           <a [routerLink]="['/']" fragment="pricing" (click)="closeMenu()" class="mobile-nav-link">Pricing</a>
           <a [routerLink]="['/']" fragment="faq" (click)="closeMenu()" class="mobile-nav-link">FAQ</a>
           <a [routerLink]="['/auth/login']" (click)="closeMenu()" class="mobile-nav-link">Organizer Sign In</a>

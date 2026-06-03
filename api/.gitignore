@@ -41,4 +41,3 @@ out/
 .env
 *firebase-adminsdk*.json
 src/main/resources/application-dev.yaml
-DECISIONS.md

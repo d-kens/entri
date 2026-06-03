@@ -37,7 +37,6 @@ export class Landing implements OnInit {
   readonly features = [
     { icon: 'bolt',              title: 'Live in minutes',        desc: 'Create an event and start selling tickets in under 5 minutes. No approval needed.' },
     { icon: 'qr_code_scanner',   title: 'QR check-in',           desc: 'Scan tickets at the door with any phone. No extra hardware required.' },
-    { icon: 'insights',          title: 'Real-time analytics',   desc: 'Watch ticket sales come in live. See revenue, attendance, and trends as they happen.' },
     { icon: 'mail',              title: 'Automatic tickets',      desc: 'Attendees receive a branded ticket with QR code the moment they pay. Zero manual work.' },
     { icon: 'tune',              title: 'Multiple ticket types',  desc: 'Early bird, VIP, group discounts - full control over your pricing structure.' },
   ];

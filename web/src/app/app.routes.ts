@@ -14,7 +14,7 @@ export const routes: Routes = [
       },
       {
         path: 'discover',
-        loadComponent: () => import('./features/events/pages/events-listing/events-listing').then(m => m.EventsListing),
+        loadComponent: () => import('@features/events/pages/browse-events/browse-events').then(m => m.BrowseEvents),
       },
     ],
   },

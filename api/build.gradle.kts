@@ -4,9 +4,9 @@ plugins {
     id("io.spring.dependency-management") version "1.1.7"
 }
 
-group = "com.parrcel"
+group = "com.entri"
 version = "1.0.0"
-description = "Backend API that powers the oro rental management platform"
+description = "Backend API that powers the entri platform"
 
 java {
     toolchain {
