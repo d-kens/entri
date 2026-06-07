@@ -24,13 +24,16 @@
           No approval process. No complicated setup.
         </p>
 
-        <div class="mt-10 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
-          <a [routerLink]="['/auth/register']" class="cta-primary">
+        <div class="mt-10 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-7">
+          <a [routerLink]="['/auth/register']" class="steps-cta inline-flex items-center gap-3">
             Start selling tickets
-            <mat-icon class="!text-base ml-1.5">arrow_forward</mat-icon>
+            <span class="steps-cta-arrow">
+              <mat-icon class="!text-base">arrow_forward</mat-icon>
+            </span>
           </a>
-          <a [routerLink]="['/discover']" class="cta-secondary">
+          <a [routerLink]="['/discover']" class="inline-flex items-center gap-1 text-sm font-semibold text-[#1A1A1A] underline underline-offset-4 decoration-[#D0C5BB] hover:decoration-[#1A1A1A] transition-colors">
             Browse events
+            <mat-icon class="!text-sm">arrow_forward</mat-icon>
           </a>
         </div>
 
