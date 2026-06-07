@@ -27,7 +27,8 @@ public class EventService {
     private final EventCategoryService eventCategoryService;
 
     public List<EventResponse>  getEvents() {
-        return null;
+        return eventRepository.findAll()
+                .stream().map(eventMapper::toEventResponse).toList();
     }
 
 
