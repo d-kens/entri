@@ -30,6 +30,7 @@
 
 .category-pill:hover {
   border-color: #1A1A1A;
+  cursor: pointer;
 }
 
 .category-pill.active {
