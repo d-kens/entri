@@ -223,6 +223,11 @@ class EventServiceTest {
     }
 
     @Test
+    void getEvents_eventsExist_shouldReturnPaginatedEvents() {
+
+    }
+
+    @Test
     void getEventByExternalId_eventExists_returnsEventDetailResponse() {
         Event event = Event.builder().build();
         EventDetailResponse expected = new EventDetailResponse(
