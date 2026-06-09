@@ -1,5 +1,6 @@
 package com.entri.modules.service;
 
+import com.entri.common.dto.PaginationResponse;
 import com.entri.common.exception.NotFoundException;
 import com.entri.modules.events.dto.CreateEventRequest;
 import com.entri.modules.events.dto.CreateTicketTypeRequest;
@@ -23,6 +24,10 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -217,14 +222,38 @@ class EventServiceTest {
 
     @Test
     void getEvents_noEventsExist_returnsEmptyList() {
-        when(eventRepository.findAll()).thenReturn(List.of());
-        List<EventResponse> result = eventService.getEvents();
-        assertThat(result).isEmpty();
+        when(eventRepository.findAll(any(Pageable.class))).thenReturn(Page.empty());
+        PaginationResponse<EventResponse> result = eventService.getEvents(Pageable.unpaged());
+        assertThat(result.content()).isEmpty();
     }
 
     @Test
     void getEvents_eventsExist_shouldReturnPaginatedEvents() {
+        List<Event> events = List.of(
+            Event.builder().id(1L).title("Jazz Night").build(),
+            Event.builder().id(2L).title("Tech Meetup").build()
+        );
+        EventResponse r1 = new EventResponse(
+                "id1", "Jazz Night", null, null, null, null, null,
+                null, null, null, null, false, null, null);
+        EventResponse r2 = new EventResponse(
+                "id2", "Tech Meetup", null, null, null, null, null,
+                null, null, null, null, false, null, null);
 
+        Pageable pageable = PageRequest.of(0, 2);
+        Page<Event> page = new PageImpl<>(events, pageable, 5);
+
+        when(eventRepository.findAll(pageable)).thenReturn(page);
+        when(eventMapper.toEventResponse(events.get(0))).thenReturn(r1);
+        when(eventMapper.toEventResponse(events.get(1))).thenReturn(r2);
+
+        PaginationResponse<EventResponse> result = eventService.getEvents(pageable);
+
+        assertThat(result.content()).containsExactly(r1, r2);
+        assertThat(result.totalElements()).isEqualTo(5);
+        assertThat(result.totalPages()).isEqualTo(3);
+        assertThat(result.first()).isTrue();
+        assertThat(result.last()).isFalse();
     }
 
     @Test
