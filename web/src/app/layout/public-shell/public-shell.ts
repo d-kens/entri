@@ -11,7 +11,18 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrl: './public-shell.css',
 })
 export class PublicLayout {
-  menuOpen = signal(false);
-  toggleMenu() { this.menuOpen.update(v => !v); }
-  closeMenu() { this.menuOpen.set(false); }
+  menuOpen    = signal(false);
+  menuClosing = signal(false);
+
+  toggleMenu() {
+    this.menuOpen() ? this.closeMenu() : this.menuOpen.set(true);
+  }
+
+  closeMenu() {
+    this.menuClosing.set(true);
+    setTimeout(() => {
+      this.menuOpen.set(false);
+      this.menuClosing.set(false);
+    }, 250);
+  }
 }

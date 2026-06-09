@@ -69,7 +69,25 @@
   to   { opacity: 1; }
 }
 
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
 @keyframes slideIn {
   from { transform: translateX(100%); }
   to   { transform: translateX(0); }
+}
+
+@keyframes slideOut {
+  from { transform: translateX(0); }
+  to   { transform: translateX(100%); }
+}
+
+.mobile-overlay.is-closing {
+  animation: fadeOut 0.2s ease forwards;
+}
+
+.mobile-drawer.is-closing {
+  animation: slideOut 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
