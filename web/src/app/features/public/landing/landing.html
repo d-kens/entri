@@ -252,28 +252,43 @@
 
 <!-- ── FAQ ────────────────────────────────────────────────────────── -->
 <section id="faq" class="bg-[#FFF7F0] py-28">
-  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
-    <div class="text-center mb-14">
-      <p class="text-[#E8572A] text-xs font-bold uppercase tracking-[0.15em] mb-4">FAQ</p>
-      <h2 class="font-display text-4xl sm:text-5xl font-black text-[#1A1A1A]">Common questions</h2>
-    </div>
+    <div class="lg:grid lg:grid-cols-[5fr_8fr] lg:gap-20">
 
-    <div>
-      @for (faq of faqs; track faq.q; let i = $index) {
-        <div class="faq-item">
-          <button class="faq-question" (click)="toggleFaq(i)">
-            <span>{{ faq.q }}</span>
-            <mat-icon class="!text-xl flex-shrink-0 transition-transform duration-200"
-              [style.transform]="openFaq() === i ? 'rotate(180deg)' : 'rotate(0)'">
-              expand_more
-            </mat-icon>
-          </button>
-          @if (openFaq() === i) {
-            <div class="faq-answer">{{ faq.a }}</div>
-          }
+      <!-- Left: sticky heading -->
+      <div class="mb-12 lg:mb-0">
+        <div class="lg:sticky lg:top-10">
+          <p class="text-[#E8572A] text-xs font-bold uppercase tracking-[0.15em] mb-4">FAQ</p>
+          <h2 class="font-display text-4xl sm:text-5xl font-black text-[#1A1A1A] leading-tight">
+            Common<br class="hidden lg:block"> questions
+          </h2>
+          <p class="text-[#6B6B6B] text-sm leading-relaxed mt-5 max-w-xs">
+            Still have questions?<br>
+            Email us at
+            <a href="mailto:hello@entri.co" class="text-[#E8572A] hover:underline font-medium">hello&#64;entri.co</a>
+          </p>
         </div>
-      }
+      </div>
+
+      <!-- Right: accordion -->
+      <div>
+        @for (faq of faqs; track faq.q; let i = $index) {
+          <div class="faq-item">
+            <button class="faq-question" (click)="toggleFaq(i)">
+              <span>{{ faq.q }}</span>
+              <mat-icon class="!text-xl flex-shrink-0 transition-transform duration-200"
+                [style.transform]="openFaq() === i ? 'rotate(180deg)' : 'rotate(0)'">
+                expand_more
+              </mat-icon>
+            </button>
+            @if (openFaq() === i) {
+              <div class="faq-answer">{{ faq.a }}</div>
+            }
+          </div>
+        }
+      </div>
+
     </div>
 
   </div>
