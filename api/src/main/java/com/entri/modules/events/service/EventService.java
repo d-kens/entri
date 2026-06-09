@@ -1,5 +1,6 @@
 package com.entri.modules.events.service;
 
+import com.entri.common.dto.PaginationResponse;
 import com.entri.common.exception.NotFoundException;
 import com.entri.modules.events.dto.CreateEventRequest;
 import com.entri.modules.events.dto.CreateTicketTypeRequest;
@@ -13,6 +14,8 @@ import com.entri.modules.events.repository.EventRepository;
 import com.entri.modules.events.service.mapper.EventMapper;
 import com.entri.modules.users.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,11 +29,23 @@ public class EventService {
     private final EventRepository eventRepository;
     private final EventCategoryService eventCategoryService;
 
-    public List<EventResponse>  getEvents() {
-        return eventRepository.findAll()
-                .stream().map(eventMapper::toEventResponse).toList();
+    public PaginationResponse<EventResponse> getEvents(Pageable pageable) {
+        Page<Event> page = eventRepository.findAll(pageable);
+        List<EventResponse> content = page.getContent()
+                .stream()
+                .map(eventMapper::toEventResponse)
+                .toList();
+        return new PaginationResponse<>(
+                content,
+                page.getNumber(),
+                page.getSize(),
+                page.getTotalElements(),
+                page.getTotalPages(),
+                page.isFirst(),
+                page.isLast()
+        );
     }
-
+;
 
     @Transactional
     public EventResponse createEvent(CreateEventRequest request, String currentUserKey) {
