@@ -33,10 +33,10 @@
   <!-- Mobile menu overlay + drawer (outside header so fixed positioning covers full viewport) -->
   @if (menuOpen()) {
     <!-- Backdrop -->
-    <div class="mobile-overlay md:hidden" (click)="closeMenu()"></div>
+    <div class="mobile-overlay md:hidden" [class.is-closing]="menuClosing()" (click)="closeMenu()"></div>
 
     <!-- Drawer -->
-    <div class="mobile-drawer md:hidden">
+    <div class="mobile-drawer md:hidden" [class.is-closing]="menuClosing()">
       <nav class="flex flex-col h-full">
 
         <!-- Drawer header: logo + close -->
