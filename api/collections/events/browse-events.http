@@ -1,0 +1,2 @@
+GET http://localhost:9096/api/events/browse
+Content-Type: application/json

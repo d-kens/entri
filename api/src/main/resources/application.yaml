@@ -1,6 +1,6 @@
 spring:
   application:
-    name: oro
+    name: entri
   liquibase:
     change-log: classpath:db/changelog/changelog.xml
   datasource:
@@ -36,3 +36,20 @@ novu:
   subscriber:
     locale: ${NOVU_SUBSCRIBER_LOCALE:en-KE}
     timezone: ${NOVU_SUBSCRIBER_TIMEZONE:Africa/Nairobi}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info"
+  info:
+    build:
+      enabled: true
+    env:
+      enabled: true
+
+info:
+  app:
+    name: ${spring.application.name}
+    description: ${project.description:Backend API that powers the entri platform}
+    version: ${project.version:1.0.0}
