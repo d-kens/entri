@@ -94,6 +94,12 @@ html {
   --font-weight-medium:  var(--mat-sys-medium-font-weight);
   --font-weight-bold:    var(--mat-sys-bold-font-weight);
 
+  /* ── Warm palette (public pages) ────────────────────────────── */
+  --color-warm:        var(--app-warm);
+  --color-warm-md:     var(--app-warm-md);
+  --color-warm-strong: var(--app-warm-strong);
+  --color-warm-text:   var(--app-warm-text);
+
   /* ── Border radius ───────────────────────────────────────── */
 
   --radius-xs:   var(--mat-sys-corner-extra-small);

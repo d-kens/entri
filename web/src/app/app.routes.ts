@@ -41,4 +41,8 @@ export const routes: Routes = [
       },
     ],
   },
+  {
+    path: '**',
+    loadComponent: () => import('./features/public/not-found/not-found').then(m => m.NotFound),
+  },
 ];

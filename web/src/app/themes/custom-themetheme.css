@@ -110,4 +110,20 @@ html {
 
   --app-overdue:    #DC2626;
   --app-on-overdue: #FFFFFF;
+
+  /* ── Snackbar semantic states ──────────────────────────────── */
+  --app-success:    #16A34A;
+  --app-on-success: #FFFFFF;
+
+  --app-warning:    #F59E0B;
+  --app-on-warning: #3D2600;
+
+  --app-info:       #0284C7;
+  --app-on-info:    #FFFFFF;
+
+  /* ── Warm surface palette (public / marketing pages) ─────── */
+  --app-warm:        #FFF7F0;
+  --app-warm-md:     #F0E8DF;
+  --app-warm-strong: #E0D5CC;
+  --app-warm-text:   #B0A49A;
 }
