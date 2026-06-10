@@ -35,7 +35,6 @@ export class EventDetails implements OnInit {
 
   event = signal<EventDetailResponse | null>(null);
   isLoading = signal(true);
-  isPublishing = signal(false);
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id')!;
@@ -50,9 +49,5 @@ export class EventDetails implements OnInit {
         this.router.navigate(['/events']);
       },
     });
-  }
-
-  publish(): void {
-    console.log("Event published.")
   }
 }

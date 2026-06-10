@@ -1,5 +1,5 @@
-import {Component, signal} from '@angular/core';
-import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import {Component, inject, signal} from '@angular/core';
+import {FormBuilder, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Router, RouterLink} from '@angular/router';
 import {AuthService} from '@core/services/auth-service';
 import {SnackbarService} from '@core/services/snackbar-service';
@@ -21,25 +21,22 @@ import {MatProgressSpinner} from '@angular/material/progress-spinner';
     MatLabel,
     MatProgressSpinner,
     MatSuffix,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
   templateUrl: './forgot-password.html',
   styleUrl: './forgot-password.css',
 })
 export class ForgotPassword {
-  forgotPasswordForm!: FormGroup;
-  isLoading = signal(false);
+  private router = inject(Router);
+  private fb = inject(FormBuilder);
+  private authService = inject(AuthService);
+  private snackbarService = inject(SnackbarService);
 
-  constructor(
-    private router: Router,
-    private fb: FormBuilder,
-    private authService: AuthService,
-    private snackbarService: SnackbarService
-  ) {
-    this.forgotPasswordForm = fb.group({
-      email: ['', [Validators.required, Validators.email]],
-    })
-  }
+  forgotPasswordForm = this.fb.group({
+    email: ['', [Validators.required, Validators.email]],
+  });
+
+  isLoading = signal(false);
 
   forgotPassword() {
     if (this.forgotPasswordForm.invalid) {
@@ -49,19 +46,18 @@ export class ForgotPassword {
 
     this.isLoading.set(true);
 
-    const email = this.forgotPasswordForm.get('email')!.value;
+    const email = this.forgotPasswordForm.get('email')?.value ?? '';
 
     this.authService.forgotPassword(email).subscribe({
       next: () => {
         this.isLoading.set(false);
-        this.snackbarService.showSuccess("A reset link has successfully been sent to your email if it was found in our system")
+        this.snackbarService.showSuccess('A reset link has successfully been sent to your email if it was found in our system');
         this.router.navigate(['/auth/login']);
       },
-      error: (err) => {
+      error: () => {
         this.snackbarService.showError('Something went wrong. Please try again later.');
         this.isLoading.set(false);
-      }
+      },
     });
   }
-
 }
