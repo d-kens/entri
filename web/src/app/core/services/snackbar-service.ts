@@ -1,16 +1,20 @@
 import { Injectable } from '@angular/core';
 import {MatSnackBar, MatSnackBarConfig} from '@angular/material/snack-bar';
 
+const SNACKBAR_DURATION = {
+  success: 3000,
+  error:   5000,
+  info:    3000,
+  warning: 4000,
+} as const;
+
 @Injectable({
   providedIn: 'root',
 })
 export class SnackbarService {
   constructor(private snackBar: MatSnackBar) {}
 
-  /**
-   * Show success message with green styling
-   */
-  showSuccess(message: string, duration: number = 3000) {
+  showSuccess(message: string, duration = SNACKBAR_DURATION.success) {
     const config: MatSnackBarConfig = {
       duration,
       horizontalPosition: 'end',
@@ -21,10 +25,7 @@ export class SnackbarService {
     this.snackBar.open(message, 'Close', config);
   }
 
-  /**
-   * Show error message with red styling
-   */
-  showError(message: string, duration: number = 5000) {
+  showError(message: string, duration = SNACKBAR_DURATION.error) {
     const config: MatSnackBarConfig = {
       duration,
       horizontalPosition: 'end',
@@ -35,10 +36,7 @@ export class SnackbarService {
     this.snackBar.open(message, 'Close', config);
   }
 
-  /**
-   * Show info message with default styling
-   */
-  showInfo(message: string, duration: number = 3000) {
+  showInfo(message: string, duration = SNACKBAR_DURATION.info) {
     const config: MatSnackBarConfig = {
       duration,
       horizontalPosition: 'end',
@@ -48,10 +46,7 @@ export class SnackbarService {
     this.snackBar.open(message, 'Close', config);
   }
 
-  /**
-   * Show warning message with custom styling (optional)
-   */
-  showWarning(message: string, duration: number = 4000) {
+  showWarning(message: string, duration = SNACKBAR_DURATION.warning) {
     const config: MatSnackBarConfig = {
       duration,
       horizontalPosition: 'end',

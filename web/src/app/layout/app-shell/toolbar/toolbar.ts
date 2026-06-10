@@ -63,9 +63,7 @@ export class Toolbar implements OnInit {
   ngOnInit() {
     const externalKey = this.authService.getExternalId();
     if (externalKey) {
-      this.usersService.getUserByExternalKey(externalKey).subscribe({
-        error: (err) => console.error('Failed to fetch user:', err),
-      });
+      this.usersService.getUserByExternalKey(externalKey).subscribe();
     }
   }
 

@@ -29,14 +29,7 @@
             Edit Event
           </a>
           @if (ev.status === 'DRAFT') {
-            <button mat-flat-button (click)="publish()" [disabled]="isPublishing()">
-              @if (isPublishing()) {
-                <mat-progress-spinner diameter="16" mode="indeterminate"></mat-progress-spinner>
-                Publishing...
-              } @else {
-                Go Live
-              }
-            </button>
+            <button mat-flat-button disabled>Go Live</button>
           }
         </div>
       </div>
@@ -48,14 +41,7 @@
           Edit Event
         </a>
         @if (ev.status === 'DRAFT') {
-          <button mat-flat-button (click)="publish()" [disabled]="isPublishing()">
-            @if (isPublishing()) {
-              <mat-progress-spinner diameter="16" mode="indeterminate"></mat-progress-spinner>
-              Publishing...
-            } @else {
-              Go Live
-            }
-          </button>
+          <button mat-flat-button disabled>Go Live</button>
         }
       </div>
 

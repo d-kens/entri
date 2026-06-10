@@ -1,4 +1,6 @@
 import { Component, signal } from '@angular/core';
+
+const MENU_CLOSE_ANIMATION_MS = 250;
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -23,6 +25,6 @@ export class PublicLayout {
     setTimeout(() => {
       this.menuOpen.set(false);
       this.menuClosing.set(false);
-    }, 250);
+    }, MENU_CLOSE_ANIMATION_MS);
   }
 }
