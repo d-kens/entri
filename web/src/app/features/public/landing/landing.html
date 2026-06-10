@@ -36,85 +36,58 @@
 
       </div>
 
-      <!-- Product mockup -->
-      <div class="hidden lg:block relative">
+      <!-- Event card stack -->
+      <div class="hidden lg:block relative pt-8">
+        <div class="cards-stack">
 
-        <div class="mockup-card">
-          <!-- Event cover -->
-          <div class="mockup-cover" style="background: linear-gradient(135deg, #2D1B4E 0%, #7C3AED 100%)">
-            <span class="mockup-cover-emoji">🎵</span>
-            <div class="mockup-cover-footer">
-              <div>
-                <p class="mockup-event-title">Afro Fusion Night</p>
-                <p class="mockup-event-meta">Sat 7 Jun · Alchemist Bar, Nairobi</p>
-              </div>
-              <span class="mockup-live-pill">
-                <span class="mockup-live-dot"></span>
-                Live
+          <div class="stack-card stack-card--back">
+            <div class="stack-cover" style="background: linear-gradient(135deg, #064E3B 0%, #059669 100%)"></div>
+            <div class="stack-body">
+              <p class="stack-title">Nairobi Marathon 2026</p>
+              <p class="stack-meta">Sun 22 Jun · Uhuru Park</p>
+            </div>
+          </div>
+
+          <div class="stack-card stack-card--mid">
+            <div class="stack-cover" style="background: linear-gradient(135deg, #7C2D12 0%, #EA580C 100%)"></div>
+            <div class="stack-body">
+              <p class="stack-title">Street Food Festival</p>
+              <p class="stack-meta">Fri 13 Jun · The Hub Karen</p>
+            </div>
+          </div>
+
+          <div class="stack-card stack-card--front">
+            <div class="stack-cover" style="background: linear-gradient(135deg, #2D1B4E 0%, #7C3AED 100%)">
+              <span class="stack-live-pill">
+                <span class="stack-live-dot"></span>
+                On sale
               </span>
             </div>
+            <div class="stack-body">
+              <p class="stack-title">Afro Fusion Night</p>
+              <p class="stack-meta">Sat 7 Jun · Alchemist Bar, Nairobi</p>
+
+              <div class="stack-rule"></div>
+
+              <div class="stack-ticket-list">
+                <div class="stack-ticket">
+                  <span class="stack-ticket-name">General Admission</span>
+                  <span class="stack-ticket-price">KES 1,500</span>
+                </div>
+                <div class="stack-ticket">
+                  <span class="stack-ticket-name">VIP Table</span>
+                  <span class="stack-ticket-price">KES 3,500</span>
+                </div>
+                <div class="stack-ticket stack-ticket--soldout">
+                  <span class="stack-ticket-name">Early Bird</span>
+                  <span class="stack-soldout">Sold out</span>
+                </div>
+              </div>
+
+            </div>
           </div>
 
-          <!-- Stats -->
-          <div class="mockup-stats">
-            <div class="mockup-stat">
-              <p class="mockup-stat-value">248</p>
-              <p class="mockup-stat-label">Tickets sold</p>
-            </div>
-            <div class="mockup-divider"></div>
-            <div class="mockup-stat">
-              <p class="mockup-stat-value">KES 372k</p>
-              <p class="mockup-stat-label">Revenue</p>
-            </div>
-            <div class="mockup-divider"></div>
-            <div class="mockup-stat">
-              <p class="mockup-stat-value">67%</p>
-              <p class="mockup-stat-label">Capacity</p>
-            </div>
-          </div>
-
-          <!-- Ticket types -->
-          <div class="mockup-tickets">
-            <div class="mockup-ticket">
-              <span class="mockup-ticket-name">General</span>
-              <div class="mockup-bar-track"><div class="mockup-bar-fill" style="width: 73%"></div></div>
-              <span class="mockup-ticket-count">182</span>
-              <span class="mockup-ticket-price">KES 1,500</span>
-            </div>
-            <div class="mockup-ticket">
-              <span class="mockup-ticket-name">VIP</span>
-              <div class="mockup-bar-track"><div class="mockup-bar-fill" style="width: 44%"></div></div>
-              <span class="mockup-ticket-count">66</span>
-              <span class="mockup-ticket-price">KES 3,500</span>
-            </div>
-            <div class="mockup-ticket">
-              <span class="mockup-ticket-name">Early Bird</span>
-              <div class="mockup-bar-track"><div class="mockup-bar-fill mockup-bar-full"></div></div>
-              <span class="mockup-ticket-soldout">Sold out</span>
-              <span class="mockup-ticket-price">KES 800</span>
-            </div>
-          </div>
         </div>
-
-        <!-- Floating toasts -->
-        <div class="mockup-toast mockup-toast--sale">
-          <div class="mockup-toast-icon">🎟</div>
-          <div>
-            <p class="mockup-toast-title">New ticket sold</p>
-            <p class="mockup-toast-sub">General · KES 1,500</p>
-          </div>
-        </div>
-
-        <div class="mockup-toast mockup-toast--checkin">
-          <div class="mockup-toast-icon mockup-toast-check">
-            <mat-icon class="!text-sm text-[#16A34A]">check</mat-icon>
-          </div>
-          <div>
-            <p class="mockup-toast-title">Ticket validated</p>
-            <p class="mockup-toast-sub">John K. · Gate 1</p>
-          </div>
-        </div>
-
       </div>
 
     </div>

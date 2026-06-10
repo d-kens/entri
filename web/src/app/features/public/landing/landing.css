@@ -121,58 +121,52 @@
   color: rgba(255, 255, 255, 0.9);
 }
 
-/* ── Product mockup ──────────────────────────────────────────── */
+/* ── Event card stack ────────────────────────────────────────── */
 
-.mockup-card {
+.cards-stack {
+  position: relative;
+}
+
+.stack-card {
   background: #ffffff;
-  border-radius: 1.5rem;
+  border-radius: 1.25rem;
   border: 1px solid #E8E0D8;
-  box-shadow: 0 8px 40px rgba(26, 26, 26, 0.1), 0 2px 8px rgba(26, 26, 26, 0.06);
   overflow: hidden;
 }
 
-.mockup-cover {
-  height: 140px;
-  position: relative;
-  padding: 1.25rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-}
-
-.mockup-cover-emoji {
+.stack-card--back {
   position: absolute;
-  top: 12px;
-  right: 16px;
-  font-size: 3.5rem;
-  opacity: 0.2;
-  line-height: 1;
-  pointer-events: none;
+  inset: 0;
+  transform: rotate(-5deg) translate(-6px, 8px);
+  z-index: 1;
+  box-shadow: 0 2px 8px rgba(26, 26, 26, 0.06);
+  opacity: 0.6;
 }
 
-.mockup-cover-footer {
+.stack-card--mid {
+  position: absolute;
+  inset: 0;
+  transform: rotate(-2.5deg) translate(-3px, 4px);
+  z-index: 2;
+  box-shadow: 0 4px 16px rgba(26, 26, 26, 0.08);
+  opacity: 0.8;
+}
+
+.stack-card--front {
+  position: relative;
+  z-index: 3;
+  box-shadow: 0 12px 40px rgba(26, 26, 26, 0.13), 0 2px 8px rgba(26, 26, 26, 0.06);
+}
+
+.stack-cover {
+  height: 120px;
+  position: relative;
   display: flex;
   align-items: flex-end;
-  justify-content: space-between;
-  gap: 0.5rem;
+  padding: 0.875rem 1rem;
 }
 
-.mockup-event-title {
-  font-family: var(--font-display, 'Coustard', Georgia, serif);
-  font-weight: 900;
-  font-size: 1rem;
-  color: #ffffff;
-  margin: 0;
-  line-height: 1.2;
-}
-
-.mockup-event-meta {
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.65);
-  margin-top: 0.125rem;
-}
-
-.mockup-live-pill {
+.stack-live-pill {
   display: inline-flex;
   align-items: center;
   gap: 0.375rem;
@@ -183,11 +177,9 @@
   font-weight: 700;
   padding: 0.25rem 0.625rem;
   border-radius: 9999px;
-  white-space: nowrap;
-  flex-shrink: 0;
 }
 
-.mockup-live-dot {
+.stack-live-dot {
   width: 6px;
   height: 6px;
   background: #4ADE80;
@@ -200,171 +192,68 @@
   50%       { opacity: 0.4; }
 }
 
-.mockup-stats {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr auto 1fr;
-  align-items: center;
-  padding: 1rem 1.25rem;
-  border-bottom: 1px solid #F0E8DF;
-  background: #FDFAF8;
+.stack-body {
+  padding: 1rem 1.125rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
-.mockup-stat {
-  text-align: center;
-  padding: 0.25rem 0;
-}
-
-.mockup-stat-value {
+.stack-title {
   font-family: var(--font-display, 'Coustard', Georgia, serif);
   font-weight: 900;
   font-size: 1.0625rem;
   color: #1A1A1A;
   margin: 0;
-  line-height: 1;
+  line-height: 1.2;
 }
 
-.mockup-stat-label {
-  font-size: 0.6875rem;
-  color: #B0A49A;
-  margin-top: 0.25rem;
-  font-weight: 500;
+.stack-meta {
+  font-size: 0.8125rem;
+  color: #6B6B6B;
+  margin: 0;
 }
 
-.mockup-divider {
-  width: 1px;
-  height: 2rem;
-  background: #E8E0D8;
-  flex-shrink: 0;
+.stack-rule {
+  height: 1px;
+  background: #F0E8DF;
+  margin: 0.625rem 0;
 }
 
-.mockup-tickets {
-  padding: 0.875rem 1.25rem 1rem;
+.stack-ticket-list {
   display: flex;
   flex-direction: column;
-  gap: 0.625rem;
+  gap: 0.5rem;
 }
 
-.mockup-ticket {
-  display: grid;
-  grid-template-columns: 5.5rem 1fr auto auto;
+.stack-ticket {
+  display: flex;
   align-items: center;
-  gap: 0.625rem;
+  justify-content: space-between;
 }
 
-.mockup-ticket-name {
+.stack-ticket-name {
+  font-size: 0.8125rem;
+  color: #3D3D3D;
+  font-weight: 500;
+}
+
+.stack-ticket--soldout .stack-ticket-name {
+  color: #B0A49A;
+}
+
+.stack-ticket-price {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #1A1A1A;
+}
+
+.stack-soldout {
   font-size: 0.75rem;
   font-weight: 600;
-  color: #1A1A1A;
-  white-space: nowrap;
-}
-
-.mockup-bar-track {
-  height: 5px;
-  background: #F0E8DF;
-  border-radius: 9999px;
-  overflow: hidden;
-}
-
-.mockup-bar-fill {
-  height: 100%;
-  background: #E8572A;
-  border-radius: 9999px;
-  transition: width 0.4s ease;
-}
-
-.mockup-bar-full {
-  width: 100% !important;
-  background: #16A34A;
-}
-
-.mockup-ticket-count {
-  font-size: 0.6875rem;
-  color: #6B6B6B;
-  font-weight: 500;
-  white-space: nowrap;
-  min-width: 3rem;
-  text-align: right;
-}
-
-.mockup-ticket-soldout {
-  font-size: 0.6875rem;
   color: #16A34A;
-  font-weight: 700;
-  white-space: nowrap;
-  min-width: 3rem;
-  text-align: right;
 }
 
-.mockup-ticket-price {
-  font-size: 0.6875rem;
-  color: #1A1A1A;
-  font-weight: 700;
-  white-space: nowrap;
-  min-width: 4rem;
-  text-align: right;
-}
-
-/* ── Floating toasts ─────────────────────────────────────────── */
-
-.mockup-toast {
-  position: absolute;
-  display: flex;
-  align-items: center;
-  gap: 0.625rem;
-  background: #ffffff;
-  border: 1px solid #E8E0D8;
-  border-radius: 0.875rem;
-  padding: 0.625rem 0.875rem;
-  box-shadow: 0 4px 20px rgba(26, 26, 26, 0.12);
-  animation: float-in 0.5s ease forwards;
-  min-width: 180px;
-}
-
-.mockup-toast--sale {
-  bottom: -16px;
-  left: -20px;
-}
-
-.mockup-toast--checkin {
-  top: -16px;
-  right: -20px;
-}
-
-@keyframes float-in {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-.mockup-toast-icon {
-  font-size: 1.125rem;
-  width: 2rem;
-  height: 2rem;
-  background: #FFF7F0;
-  border-radius: 0.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.mockup-toast-check {
-  background: #F0FDF4;
-}
-
-.mockup-toast-title {
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: #1A1A1A;
-  margin: 0;
-  line-height: 1;
-}
-
-.mockup-toast-sub {
-  font-size: 0.6875rem;
-  color: #B0A49A;
-  margin-top: 0.1875rem;
-  line-height: 1;
-}
 
 /* ── How it works ────────────────────────────────────────────── */
 
