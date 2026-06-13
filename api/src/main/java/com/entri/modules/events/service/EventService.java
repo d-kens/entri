@@ -1,9 +1,11 @@
 package com.entri.modules.events.service;
 
+import com.entri.common.dto.PaginationResponse;
 import com.entri.common.exception.NotFoundException;
 import com.entri.modules.events.dto.CreateEventRequest;
 import com.entri.modules.events.dto.CreateTicketTypeRequest;
 import com.entri.modules.events.dto.EventDetailResponse;
+import com.entri.modules.events.dto.EventFilter;
 import com.entri.modules.events.dto.EventResponse;
 import com.entri.modules.events.entity.Event;
 import com.entri.modules.events.entity.EventStatus;
@@ -11,10 +13,18 @@ import com.entri.modules.events.entity.TicketStatus;
 import com.entri.modules.events.entity.TicketType;
 import com.entri.modules.events.repository.EventRepository;
 import com.entri.modules.events.service.mapper.EventMapper;
+import com.entri.modules.events.specification.EventSpecifications;
 import com.entri.modules.users.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +33,29 @@ public class EventService {
     private final UserService userService;
     private final EventRepository eventRepository;
     private final EventCategoryService eventCategoryService;
+
+    public PaginationResponse<EventResponse> getEvents(EventFilter filter) {
+        Sort sort = Sort.by(Sort.Direction.fromString(filter.sortDirection()), "startTime");
+        Pageable pageable = PageRequest.of(filter.page(), filter.size(), sort);
+
+        Specification<Event> spec = buildSpecification(filter);
+
+        Page<Event> result = eventRepository.findAll(spec, pageable);
+
+        List<EventResponse> content = result.getContent()
+                .stream()
+                .map(eventMapper::toEventResponse)
+                .toList();
+        return new PaginationResponse<>(
+                content,
+                result.getNumber(),
+                result.getSize(),
+                result.getTotalElements(),
+                result.getTotalPages(),
+                result.isFirst(),
+                result.isLast()
+        );
+    }
 
     @Transactional
     public EventResponse createEvent(CreateEventRequest request, String currentUserKey) {
@@ -58,6 +91,13 @@ public class EventService {
         var event = eventRepository.findByExternalId(externalId)
                 .orElseThrow(() -> new NotFoundException("Event with external ID: " + externalId + " not found"));
         return eventMapper.toEventDetailResponse(event);
+    }
+
+    private Specification<Event> buildSpecification(EventFilter filter) {
+        return Specification
+                .where(EventSpecifications.hasCategory(filter.categoryId()))
+                .and(EventSpecifications.search(filter.searchTerm()))
+                .and(EventSpecifications.hasOrganizer(filter.organizerExternalId()));
     }
 
     private TicketType toTicketType(CreateTicketTypeRequest t, Event event) {

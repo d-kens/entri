@@ -31,7 +31,7 @@ export class Landing implements OnInit {
   readonly steps = [
     { icon: 'edit_note',          title: 'Create your event',    desc: 'Add your event details, upload a cover image, and set your ticket types in minutes.' },
     { icon: 'confirmation_number', title: 'Set ticket types',     desc: 'Create multiple ticket tiers - VIP, Early Bird, General - each with their own price and quantity.' },
-    { icon: 'payments',           title: 'Get paid instantly',   desc: 'Payments go straight to you. Track sales and attendees from your dashboard in real time.' },
+    { icon: 'payments',           title: 'Track your payments',  desc: 'Monitor ticket sales and payment activity from your dashboard in real time.' },
   ];
 
   readonly features = [
@@ -71,7 +71,7 @@ export class Landing implements OnInit {
       features: [
         'Flat fee - no cut from your revenue',
         'Live in minutes, no approval needed',
-        'Payments go directly to you',
+        'Track payments from your dashboard',
       ],
       cta: 'Create an event',
       highlight: false,
@@ -85,7 +85,7 @@ export class Landing implements OnInit {
       features: [
         'Flat fee - no cut from your revenue',
         'Live in minutes, no approval needed',
-        'Payments go directly to you',
+        'Track payments from your dashboard',
       ],
       cta: 'Create an event',
       highlight: true,
@@ -99,7 +99,7 @@ export class Landing implements OnInit {
       features: [
         'Flat fee - no cut from your revenue',
         'Live in minutes, no approval needed',
-        'Payments go directly to you',
+        'Track payments from your dashboard',
       ],
       cta: 'Create an event',
       highlight: false,
@@ -113,7 +113,7 @@ export class Landing implements OnInit {
       features: [
         'Flat fee - no cut from your revenue',
         'Live in minutes, no approval needed',
-        'Payments go directly to you',
+        'Track payments from your dashboard',
       ],
       cta: 'Create an event',
       highlight: false,
@@ -126,8 +126,8 @@ export class Landing implements OnInit {
       a: 'Flat fee per event - KES 999 up to 200 tickets, KES 2,499 up to 1,000, KES 4,999 up to 5,000, KES 9,999 unlimited. Free events are always free.',
     },
     {
-      q: 'Where does ticket money go?',
-      a: 'Straight to your M-Pesa or bank account. You provide your details when creating the event. Entri does not hold your money.',
+      q: 'How are ticket payments handled?',
+      a: 'Ticket payments are processed securely through the platform. You can track all transactions and revenue in real time from your organiser dashboard.',
     },
     {
       q: 'What if I need to cancel my event?',
