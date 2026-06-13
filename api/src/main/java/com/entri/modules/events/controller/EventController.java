@@ -24,7 +24,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class EventController {
     private final EventService eventService;
 
-    @GetMapping("/browse")
+    @GetMapping()
     public PaginationResponse<EventResponse> browseEvents(
             @Valid EventFilter filter
     ) {

@@ -35,7 +35,6 @@ public class EventService {
     private final EventCategoryService eventCategoryService;
 
     public PaginationResponse<EventResponse> getEvents(EventFilter filter) {
-
         Sort sort = Sort.by(Sort.Direction.fromString(filter.sortDirection()), "startTime");
         Pageable pageable = PageRequest.of(filter.page(), filter.size(), sort);
 
@@ -97,7 +96,8 @@ public class EventService {
     private Specification<Event> buildSpecification(EventFilter filter) {
         return Specification
                 .where(EventSpecifications.hasCategory(filter.categoryId()))
-                .and(EventSpecifications.search(filter.searchTerm()));
+                .and(EventSpecifications.search(filter.searchTerm()))
+                .and(EventSpecifications.hasOrganizer(filter.organizerExternalId()));
     }
 
     private TicketType toTicketType(CreateTicketTypeRequest t, Event event) {

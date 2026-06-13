@@ -5,6 +5,7 @@ import com.entri.modules.users.service.UserDetailsService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
@@ -51,7 +52,7 @@ public class SecurityConfig {
                         .requestMatchers("/auth/refresh-token").permitAll()
                         .requestMatchers("/auth/forgot-password").permitAll()
                         .requestMatchers("/auth/reset-password").permitAll()
-                        .requestMatchers("/events/browse").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/events").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
