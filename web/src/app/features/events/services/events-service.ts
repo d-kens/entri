@@ -1,12 +1,17 @@
 import { inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'environments/environment';
-import {CreateEventRequest, EventDetailResponse, EventResponse} from '@core/models/event.models';
+import { CategoryResponse, CreateEventRequest, EventDetailResponse, EventFilter, EventResponse } from '@core/models/event.models';
+import { PageResponse } from '@core/models/common.model';
 
 @Injectable({ providedIn: 'root' })
 export class EventsService {
   private http = inject(HttpClient);
+
+  getCategories(): Observable<CategoryResponse[]> {
+    return this.http.get<CategoryResponse[]>(`${environment.apiBaseUrl}/categories`);
+  }
 
   uploadBanner(file: File): Observable<{ url: string }> {
     const fd = new FormData();
@@ -20,6 +25,17 @@ export class EventsService {
 
   createEvent(payload: CreateEventRequest): Observable<EventResponse> {
     return this.http.post<EventResponse>(`${environment.apiBaseUrl}/events`, payload);
+  }
+
+  getEvents(filter: EventFilter): Observable<PageResponse<EventResponse>> {
+    let params = new HttpParams();
+    if (filter.page !== undefined)          params = params.set('page', filter.page);
+    if (filter.size !== undefined)          params = params.set('size', filter.size);
+    if (filter.sortDirection)               params = params.set('sortDirection', filter.sortDirection);
+    if (filter.categoryId !== undefined)    params = params.set('categoryId', filter.categoryId);
+    if (filter.searchTerm)                  params = params.set('searchTerm', filter.searchTerm);
+    if (filter.organizerExternalId)         params = params.set('organizerExternalId', filter.organizerExternalId);
+    return this.http.get<PageResponse<EventResponse>>(`${environment.apiBaseUrl}/events`, { params });
   }
 
   getEvent(id: string): Observable<EventDetailResponse> {

@@ -1,140 +1,22 @@
-import { Component, signal, computed } from '@angular/core';
+import { Component, signal, computed, inject, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
+import { toObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Subject, debounceTime, distinctUntilChanged, skip, switchMap, catchError, EMPTY } from 'rxjs';
+import { EventsService } from '../../services/events-service';
+import { CategoryResponse, EventFilter, EventResponse } from '@core/models/event.models';
+import { PageResponse } from '@core/models/common.model';
 
-export interface EventItem {
-  id: string;
-  title: string;
-  day: string;
-  month: string;
-  time: string;
-  venue: string;
-  city: string;
-  category: string;
-  price: number | null;
-  gradient: string;
-  emoji: string;
-  tag?: string;
-}
-
-const MOCK_EVENTS: EventItem[] = [
-  {
-    id: '1',
-    title: 'Afro Fusion Night',
-    day: '07', month: 'Jun',
-    time: '8:00 PM',
-    venue: 'Alchemist Bar', city: 'Nairobi',
-    category: 'Music',
-    price: 1500,
-    gradient: 'linear-gradient(135deg, #2D1B4E 0%, #7C3AED 100%)',
-    emoji: '🎵',
-    tag: 'Selling fast',
-  },
-  {
-    id: '2',
-    title: 'Nairobi Tech Summit 2026',
-    day: '13', month: 'Jun',
-    time: '9:00 AM',
-    venue: 'Sarit Expo Centre', city: 'Nairobi',
-    category: 'Tech',
-    price: 3000,
-    gradient: 'linear-gradient(135deg, #0D3B5E 0%, #0EA5E9 100%)',
-    emoji: '💻',
-  },
-  {
-    id: '3',
-    title: 'Laugh Out Loud Comedy Show',
-    day: '14', month: 'Jun',
-    time: '7:00 PM',
-    venue: 'Kenya National Theatre', city: 'Nairobi',
-    category: 'Comedy',
-    price: 1000,
-    gradient: 'linear-gradient(135deg, #7C2D12 0%, #EA580C 100%)',
-    emoji: '😂',
-    tag: 'New',
-  },
-  {
-    id: '4',
-    title: 'Nairobi Marathon 2026',
-    day: '22', month: 'Jun',
-    time: '6:00 AM',
-    venue: 'Uhuru Park', city: 'Nairobi',
-    category: 'Sports',
-    price: 500,
-    gradient: 'linear-gradient(135deg, #064E3B 0%, #10B981 100%)',
-    emoji: '🏃',
-  },
-  {
-    id: '5',
-    title: 'Food & Wine Festival',
-    day: '28', month: 'Jun',
-    time: '12:00 PM',
-    venue: 'Ngong Racecourse', city: 'Nairobi',
-    category: 'Food',
-    price: 2000,
-    gradient: 'linear-gradient(135deg, #713F12 0%, #F59E0B 100%)',
-    emoji: '🍷',
-    tag: 'Popular',
-  },
-  {
-    id: '6',
-    title: 'Blankets & Wine',
-    day: '29', month: 'Jun',
-    time: '2:00 PM',
-    venue: 'Kasarani Grounds', city: 'Nairobi',
-    category: 'Music',
-    price: 2500,
-    gradient: 'linear-gradient(135deg, #1E3A5F 0%, #6366F1 100%)',
-    emoji: '🎶',
-  },
-  {
-    id: '7',
-    title: 'Mombasa Beach Carnival',
-    day: '05', month: 'Jul',
-    time: '10:00 AM',
-    venue: 'Nyali Beach', city: 'Mombasa',
-    category: 'Arts',
-    price: null,
-    gradient: 'linear-gradient(135deg, #0E4D5C 0%, #06B6D4 100%)',
-    emoji: '🎪',
-    tag: 'Free',
-  },
-  {
-    id: '8',
-    title: 'StartUp Grind Nairobi',
-    day: '10', month: 'Jul',
-    time: '6:00 PM',
-    venue: 'iHub, Kilimani', city: 'Nairobi',
-    category: 'Tech',
-    price: 500,
-    gradient: 'linear-gradient(135deg, #312E81 0%, #8B5CF6 100%)',
-    emoji: '🚀',
-  },
-  {
-    id: '9',
-    title: 'Gospel Concert Live',
-    day: '12', month: 'Jul',
-    time: '5:00 PM',
-    venue: 'KICC Grounds', city: 'Nairobi',
-    category: 'Music',
-    price: 800,
-    gradient: 'linear-gradient(135deg, #4A1942 0%, #DB2777 100%)',
-    emoji: '🙌',
-  },
-];
-
-interface CategoryConfig { label: string; icon: string; }
-
-const CATEGORY_CONFIG: CategoryConfig[] = [
-  { label: 'All',     icon: 'apps' },
-  { label: 'Music',   icon: 'music_note' },
-  { label: 'Tech',    icon: 'laptop' },
-  { label: 'Comedy',  icon: 'sentiment_very_satisfied' },
-  { label: 'Sports',  icon: 'sports' },
-  { label: 'Food',    icon: 'restaurant' },
-  { label: 'Arts',    icon: 'palette' },
-];
+const CATEGORY_STYLES: Record<string, { gradient: string; emoji: string }> = {
+  Music:  { gradient: 'linear-gradient(135deg, #2D1B4E 0%, #7C3AED 100%)', emoji: '🎵' },
+  Tech:   { gradient: 'linear-gradient(135deg, #0D3B5E 0%, #0EA5E9 100%)', emoji: '💻' },
+  Comedy: { gradient: 'linear-gradient(135deg, #7C2D12 0%, #EA580C 100%)', emoji: '😂' },
+  Sports: { gradient: 'linear-gradient(135deg, #064E3B 0%, #10B981 100%)', emoji: '🏃' },
+  Food:   { gradient: 'linear-gradient(135deg, #713F12 0%, #F59E0B 100%)', emoji: '🍷' },
+  Arts:   { gradient: 'linear-gradient(135deg, #0E4D5C 0%, #06B6D4 100%)', emoji: '🎪' },
+};
+const DEFAULT_STYLE = { gradient: 'linear-gradient(135deg, #1E293B 0%, #475569 100%)', emoji: '🎟️' };
 
 @Component({
   selector: 'app-events-listing',
@@ -144,30 +26,95 @@ const CATEGORY_CONFIG: CategoryConfig[] = [
   styleUrl: './browse-events.css',
 })
 export class BrowseEvents {
+  private eventsService = inject(EventsService);
+  private destroyRef = inject(DestroyRef);
+
+  readonly pageSize = 12;
+
+  categories = signal<CategoryResponse[]>([]);
+  activeCategoryId = signal<number | null>(null);
   searchQuery = signal('');
-  activeCategory = signal('All');
+  currentPage = signal(0);
+  events = signal<EventResponse[]>([]);
+  pageInfo = signal<Omit<PageResponse<EventResponse>, 'content'> | null>(null);
+  loading = signal(true);
+  error = signal<string | null>(null);
 
-  readonly categoryConfig = CATEGORY_CONFIG;
+  featuredEvent = computed(() => this.events()[0] ?? null);
+  gridEvents    = computed(() => this.events().slice(1));
 
-  filteredEvents = computed(() => {
-    const q = this.searchQuery().toLowerCase();
-    const cat = this.activeCategory();
-    return MOCK_EVENTS.filter(e => {
-      const matchesSearch = !q
-        || e.title.toLowerCase().includes(q)
-        || e.venue.toLowerCase().includes(q)
-        || e.city.toLowerCase().includes(q);
-      const matchesCategory = cat === 'All' || e.category === cat;
-      return matchesSearch && matchesCategory;
+  private readonly trigger$ = new Subject<{ page: number; searchTerm: string; categoryId?: number }>();
+
+  constructor() {
+    this.eventsService.getCategories().subscribe({
+      next: cats => this.categories.set(cats),
     });
-  });
 
-  featuredEvent = computed(() => this.filteredEvents()[0] ?? null);
-  gridEvents    = computed(() => this.filteredEvents().slice(1));
+    this.trigger$.pipe(
+      switchMap(({ page, searchTerm, categoryId }) => {
+        this.loading.set(true);
+        const filter: EventFilter = { page, size: this.pageSize };
+        if (searchTerm) filter.searchTerm = searchTerm;
+        if (categoryId) filter.categoryId = categoryId;
+        return this.eventsService.getEvents(filter).pipe(
+          catchError(() => {
+            this.error.set('Failed to load events. Please try again.');
+            this.loading.set(false);
+            return EMPTY;
+          })
+        );
+      }),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(({ content, ...info }) => {
+      this.events.set(content);
+      this.pageInfo.set(info);
+      this.loading.set(false);
+      this.error.set(null);
+    });
 
-  setCategory(cat: string) { this.activeCategory.set(cat); }
+    this.trigger$.next({ page: 0, searchTerm: '' });
 
-  onSearch(event: Event) {
+    toObservable(this.searchQuery).pipe(
+      skip(1),
+      debounceTime(400),
+      distinctUntilChanged(),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(q => {
+      this.currentPage.set(0);
+      this.trigger$.next({ page: 0, searchTerm: q, categoryId: this.activeCategoryId() ?? undefined });
+    });
+  }
+
+  private fire(page: number): void {
+    const categoryId = this.activeCategoryId() ?? undefined;
+    const searchTerm = this.searchQuery();
+    this.trigger$.next({ page, searchTerm, categoryId });
+  }
+
+  retry(): void { this.fire(this.currentPage()); }
+
+  onSearch(event: Event): void {
     this.searchQuery.set((event.target as HTMLInputElement).value);
+  }
+
+  setCategory(id: number | null): void {
+    this.activeCategoryId.set(id);
+    this.currentPage.set(0);
+    this.fire(0);
+  }
+
+  goToPage(page: number): void {
+    this.currentPage.set(page);
+    this.fire(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  getStyle(categoryName: string) {
+    return CATEGORY_STYLES[categoryName] ?? DEFAULT_STYLE;
+  }
+
+  coverStyle(event: EventResponse): string {
+    if (event.bannerUrl) return `url(${event.bannerUrl}) center / cover no-repeat`;
+    return this.getStyle(event.categoryName).gradient;
   }
 }
