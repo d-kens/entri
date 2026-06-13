@@ -22,6 +22,16 @@
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
+.category-fade-right {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 80px;
+  background: linear-gradient(to right, transparent, #FFF7F0 75%);
+  pointer-events: none;
+}
+
 .category-pill {
   background: white;
   color: #1A1A1A;
@@ -108,4 +118,43 @@
 .get-tickets-btn:hover {
   background: #E8572A;
   transform: translateX(2px);
+}
+
+/* ── Shimmer ─────────────────────────────────────────────────── */
+
+.shimmer-block {
+  background: linear-gradient(90deg, #f0ebe6 25%, #e4d9d1 50%, #f0ebe6 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ── Pagination ──────────────────────────────────────────────── */
+
+.pagination-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.5rem 1.25rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: 2px solid #E0D5CC;
+  background: white;
+  color: #1A1A1A;
+  transition: border-color 0.15s ease;
+  cursor: pointer;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  border-color: #1A1A1A;
+}
+
+.pagination-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }

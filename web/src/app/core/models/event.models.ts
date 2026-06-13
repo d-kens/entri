@@ -1,3 +1,17 @@
+export type EventFilter = {
+  page?: number;
+  size?: number;
+  sortDirection?: 'ASC' | 'DESC';
+  categoryId?: number;
+  searchTerm?: string;
+  organizerExternalId?: string;
+};
+
+export type CategoryResponse = {
+  id: number;
+  name: string;
+};
+
 export type CreateTicketTypeRequest = {
   name: string;
   description?: string | null;

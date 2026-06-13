@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -13,12 +14,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { EventsService } from '../../services/events-service';
 import { SnackbarService } from '@core/services/snackbar-service';
-import { CreateEventRequest } from '@core/models/event.models';
+import { CategoryResponse, CreateEventRequest } from '@core/models/event.models';
 
-interface Category {
-  id: number;
-  name: string;
-}
 
 type InfoForm = {
   title: FormControl<string>;
@@ -90,20 +87,15 @@ export class CreateEvent {
     { index: 2, name: 'Media & Tickets', desc: 'Banner & ticket types' },
   ];
 
-  readonly categories: Category[] = [
-    { id: 1, name: 'Music & Concerts' },
-    { id: 2, name: 'Sports & Fitness' },
-    { id: 3, name: 'Food & Drink' },
-    { id: 4, name: 'Arts & Culture' },
-    { id: 5, name: 'Business & Networking' },
-    { id: 6, name: 'Education & Workshops' },
-    { id: 7, name: 'Community & Social' },
-    { id: 8, name: 'Technology' },
-    { id: 9, name: 'Fashion & Beauty' },
-    { id: 10, name: 'Other' },
-  ];
+  categories = signal<CategoryResponse[]>([]);
 
   readonly currencies = ['KES', 'USD', 'EUR', 'GBP', 'TZS', 'UGX'];
+
+  constructor() {
+    this.eventsService.getCategories().subscribe({
+      next: cats => this.categories.set(cats),
+    });
+  }
 
   infoForm: FormGroup<InfoForm> = this.fb.nonNullable.group({
     title: ['', [Validators.required, Validators.minLength(3)]],
@@ -205,8 +197,11 @@ export class CreateEvent {
         this.bannerUrl.set(url);
         this.isUploadingBanner.set(false);
       },
-      error: () => {
-        this.snackbarService.showError('Failed to upload banner image. Please try again.');
+      error: (err: HttpErrorResponse) => {
+        const message = err.status === 413
+          ? 'File is too large. Please upload a smaller image.'
+          : 'Failed to upload banner image. Please try again.';
+        this.snackbarService.showError(message);
         this.bannerFile.set(null);
         this.bannerPreview.set(null);
         this.isUploadingBanner.set(false);
