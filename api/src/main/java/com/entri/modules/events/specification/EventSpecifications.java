@@ -22,4 +22,11 @@ public class EventSpecifications {
             );
         };
     }
+
+    public static Specification<Event> hasOrganizer(String organizerExternalId) {
+        return (root, query, cb) ->
+                organizerExternalId == null
+                        ? null
+                        : cb.equal(root.get("organizer").get("externalKey"), organizerExternalId);
+    }
 }

@@ -17,7 +17,9 @@ public record EventFilter(
 
         Long categoryId,
 
-        String searchTerm
+        String searchTerm,
+
+        String organizerExternalId
 ) {
     public EventFilter {
         searchTerm = (searchTerm == null || searchTerm.isBlank()) ? null : searchTerm.trim();
