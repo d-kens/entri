@@ -5,6 +5,8 @@ export type EventFilter = {
   categoryId?: number;
   searchTerm?: string;
   organizerExternalId?: string;
+  startFrom?: string;
+  startTo?: string;
 };
 
 export type CategoryResponse = {

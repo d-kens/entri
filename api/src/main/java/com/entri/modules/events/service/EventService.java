@@ -97,7 +97,9 @@ public class EventService {
         return Specification
                 .where(EventSpecifications.hasCategory(filter.categoryId()))
                 .and(EventSpecifications.search(filter.searchTerm()))
-                .and(EventSpecifications.hasOrganizer(filter.organizerExternalId()));
+                .and(EventSpecifications.hasOrganizer(filter.organizerExternalId()))
+                .and(EventSpecifications.startFrom(filter.startFrom()))
+                .and(EventSpecifications.startTo(filter.startTo()));
     }
 
     private TicketType toTicketType(CreateTicketTypeRequest t, Event event) {
