@@ -19,10 +19,16 @@ public record EventFilter(
 
         String searchTerm,
 
-        String organizerExternalId
+        String organizerExternalId,
+
+        String startFrom,
+
+        String startTo
 ) {
     public EventFilter {
         searchTerm = (searchTerm == null || searchTerm.isBlank()) ? null : searchTerm.trim();
+        startFrom  = (startFrom  == null || startFrom.isBlank())  ? null : startFrom.trim();
+        startTo    = (startTo    == null || startTo.isBlank())    ? null : startTo.trim();
 
         page = (page == null) ? 0 : page;
         size = (size == null) ? 10 : size;

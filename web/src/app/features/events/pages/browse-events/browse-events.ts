@@ -34,6 +34,8 @@ export class BrowseEvents {
   categories = signal<CategoryResponse[]>([]);
   activeCategoryId = signal<number | null>(null);
   searchQuery = signal('');
+  startFromDate = signal('');
+  startToDate = signal('');
   currentPage = signal(0);
   events = signal<EventResponse[]>([]);
   pageInfo = signal<Omit<PageResponse<EventResponse>, 'content'> | null>(null);
@@ -43,7 +45,7 @@ export class BrowseEvents {
   featuredEvent = computed(() => this.events()[0] ?? null);
   gridEvents    = computed(() => this.events().slice(1));
 
-  private readonly trigger$ = new Subject<{ page: number; searchTerm: string; categoryId?: number }>();
+  private readonly trigger$ = new Subject<{ page: number; searchTerm: string; categoryId?: number; startFrom?: string; startTo?: string }>();
 
   constructor() {
     this.eventsService.getCategories().subscribe({
@@ -51,11 +53,13 @@ export class BrowseEvents {
     });
 
     this.trigger$.pipe(
-      switchMap(({ page, searchTerm, categoryId }) => {
+      switchMap(({ page, searchTerm, categoryId, startFrom, startTo }) => {
         this.loading.set(true);
         const filter: EventFilter = { page, size: this.pageSize };
         if (searchTerm) filter.searchTerm = searchTerm;
         if (categoryId) filter.categoryId = categoryId;
+        if (startFrom) filter.startFrom = startFrom;
+        if (startTo)   filter.startTo   = startTo;
         return this.eventsService.getEvents(filter).pipe(
           catchError(() => {
             this.error.set('Failed to load events. Please try again.');
@@ -86,9 +90,13 @@ export class BrowseEvents {
   }
 
   private fire(page: number): void {
-    const categoryId = this.activeCategoryId() ?? undefined;
-    const searchTerm = this.searchQuery();
-    this.trigger$.next({ page, searchTerm, categoryId });
+    this.trigger$.next({
+      page,
+      searchTerm: this.searchQuery(),
+      categoryId: this.activeCategoryId() ?? undefined,
+      startFrom: this.startFromDate() ? `${this.startFromDate()}T00:00:00.000Z` : undefined,
+      startTo:   this.startToDate()   ? `${this.startToDate()}T23:59:59.999Z`   : undefined,
+    });
   }
 
   retry(): void { this.fire(this.currentPage()); }
@@ -101,6 +109,29 @@ export class BrowseEvents {
     this.activeCategoryId.set(id);
     this.currentPage.set(0);
     this.fire(0);
+  }
+
+  onStartFromChange(event: Event): void {
+    this.startFromDate.set((event.target as HTMLInputElement).value);
+    this.currentPage.set(0);
+    this.fire(0);
+  }
+
+  onStartToChange(event: Event): void {
+    this.startToDate.set((event.target as HTMLInputElement).value);
+    this.currentPage.set(0);
+    this.fire(0);
+  }
+
+  clearDateFilter(): void {
+    this.startFromDate.set('');
+    this.startToDate.set('');
+    this.currentPage.set(0);
+    this.fire(0);
+  }
+
+  hasDateFilter(): boolean {
+    return !!(this.startFromDate() || this.startToDate());
   }
 
   goToPage(page: number): void {
@@ -116,5 +147,38 @@ export class BrowseEvents {
   coverStyle(event: EventResponse): string {
     if (event.bannerUrl) return `url(${event.bannerUrl}) center / cover no-repeat`;
     return this.getStyle(event.categoryName).gradient;
+  }
+
+  proximityLabel(dateStr: string): string | null {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const target = new Date(dateStr);
+    target.setHours(0, 0, 0, 0);
+    const diff = Math.round((target.getTime() - today.getTime()) / 86_400_000);
+
+    if (diff < 0) return null;
+    if (diff === 0) return 'Today';
+    if (diff === 1) return 'Tomorrow';
+
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    if (diff <= 6) return `This ${days[target.getDay()]}`;
+    if (diff <= 13) return `Next ${days[target.getDay()]}`;
+
+    const evMonth = target.getMonth();
+    const nowMonth = today.getMonth();
+    const nowYear = today.getFullYear();
+    const isNextMonth = (evMonth === (nowMonth + 1) % 12) &&
+      (evMonth === 0 ? target.getFullYear() === nowYear + 1 : target.getFullYear() === nowYear);
+    if (isNextMonth) return 'Next Month';
+
+    return null;
+  }
+
+  isUrgent(dateStr: string): boolean {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const target = new Date(dateStr);
+    target.setHours(0, 0, 0, 0);
+    return Math.round((target.getTime() - today.getTime()) / 86_400_000) <= 1;
   }
 }

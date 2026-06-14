@@ -3,6 +3,8 @@ package com.entri.modules.events.specification;
 import com.entri.modules.events.entity.Event;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.time.Instant;
+
 public class EventSpecifications {
     public static Specification<Event> hasCategory(Long categoryId) {
         return (root, query, cb) ->
@@ -28,5 +30,17 @@ public class EventSpecifications {
                 organizerExternalId == null
                         ? null
                         : cb.equal(root.get("organizer").get("externalKey"), organizerExternalId);
+    }
+
+    public static Specification<Event> startFrom(String startFromStr) {
+        if (startFromStr == null) return (root, query, cb) -> null;
+        Instant from = Instant.parse(startFromStr);
+        return (root, query, cb) -> cb.greaterThanOrEqualTo(root.get("startTime"), from);
+    }
+
+    public static Specification<Event> startTo(String startToStr) {
+        if (startToStr == null) return (root, query, cb) -> null;
+        Instant to = Instant.parse(startToStr);
+        return (root, query, cb) -> cb.lessThanOrEqualTo(root.get("startTime"), to);
     }
 }

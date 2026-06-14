@@ -35,6 +35,8 @@ export class EventsService {
     if (filter.categoryId !== undefined)    params = params.set('categoryId', filter.categoryId);
     if (filter.searchTerm)                  params = params.set('searchTerm', filter.searchTerm);
     if (filter.organizerExternalId)         params = params.set('organizerExternalId', filter.organizerExternalId);
+    if (filter.startFrom)                   params = params.set('startFrom', filter.startFrom);
+    if (filter.startTo)                     params = params.set('startTo', filter.startTo);
     return this.http.get<PageResponse<EventResponse>>(`${environment.apiBaseUrl}/events`, { params });
   }
 
