@@ -59,6 +59,13 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<ErrorDto> handleForbiddenException(ForbiddenException exception) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+                new ErrorDto(exception.getMessage())
+        );
+    }
+
     @ExceptionHandler(FileUploadException.class)
     public ResponseEntity<ErrorDto> handleFileUploadException(FileUploadException exception) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
