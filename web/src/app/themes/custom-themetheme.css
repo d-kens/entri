@@ -1,56 +1,56 @@
 html {
-  color-scheme: dark;
+  color-scheme: light;
 
   /* ═══════════════════════════════════════════════════════════
-     PRIMARY — Hot pink #FF1867
+     PRIMARY — Black
      ═══════════════════════════════════════════════════════════ */
-  --mat-sys-primary:               #FF1867;
+  --mat-sys-primary:               #000000;
   --mat-sys-on-primary:            #FFFFFF;
-  --mat-sys-primary-container:     #5A0022;
-  --mat-sys-on-primary-container:  #FFB3C8;
-  --mat-sys-inverse-primary:       #C0004E;
+  --mat-sys-primary-container:     #E8E8E8;
+  --mat-sys-on-primary-container:  #000000;
+  --mat-sys-inverse-primary:       #6A6A6A;
 
   /* ═══════════════════════════════════════════════════════════
      SECONDARY — Mid gray
      ═══════════════════════════════════════════════════════════ */
-  --mat-sys-secondary:             #9E9E9E;
-  --mat-sys-on-secondary:          #000000;
-  --mat-sys-secondary-container:   #2A2A2A;
-  --mat-sys-on-secondary-container:#E0E0E0;
+  --mat-sys-secondary:             #6A6A6A;
+  --mat-sys-on-secondary:          #FFFFFF;
+  --mat-sys-secondary-container:   #F0F0F0;
+  --mat-sys-on-secondary-container:#000000;
 
   /* ═══════════════════════════════════════════════════════════
-     SURFACES — Dark
+     SURFACES — Light
      ═══════════════════════════════════════════════════════════ */
-  --mat-sys-background:            #0D0D0D;
-  --mat-sys-on-background:         #FFFFFF;
-  --mat-sys-surface:               #161616;
-  --mat-sys-surface-container-low:  #1A1A1A;
-  --mat-sys-surface-container:      #1E1E1E;
-  --mat-sys-surface-container-high: #242424;
+  --mat-sys-background:            #FFFFFF;
+  --mat-sys-on-background:         #000000;
+  --mat-sys-surface:               #FFFFFF;
+  --mat-sys-surface-container-low:  #F8F8F8;
+  --mat-sys-surface-container:      #F2F2F2;
+  --mat-sys-surface-container-high: #EBEBEB;
 
-  --mat-sys-surface-variant:       #1E1E1E;
-  --mat-sys-on-surface:            #FFFFFF;
-  --mat-sys-on-surface-variant:    #9E9E9E;
-  --mat-sys-inverse-surface:       #FFFFFF;
-  --mat-sys-inverse-on-surface:    #0D0D0D;
-  --mat-sys-surface-tint:          #FF1867;
-  --mat-sys-outline:               #3A3A3A;
-  --mat-sys-outline-variant:       #2A2A2A;
+  --mat-sys-surface-variant:       #F2F2F2;
+  --mat-sys-on-surface:            #000000;
+  --mat-sys-on-surface-variant:    #6A6A6A;
+  --mat-sys-inverse-surface:       #000000;
+  --mat-sys-inverse-on-surface:    #FFFFFF;
+  --mat-sys-surface-tint:          #000000;
+  --mat-sys-outline:               #D4D4D4;
+  --mat-sys-outline-variant:       #E8E8E8;
   --mat-sys-shadow:                #000000;
   --mat-sys-scrim:                 #000000;
 
   /* ═══════════════════════════════════════════════════════════
      ERROR
      ═══════════════════════════════════════════════════════════ */
-  --mat-sys-error:                 #FF4D4D;
+  --mat-sys-error:                 #DC2626;
   --mat-sys-on-error:              #FFFFFF;
-  --mat-sys-error-container:       #4D0000;
-  --mat-sys-on-error-container:    #FFB3B3;
+  --mat-sys-error-container:       #FEE2E2;
+  --mat-sys-on-error-container:    #7F1D1D;
 
   /* ═══════════════════════════════════════════════════════════
-     TYPOGRAPHY — Outfit (display) + Inter (body)
+     TYPOGRAPHY — Coustard (display) + Inter (body)
      ═══════════════════════════════════════════════════════════ */
-  --mat-sys-brand-font-family:     'Coustard', Georgia, serif;
+  --mat-sys-brand-font-family:     'Poppins', -apple-system, sans-serif;
   --mat-sys-plain-font-family:     'Inter', -apple-system, sans-serif;
   --mat-sys-bold-font-weight:      700;
   --mat-sys-medium-font-weight:    500;
@@ -87,43 +87,43 @@ html {
      ═══════════════════════════════════════════════════════════ */
 
   /* Default */
-  --mat-form-field-outlined-outline-color:          #3A3A3A;
-  --mat-form-field-outlined-hover-outline-color:    #6A6A6A;
-  --mat-form-field-outlined-label-text-color:       #9E9E9E;
+  --mat-form-field-outlined-outline-color:          #D4D4D4;
+  --mat-form-field-outlined-hover-outline-color:    #9A9A9A;
+  --mat-form-field-outlined-label-text-color:       #6A6A6A;
 
   /* Error */
-  --mat-form-field-outlined-error-outline-color:          #FF4D4D;
-  --mat-form-field-outlined-error-hover-outline-color:    #FF4D4D;
-  --mat-form-field-outlined-error-focus-outline-color:    #FF4D4D;
-  --mat-form-field-outlined-error-label-text-color:       #9E9E9E;
-  --mat-form-field-outlined-error-focus-label-text-color: #FF4D4D;
-  --mat-form-field-outlined-error-caret-color:            #FF4D4D;
+  --mat-form-field-outlined-error-outline-color:          #DC2626;
+  --mat-form-field-outlined-error-hover-outline-color:    #DC2626;
+  --mat-form-field-outlined-error-focus-outline-color:    #DC2626;
+  --mat-form-field-outlined-error-label-text-color:       #6A6A6A;
+  --mat-form-field-outlined-error-focus-label-text-color: #DC2626;
+  --mat-form-field-outlined-error-caret-color:            #DC2626;
 
   /* ═══════════════════════════════════════════════════════════
      APP SEMANTIC — ticket/payment status
      ═══════════════════════════════════════════════════════════ */
-  --app-paid:       #22C55E;
-  --app-on-paid:    #000000;
+  --app-paid:       #16A34A;
+  --app-on-paid:    #FFFFFF;
 
-  --app-pending:    #F59E0B;
-  --app-on-pending: #000000;
+  --app-pending:    #D97706;
+  --app-on-pending: #FFFFFF;
 
-  --app-overdue:    #FF4D4D;
+  --app-overdue:    #DC2626;
   --app-on-overdue: #FFFFFF;
 
   /* ── Snackbar semantic states ──────────────────────────────── */
-  --app-success:    #22C55E;
-  --app-on-success: #000000;
+  --app-success:    #16A34A;
+  --app-on-success: #FFFFFF;
 
-  --app-warning:    #F59E0B;
-  --app-on-warning: #000000;
+  --app-warning:    #D97706;
+  --app-on-warning: #FFFFFF;
 
-  --app-info:       #38BDF8;
-  --app-on-info:    #000000;
+  --app-info:       #0284C7;
+  --app-on-info:    #FFFFFF;
 
-  /* ── Dark surface palette ─────────────────────────────────── */
-  --app-warm:        #0D0D0D;
-  --app-warm-md:     #161616;
-  --app-warm-strong: #222222;
-  --app-warm-text:   #9E9E9E;
+  /* ── Light surface palette ─────────────────────────────────── */
+  --app-warm:        #FFFFFF;
+  --app-warm-md:     #F8F8F8;
+  --app-warm-strong: #F0F0F0;
+  --app-warm-text:   #6A6A6A;
 }

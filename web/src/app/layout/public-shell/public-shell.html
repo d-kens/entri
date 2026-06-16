@@ -1,13 +1,13 @@
-<div class="min-h-screen bg-[#0D0D0D]">
+<div class="min-h-screen bg-white">
 
   <!-- Navbar -->
-  <header class="sticky top-0 z-50 bg-[#0D0D0D]/95 backdrop-blur-sm border-b border-[#222222]">
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-[#E8E8E8]">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
 
       <!-- Logo -->
       <a [routerLink]="['/']" (click)="closeMenu()" class="flex items-center gap-1.5 flex-shrink-0">
-        <span class="font-display text-2xl font-black tracking-tight text-white leading-none select-none">Entri</span>
-        <span class="w-1.5 h-1.5 rounded-full bg-[#FF1867] flex-shrink-0 mb-0.5"></span>
+        <span class="font-display text-2xl font-black tracking-tight text-black leading-none select-none">Entri</span>
+        <span class="w-1.5 h-1.5 rounded-full bg-black flex-shrink-0 mb-0.5"></span>
       </a>
 
       <!-- Desktop nav + actions -->
@@ -19,7 +19,7 @@
       </nav>
 
       <!-- Mobile hamburger -->
-      <button class="md:hidden p-2 text-white cursor-pointer" (click)="toggleMenu()" aria-label="Toggle menu">
+      <button class="md:hidden p-2 text-black cursor-pointer" (click)="toggleMenu()" aria-label="Toggle menu">
         <mat-icon>{{ menuOpen() ? 'close' : 'menu' }}</mat-icon>
       </button>
 
@@ -38,7 +38,7 @@
 
         <!-- Drawer header: close button -->
         <div class="flex items-center justify-end px-6 h-16 flex-shrink-0">
-          <button (click)="closeMenu()" class="p-2 -mr-1 text-white cursor-pointer rounded-lg hover:bg-white/5 transition-colors" aria-label="Close menu">
+          <button (click)="closeMenu()" class="p-2 -mr-1 text-black cursor-pointer rounded-lg hover:bg-black/5 transition-colors" aria-label="Close menu">
             <mat-icon>close</mat-icon>
           </button>
         </div>
@@ -46,7 +46,7 @@
         <div class="flex flex-col flex-1 px-6 pt-4">
           <a [routerLink]="['/auth/login']" (click)="closeMenu()" class="mobile-nav-link">Organizer Sign In</a>
         </div>
-        <div class="px-6 py-6 border-t border-[#222222]">
+        <div class="px-6 py-6 border-t border-[#E8E8E8]">
           <a [routerLink]="['/auth/register']" (click)="closeMenu()">
             <button mat-flat-button class="nav-cta w-full">Organizer Sign Up</button>
           </a>
