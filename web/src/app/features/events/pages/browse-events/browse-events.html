@@ -1,25 +1,23 @@
 <!-- ── Hero ─────────────────────────────────────────────────────── -->
 <section class="hero-section">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-10">
+  <div class="hero-inner">
 
-    <p class="catalog-label">CATALOG</p>
-    <h1 class="hero-title">ALL EVENTS</h1>
-
+    <h1 class="hero-title">Discover Events</h1>
     <p class="hero-subtitle">
       @if (loading()) {
         &nbsp;
       } @else {
-        {{ totalEvents() }} live event{{ totalEvents() !== 1 ? 's' : '' }} on sale right now.
+        {{ totalEvents() }} event{{ totalEvents() !== 1 ? 's' : '' }} on sale right now
       }
     </p>
 
     <!-- Search -->
-    <div class="search-bar mt-8 mb-6">
+    <div class="search-bar">
       <mat-icon class="search-icon">search</mat-icon>
       <input
         class="search-input"
         type="text"
-        placeholder="Search artist, venue, city..."
+        placeholder="Search events, artists, venues..."
         [value]="searchQuery()"
         (input)="onSearch($event)"
         autocomplete="off"
@@ -27,22 +25,20 @@
     </div>
 
     <!-- Category pills -->
-    <div class="relative">
-      <div class="category-row no-scrollbar">
+    <div class="category-row no-scrollbar">
+      <button
+        class="cat-pill"
+        [class.active]="activeCategoryId() === null"
+        (click)="setCategory(null)"
+      >All</button>
+
+      @for (cat of categories(); track cat.id) {
         <button
           class="cat-pill"
-          [class.active]="activeCategoryId() === null"
-          (click)="setCategory(null)"
-        >ALL</button>
-
-        @for (cat of categories(); track cat.id) {
-          <button
-            class="cat-pill"
-            [class.active]="activeCategoryId() === cat.id"
-            (click)="setCategory(cat.id)"
-          >{{ cat.name.toUpperCase() }}</button>
-        }
-      </div>
+          [class.active]="activeCategoryId() === cat.id"
+          (click)="setCategory(cat.id)"
+        >{{ cat.name }}</button>
+      }
     </div>
 
   </div>
