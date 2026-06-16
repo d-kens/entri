@@ -10,11 +10,12 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        loadComponent: () => import('./features/public/landing/landing').then(m => m.Landing),
+        loadComponent: () => import('@features/events/pages/browse-events/browse-events').then(m => m.BrowseEvents),
       },
       {
         path: 'discover',
-        loadComponent: () => import('@features/events/pages/browse-events/browse-events').then(m => m.BrowseEvents),
+        redirectTo: '',
+        pathMatch: 'full',
       },
     ],
   },

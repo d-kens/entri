@@ -1,28 +1,25 @@
-<div class="min-h-screen bg-[#FFF7F0]">
+<div class="min-h-screen bg-[#0D0D0D]">
 
   <!-- Navbar -->
-  <header class="sticky top-0 z-50 bg-[#FFF7F0]/95 backdrop-blur-sm border-b border-[#E0D5CC]">
+  <header class="sticky top-0 z-50 bg-[#0D0D0D]/95 backdrop-blur-sm border-b border-[#222222]">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
 
       <!-- Logo -->
       <a [routerLink]="['/']" (click)="closeMenu()" class="flex items-center gap-1.5 flex-shrink-0">
-        <span class="font-display text-2xl font-black tracking-tight text-[#1A1A1A] leading-none select-none">Entri</span>
-        <span class="w-1.5 h-1.5 rounded-full bg-[#E8572A] flex-shrink-0 mb-0.5"></span>
+        <span class="font-display text-2xl font-black tracking-tight text-white leading-none select-none">Entri</span>
+        <span class="w-1.5 h-1.5 rounded-full bg-[#FF1867] flex-shrink-0 mb-0.5"></span>
       </a>
 
       <!-- Desktop nav + actions -->
       <nav class="hidden md:flex items-center gap-6">
-        <a [routerLink]="['/discover']" class="nav-link">Events</a>
-        <a [routerLink]="['/']" fragment="pricing" class="nav-link">Pricing</a>
-        <a [routerLink]="['/']" fragment="faq" class="nav-link">FAQ</a>
         <a [routerLink]="['/auth/login']" class="nav-link">Organizer Sign In</a>
         <a [routerLink]="['/auth/register']">
-          <button mat-flat-button class="nav-cta">Organizer Sign Up</button>
+          <button mat-flat-button class="nav-cta">Organizer Sign Up →</button>
         </a>
       </nav>
 
       <!-- Mobile hamburger -->
-      <button class="md:hidden p-2 text-[#1A1A1A] cursor-pointer" (click)="toggleMenu()" aria-label="Toggle menu">
+      <button class="md:hidden p-2 text-white cursor-pointer" (click)="toggleMenu()" aria-label="Toggle menu">
         <mat-icon>{{ menuOpen() ? 'close' : 'menu' }}</mat-icon>
       </button>
 
@@ -41,18 +38,15 @@
 
         <!-- Drawer header: close button -->
         <div class="flex items-center justify-end px-6 h-16 flex-shrink-0">
-          <button (click)="closeMenu()" class="p-2 -mr-1 text-[#1A1A1A] cursor-pointer rounded-lg hover:bg-black/5 transition-colors" aria-label="Close menu">
+          <button (click)="closeMenu()" class="p-2 -mr-1 text-white cursor-pointer rounded-lg hover:bg-white/5 transition-colors" aria-label="Close menu">
             <mat-icon>close</mat-icon>
           </button>
         </div>
 
         <div class="flex flex-col flex-1 px-6 pt-4">
-          <a [routerLink]="['/discover']" (click)="closeMenu()" class="mobile-nav-link">Events</a>
-          <a [routerLink]="['/']" fragment="pricing" (click)="closeMenu()" class="mobile-nav-link">Pricing</a>
-          <a [routerLink]="['/']" fragment="faq" (click)="closeMenu()" class="mobile-nav-link">FAQ</a>
           <a [routerLink]="['/auth/login']" (click)="closeMenu()" class="mobile-nav-link">Organizer Sign In</a>
         </div>
-        <div class="px-6 py-6 border-t border-[#E0D5CC]">
+        <div class="px-6 py-6 border-t border-[#222222]">
           <a [routerLink]="['/auth/register']" (click)="closeMenu()">
             <button mat-flat-button class="nav-cta w-full">Organizer Sign Up</button>
           </a>
