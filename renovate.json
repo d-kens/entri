@@ -3,12 +3,12 @@
   "extends": ["config:recommended"],
   "packageRules": [
     {
-      "matchPackagePatterns": ["^org\\.springframework"],
+      "matchPackageNames": ["/^org\\.springframework/"],
       "groupName": "Spring"
     },
     {
       "matchManagers": ["npm"],
-      "matchPackagePatterns": ["^@angular"],
+      "matchPackageNames": ["/^@angular/"],
       "groupName": "Angular"
     },
     {
