@@ -9,7 +9,7 @@ import java.time.Instant;
 import java.util.List;
 
 @ValidDateRange(startField = "startTime", endField = "endTime")
-public record CreateEventRequest(
+public record EventRequest(
         @NotBlank(message = "Event title is required")
         String title,
 

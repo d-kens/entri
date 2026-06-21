@@ -1,0 +1,120 @@
+.nav-link {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #6A6A6A;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.nav-link:hover {
+  color: #FF1867;
+}
+
+.nav-link-active {
+  color: #FF1867 !important;
+  font-weight: 600;
+}
+
+.nav-cta {
+  background: #FF1867 !important;
+  color: #FFFFFF !important;
+  border-radius: 0 !important;
+  font-size: 0.8125rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.06em !important;
+  padding: 0 1.25rem !important;
+  height: 2.25rem !important;
+}
+
+/* Full-screen mobile menu */
+.mobile-fullscreen {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse 85% 60% at 50% 40%, rgba(255, 100, 165, 0.14) 0%, transparent 65%), #FFFFFF;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  animation: menuOpen 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.mobile-fullscreen.is-closing {
+  animation: menuClose 0.3s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
+.mobile-fs-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.25rem;
+}
+
+.mobile-close-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: #FF1867;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.mobile-close-btn:hover {
+  color: #d4144e;
+}
+
+.mobile-fs-link {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #111111;
+  text-decoration: none;
+  padding: 0.75rem 0;
+  letter-spacing: -0.02em;
+  transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.mobile-fs-link:hover {
+  color: #FF1867;
+  transform: translateY(-1px);
+}
+
+.mobile-fs-link-active {
+  color: #FF1867 !important;
+}
+
+
+.mobile-fs-divider {
+  width: 2rem;
+  height: 1.5px;
+  background: #E8E8E8;
+  margin: 1rem 0;
+}
+
+@keyframes menuOpen {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes menuClose {
+  from {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.96) translateY(-12px);
+  }
+}

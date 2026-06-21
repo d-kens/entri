@@ -1,9 +1,28 @@
 /* --------------------------------------------------------------------------
+   Auth brand button — pink CTA used on all auth pages
+   -------------------------------------------------------------------------- */
+
+.auth-brand-btn {
+  --mdc-filled-button-container-color: #FF1867 !important;
+  --mdc-filled-button-label-text-color: #FFFFFF !important;
+  --mat-filled-button-state-layer-color: rgba(255,255,255,0.15) !important;
+}
+
+.auth-brand-btn.mdc-button--filled,
+.auth-brand-btn.mat-mdc-button-base {
+  background-color: #FF1867 !important;
+}
+
+.auth-brand-btn .mdc-button__label {
+  color: #FFFFFF !important;
+}
+
+/* --------------------------------------------------------------------------
    Sidenav
    -------------------------------------------------------------------------- */
 
 .mat-drawer.mat-sidenav {
-  background-color: #1A1A1A;
+  background-color: #FFFFFF;
 }
 
 /* --------------------------------------------------------------------------

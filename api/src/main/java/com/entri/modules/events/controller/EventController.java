@@ -1,7 +1,7 @@
 package com.entri.modules.events.controller;
 
 import com.entri.common.dto.PaginationResponse;
-import com.entri.modules.events.dto.CreateEventRequest;
+import com.entri.modules.events.dto.EventRequest;
 import com.entri.modules.events.dto.EventDetailResponse;
 import com.entri.modules.events.dto.EventFilter;
 import com.entri.modules.events.dto.EventResponse;
@@ -10,12 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
@@ -26,14 +21,14 @@ public class EventController {
 
     @GetMapping()
     public PaginationResponse<EventResponse> browseEvents(
-            @Valid EventFilter filter
+            @Valid final EventFilter filter
     ) {
         return  eventService.getEvents(filter);
     }
 
     @GetMapping("/{externalId}")
     public EventDetailResponse getEventByExternalId(
-            @PathVariable String externalId
+            @PathVariable final String externalId
     ) {
         return eventService.getEventByExternalId(externalId);
     }
@@ -42,10 +37,19 @@ public class EventController {
     public ResponseEntity<EventResponse> createEvent(
             UriComponentsBuilder uriComponentsBuilder,
             @AuthenticationPrincipal String currentUserKey,
-            @Valid @RequestBody CreateEventRequest request
+            @Valid @RequestBody final EventRequest request
     ) {
         var response = eventService.createEvent(request, currentUserKey);
         var uri = uriComponentsBuilder.path("/events/{external_id}").buildAndExpand(response.externalId()).toUri();
         return ResponseEntity.created(uri).body(response);
+    }
+
+    @PutMapping("/{externalId}")
+    public EventResponse updateEvent(
+            @PathVariable final String externalId,
+            @AuthenticationPrincipal String currentUserKey,
+            @Valid @RequestBody final EventRequest request
+    ) {
+        return eventService.updateEvent(externalId, request, currentUserKey);
     }
 }

@@ -1,8 +1,9 @@
 package com.entri.modules.service;
 
 import com.entri.common.dto.PaginationResponse;
+import com.entri.common.exception.ForbiddenException;
 import com.entri.common.exception.NotFoundException;
-import com.entri.modules.events.dto.CreateEventRequest;
+import com.entri.modules.events.dto.EventRequest;
 import com.entri.modules.events.dto.CreateTicketTypeRequest;
 import com.entri.modules.events.dto.EventDetailResponse;
 import com.entri.modules.events.dto.EventFilter;
@@ -382,6 +383,72 @@ class EventServiceTest {
     }
 
     @Test
+    void updateEvent_eventNotFound_throwsNotFoundException() {
+        when(eventRepository.findByExternalId(EVENT_EXTERNAL_ID)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> eventService.updateEvent(EVENT_EXTERNAL_ID, baseRequest(null), USER_KEY))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("Event with external ID: " + EVENT_EXTERNAL_ID + " not found");
+    }
+
+    @Test
+    void updateEvent_callerIsNotOrganizer_throwsForbiddenException() {
+        User otherUser = User.builder().externalKey("other-user-key").build();
+        Event event = Event.builder().organizer(otherUser).build();
+        when(eventRepository.findByExternalId(EVENT_EXTERNAL_ID)).thenReturn(Optional.of(event));
+
+        assertThatThrownBy(() -> eventService.updateEvent(EVENT_EXTERNAL_ID, baseRequest(null), USER_KEY))
+                .isInstanceOf(ForbiddenException.class);
+    }
+
+    @Test
+    void updateEvent_updatesAllScalarFields() {
+        Event event = Event.builder().organizer(user).build();
+        when(eventRepository.findByExternalId(EVENT_EXTERNAL_ID)).thenReturn(Optional.of(event));
+        when(eventCategoryService.findById(1L)).thenReturn(category);
+
+        eventService.updateEvent(EVENT_EXTERNAL_ID, baseRequest(null), USER_KEY);
+
+        assertThat(event.getTitle()).isEqualTo("Jazz Night");
+        assertThat(event.getDescription()).isEqualTo("A night to remember");
+        assertThat(event.getVenueName()).isEqualTo("Uhuru Park");
+        assertThat(event.getVenueCountry()).isEqualTo("Kenya");
+        assertThat(event.getVenueCity()).isEqualTo("Nairobi");
+        assertThat(event.getCategory()).isEqualTo(category);
+        assertThat(event.isPublic()).isTrue();
+    }
+
+    @Test
+    void updateEvent_nullIsPublic_preservesExistingValue() {
+        Event event = Event.builder().organizer(user).isPublic(false).build();
+        when(eventRepository.findByExternalId(EVENT_EXTERNAL_ID)).thenReturn(Optional.of(event));
+        when(eventCategoryService.findById(1L)).thenReturn(category);
+
+        eventService.updateEvent(EVENT_EXTERNAL_ID, requestWithIsPublic(null), USER_KEY);
+
+        assertThat(event.isPublic()).isFalse();
+    }
+
+    @Test
+    void updateEvent_returnsMapperResponse() {
+        Event event = Event.builder().organizer(user).build();
+        EventResponse expected = new EventResponse(
+                EVENT_EXTERNAL_ID, "Jazz Night", "A night to remember", "Music",
+                "Uhuru Park", "Kenya", "Nairobi",
+                Instant.parse("2025-12-15T19:00:00Z"), Instant.parse("2025-12-15T23:00:00Z"),
+                "https://example.com/banner.jpg", EventStatus.DRAFT, true, null,
+                Instant.parse("2025-12-01T10:00:00Z")
+        );
+        when(eventRepository.findByExternalId(EVENT_EXTERNAL_ID)).thenReturn(Optional.of(event));
+        when(eventCategoryService.findById(1L)).thenReturn(category);
+        when(eventMapper.toEventResponse(event)).thenReturn(expected);
+
+        var result = eventService.updateEvent(EVENT_EXTERNAL_ID, baseRequest(null), USER_KEY);
+
+        assertThat(result).isEqualTo(expected);
+    }
+
+    @Test
     void getEventByExternalId_eventExists_returnsEventDetailResponse() {
         Event event = Event.builder().build();
         EventDetailResponse expected = new EventDetailResponse(
@@ -410,8 +477,8 @@ class EventServiceTest {
         return captor.getValue();
     }
 
-    private CreateEventRequest baseRequest(List<CreateTicketTypeRequest> ticketTypes) {
-        return new CreateEventRequest(
+    private EventRequest baseRequest(List<CreateTicketTypeRequest> ticketTypes) {
+        return new EventRequest(
                 "Jazz Night", "A night to remember",
                 1L, "Uhuru Park", "Kenya", "Nairobi",
                 Instant.parse("2025-12-15T19:00:00Z"), Instant.parse("2025-12-15T23:00:00Z"),
@@ -419,8 +486,8 @@ class EventServiceTest {
         );
     }
 
-    private CreateEventRequest requestWithIsPublic(Boolean isPublic) {
-        return new CreateEventRequest(
+    private EventRequest requestWithIsPublic(Boolean isPublic) {
+        return new EventRequest(
                 "Jazz Night", "A night to remember",
                 1L, "Uhuru Park", "Kenya", "Nairobi",
                 Instant.parse("2025-12-15T19:00:00Z"), Instant.parse("2025-12-15T23:00:00Z"),
