@@ -41,7 +41,7 @@ export class Login {
 
   isLoading     = signal(false);
   hidePassword  = signal(true);
-  returnUrl     = this.route.snapshot.queryParamMap.get('returnUrl') ?? '/overview';
+  returnUrl     = this.route.snapshot.queryParamMap.get('returnUrl') ?? '/dashboard/overview';
 
   togglePassword() { this.hidePassword.update(v => !v); }
 

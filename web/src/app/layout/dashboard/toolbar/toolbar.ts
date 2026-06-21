@@ -11,12 +11,11 @@ import { UsersService } from '@core/services/users-service';
 import { SnackbarService } from '@core/services/snackbar-service';
 
 const ROUTE_TITLES: Record<string, string> = {
-  '/overview':    'Dashboard',
-  '/properties':  'Properties',
-  '/tenants':     'Tenants',
-  '/landlords':   'Landlords',
-  '/payments':    'Payments',
-  '/profile':     'Profile',
+  'overview':    'Dashboard',
+  'events':      'Events',
+  'properties':  'Properties',
+  'payments':    'Payments',
+  'profile':     'Profile',
 };
 
 @Component({
@@ -46,10 +45,10 @@ export class Toolbar implements OnInit {
     this.router.events.pipe(
       filter(e => e instanceof NavigationEnd),
       map((e: NavigationEnd) => {
-        const base = '/' + e.urlAfterRedirects.split('/')[1];
-        return ROUTE_TITLES[base] ?? '';
+        const segment = e.urlAfterRedirects.split('/')[2] ?? '';
+        return ROUTE_TITLES[segment] ?? '';
       }),
-      startWith(ROUTE_TITLES['/' + this.router.url.split('/')[1]] ?? ''),
+      startWith(ROUTE_TITLES[this.router.url.split('/')[2] ?? ''] ?? ''),
     ),
     { initialValue: '' },
   );
