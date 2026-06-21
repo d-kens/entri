@@ -12,10 +12,6 @@
       "groupName": "Angular"
     },
     {
-      "matchUpdateTypes": ["patch"],
-      "automerge": true
-    },
-    {
       "matchUpdateTypes": ["major"],
       "enabled": false
     }
