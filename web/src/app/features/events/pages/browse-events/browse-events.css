@@ -1,7 +1,7 @@
 /* ── Hero ────────────────────────────────────────────────────── */
 
 .hero-section {
-  background-color: #FFFFFF;
+  background: radial-gradient(ellipse 85% 75% at 50% 50%, rgba(255, 100, 165, 0.18) 0%, transparent 65%), #FFFFFF;
 }
 
 .hero-inner {
@@ -48,8 +48,8 @@
 }
 
 .search-bar:focus-within {
-  border-color: #000000;
-  box-shadow: 0 0 0 3px rgba(0,0,0,0.06);
+  border-color: #FF1867;
+  box-shadow: 0 0 0 3px rgba(255, 24, 103, 0.12);
 }
 
 .search-icon {
@@ -109,9 +109,9 @@
 }
 
 .cat-pill.active {
-  background: #000000;
+  background: #FF1867;
   color: #FFFFFF;
-  border-color: #000000;
+  border-color: #FF1867;
 }
 
 /* ── Section divider ─────────────────────────────────────────── */
@@ -163,7 +163,7 @@
 }
 
 .event-card:hover {
-  border-color: #000000;
+  border-color: #FF1867;
   transform: translateY(-2px);
 }
 
@@ -236,7 +236,7 @@
   position: absolute;
   top: 0.75rem;
   right: 0.75rem;
-  background: #000000;
+  background: #FF1867;
   color: #FFFFFF;
   font-size: 0.65rem;
   font-weight: 800;
@@ -305,7 +305,7 @@
 }
 
 .event-card:hover .footer-arrow {
-  color: #000000;
+  color: #FF1867;
   transform: translateX(2px);
 }
 
@@ -374,7 +374,7 @@
 }
 
 .retry-btn:hover {
-  border-color: #000000;
+  border-color: #FF1867;
   background: #F5F5F5;
 }
 
@@ -403,6 +403,6 @@
 }
 
 .load-more-btn:hover {
-  border-color: #000000;
+  border-color: #FF1867;
   background: #F5F5F5;
 }
