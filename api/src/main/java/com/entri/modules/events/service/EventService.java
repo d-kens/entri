@@ -1,8 +1,9 @@
 package com.entri.modules.events.service;
 
 import com.entri.common.dto.PaginationResponse;
+import com.entri.common.exception.ForbiddenException;
 import com.entri.common.exception.NotFoundException;
-import com.entri.modules.events.dto.CreateEventRequest;
+import com.entri.modules.events.dto.EventRequest;
 import com.entri.modules.events.dto.CreateTicketTypeRequest;
 import com.entri.modules.events.dto.EventDetailResponse;
 import com.entri.modules.events.dto.EventFilter;
@@ -58,7 +59,7 @@ public class EventService {
     }
 
     @Transactional
-    public EventResponse createEvent(CreateEventRequest request, String currentUserKey) {
+    public EventResponse createEvent(EventRequest request, String currentUserKey) {
         var user = userService.findEntityByExternalKey(currentUserKey);
         var category = eventCategoryService.findById(request.categoryId());
 
@@ -91,6 +92,34 @@ public class EventService {
         var event = eventRepository.findByExternalId(externalId)
                 .orElseThrow(() -> new NotFoundException("Event with external ID: " + externalId + " not found"));
         return eventMapper.toEventDetailResponse(event);
+    }
+
+    @Transactional
+    public EventResponse updateEvent(final String externalId, EventRequest request, String currentUserKey) {
+        var event = eventRepository.findByExternalId(externalId)
+                .orElseThrow(() -> new NotFoundException("Event with external ID: " + externalId + " not found"));
+
+        if (!event.getOrganizer().getExternalKey().equals(currentUserKey)) {
+            throw new ForbiddenException("You are not authorized to update this event");
+        }
+
+        var category = eventCategoryService.findById(request.categoryId());
+
+        event.setTitle(request.title());
+        event.setDescription(request.description());
+        event.setCategory(category);
+        event.setVenueName(request.venueName());
+        event.setVenueCountry(request.venueCountry());
+        event.setVenueCity(request.venueCity());
+        event.setStartTime(request.startTime());
+        event.setEndTime(request.endTime());
+        event.setBannerUrl(request.bannerUrl());
+        if (request.isPublic() != null) {
+            event.setPublic(request.isPublic());
+        }
+
+        eventRepository.save(event);
+        return eventMapper.toEventResponse(event);
     }
 
     private Specification<Event> buildSpecification(EventFilter filter) {

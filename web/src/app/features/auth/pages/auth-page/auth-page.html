@@ -1,85 +1,26 @@
-<div class="flex min-h-screen">
+<div class="auth-split">
 
-  <!-- Left marketing panel -->
-  <div class="hidden lg:flex lg:flex-[2] bg-[#1A1A1A] items-center justify-center p-16 relative overflow-hidden">
+  <!-- Left brand panel -->
+  <div class="auth-brand-panel">
+    <div class="brand-decor-circle brand-decor-circle--lg"></div>
+    <div class="brand-decor-circle brand-decor-circle--sm"></div>
 
-    <!-- Background pattern -->
-    <svg class="absolute inset-0 w-full h-full opacity-[0.04]" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-          <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" stroke-width="1"/>
-        </pattern>
-      </defs>
-      <rect width="100%" height="100%" fill="url(#grid)"/>
-    </svg>
-
-    <!-- Radial glow -->
-    <div class="absolute inset-0 bg-radial-[ellipse_at_30%_50%] from-primary/10 to-transparent"></div>
-
-    <!-- Content -->
-    <div class="relative flex flex-col gap-10 max-w-sm">
-
-      <!-- Logo -->
-      <div class="flex flex-col gap-3">
-        <div class="flex items-center gap-2">
-          <span class="font-display text-6xl font-bold tracking-tight text-white leading-none select-none">Entri</span>
-          <span class="w-2 h-2 rounded-full bg-primary flex-shrink-0"></span>
-        </div>
-        <p class="text-white/50 text-xl leading-snug">
-          Sell tickets. Fill seats. Track every entry.
-        </p>
+    <div class="brand-content">
+      <div class="brand-logo">
+        <span>entri</span>
+        <span class="brand-dot"></span>
       </div>
-
-      <!-- Feature highlights -->
-      <div class="flex flex-col gap-5">
-
-        <div class="flex items-start gap-4">
-          <div class="w-9 h-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center flex-shrink-0">
-            <mat-icon class="feature-icon !text-[20px] !w-5 !h-5 !leading-none">confirmation_number</mat-icon>
-          </div>
-          <div>
-            <p class="text-white text-sm font-medium">Create events & manage tickets</p>
-            <p class="text-white/40 text-sm mt-0.5">Set up ticket types, control quantities, and go live in minutes.</p>
-          </div>
-        </div>
-
-        <div class="flex items-start gap-4">
-          <div class="w-9 h-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center flex-shrink-0">
-            <mat-icon class="feature-icon !text-[20px] !w-5 !h-5 !leading-none">payments</mat-icon>
-          </div>
-          <div>
-            <p class="text-white text-sm font-medium">Payments, handled</p>
-            <p class="text-white/40 text-sm mt-0.5">Attendees pay online and their ticket lands in their inbox instantly.</p>
-          </div>
-        </div>
-
-        <div class="flex items-start gap-4">
-          <div class="w-9 h-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center flex-shrink-0">
-            <mat-icon class="feature-icon !text-[20px] !w-5 !h-5 !leading-none">qr_code_scanner</mat-icon>
-          </div>
-          <div>
-            <p class="text-white text-sm font-medium">QR check-in at the door</p>
-            <p class="text-white/40 text-sm mt-0.5">Scan tickets at entry and track attendance in real time.</p>
-          </div>
-        </div>
-
-      </div>
+      <p class="brand-tagline">Where events<br>come alive.</p>
+      <p class="brand-sub">Sell tickets, fill seats, and track every entry - all in one place.</p>
     </div>
-
   </div>
 
-  <!-- Right panel -->
-  <div class="flex-1 flex flex-col bg-white p-4 md:p-8 !w-full">
-
-    <!-- Mobile branding — hidden on large screens -->
-    <div class="flex items-center gap-2 lg:hidden">
-      <span class="font-display text-2xl font-bold tracking-tight text-on-surface leading-none select-none">Entri</span>
-      <span class="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0"></span>
-    </div>
-
-    <div class="flex-1 flex flex-col justify-center">
-      <router-outlet />
-    </div>
+  <!-- Right form panel -->
+  <div class="auth-form-panel">
+    <a [routerLink]="['/']" class="brand-back-link">
+      <span>←</span> Back to home
+    </a>
+    <router-outlet />
   </div>
 
 </div>

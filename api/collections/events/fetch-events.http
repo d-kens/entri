@@ -1,2 +1,2 @@
-GET http://localhost:9096/api/events
+GET {{baseUrl}}/api/events
 Content-Type: application/json
