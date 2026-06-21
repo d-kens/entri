@@ -1,0 +1,15 @@
+PUT {{baseUrl}}/api/events/224705b4-0a5f-4e63-ba7b-e72ee103016d
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "venueName": "Uhuru Park",
+  "bannerUrl": "https://storage.googleapis.com/oro-web-app.firebasestorage.app/5c60e443-82f5-4a6a-867e-758e4810ae08_pexels-maorattias-5152572.jpg",
+  "description": "An evening of live jazz performances in Nairobi with a relaxed atmosphere and diverse musical styles.",
+  "startTime": "2026-06-16T15:00:00Z",
+  "endTime": "2026-06-16T20:00:00Z",
+  "title": "Wetu Wetu Fest",
+  "categoryId": "1",
+  "venueCountry": "Kenya",
+  "venueCity": "Kisumu"
+}

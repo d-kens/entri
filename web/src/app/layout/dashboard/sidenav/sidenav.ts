@@ -49,20 +49,20 @@ export class Sidenav {
 
   private getPlatformUserMenu(): MenuItem[] {
     return [
-      { icon: 'dashboard', label: 'Dashboard', route: '/overview' },
-      { icon: 'confirmation_number', label: 'Events', route: '/events' },
-      { icon: 'payments', label: 'Payments', route: '/payments' },
-      { icon: 'account_circle', label: 'Profile', route: '/profile' },
+      { icon: 'dashboard', label: 'Dashboard', route: '/dashboard/overview' },
+      { icon: 'confirmation_number', label: 'Events', route: '/dashboard/events' },
+      { icon: 'payments', label: 'Payments', route: '/dashboard/payments' },
+      { icon: 'account_circle', label: 'Profile', route: '/dashboard/profile' },
     ];
   }
 
   private getPlatformAdminMenu(): MenuItem[] {
     return [
-      { icon: 'dashboard', label: 'Dashboard', route: '/overview' },
-      { icon: 'confirmation_number', label: 'Events', route: '/events' },
-      { icon: 'people', label: 'Organisers', route: '/organisers' },
-      { icon: 'payments', label: 'Payments', route: '/payments' },
-      { icon: 'account_circle', label: 'Profile', route: '/profile' },
+      { icon: 'dashboard', label: 'Dashboard', route: '/dashboard/overview' },
+      { icon: 'confirmation_number', label: 'Events', route: '/dashboard/events' },
+      { icon: 'people', label: 'Organisers', route: '/dashboard/organisers' },
+      { icon: 'payments', label: 'Payments', route: '/dashboard/payments' },
+      { icon: 'account_circle', label: 'Profile', route: '/dashboard/profile' },
     ];
   }
 
