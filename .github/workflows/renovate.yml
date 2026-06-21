@@ -13,5 +13,7 @@ jobs:
       - uses: renovatebot/github-action@v46.1.15
         with:
           configurationFile: renovate.json
+          renovate-version: latest
         env:
           RENOVATE_TOKEN: ${{ secrets.RENOVATE_TOKEN }}
+          RENOVATE_REPOSITORIES: ${{ github.repository }}
