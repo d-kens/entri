@@ -9,7 +9,7 @@ RUN gradle dependencies --no-daemon
 COPY src ./src
 RUN gradle clean bootJar --no-daemon
 
-FROM eclipse-temurin:21-jre-alpine
+FROM eclipse-temurin:21.0.11_10-jre-alpine
 WORKDIR /app
 
 RUN addgroup -S spring && adduser -S spring -G spring
