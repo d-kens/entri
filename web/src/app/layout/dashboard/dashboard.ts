@@ -10,7 +10,7 @@ import { Toolbar } from './toolbar/toolbar';
 type UserRole = 'ADMIN' | 'MERCHANT' | 'AGENT';
 
 @Component({
-  selector: 'app-shell',
+  selector: 'app-dashboard',
   imports: [
     CommonModule,
     RouterOutlet,
@@ -18,8 +18,8 @@ type UserRole = 'ADMIN' | 'MERCHANT' | 'AGENT';
     Sidenav,
     Toolbar
   ],
-  templateUrl: './app-shell.html',
-  styleUrl: './app-shell.css',
+  templateUrl: './dashboard.html',
+  styleUrl: './dashboard.css',
   standalone: true
 })
 export class Layout implements OnInit, OnDestroy {
