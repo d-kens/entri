@@ -254,7 +254,7 @@ class EventServiceTest {
         when(eventMapper.toEventResponse(events.get(0))).thenReturn(r1);
         when(eventMapper.toEventResponse(events.get(1))).thenReturn(r2);
 
-        PaginationResponse<EventResponse> result = eventService.getEvents(new EventFilter(0, 2, null, null, null, null, null, null));
+        PaginationResponse<EventResponse> result = eventService.getEvents(new EventFilter(0, 2, null, null, null, null, null));
 
         assertThat(result.content()).containsExactly(r1, r2);
         assertThat(result.totalElements()).isEqualTo(5);
@@ -273,7 +273,7 @@ class EventServiceTest {
         when(eventRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(page);
         when(eventMapper.toEventResponse(any(Event.class))).thenReturn(mock(EventResponse.class));
 
-        PaginationResponse<EventResponse> result = eventService.getEvents(new EventFilter(2, 2, null, null, null, null, null, null));
+        PaginationResponse<EventResponse> result = eventService.getEvents(new EventFilter(2, 2, null, null, null, null, null));
 
         assertThat(result.pageNumber()).isEqualTo(2);
         assertThat(result.pageSize()).isEqualTo(2);
@@ -287,7 +287,7 @@ class EventServiceTest {
     void getEvents_nullPageAndSize_usesDefaultPagination() {
         when(eventRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(Page.empty());
 
-        eventService.getEvents(new EventFilter(null, null, null, null, null, null, null, null));
+        eventService.getEvents(new EventFilter(null, null, null, null, null, null, null));
 
         ArgumentCaptor<Pageable> captor = ArgumentCaptor.forClass(Pageable.class);
         verify(eventRepository).findAll(any(Specification.class), captor.capture());
@@ -310,7 +310,7 @@ class EventServiceTest {
     void getEvents_descSortDirection_sortsStartTimeDescending() {
         when(eventRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(Page.empty());
 
-        eventService.getEvents(new EventFilter(0, 10, "DESC", null, null, null, null, null));
+        eventService.getEvents(new EventFilter(0, 10, "DESC", null, null, null, null));
 
         ArgumentCaptor<Pageable> captor = ArgumentCaptor.forClass(Pageable.class);
         verify(eventRepository).findAll(any(Specification.class), captor.capture());
@@ -328,28 +328,10 @@ class EventServiceTest {
     }
 
     @Test
-    void getEvents_withOrganizerExternalId_passesSpecificationToRepository() {
-        when(eventRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(Page.empty());
-
-        eventService.getEvents(new EventFilter(0, 10, null, null, null, USER_KEY, null, null));
-
-        verify(eventRepository).findAll(any(Specification.class), any(Pageable.class));
-    }
-
-    @Test
-    void getEvents_nullOrganizerExternalId_doesNotFilterByOrganizer() {
-        when(eventRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(Page.empty());
-
-        eventService.getEvents(filter());
-
-        verify(eventRepository).findAll(any(Specification.class), any(Pageable.class));
-    }
-
-    @Test
     void getEvents_withStartFrom_passesSpecificationToRepository() {
         when(eventRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(Page.empty());
 
-        eventService.getEvents(new EventFilter(0, 10, null, null, null, null, "2026-06-14T00:00:00.000Z", null));
+        eventService.getEvents(new EventFilter(0, 10, null, null, null, "2026-06-14T00:00:00.000Z", null));
 
         verify(eventRepository).findAll(any(Specification.class), any(Pageable.class));
     }
@@ -358,7 +340,7 @@ class EventServiceTest {
     void getEvents_withStartTo_passesSpecificationToRepository() {
         when(eventRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(Page.empty());
 
-        eventService.getEvents(new EventFilter(0, 10, null, null, null, null, null, "2026-06-17T23:59:59.999Z"));
+        eventService.getEvents(new EventFilter(0, 10, null, null, null, null, "2026-06-17T23:59:59.999Z"));
 
         verify(eventRepository).findAll(any(Specification.class), any(Pageable.class));
     }
@@ -367,7 +349,7 @@ class EventServiceTest {
     void getEvents_withBothDateFilters_passesSpecificationToRepository() {
         when(eventRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(Page.empty());
 
-        eventService.getEvents(new EventFilter(0, 10, null, null, null, null,
+        eventService.getEvents(new EventFilter(0, 10, null, null, null,
                 "2026-06-14T00:00:00.000Z", "2026-06-17T23:59:59.999Z"));
 
         verify(eventRepository).findAll(any(Specification.class), any(Pageable.class));
@@ -380,6 +362,54 @@ class EventServiceTest {
         eventService.getEvents(filter());
 
         verify(eventRepository).findAll(any(Specification.class), any(Pageable.class));
+    }
+
+    @Test
+    void getEventsForManagement_nullOrganizerKey_returnsAllEvents() {
+        when(eventRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(Page.empty());
+
+        PaginationResponse<EventResponse> result = eventService.getEventsForManagement(filter(), null);
+
+        assertThat(result.content()).isEmpty();
+        verify(eventRepository).findAll(any(Specification.class), any(Pageable.class));
+    }
+
+    @Test
+    void getEventsForManagement_withOrganizerKey_passesOrganizerFilterToRepository() {
+        when(eventRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(Page.empty());
+
+        eventService.getEventsForManagement(filter(), USER_KEY);
+
+        verify(eventRepository).findAll(any(Specification.class), any(Pageable.class));
+    }
+
+    @Test
+    void getEventsForManagement_returnsCorrectPaginationMetadata() {
+        List<Event> events = List.of(Event.builder().id(1L).build());
+        Page<Event> page = new PageImpl<>(events, PageRequest.of(0, 10), 1);
+        when(eventRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(page);
+        when(eventMapper.toEventResponse(any(Event.class))).thenReturn(mock(EventResponse.class));
+
+        PaginationResponse<EventResponse> result = eventService.getEventsForManagement(filter(), null);
+
+        assertThat(result.totalElements()).isEqualTo(1);
+        assertThat(result.first()).isTrue();
+        assertThat(result.last()).isTrue();
+    }
+
+    @Test
+    void getEventsForManagement_mapsEachEventUsingMapper() {
+        List<Event> events = List.of(Event.builder().id(1L).build(), Event.builder().id(2L).build());
+        Page<Event> page = new PageImpl<>(events, PageRequest.of(0, 10), 2);
+        EventResponse r1 = new EventResponse("id1", "Draft Event", null, null, null, null, null, null, null, null, null, false, null, null);
+        EventResponse r2 = new EventResponse("id2", "Private Event", null, null, null, null, null, null, null, null, null, false, null, null);
+        when(eventRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(page);
+        when(eventMapper.toEventResponse(events.get(0))).thenReturn(r1);
+        when(eventMapper.toEventResponse(events.get(1))).thenReturn(r2);
+
+        PaginationResponse<EventResponse> result = eventService.getEventsForManagement(filter(), null);
+
+        assertThat(result.content()).containsExactly(r1, r2);
     }
 
     @Test
@@ -504,6 +534,6 @@ class EventServiceTest {
     }
 
     private EventFilter filter() {
-        return new EventFilter(0, 10, null, null, null, null, null, null);
+        return new EventFilter(0, 10, null, null, null, null, null);
     }
 }

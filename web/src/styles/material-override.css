@@ -3,18 +3,7 @@
    -------------------------------------------------------------------------- */
 
 .auth-brand-btn {
-  --mdc-filled-button-container-color: #ff1867 !important;
-  --mdc-filled-button-label-text-color: #ffffff !important;
-  --mat-filled-button-state-layer-color: rgba(255, 255, 255, 0.15) !important;
-}
-
-.auth-brand-btn.mdc-button--filled,
-.auth-brand-btn.mat-mdc-button-base {
-  background-color: #ff1867 !important;
-}
-
-.auth-brand-btn .mdc-button__label {
-  color: #ffffff !important;
+  --mat-filled-button-state-layer-color: rgba(255, 255, 255, 0.15);
 }
 
 /* --------------------------------------------------------------------------

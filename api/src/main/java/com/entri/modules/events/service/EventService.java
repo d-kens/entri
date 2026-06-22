@@ -36,15 +36,25 @@ public class EventService {
     private final EventCategoryService eventCategoryService;
 
     public PaginationResponse<EventResponse> getEvents(EventFilter filter) {
+        Specification<Event> spec = buildSpecification(filter)
+                .and(EventSpecifications.hasStatus(EventStatus.PUBLISHED))
+                .and(EventSpecifications.isPublic());
+        return fetchPage(filter, spec);
+    }
+
+    public PaginationResponse<EventResponse> getEventsForManagement(EventFilter filter, String organizerKey) {
+        Specification<Event> spec = buildSpecification(filter);
+        if (organizerKey != null) {
+            spec = spec.and(EventSpecifications.hasOrganizer(organizerKey));
+        }
+        return fetchPage(filter, spec);
+    }
+
+    private PaginationResponse<EventResponse> fetchPage(EventFilter filter, Specification<Event> spec) {
         Sort sort = Sort.by(Sort.Direction.fromString(filter.sortDirection()), "startTime");
         Pageable pageable = PageRequest.of(filter.page(), filter.size(), sort);
-
-        Specification<Event> spec = buildSpecification(filter);
-
         Page<Event> result = eventRepository.findAll(spec, pageable);
-
-        List<EventResponse> content = result.getContent()
-                .stream()
+        List<EventResponse> content = result.getContent().stream()
                 .map(eventMapper::toEventResponse)
                 .toList();
         return new PaginationResponse<>(
@@ -126,7 +136,6 @@ public class EventService {
         return Specification
                 .where(EventSpecifications.hasCategory(filter.categoryId()))
                 .and(EventSpecifications.search(filter.searchTerm()))
-                .and(EventSpecifications.hasOrganizer(filter.organizerExternalId()))
                 .and(EventSpecifications.startFrom(filter.startFrom()))
                 .and(EventSpecifications.startTo(filter.startTo()));
     }

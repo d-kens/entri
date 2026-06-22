@@ -9,6 +9,7 @@ import com.entri.modules.events.service.EventService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -19,11 +20,22 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class EventController {
     private final EventService eventService;
 
-    @GetMapping()
+    @GetMapping
     public PaginationResponse<EventResponse> browseEvents(
             @Valid final EventFilter filter
     ) {
-        return  eventService.getEvents(filter);
+        return eventService.getEvents(filter);
+    }
+
+    @GetMapping("/manage")
+    public PaginationResponse<EventResponse> manageEvents(
+            @Valid final EventFilter filter,
+            @AuthenticationPrincipal String currentUserKey,
+            Authentication authentication
+    ) {
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_PLATFORM_ADMIN"));
+        return eventService.getEventsForManagement(filter, isAdmin ? null : currentUserKey);
     }
 
     @GetMapping("/{externalId}")

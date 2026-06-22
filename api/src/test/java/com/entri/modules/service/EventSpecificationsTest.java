@@ -1,6 +1,7 @@
 package com.entri.modules.service;
 
 import com.entri.modules.events.entity.Event;
+import com.entri.modules.events.entity.EventStatus;
 import com.entri.modules.events.specification.EventSpecifications;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -17,6 +18,7 @@ import java.time.Instant;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -30,6 +32,42 @@ class EventSpecificationsTest {
     @Mock CriteriaBuilder cb;
     @Mock Path<Instant> startTimePath;
     @Mock Predicate predicate;
+
+    // ── isPublic ──────────────────────────────────────────────────────
+
+    @Test
+    void isPublic_callsIsTrueOnIsPublicField() {
+        Path<Boolean> isPublicPath = mock(Path.class);
+        when(root.<Boolean>get("isPublic")).thenReturn(isPublicPath);
+        when(cb.isTrue(isPublicPath)).thenReturn(predicate);
+
+        Predicate result = EventSpecifications.isPublic().toPredicate(root, query, cb);
+
+        assertThat(result).isEqualTo(predicate);
+        verify(cb).isTrue(isPublicPath);
+    }
+
+    // ── hasStatus ─────────────────────────────────────────────────────
+
+    @Test
+    void hasStatus_null_returnsNullPredicate() {
+        Predicate result = EventSpecifications.hasStatus(null).toPredicate(root, query, cb);
+
+        assertThat(result).isNull();
+        verifyNoInteractions(root, cb);
+    }
+
+    @Test
+    void hasStatus_published_callsEqualWithStatusField() {
+        Path<EventStatus> statusPath = mock(Path.class);
+        when(root.<EventStatus>get("status")).thenReturn(statusPath);
+        when(cb.equal(statusPath, EventStatus.PUBLISHED)).thenReturn(predicate);
+
+        Predicate result = EventSpecifications.hasStatus(EventStatus.PUBLISHED).toPredicate(root, query, cb);
+
+        assertThat(result).isEqualTo(predicate);
+        verify(cb).equal(statusPath, EventStatus.PUBLISHED);
+    }
 
     // ── startFrom ─────────────────────────────────────────────────────
 

@@ -19,8 +19,6 @@ public record EventFilter(
 
         String searchTerm,
 
-        String organizerExternalId,
-
         String startFrom,
 
         String startTo
