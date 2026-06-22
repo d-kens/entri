@@ -13,16 +13,10 @@ interface MenuItem {
 
 @Component({
   selector: 'app-sidenav',
-  imports: [
-    MatListModule,
-    MatIconModule,
-    MatButtonModule,
-    RouterLink,
-    RouterLinkActive
-  ],
+  imports: [MatListModule, MatIconModule, MatButtonModule, RouterLink, RouterLinkActive],
   templateUrl: './sidenav.html',
   styleUrl: './sidenav.css',
-  standalone: true
+  standalone: true,
 })
 export class Sidenav {
   private usersService = inject(UsersService);

@@ -14,7 +14,7 @@ const MD_BREAKPOINT = 768;
   styleUrl: './nav-bar.css',
 })
 export class NavBar {
-  menuOpen    = signal(false);
+  menuOpen = signal(false);
   menuClosing = signal(false);
 
   toggleMenu() {

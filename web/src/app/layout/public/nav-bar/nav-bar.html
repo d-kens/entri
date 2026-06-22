@@ -1,37 +1,54 @@
 <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-sm">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-
     <!-- Logo -->
     <a [routerLink]="['/']" (click)="closeMenu()" class="flex items-center gap-1.5 flex-shrink-0">
-      <span class="font-display text-2xl font-black tracking-tight text-black leading-none select-none">entri</span>
+      <span
+        class="font-display text-2xl font-black tracking-tight text-black leading-none select-none"
+        >entri</span
+      >
       <span class="w-1.5 h-1.5 rounded-full bg-[#FF1867] flex-shrink-0 mb-0.5"></span>
     </a>
 
     <!-- Desktop nav + actions -->
     <nav class="hidden md:flex items-center gap-6">
-      <a [routerLink]="['/']" routerLinkActive="nav-link-active" [routerLinkActiveOptions]="{exact:true}" class="nav-link">Events</a>
+      <a
+        [routerLink]="['/']"
+        routerLinkActive="nav-link-active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="nav-link"
+        >Events</a
+      >
       <a href="#" class="nav-link">About Us</a>
       <a href="#" class="nav-link">Support</a>
-      <a [routerLink]="['/auth/login']" routerLinkActive="nav-link-active" class="nav-link">Sign In</a>
-      <a [routerLink]="['/auth/register']" routerLinkActive="nav-link-active" class="nav-link">Sign Up</a>
+      <a [routerLink]="['/auth/login']" routerLinkActive="nav-link-active" class="nav-link"
+        >Sign In</a
+      >
+      <a [routerLink]="['/auth/register']" routerLinkActive="nav-link-active" class="nav-link"
+        >Sign Up</a
+      >
     </nav>
 
     <!-- Mobile hamburger -->
-    <button class="md:hidden p-2 text-[#FF1867] cursor-pointer" (click)="toggleMenu()" aria-label="Toggle menu">
+    <button
+      class="md:hidden p-2 text-[#FF1867] cursor-pointer"
+      (click)="toggleMenu()"
+      aria-label="Toggle menu"
+    >
       <mat-icon>{{ menuOpen() ? 'close' : 'menu' }}</mat-icon>
     </button>
-
   </div>
 </header>
 
 <!-- Mobile full-page menu -->
 @if (menuOpen()) {
   <div class="mobile-fullscreen md:hidden" [class.is-closing]="menuClosing()">
-
     <!-- Header: logo + close -->
     <div class="mobile-fs-header">
       <a [routerLink]="['/']" (click)="closeMenu()" class="flex items-center gap-1.5">
-        <span class="font-display text-2xl font-black tracking-tight text-black leading-none select-none">entri</span>
+        <span
+          class="font-display text-2xl font-black tracking-tight text-black leading-none select-none"
+          >entri</span
+        >
         <span class="w-1.5 h-1.5 rounded-full bg-[#FF1867] flex-shrink-0 mb-0.5"></span>
       </a>
       <button (click)="closeMenu()" class="mobile-close-btn" aria-label="Close menu">
@@ -41,15 +58,33 @@
 
     <!-- Centered links -->
     <nav class="flex flex-col items-center">
-      <a [routerLink]="['/']" routerLinkActive="mobile-fs-link-active" [routerLinkActiveOptions]="{exact:true}" (click)="closeMenu()" class="mobile-fs-link">Events</a>
+      <a
+        [routerLink]="['/']"
+        routerLinkActive="mobile-fs-link-active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        (click)="closeMenu()"
+        class="mobile-fs-link"
+        >Events</a
+      >
       <a href="#" (click)="closeMenu()" class="mobile-fs-link">About Us</a>
       <a href="#" (click)="closeMenu()" class="mobile-fs-link">Support</a>
 
       <div class="mobile-fs-divider"></div>
 
-      <a [routerLink]="['/auth/login']" routerLinkActive="mobile-fs-link-active" (click)="closeMenu()" class="mobile-fs-link">Sign In</a>
-      <a [routerLink]="['/auth/register']" routerLinkActive="mobile-fs-link-active" (click)="closeMenu()" class="mobile-fs-link">Sign Up</a>
+      <a
+        [routerLink]="['/auth/login']"
+        routerLinkActive="mobile-fs-link-active"
+        (click)="closeMenu()"
+        class="mobile-fs-link"
+        >Sign In</a
+      >
+      <a
+        [routerLink]="['/auth/register']"
+        routerLinkActive="mobile-fs-link-active"
+        (click)="closeMenu()"
+        class="mobile-fs-link"
+        >Sign Up</a
+      >
     </nav>
-
   </div>
 }

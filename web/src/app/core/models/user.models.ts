@@ -1,8 +1,8 @@
 export type UserResponse = {
-  role: string,
-  email: string,
-  externalKey: string,
-  firstName: string,
-  lastName: string,
-  phoneNumber: string,
-}
+  role: string;
+  email: string;
+  externalKey: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+};

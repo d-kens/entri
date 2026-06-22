@@ -11,16 +11,10 @@ type UserRole = 'ADMIN' | 'MERCHANT' | 'AGENT';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [
-    CommonModule,
-    RouterOutlet,
-    MatSidenavModule,
-    Sidenav,
-    Toolbar
-  ],
+  imports: [CommonModule, RouterOutlet, MatSidenavModule, Sidenav, Toolbar],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
-  standalone: true
+  standalone: true,
 })
 export class Layout implements OnInit, OnDestroy {
   @ViewChild('sidenav') sidenav!: MatSidenav;
@@ -35,7 +29,7 @@ export class Layout implements OnInit, OnDestroy {
     this.breakpointObserver
       .observe([Breakpoints.Handset, Breakpoints.Tablet])
       .pipe(takeUntil(this.destroy$))
-      .subscribe(result => {
+      .subscribe((result) => {
         this.isMobile.set(result.matches);
 
         if (this.sidenav) {

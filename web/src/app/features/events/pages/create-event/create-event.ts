@@ -1,6 +1,13 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -15,7 +22,6 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { EventsService } from '../../services/events-service';
 import { SnackbarService } from '@core/services/snackbar-service';
 import { CategoryResponse, CreateEventRequest } from '@core/models/event.models';
-
 
 type InfoForm = {
   title: FormControl<string>;
@@ -93,7 +99,7 @@ export class CreateEvent {
 
   constructor() {
     this.eventsService.getCategories().subscribe({
-      next: cats => this.categories.set(cats),
+      next: (cats) => this.categories.set(cats),
     });
   }
 
@@ -132,11 +138,11 @@ export class CreateEvent {
       this.venueForm.markAllAsTouched();
       if (this.venueForm.invalid) return;
     }
-    this.currentStep.update(s => Math.min(s + 1, this.steps.length - 1));
+    this.currentStep.update((s) => Math.min(s + 1, this.steps.length - 1));
   }
 
   prevStep(): void {
-    this.currentStep.update(s => Math.max(s - 1, 0));
+    this.currentStep.update((s) => Math.max(s - 1, 0));
   }
 
   addTicketType(): void {
@@ -151,15 +157,17 @@ export class CreateEvent {
         saleStartDate: this.fb.control<Date | null>(null),
         saleEndDate: this.fb.control<Date | null>(null),
         isHidden: this.fb.nonNullable.control(false),
-      })
+      }),
     );
   }
 
   removeTicketType(index: number): void {
     this.ticketTypes.removeAt(index);
-    this.expandedTickets.update(set => {
+    this.expandedTickets.update((set) => {
       const next = new Set<number>();
-      set.forEach(i => { if (i !== index) next.add(i > index ? i - 1 : i); });
+      set.forEach((i) => {
+        if (i !== index) next.add(i > index ? i - 1 : i);
+      });
       return next;
     });
   }
@@ -169,7 +177,7 @@ export class CreateEvent {
   }
 
   toggleAdvanced(index: number): void {
-    this.expandedTickets.update(set => {
+    this.expandedTickets.update((set) => {
       const next = new Set(set);
       next.has(index) ? next.delete(index) : next.add(index);
       return next;
@@ -198,9 +206,10 @@ export class CreateEvent {
         this.isUploadingBanner.set(false);
       },
       error: (err: HttpErrorResponse) => {
-        const message = err.status === 413
-          ? 'File is too large. Please upload a smaller image.'
-          : 'Failed to upload banner image. Please try again.';
+        const message =
+          err.status === 413
+            ? 'File is too large. Please upload a smaller image.'
+            : 'Failed to upload banner image. Please try again.';
         this.snackbarService.showError(message);
         this.bannerFile.set(null);
         this.bannerPreview.set(null);
@@ -289,7 +298,7 @@ export class CreateEvent {
       startTime: this.combineDateTime(venue.startDate as Date, venue.startTime),
       endTime: this.combineDateTime(venue.endDate as Date, venue.endTime),
       bannerUrl: this.bannerUrl() as string,
-      ticketTypes: this.ticketTypes.controls.map(ctrl => {
+      ticketTypes: this.ticketTypes.controls.map((ctrl) => {
         const t = ctrl.getRawValue();
         return {
           name: t.name,

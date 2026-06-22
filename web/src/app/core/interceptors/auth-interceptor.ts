@@ -13,13 +13,14 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   const isRefreshCall = req.url.includes('/refresh-token');
 
-  const authReq = accessToken && !isRefreshCall
-    ? req.clone({
-        setHeaders: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
-    : req;
+  const authReq =
+    accessToken && !isRefreshCall
+      ? req.clone({
+          setHeaders: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        })
+      : req;
 
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
@@ -40,11 +41,11 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
               router.navigate(['/auth/login']);
             }
             return throwError(() => refreshError);
-          })
+          }),
         );
       }
 
       return throwError(() => error);
-    })
+    }),
   );
 };

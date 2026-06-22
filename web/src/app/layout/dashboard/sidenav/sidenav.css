@@ -25,7 +25,7 @@
 /* Active route */
 .active-route {
   background-color: rgba(255, 255, 255, 0.07) !important;
-  border-left: 2px solid #FF1867 !important;
+  border-left: 2px solid #ff1867 !important;
 }
 
 .active-route .nav-icon {

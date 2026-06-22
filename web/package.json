@@ -11,7 +11,13 @@
     "cy:run": "cypress run --e2e",
     "cy:smoke": "cypress run --e2e --spec 'cypress/e2e/**/*.smoke.cy.ts'",
     "cy:msw": "cypress run --e2e --spec 'cypress/e2e/**/*.msw.cy.ts'",
-    "serve:ssr:web": "node dist/web/server/server.mjs"
+    "serve:ssr:web": "node dist/web/server/server.mjs",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepare": "cd .. && husky"
+  },
+  "lint-staged": {
+    "*.{ts,html,css,scss,json,md}": "prettier --write"
   },
   "prettier": {
     "printWidth": 100,
@@ -55,8 +61,11 @@
     "@types/express": "^5.0.1",
     "@types/node": "^20.17.19",
     "cypress": "^15.14.2",
+    "husky": "^9.1.7",
     "jsdom": "^27.1.0",
+    "lint-staged": "^16.4.0",
     "postcss": "^8.5.3",
+    "prettier": "^3.8.4",
     "tailwindcss": "^4.1.12",
     "typescript": "~5.9.2",
     "vitest": "^4.0.8"

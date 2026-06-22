@@ -1,4 +1,4 @@
-import {BasePo} from '../../../../support/base.po';
+import { BasePo } from '../../../../support/base.po';
 
 export class ResetPasswordPo extends BasePo {
   visit() {

@@ -40,19 +40,18 @@ describe('Register page', () => {
       const existingEmail = `existing+${Date.now()}@example.com`;
 
       before(() => {
-        cy.env(['API_BASE_URL', 'TEST_REGISTER_PASSWORD']).then(({
-          API_BASE_URL: apiBaseUrl,
-          TEST_REGISTER_PASSWORD: password,
-        }) => {
-          cy.request('POST', `${apiBaseUrl}/auth/register`, {
-            firstName: 'Test',
-            lastName: 'User',
-            email: existingEmail,
-            phoneNumber: '0712345678',
-            password,
-            role: 'PLATFORM_USER',
-          });
-        });
+        cy.env(['API_BASE_URL', 'TEST_REGISTER_PASSWORD']).then(
+          ({ API_BASE_URL: apiBaseUrl, TEST_REGISTER_PASSWORD: password }) => {
+            cy.request('POST', `${apiBaseUrl}/auth/register`, {
+              firstName: 'Test',
+              lastName: 'User',
+              email: existingEmail,
+              phoneNumber: '0712345678',
+              password,
+              role: 'PLATFORM_USER',
+            });
+          },
+        );
       });
 
       it('shows an error for an already-registered email', () => {
@@ -86,27 +85,29 @@ describe('Register page', () => {
         'TEST_REGISTER_LAST_NAME',
         'TEST_REGISTER_PHONE',
         'TEST_REGISTER_PASSWORD',
-      ]).then(({
-        TEST_REGISTER_FIRST_NAME: firstName,
-        TEST_REGISTER_LAST_NAME: lastName,
-        TEST_REGISTER_PHONE: phone,
-        TEST_REGISTER_PASSWORD: password,
-      }) => {
-        const email = `testuser+${Date.now()}@example.com`;
+      ]).then(
+        ({
+          TEST_REGISTER_FIRST_NAME: firstName,
+          TEST_REGISTER_LAST_NAME: lastName,
+          TEST_REGISTER_PHONE: phone,
+          TEST_REGISTER_PASSWORD: password,
+        }) => {
+          const email = `testuser+${Date.now()}@example.com`;
 
-        po.visit()
-          .typeFirstName(firstName)
-          .typeLastName(lastName)
-          .typeEmail(email)
-          .typePhone(phone)
-          .typePassword(password)
-          .typeConfirmPassword(password)
-          .submit();
-        po.urlIncludes('/auth/login');
+          po.visit()
+            .typeFirstName(firstName)
+            .typeLastName(lastName)
+            .typeEmail(email)
+            .typePhone(phone)
+            .typePassword(password)
+            .typeConfirmPassword(password)
+            .submit();
+          po.urlIncludes('/auth/login');
 
-        loginPo.typeEmail(email).typePassword(password).submit();
-        cy.url().should('not.include', '/auth');
-      });
+          loginPo.typeEmail(email).typePassword(password).submit();
+          cy.url().should('not.include', '/auth');
+        },
+      );
     });
   });
 });

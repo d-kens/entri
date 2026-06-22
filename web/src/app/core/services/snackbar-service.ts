@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import {MatSnackBar, MatSnackBarConfig} from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 
 const SNACKBAR_DURATION = {
   success: 3000,
-  error:   5000,
-  info:    3000,
+  error: 5000,
+  info: 3000,
   warning: 4000,
 } as const;
 
@@ -19,7 +19,7 @@ export class SnackbarService {
       duration,
       horizontalPosition: 'end',
       verticalPosition: 'top',
-      panelClass: ['success-snackbar']
+      panelClass: ['success-snackbar'],
     };
 
     this.snackBar.open(message, 'Close', config);
@@ -30,7 +30,7 @@ export class SnackbarService {
       duration,
       horizontalPosition: 'end',
       verticalPosition: 'top',
-      panelClass: ['error-snackbar']
+      panelClass: ['error-snackbar'],
     };
 
     this.snackBar.open(message, 'Close', config);
@@ -40,7 +40,7 @@ export class SnackbarService {
     const config: MatSnackBarConfig = {
       duration,
       horizontalPosition: 'end',
-      verticalPosition: 'top'
+      verticalPosition: 'top',
     };
 
     this.snackBar.open(message, 'Close', config);
@@ -51,7 +51,7 @@ export class SnackbarService {
       duration,
       horizontalPosition: 'end',
       verticalPosition: 'top',
-      panelClass: ['warning-snackbar']
+      panelClass: ['warning-snackbar'],
     };
 
     this.snackBar.open(message, 'Close', config);

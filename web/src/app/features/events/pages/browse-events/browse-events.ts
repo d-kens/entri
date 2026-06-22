@@ -3,7 +3,15 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { toObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Subject, debounceTime, distinctUntilChanged, skip, switchMap, catchError, EMPTY } from 'rxjs';
+import {
+  Subject,
+  debounceTime,
+  distinctUntilChanged,
+  skip,
+  switchMap,
+  catchError,
+  EMPTY,
+} from 'rxjs';
 import { EventsService } from '../../services/events-service';
 import { CategoryResponse, EventFilter, EventResponse } from '@core/models/event.models';
 import { PageResponse } from '@core/models/common.model';
@@ -33,46 +41,53 @@ export class BrowseEvents {
   totalEvents = computed(() => this.pageInfo()?.totalElements ?? 0);
   hasFilters = computed(() => !!this.searchQuery() || this.activeCategoryId() !== null);
 
-  private readonly trigger$ = new Subject<{ page: number; searchTerm: string; categoryId?: number }>();
+  private readonly trigger$ = new Subject<{
+    page: number;
+    searchTerm: string;
+    categoryId?: number;
+  }>();
 
   constructor() {
     this.eventsService.getCategories().subscribe({
-      next: cats => this.categories.set(cats),
+      next: (cats) => this.categories.set(cats),
     });
 
-    this.trigger$.pipe(
-      switchMap(({ page, searchTerm, categoryId }) => {
-        this.loading.set(true);
-        const filter: EventFilter = { page, size: this.pageSize };
-        if (searchTerm) filter.searchTerm = searchTerm;
-        if (categoryId) filter.categoryId = categoryId;
-        return this.eventsService.getEvents(filter).pipe(
-          catchError(() => {
-            this.error.set('Failed to load events. Please try again.');
-            this.loading.set(false);
-            return EMPTY;
-          })
-        );
-      }),
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe(({ content, ...info }) => {
-      this.events.set(content);
-      this.pageInfo.set(info);
-      this.loading.set(false);
-      this.error.set(null);
-    });
+    this.trigger$
+      .pipe(
+        switchMap(({ page, searchTerm, categoryId }) => {
+          this.loading.set(true);
+          const filter: EventFilter = { page, size: this.pageSize };
+          if (searchTerm) filter.searchTerm = searchTerm;
+          if (categoryId) filter.categoryId = categoryId;
+          return this.eventsService.getEvents(filter).pipe(
+            catchError(() => {
+              this.error.set('Failed to load events. Please try again.');
+              this.loading.set(false);
+              return EMPTY;
+            }),
+          );
+        }),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe(({ content, ...info }) => {
+        this.events.set(content);
+        this.pageInfo.set(info);
+        this.loading.set(false);
+        this.error.set(null);
+      });
 
     this.trigger$.next({ page: 0, searchTerm: '' });
 
-    toObservable(this.searchQuery).pipe(
-      skip(1),
-      debounceTime(400),
-      distinctUntilChanged(),
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe(q => {
-      this.currentPage.set(0);
-      this.trigger$.next({ page: 0, searchTerm: q, categoryId: this.activeCategoryId() ?? undefined });
-    });
+    toObservable(this.searchQuery)
+      .pipe(skip(1), debounceTime(400), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
+      .subscribe((q) => {
+        this.currentPage.set(0);
+        this.trigger$.next({
+          page: 0,
+          searchTerm: q,
+          categoryId: this.activeCategoryId() ?? undefined,
+        });
+      });
   }
 
   private fire(page: number): void {
@@ -83,7 +98,9 @@ export class BrowseEvents {
     });
   }
 
-  retry(): void { this.fire(this.currentPage()); }
+  retry(): void {
+    this.fire(this.currentPage());
+  }
 
   clearFilters(): void {
     this.searchQuery.set('');

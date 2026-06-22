@@ -13,11 +13,7 @@
 
   <mat-sidenav-content class="flex flex-col h-full overflow-hidden">
     <!-- Sticky Toolbar -->
-    <app-toolbar
-      [isMobile]="isMobile()"
-      (toggleSidenav)="toggleSidenav()"
-      class="flex-shrink-0"
-    />
+    <app-toolbar [isMobile]="isMobile()" (toggleSidenav)="toggleSidenav()" class="flex-shrink-0" />
 
     <!-- Scrollable Content -->
     <div class="flex-1 overflow-y-auto">

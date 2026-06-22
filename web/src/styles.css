@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 @import './app/themes/custom-themetheme.css';
 @import './styles/material-override.css';
 
@@ -23,7 +23,9 @@ html {
     -moz-osx-font-smoothing: grayscale;
   }
 
-  h1, h2, h3 {
+  h1,
+  h2,
+  h3 {
     font-family: var(--font-display);
     color: var(--color-foreground);
     font-weight: 700;
@@ -46,84 +48,81 @@ html {
 }
 
 @media (min-width: 640px) {
-  .page-content { padding: 2rem 1.5rem; }
+  .page-content {
+    padding: 2rem 1.5rem;
+  }
 }
 
 @theme {
-
   /* ── Colors ──────────────────────────────────────────────── */
 
-  --color-primary:            var(--mat-sys-primary);
-  --color-on-primary:         var(--mat-sys-on-primary);
-  --color-primary-container:  var(--mat-sys-primary-container);
+  --color-primary: var(--mat-sys-primary);
+  --color-on-primary: var(--mat-sys-on-primary);
+  --color-primary-container: var(--mat-sys-primary-container);
 
-  --color-secondary:          var(--mat-sys-secondary);
-  --color-on-secondary:       var(--mat-sys-on-secondary);
+  --color-secondary: var(--mat-sys-secondary);
+  --color-on-secondary: var(--mat-sys-on-secondary);
 
-  --color-background:         var(--mat-sys-background);
-  --color-foreground:         var(--mat-sys-on-background);
+  --color-background: var(--mat-sys-background);
+  --color-foreground: var(--mat-sys-on-background);
 
-  --color-surface:                   var(--mat-sys-surface);
-  --color-surface-container-low:     var(--mat-sys-surface-container-low);
-  --color-surface-container:         var(--mat-sys-surface-container);
-  --color-surface-variant:           var(--mat-sys-surface-variant);
-  --color-on-surface:                var(--mat-sys-on-surface);
-  --color-on-surface-variant:        var(--mat-sys-on-surface-variant);
+  --color-surface: var(--mat-sys-surface);
+  --color-surface-container-low: var(--mat-sys-surface-container-low);
+  --color-surface-container: var(--mat-sys-surface-container);
+  --color-surface-variant: var(--mat-sys-surface-variant);
+  --color-on-surface: var(--mat-sys-on-surface);
+  --color-on-surface-variant: var(--mat-sys-on-surface-variant);
 
-  --color-outline:            var(--mat-sys-outline);
-  --color-outline-variant:    var(--mat-sys-outline-variant);
+  --color-outline: var(--mat-sys-outline);
+  --color-outline-variant: var(--mat-sys-outline-variant);
 
-  --color-error:              var(--mat-sys-error);
-  --color-on-error:           var(--mat-sys-on-error);
-  --color-error-container:    var(--mat-sys-error-container);
+  --color-error: var(--mat-sys-error);
+  --color-on-error: var(--mat-sys-on-error);
+  --color-error-container: var(--mat-sys-error-container);
 
-  --color-paid:               var(--app-paid);
-  --color-on-paid:            var(--app-on-paid);
-  --color-pending:            var(--app-pending);
-  --color-on-pending:         var(--app-on-pending);
-  --color-overdue:            var(--app-overdue);
-  --color-on-overdue:         var(--app-on-overdue);
+  --color-paid: var(--app-paid);
+  --color-on-paid: var(--app-on-paid);
+  --color-pending: var(--app-pending);
+  --color-on-pending: var(--app-on-pending);
+  --color-overdue: var(--app-overdue);
+  --color-on-overdue: var(--app-on-overdue);
 
   /* ── Typography ──────────────────────────────────────────── */
 
-  --font-sans:    var(--mat-sys-plain-font-family);
+  --font-sans: var(--mat-sys-plain-font-family);
   --font-display: var(--mat-sys-brand-font-family);
-  --font-mono:    'Fira Code', monospace;
+  --font-mono: 'Fira Code', monospace;
 
   --font-weight-regular: var(--mat-sys-regular-font-weight);
-  --font-weight-medium:  var(--mat-sys-medium-font-weight);
-  --font-weight-bold:    var(--mat-sys-bold-font-weight);
+  --font-weight-medium: var(--mat-sys-medium-font-weight);
+  --font-weight-bold: var(--mat-sys-bold-font-weight);
 
   /* ── Warm palette (public pages) ────────────────────────────── */
-  --color-warm:        var(--app-warm);
-  --color-warm-md:     var(--app-warm-md);
+  --color-warm: var(--app-warm);
+  --color-warm-md: var(--app-warm-md);
   --color-warm-strong: var(--app-warm-strong);
-  --color-warm-text:   var(--app-warm-text);
+  --color-warm-text: var(--app-warm-text);
 
   /* ── Border radius ───────────────────────────────────────── */
 
-  --radius-xs:   var(--mat-sys-corner-extra-small);
-  --radius-sm:   var(--mat-sys-corner-small);
-  --radius-md:   var(--mat-sys-corner-medium);
-  --radius-lg:   var(--mat-sys-corner-large);
-  --radius-xl:   var(--mat-sys-corner-extra-large);
+  --radius-xs: var(--mat-sys-corner-extra-small);
+  --radius-sm: var(--mat-sys-corner-small);
+  --radius-md: var(--mat-sys-corner-medium);
+  --radius-lg: var(--mat-sys-corner-large);
+  --radius-xl: var(--mat-sys-corner-extra-large);
   --radius-full: var(--mat-sys-corner-full);
 
   /* ── Shadows ─────────────────────────────────────────────── */
 
   --shadow-elevation-1:
-    0px 1px 2px  var(--mat-sys-umbra-color),
-    0px 1px 3px  var(--mat-sys-penumbra-color),
-    0px 1px 4px  var(--mat-sys-ambient-color);
+    0px 1px 2px var(--mat-sys-umbra-color), 0px 1px 3px var(--mat-sys-penumbra-color),
+    0px 1px 4px var(--mat-sys-ambient-color);
 
   --shadow-elevation-2:
-    0px 1px 2px  var(--mat-sys-umbra-color),
-    0px 2px 6px  var(--mat-sys-penumbra-color),
+    0px 1px 2px var(--mat-sys-umbra-color), 0px 2px 6px var(--mat-sys-penumbra-color),
     0px 4px 12px var(--mat-sys-ambient-color);
 
   --shadow-elevation-3:
-    0px 4px 8px  var(--mat-sys-umbra-color),
-    0px 6px 16px var(--mat-sys-penumbra-color),
+    0px 4px 8px var(--mat-sys-umbra-color), 0px 6px 16px var(--mat-sys-penumbra-color),
     0px 8px 24px var(--mat-sys-ambient-color);
-
 }

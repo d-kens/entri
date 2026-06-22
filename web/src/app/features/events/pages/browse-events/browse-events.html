@@ -1,7 +1,6 @@
 <!-- ── Hero ─────────────────────────────────────────────────────── -->
 <section class="hero-section">
   <div class="hero-inner">
-
     <h1 class="hero-title">Discover Events</h1>
     <p class="hero-subtitle">
       @if (loading()) {
@@ -33,29 +32,31 @@
           class="cat-pill"
           [class.active]="activeCategoryId() === null"
           (click)="setCategory(null)"
-        >All</button>
+        >
+          All
+        </button>
 
         @for (cat of categories(); track cat.id) {
           <button
             class="cat-pill"
             [class.active]="activeCategoryId() === cat.id"
             (click)="setCategory(cat.id)"
-          >{{ cat.name }}</button>
+          >
+            {{ cat.name }}
+          </button>
         }
       </div>
     }
-
   </div>
 </section>
 
 <!-- ── Events grid ──────────────────────────────────────────────── -->
 <section class="events-section">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-
     <!-- Loading skeletons -->
     @if (loading()) {
       <div class="events-grid">
-        @for (n of [1,2,3,4,5,6]; track n) {
+        @for (n of [1, 2, 3, 4, 5, 6]; track n) {
           <div class="event-card skeleton-card">
             <div class="card-image shimmer-block"></div>
             <div class="card-info">
@@ -68,7 +69,7 @@
         }
       </div>
 
-    <!-- Error state -->
+      <!-- Error state -->
     } @else if (error()) {
       <div class="state-box">
         <div class="state-icon-wrap state-icon-wrap--error">
@@ -82,7 +83,7 @@
         </button>
       </div>
 
-    <!-- Empty state -->
+      <!-- Empty state -->
     } @else if (events().length === 0) {
       <div class="state-box">
         <div class="state-icon-wrap">
@@ -93,8 +94,11 @@
           }
         </div>
         <p class="state-title">
-          @if (hasFilters()) { No events match your search }
-          @else { No events yet }
+          @if (hasFilters()) {
+            No events match your search
+          } @else {
+            No events yet
+          }
         </p>
         <p class="state-body">
           @if (hasFilters()) {
@@ -104,16 +108,17 @@
           }
         </p>
         @if (hasFilters()) {
-          <button class="state-cta state-cta--outline" (click)="clearFilters()">Clear filters</button>
+          <button class="state-cta state-cta--outline" (click)="clearFilters()">
+            Clear filters
+          </button>
         }
       </div>
 
-    <!-- Grid -->
+      <!-- Grid -->
     } @else {
       <div class="events-grid">
         @for (event of events(); track event.externalId) {
           <a [routerLink]="['/events', event.externalId]" class="event-card">
-
             <!-- Image -->
             <div class="card-image">
               @if (event.bannerUrl) {
@@ -146,7 +151,6 @@
                 <mat-icon class="footer-arrow">arrow_forward</mat-icon>
               </div>
             </div>
-
           </a>
         }
       </div>
@@ -161,6 +165,5 @@
         </div>
       }
     }
-
   </div>
 </section>

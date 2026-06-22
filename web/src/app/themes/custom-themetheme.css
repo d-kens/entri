@@ -4,82 +4,82 @@ html {
   /* ═══════════════════════════════════════════════════════════
      PRIMARY — Black
      ═══════════════════════════════════════════════════════════ */
-  --mat-sys-primary:               #000000;
-  --mat-sys-on-primary:            #FFFFFF;
-  --mat-sys-primary-container:     #E8E8E8;
-  --mat-sys-on-primary-container:  #000000;
-  --mat-sys-inverse-primary:       #6A6A6A;
+  --mat-sys-primary: #000000;
+  --mat-sys-on-primary: #ffffff;
+  --mat-sys-primary-container: #e8e8e8;
+  --mat-sys-on-primary-container: #000000;
+  --mat-sys-inverse-primary: #6a6a6a;
 
   /* ═══════════════════════════════════════════════════════════
      SECONDARY — Mid gray
      ═══════════════════════════════════════════════════════════ */
-  --mat-sys-secondary:             #6A6A6A;
-  --mat-sys-on-secondary:          #FFFFFF;
-  --mat-sys-secondary-container:   #F0F0F0;
-  --mat-sys-on-secondary-container:#000000;
+  --mat-sys-secondary: #6a6a6a;
+  --mat-sys-on-secondary: #ffffff;
+  --mat-sys-secondary-container: #f0f0f0;
+  --mat-sys-on-secondary-container: #000000;
 
   /* ═══════════════════════════════════════════════════════════
      SURFACES — Light
      ═══════════════════════════════════════════════════════════ */
-  --mat-sys-background:            #FFFFFF;
-  --mat-sys-on-background:         #000000;
-  --mat-sys-surface:               #FFFFFF;
-  --mat-sys-surface-container-low:  #F8F8F8;
-  --mat-sys-surface-container:      #F2F2F2;
-  --mat-sys-surface-container-high: #EBEBEB;
+  --mat-sys-background: #ffffff;
+  --mat-sys-on-background: #000000;
+  --mat-sys-surface: #ffffff;
+  --mat-sys-surface-container-low: #f8f8f8;
+  --mat-sys-surface-container: #f2f2f2;
+  --mat-sys-surface-container-high: #ebebeb;
 
-  --mat-sys-surface-variant:       #F2F2F2;
-  --mat-sys-on-surface:            #000000;
-  --mat-sys-on-surface-variant:    #6A6A6A;
-  --mat-sys-inverse-surface:       #000000;
-  --mat-sys-inverse-on-surface:    #FFFFFF;
-  --mat-sys-surface-tint:          #000000;
-  --mat-sys-outline:               #D4D4D4;
-  --mat-sys-outline-variant:       #E8E8E8;
-  --mat-sys-shadow:                #000000;
-  --mat-sys-scrim:                 #000000;
+  --mat-sys-surface-variant: #f2f2f2;
+  --mat-sys-on-surface: #000000;
+  --mat-sys-on-surface-variant: #6a6a6a;
+  --mat-sys-inverse-surface: #000000;
+  --mat-sys-inverse-on-surface: #ffffff;
+  --mat-sys-surface-tint: #000000;
+  --mat-sys-outline: #d4d4d4;
+  --mat-sys-outline-variant: #e8e8e8;
+  --mat-sys-shadow: #000000;
+  --mat-sys-scrim: #000000;
 
   /* ═══════════════════════════════════════════════════════════
      ERROR
      ═══════════════════════════════════════════════════════════ */
-  --mat-sys-error:                 #DC2626;
-  --mat-sys-on-error:              #FFFFFF;
-  --mat-sys-error-container:       #FEE2E2;
-  --mat-sys-on-error-container:    #7F1D1D;
+  --mat-sys-error: #dc2626;
+  --mat-sys-on-error: #ffffff;
+  --mat-sys-error-container: #fee2e2;
+  --mat-sys-on-error-container: #7f1d1d;
 
   /* ═══════════════════════════════════════════════════════════
      TYPOGRAPHY — Coustard (display) + Inter (body)
      ═══════════════════════════════════════════════════════════ */
-  --mat-sys-brand-font-family:     'Poppins', -apple-system, sans-serif;
-  --mat-sys-plain-font-family:     'Inter', -apple-system, sans-serif;
-  --mat-sys-bold-font-weight:      700;
-  --mat-sys-medium-font-weight:    500;
-  --mat-sys-regular-font-weight:   400;
+  --mat-sys-brand-font-family: 'Poppins', -apple-system, sans-serif;
+  --mat-sys-plain-font-family: 'Inter', -apple-system, sans-serif;
+  --mat-sys-bold-font-weight: 700;
+  --mat-sys-medium-font-weight: 500;
+  --mat-sys-regular-font-weight: 400;
 
   /* ═══════════════════════════════════════════════════════════
      SHADOWS / ELEVATION
      ═══════════════════════════════════════════════════════════ */
-  --mat-sys-umbra-color:    color-mix(in srgb, var(--mat-sys-shadow), transparent 80%);
+  --mat-sys-umbra-color: color-mix(in srgb, var(--mat-sys-shadow), transparent 80%);
   --mat-sys-penumbra-color: color-mix(in srgb, var(--mat-sys-shadow), transparent 86%);
-  --mat-sys-ambient-color:  color-mix(in srgb, var(--mat-sys-shadow), transparent 88%);
+  --mat-sys-ambient-color: color-mix(in srgb, var(--mat-sys-shadow), transparent 88%);
 
   /* ═══════════════════════════════════════════════════════════
      SHAPE / CORNERS
      ═══════════════════════════════════════════════════════════ */
   --mat-sys-corner-extra-large: 24px;
-  --mat-sys-corner-large:       12px;
-  --mat-sys-corner-medium:      10px;
-  --mat-sys-corner-small:        8px;
-  --mat-sys-corner-extra-small:  6px;
-  --mat-sys-corner-full:      9999px;
-  --mat-sys-corner-none:          0;
+  --mat-sys-corner-large: 12px;
+  --mat-sys-corner-medium: 10px;
+  --mat-sys-corner-small: 8px;
+  --mat-sys-corner-extra-small: 6px;
+  --mat-sys-corner-full: 9999px;
+  --mat-sys-corner-none: 0;
 
   /* ═══════════════════════════════════════════════════════════
      INTERACTION STATES
      ═══════════════════════════════════════════════════════════ */
   --mat-sys-dragged-state-layer-opacity: 0.16;
-  --mat-sys-focus-state-layer-opacity:   0.12;
-  --mat-sys-hover-state-layer-opacity:   0.08;
+  --mat-sys-focus-state-layer-opacity: 0.12;
+  --mat-sys-hover-state-layer-opacity: 0.08;
   --mat-sys-pressed-state-layer-opacity: 0.12;
 
   /* ═══════════════════════════════════════════════════════════
@@ -87,43 +87,43 @@ html {
      ═══════════════════════════════════════════════════════════ */
 
   /* Default */
-  --mat-form-field-outlined-outline-color:          #D4D4D4;
-  --mat-form-field-outlined-hover-outline-color:    #9A9A9A;
-  --mat-form-field-outlined-label-text-color:       #6A6A6A;
+  --mat-form-field-outlined-outline-color: #d4d4d4;
+  --mat-form-field-outlined-hover-outline-color: #9a9a9a;
+  --mat-form-field-outlined-label-text-color: #6a6a6a;
 
   /* Error */
-  --mat-form-field-outlined-error-outline-color:          #DC2626;
-  --mat-form-field-outlined-error-hover-outline-color:    #DC2626;
-  --mat-form-field-outlined-error-focus-outline-color:    #DC2626;
-  --mat-form-field-outlined-error-label-text-color:       #6A6A6A;
-  --mat-form-field-outlined-error-focus-label-text-color: #DC2626;
-  --mat-form-field-outlined-error-caret-color:            #DC2626;
+  --mat-form-field-outlined-error-outline-color: #dc2626;
+  --mat-form-field-outlined-error-hover-outline-color: #dc2626;
+  --mat-form-field-outlined-error-focus-outline-color: #dc2626;
+  --mat-form-field-outlined-error-label-text-color: #6a6a6a;
+  --mat-form-field-outlined-error-focus-label-text-color: #dc2626;
+  --mat-form-field-outlined-error-caret-color: #dc2626;
 
   /* ═══════════════════════════════════════════════════════════
      APP SEMANTIC — ticket/payment status
      ═══════════════════════════════════════════════════════════ */
-  --app-paid:       #16A34A;
-  --app-on-paid:    #FFFFFF;
+  --app-paid: #16a34a;
+  --app-on-paid: #ffffff;
 
-  --app-pending:    #D97706;
-  --app-on-pending: #FFFFFF;
+  --app-pending: #d97706;
+  --app-on-pending: #ffffff;
 
-  --app-overdue:    #DC2626;
-  --app-on-overdue: #FFFFFF;
+  --app-overdue: #dc2626;
+  --app-on-overdue: #ffffff;
 
   /* ── Snackbar semantic states ──────────────────────────────── */
-  --app-success:    #16A34A;
-  --app-on-success: #FFFFFF;
+  --app-success: #16a34a;
+  --app-on-success: #ffffff;
 
-  --app-warning:    #D97706;
-  --app-on-warning: #FFFFFF;
+  --app-warning: #d97706;
+  --app-on-warning: #ffffff;
 
-  --app-info:       #0284C7;
-  --app-on-info:    #FFFFFF;
+  --app-info: #0284c7;
+  --app-on-info: #ffffff;
 
   /* ── Light surface palette ─────────────────────────────────── */
-  --app-warm:        #FFFFFF;
-  --app-warm-md:     #F8F8F8;
-  --app-warm-strong: #F0F0F0;
-  --app-warm-text:   #6A6A6A;
+  --app-warm: #ffffff;
+  --app-warm-md: #f8f8f8;
+  --app-warm-strong: #f0f0f0;
+  --app-warm-text: #6a6a6a;
 }
