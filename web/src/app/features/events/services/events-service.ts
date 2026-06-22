@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from 'environments/environment';
 import {
   CategoryResponse,
-  CreateEventRequest,
+  EventRequest,
   EventDetailResponse,
   EventFilter,
   EventResponse,
@@ -29,7 +29,7 @@ export class EventsService {
     return this.http.delete<void>(`${environment.apiBaseUrl}/media/upload`, { params: { url } });
   }
 
-  createEvent(payload: CreateEventRequest): Observable<EventResponse> {
+  createEvent(payload: EventRequest): Observable<EventResponse> {
     return this.http.post<EventResponse>(`${environment.apiBaseUrl}/events`, payload);
   }
 
@@ -44,7 +44,7 @@ export class EventsService {
     return this.http.get<EventDetailResponse>(`${environment.apiBaseUrl}/events/${id}`);
   }
 
-  updateEvent(id: string, payload: CreateEventRequest): Observable<EventResponse> {
+  updateEvent(id: string, payload: EventRequest): Observable<EventResponse> {
     return this.http.put<EventResponse>(`${environment.apiBaseUrl}/events/${id}`, payload);
   }
 
