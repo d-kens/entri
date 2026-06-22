@@ -1,7 +1,9 @@
 /* ── Hero ────────────────────────────────────────────────────── */
 
 .hero-section {
-  background: radial-gradient(ellipse 85% 75% at 50% 50%, rgba(255, 100, 165, 0.18) 0%, transparent 65%), #FFFFFF;
+  background:
+    radial-gradient(ellipse 85% 75% at 50% 50%, rgba(255, 100, 165, 0.18) 0%, transparent 65%),
+    #ffffff;
 }
 
 .hero-inner {
@@ -15,7 +17,10 @@
 }
 
 .hero-title {
-  font-family: 'Poppins', -apple-system, sans-serif;
+  font-family:
+    'Poppins',
+    -apple-system,
+    sans-serif;
   font-size: clamp(2rem, 4vw, 2.75rem);
   font-weight: 700;
   color: #000000;
@@ -26,7 +31,7 @@
 
 .hero-subtitle {
   font-size: 0.9375rem;
-  color: #6A6A6A;
+  color: #6a6a6a;
   min-height: 1.5rem;
   margin-bottom: 2rem;
 }
@@ -37,23 +42,25 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  background: #F5F5F5;
-  border: 1.5px solid #E0E0E0;
+  background: #f5f5f5;
+  border: 1.5px solid #e0e0e0;
   border-radius: 100px;
   padding: 0 1.25rem;
   width: 100%;
   height: 3.25rem;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
   margin-bottom: 1.5rem;
 }
 
 .search-bar:focus-within {
-  border-color: #FF1867;
+  border-color: #ff1867;
   box-shadow: 0 0 0 3px rgba(255, 24, 103, 0.12);
 }
 
 .search-icon {
-  color: #9A9A9A;
+  color: #9a9a9a;
   flex-shrink: 0;
   font-size: 20px;
   width: 20px;
@@ -67,17 +74,25 @@
   outline: none;
   font-size: 0.9375rem;
   color: #000000;
-  font-family: 'Inter', -apple-system, sans-serif;
+  font-family:
+    'Inter',
+    -apple-system,
+    sans-serif;
 }
 
 .search-input::placeholder {
-  color: #AAAAAA;
+  color: #aaaaaa;
 }
 
 /* ── Category pills ──────────────────────────────────────────── */
 
-.no-scrollbar::-webkit-scrollbar { display: none; }
-.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
 
 .category-row {
   display: flex;
@@ -91,40 +106,43 @@
 .cat-pill {
   flex-shrink: 0;
   padding: 0.4rem 1rem;
-  border: 1.5px solid #E0E0E0;
+  border: 1.5px solid #e0e0e0;
   border-radius: 4px;
   background: transparent;
-  color: #6A6A6A;
+  color: #6a6a6a;
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   cursor: pointer;
-  transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease,
+    background 0.15s ease;
   white-space: nowrap;
 }
 
 .cat-pill:hover {
-  border-color: #9A9A9A;
+  border-color: #9a9a9a;
   color: #000000;
 }
 
 .cat-pill.active {
-  background: #FF1867;
-  color: #FFFFFF;
-  border-color: #FF1867;
+  background: #ff1867;
+  color: #ffffff;
+  border-color: #ff1867;
 }
 
 /* ── Section divider ─────────────────────────────────────────── */
 
 .section-divider {
   height: 1px;
-  background: #E8E8E8;
+  background: #e8e8e8;
 }
 
 /* ── Events section ──────────────────────────────────────────── */
 
 .events-section {
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   min-height: 400px;
 }
 
@@ -153,17 +171,19 @@
 .event-card {
   display: flex;
   flex-direction: column;
-  background: #FFFFFF;
-  border: 1.5px solid #E8E8E8;
+  background: #ffffff;
+  border: 1.5px solid #e8e8e8;
   border-radius: 4px;
   overflow: hidden;
   text-decoration: none;
-  transition: border-color 0.2s ease, transform 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    transform 0.2s ease;
   cursor: pointer;
 }
 
 .event-card:hover {
-  border-color: #FF1867;
+  border-color: #ff1867;
   transform: translateY(-2px);
 }
 
@@ -173,7 +193,7 @@
   position: relative;
   height: 260px;
   overflow: hidden;
-  background: #F0F0F0;
+  background: #f0f0f0;
 }
 
 .card-img {
@@ -186,7 +206,7 @@
 .card-img-placeholder {
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #F0F0F0 0%, #E8E8E8 100%);
+  background: linear-gradient(135deg, #f0f0f0 0%, #e8e8e8 100%);
 }
 
 /* ── Date badge ──────────────────────────────────────────────── */
@@ -207,7 +227,7 @@
 .date-dow {
   font-size: 0.6rem;
   font-weight: 600;
-  color: #AAAAAA;
+  color: #aaaaaa;
   letter-spacing: 0.08em;
   line-height: 1;
   margin-bottom: 0.125rem;
@@ -216,7 +236,7 @@
 .date-day {
   font-size: 1.5rem;
   font-weight: 800;
-  color: #FFFFFF;
+  color: #ffffff;
   line-height: 1;
   letter-spacing: -0.02em;
 }
@@ -224,7 +244,7 @@
 .date-month {
   font-size: 0.6rem;
   font-weight: 600;
-  color: #AAAAAA;
+  color: #aaaaaa;
   letter-spacing: 0.08em;
   line-height: 1;
   margin-top: 0.125rem;
@@ -236,8 +256,8 @@
   position: absolute;
   top: 0.75rem;
   right: 0.75rem;
-  background: #FF1867;
-  color: #FFFFFF;
+  background: #ff1867;
+  color: #ffffff;
   font-size: 0.65rem;
   font-weight: 800;
   letter-spacing: 0.1em;
@@ -257,12 +277,15 @@
   font-size: 0.6875rem;
   font-weight: 700;
   letter-spacing: 0.1em;
-  color: #6A6A6A;
+  color: #6a6a6a;
   margin-bottom: 0.375rem;
 }
 
 .card-title-text {
-  font-family: 'Poppins', -apple-system, sans-serif;
+  font-family:
+    'Poppins',
+    -apple-system,
+    sans-serif;
   font-size: 1.25rem;
   font-weight: 800;
   color: #000000;
@@ -276,7 +299,7 @@
   align-items: center;
   gap: 0.25rem;
   font-size: 0.8125rem;
-  color: #6A6A6A;
+  color: #6a6a6a;
   margin-bottom: auto;
   padding-bottom: 1rem;
 }
@@ -286,26 +309,28 @@
   align-items: center;
   justify-content: space-between;
   padding-top: 1rem;
-  border-top: 1px solid #E8E8E8;
+  border-top: 1px solid #e8e8e8;
 }
 
 .get-tickets {
   font-size: 0.6875rem;
   font-weight: 700;
   letter-spacing: 0.1em;
-  color: #6A6A6A;
+  color: #6a6a6a;
 }
 
 .footer-arrow {
-  color: #6A6A6A;
+  color: #6a6a6a;
   font-size: 18px !important;
   width: 18px !important;
   height: 18px !important;
-  transition: color 0.15s ease, transform 0.15s ease;
+  transition:
+    color 0.15s ease,
+    transform 0.15s ease;
 }
 
 .event-card:hover .footer-arrow {
-  color: #FF1867;
+  color: #ff1867;
   transform: translateX(2px);
 }
 
@@ -318,14 +343,18 @@
 /* ── Shimmer ─────────────────────────────────────────────────── */
 
 .shimmer-block {
-  background: linear-gradient(90deg, #F0F0F0 25%, #E4E4E4 50%, #F0F0F0 75%);
+  background: linear-gradient(90deg, #f0f0f0 25%, #e4e4e4 50%, #f0f0f0 75%);
   background-size: 200% 100%;
   animation: shimmer 1.4s ease-in-out infinite;
 }
 
 @keyframes shimmer {
-  0%   { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 /* ── State box (error / empty) ───────────────────────────────── */
@@ -343,7 +372,7 @@
   width: 5rem;
   height: 5rem;
   border-radius: 50%;
-  background: #FFF0F4;
+  background: #fff0f4;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -355,15 +384,18 @@
   font-size: 2rem !important;
   width: 2rem !important;
   height: 2rem !important;
-  color: #FF1867;
+  color: #ff1867;
 }
 
 .state-icon-wrap--error {
-  background: #FFF0F4;
+  background: #fff0f4;
 }
 
 .state-title {
-  font-family: 'Poppins', -apple-system, sans-serif;
+  font-family:
+    'Poppins',
+    -apple-system,
+    sans-serif;
   font-size: 1.375rem;
   font-weight: 700;
   color: #000000;
@@ -372,7 +404,7 @@
 
 .state-body {
   font-size: 0.9375rem;
-  color: #6A6A6A;
+  color: #6a6a6a;
   max-width: 380px;
   line-height: 1.65;
   margin-bottom: 1.75rem;
@@ -385,13 +417,15 @@
   padding: 0.625rem 1.75rem;
   border-radius: 4px;
   border: none;
-  background: #FF1867;
-  color: #FFFFFF;
+  background: #ff1867;
+  color: #ffffff;
   font-size: 0.875rem;
   font-weight: 700;
   letter-spacing: 0.04em;
   cursor: pointer;
-  transition: background 0.15s ease, transform 0.15s ease;
+  transition:
+    background 0.15s ease,
+    transform 0.15s ease;
 }
 
 .state-cta:hover {
@@ -407,13 +441,13 @@
 
 .state-cta--outline {
   background: transparent;
-  border: 1.5px solid #D4D4D4;
+  border: 1.5px solid #d4d4d4;
   color: #000000;
 }
 
 .state-cta--outline:hover {
-  background: #F5F5F5;
-  border-color: #FF1867;
+  background: #f5f5f5;
+  border-color: #ff1867;
   transform: none;
 }
 
@@ -430,7 +464,7 @@
   align-items: center;
   gap: 0.375rem;
   padding: 0.625rem 2rem;
-  border: 1.5px solid #D4D4D4;
+  border: 1.5px solid #d4d4d4;
   border-radius: 4px;
   background: transparent;
   color: #000000;
@@ -438,10 +472,12 @@
   font-weight: 600;
   letter-spacing: 0.05em;
   cursor: pointer;
-  transition: border-color 0.15s ease, background 0.15s ease;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease;
 }
 
 .load-more-btn:hover {
-  border-color: #FF1867;
-  background: #F5F5F5;
+  border-color: #ff1867;
+  background: #f5f5f5;
 }

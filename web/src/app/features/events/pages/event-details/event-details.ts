@@ -9,7 +9,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { EventsService } from '../../services/events-service';
 import { SnackbarService } from '@core/services/snackbar-service';
-import {EventDetailResponse, EventResponse} from '@core/models/event.models';
+import { EventDetailResponse, EventResponse } from '@core/models/event.models';
 
 @Component({
   selector: 'app-event-details',
@@ -22,7 +22,7 @@ import {EventDetailResponse, EventResponse} from '@core/models/event.models';
     MatChipsModule,
     MatProgressSpinnerModule,
     MatDividerModule,
-  MatTooltipModule,
+    MatTooltipModule,
   ],
   templateUrl: './event-details.html',
   styleUrl: './event-details.css',

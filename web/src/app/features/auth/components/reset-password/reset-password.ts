@@ -1,14 +1,14 @@
-import {Component, inject, OnInit, signal} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {FormBuilder, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
-import {ResetPasswordRequest} from '@core/models/auth.models';
-import {AuthService} from '@core/services/auth-service';
-import {SnackbarService} from '@core/services/snackbar-service';
-import {MatButton, MatIconButton} from '@angular/material/button';
-import {MatError, MatFormField, MatInput, MatLabel, MatSuffix} from '@angular/material/input';
-import {MatIcon} from '@angular/material/icon';
-import {MatProgressSpinner} from '@angular/material/progress-spinner';
-import {passwordsMatch, PasswordMismatchStateMatcher} from '../../validators/password.validators';
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ResetPasswordRequest } from '@core/models/auth.models';
+import { AuthService } from '@core/services/auth-service';
+import { SnackbarService } from '@core/services/snackbar-service';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatError, MatFormField, MatInput, MatLabel, MatSuffix } from '@angular/material/input';
+import { MatIcon } from '@angular/material/icon';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { passwordsMatch, PasswordMismatchStateMatcher } from '../../validators/password.validators';
 
 @Component({
   selector: 'app-reset-password',
@@ -37,21 +37,28 @@ export class ResetPassword implements OnInit {
 
   token!: string;
 
-  resetPasswordForm = this.fb.group({
-    password:        ['', [Validators.required, Validators.minLength(8)]],
-    confirmPassword: ['', Validators.required],
-  }, {validators: passwordsMatch});
+  resetPasswordForm = this.fb.group(
+    {
+      password: ['', [Validators.required, Validators.minLength(8)]],
+      confirmPassword: ['', Validators.required],
+    },
+    { validators: passwordsMatch },
+  );
 
-  isLoading           = signal(false);
-  hidePassword        = signal(true);
+  isLoading = signal(false);
+  hidePassword = signal(true);
   hideConfirmPassword = signal(true);
-  passwordMatcher     = new PasswordMismatchStateMatcher();
+  passwordMatcher = new PasswordMismatchStateMatcher();
 
-  togglePassword()        { this.hidePassword.update(v => !v); }
-  toggleConfirmPassword() { this.hideConfirmPassword.update(v => !v); }
+  togglePassword() {
+    this.hidePassword.update((v) => !v);
+  }
+  toggleConfirmPassword() {
+    this.hideConfirmPassword.update((v) => !v);
+  }
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe((params) => {
       const token = params['token'];
 
       if (!token) {
@@ -72,7 +79,7 @@ export class ResetPassword implements OnInit {
     this.isLoading.set(true);
 
     const payload: ResetPasswordRequest = {
-      token:    this.token,
+      token: this.token,
       password: this.resetPasswordForm.get('password')?.value ?? '',
     };
 
@@ -87,7 +94,9 @@ export class ResetPassword implements OnInit {
 
         if (err.status === 401) {
           this.router.navigateByUrl('/auth/forgot-password');
-          this.snackbarService.showError('This reset link has expired or already been used. Request a new one.');
+          this.snackbarService.showError(
+            'This reset link has expired or already been used. Request a new one.',
+          );
           return;
         }
 

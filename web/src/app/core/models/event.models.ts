@@ -24,7 +24,7 @@ export type CreateTicketTypeRequest = {
   saleStartDate?: string | null;
   saleEndDate?: string | null;
   isHidden: boolean;
-}
+};
 
 export type CreateEventRequest = {
   title: string;
@@ -38,7 +38,7 @@ export type CreateEventRequest = {
   endTime: string;
   bannerUrl: string;
   ticketTypes: CreateTicketTypeRequest[];
-}
+};
 
 export type TicketTypeResponse = {
   externalId: string;
@@ -52,7 +52,7 @@ export type TicketTypeResponse = {
   saleEndDate?: string;
   status: string;
   isHidden: boolean;
-}
+};
 
 export type EventResponse = {
   externalId: string;
@@ -69,7 +69,7 @@ export type EventResponse = {
   isPublic: boolean;
   publishedAt?: string;
   dateCreated: string;
-}
+};
 
 export type EventDetailResponse = {
   externalId: string;
@@ -87,4 +87,4 @@ export type EventDetailResponse = {
   publishedAt?: string;
   dateCreated: string;
   ticketTypes: TicketTypeResponse[];
-}
+};

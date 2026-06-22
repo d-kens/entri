@@ -1,8 +1,8 @@
-import {BasePo} from '../../../../support/base.po';
+import { BasePo } from '../../../../support/base.po';
 
 export class ForgotPasswordPo extends BasePo {
   visit() {
-    cy.visit("/auth/forgot-password");
+    cy.visit('/auth/forgot-password');
     return this;
   }
 

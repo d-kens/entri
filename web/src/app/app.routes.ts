@@ -10,13 +10,14 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        loadComponent: () => import('@features/events/pages/browse-events/browse-events').then(m => m.BrowseEvents),
+        loadComponent: () =>
+          import('@features/events/pages/browse-events/browse-events').then((m) => m.BrowseEvents),
       },
     ],
   },
   {
     path: 'auth',
-    loadChildren: () => import('./features/auth/auth.routes').then(m => m.AUTH_ROUTES),
+    loadChildren: () => import('./features/auth/auth.routes').then((m) => m.AUTH_ROUTES),
   },
   {
     path: 'dashboard',
@@ -25,16 +26,16 @@ export const routes: Routes = [
     children: [
       {
         path: 'overview',
-        loadComponent: () => import('./features/overview/overview').then(m => m.Overview),
+        loadComponent: () => import('./features/overview/overview').then((m) => m.Overview),
       },
       {
         path: 'events',
-        loadChildren: () => import('./features/events/events.routes').then(m => m.EVENTS_ROUTES),
+        loadChildren: () => import('./features/events/events.routes').then((m) => m.EVENTS_ROUTES),
       },
     ],
   },
   {
     path: '**',
-    loadComponent: () => import('./features/public/not-found/not-found').then(m => m.NotFound),
+    loadComponent: () => import('./features/public/not-found/not-found').then((m) => m.NotFound),
   },
 ];

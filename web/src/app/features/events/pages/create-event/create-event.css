@@ -66,7 +66,10 @@
   border: 2px solid var(--mat-sys-outline-variant);
   color: var(--mat-sys-on-surface-variant);
   background: transparent;
-  transition: border-color 0.2s, background 0.2s, color 0.2s;
+  transition:
+    border-color 0.2s,
+    background 0.2s,
+    color 0.2s;
 }
 
 .step-active .step-indicator {
@@ -99,7 +102,9 @@
   font-size: 0.875rem;
   font-weight: 500;
   color: var(--mat-sys-on-surface-variant);
-  transition: color 0.2s, font-weight 0.2s;
+  transition:
+    color 0.2s,
+    font-weight 0.2s;
   line-height: 1.2;
 }
 
@@ -234,7 +239,9 @@
   border: 2px dashed var(--mat-sys-outline-variant);
   border-radius: var(--mat-sys-corner-large);
   cursor: pointer;
-  transition: border-color 0.15s, background 0.15s;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
   text-align: center;
 }
 
@@ -462,11 +469,17 @@
     padding: 0;
   }
 
-  .step-text { align-items: center; }
+  .step-text {
+    align-items: center;
+  }
 
-  .step-desc { display: none; }
+  .step-desc {
+    display: none;
+  }
 
-  .step-connector { display: none; }
+  .step-connector {
+    display: none;
+  }
 
   .form-section {
     padding: 1.25rem 1rem;

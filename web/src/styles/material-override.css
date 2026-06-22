@@ -3,18 +3,18 @@
    -------------------------------------------------------------------------- */
 
 .auth-brand-btn {
-  --mdc-filled-button-container-color: #FF1867 !important;
-  --mdc-filled-button-label-text-color: #FFFFFF !important;
-  --mat-filled-button-state-layer-color: rgba(255,255,255,0.15) !important;
+  --mdc-filled-button-container-color: #ff1867 !important;
+  --mdc-filled-button-label-text-color: #ffffff !important;
+  --mat-filled-button-state-layer-color: rgba(255, 255, 255, 0.15) !important;
 }
 
 .auth-brand-btn.mdc-button--filled,
 .auth-brand-btn.mat-mdc-button-base {
-  background-color: #FF1867 !important;
+  background-color: #ff1867 !important;
 }
 
 .auth-brand-btn .mdc-button__label {
-  color: #FFFFFF !important;
+  color: #ffffff !important;
 }
 
 /* --------------------------------------------------------------------------
@@ -22,7 +22,7 @@
    -------------------------------------------------------------------------- */
 
 .mat-drawer.mat-sidenav {
-  background-color: #FFFFFF;
+  background-color: #ffffff;
 }
 
 /* --------------------------------------------------------------------------
@@ -32,7 +32,6 @@
 /* --------------------------------------------------------------------------
    Form field focus — #1A1A1A, clearly distinct from red error state
    -------------------------------------------------------------------------- */
-
 
 /* --------------------------------------------------------------------------
    Global Form Field — tiny and neat
@@ -200,6 +199,6 @@
 .info-snackbar .mat-mdc-snack-bar-action .mdc-button__label,
 .warning-snackbar .mat-mdc-snack-bar-action .mdc-button__label,
 .error-snackbar .mat-mdc-snack-bar-action .mdc-button__label,
-.success-snackbar .mat-mdc-snack-bar-action .mdc-button__label{
+.success-snackbar .mat-mdc-snack-bar-action .mdc-button__label {
   color: #fff !important;
 }

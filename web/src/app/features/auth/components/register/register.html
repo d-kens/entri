@@ -1,5 +1,4 @@
 <div class="w-full max-w-md mx-auto">
-
   <div class="bg-white rounded-2xl p-3 md:p-4">
     <div class="text-center mb-5">
       <h2 class="text-2xl mb-1 text-gray-900 font-bold">Create an Account</h2>
@@ -7,12 +6,18 @@
     </div>
 
     <form [formGroup]="registerForm" class="space-y-4">
-
       <!-- Name row -->
       <div class="grid grid-cols-2 gap-3 items-start">
         <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
           <mat-label>First Name</mat-label>
-          <input matInput type="text" placeholder="John" formControlName="firstName" autocomplete="given-name" data-cy="first-name-input">
+          <input
+            matInput
+            type="text"
+            placeholder="John"
+            formControlName="firstName"
+            autocomplete="given-name"
+            data-cy="first-name-input"
+          />
           @if (registerForm.get('firstName')?.hasError('required')) {
             <mat-error>Required</mat-error>
           } @else if (registerForm.get('firstName')?.hasError('minlength')) {
@@ -22,7 +27,14 @@
 
         <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
           <mat-label>Last Name</mat-label>
-          <input matInput type="text" placeholder="Doe" formControlName="lastName" autocomplete="family-name" data-cy="last-name-input">
+          <input
+            matInput
+            type="text"
+            placeholder="Doe"
+            formControlName="lastName"
+            autocomplete="family-name"
+            data-cy="last-name-input"
+          />
           @if (registerForm.get('lastName')?.hasError('required')) {
             <mat-error>Required</mat-error>
           } @else if (registerForm.get('lastName')?.hasError('minlength')) {
@@ -34,7 +46,14 @@
       <!-- Email -->
       <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
         <mat-label>Email Address</mat-label>
-        <input matInput type="email" placeholder="john@example.com" formControlName="email" autocomplete="email" data-cy="email-input">
+        <input
+          matInput
+          type="email"
+          placeholder="john@example.com"
+          formControlName="email"
+          autocomplete="email"
+          data-cy="email-input"
+        />
         <mat-icon matSuffix>mail_outline</mat-icon>
         @if (registerForm.get('email')?.hasError('required')) {
           <mat-error>Email is required</mat-error>
@@ -46,11 +65,22 @@
       <!-- Phone Number -->
       <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
         <mat-label>Phone Number</mat-label>
-        <input matInput type="tel" placeholder="0712 345 678" formControlName="phoneNumber" autocomplete="tel" data-cy="phone-input">
+        <input
+          matInput
+          type="tel"
+          placeholder="0712 345 678"
+          formControlName="phoneNumber"
+          autocomplete="tel"
+          data-cy="phone-input"
+        />
         <mat-icon matSuffix>phone_iphone</mat-icon>
         @if (registerForm.get('phoneNumber')?.hasError('required')) {
           <mat-error>Phone number is required</mat-error>
-        } @else if (registerForm.get('phoneNumber')?.hasError('pattern') || registerForm.get('phoneNumber')?.hasError('minlength') || registerForm.get('phoneNumber')?.hasError('maxlength')) {
+        } @else if (
+          registerForm.get('phoneNumber')?.hasError('pattern') ||
+          registerForm.get('phoneNumber')?.hasError('minlength') ||
+          registerForm.get('phoneNumber')?.hasError('maxlength')
+        ) {
           <mat-error>Enter a valid Kenyan number (e.g. 0712345678)</mat-error>
         }
       </mat-form-field>
@@ -58,8 +88,21 @@
       <!-- Password -->
       <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
         <mat-label>Password</mat-label>
-        <input matInput [type]="hidePassword() ? 'password' : 'text'" placeholder="At least 8 characters" formControlName="password" autocomplete="new-password" data-cy="password-input">
-        <button mat-icon-button matSuffix type="button" (mousedown)="$event.preventDefault()" (click)="togglePassword()">
+        <input
+          matInput
+          [type]="hidePassword() ? 'password' : 'text'"
+          placeholder="At least 8 characters"
+          formControlName="password"
+          autocomplete="new-password"
+          data-cy="password-input"
+        />
+        <button
+          mat-icon-button
+          matSuffix
+          type="button"
+          (mousedown)="$event.preventDefault()"
+          (click)="togglePassword()"
+        >
           <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
         </button>
         @if (registerForm.get('password')?.hasError('required')) {
@@ -72,8 +115,22 @@
       <!-- Confirm Password -->
       <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
         <mat-label>Confirm Password</mat-label>
-        <input matInput [type]="hideConfirmPassword() ? 'password' : 'text'" placeholder="Re-enter your password" formControlName="confirmPassword" autocomplete="new-password" [errorStateMatcher]="passwordMatcher" data-cy="confirm-password-input">
-        <button mat-icon-button matSuffix type="button" (mousedown)="$event.preventDefault()" (click)="toggleConfirmPassword()">
+        <input
+          matInput
+          [type]="hideConfirmPassword() ? 'password' : 'text'"
+          placeholder="Re-enter your password"
+          formControlName="confirmPassword"
+          autocomplete="new-password"
+          [errorStateMatcher]="passwordMatcher"
+          data-cy="confirm-password-input"
+        />
+        <button
+          mat-icon-button
+          matSuffix
+          type="button"
+          (mousedown)="$event.preventDefault()"
+          (click)="toggleConfirmPassword()"
+        >
           <mat-icon>{{ hideConfirmPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
         </button>
         @if (registerForm.get('confirmPassword')?.hasError('required')) {
@@ -100,12 +157,13 @@
           <span>Create Account</span>
         }
       </button>
-
     </form>
   </div>
 
   <p class="text-center text-sm mt-4 text-gray-500">
-    Already have an account? <a [routerLink]="['/auth/login']" class="text-[#FF1867] font-semibold hover:underline">Sign in</a>
+    Already have an account?
+    <a [routerLink]="['/auth/login']" class="text-[#FF1867] font-semibold hover:underline"
+      >Sign in</a
+    >
   </p>
-
 </div>

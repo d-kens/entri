@@ -18,12 +18,14 @@ unit tests  →  E2E tests (real backend)
 **How they work:** Dependencies are replaced with fakes or spies. The class is called directly and the output is asserted.
 
 **File convention:** Co-located with the file they test, suffixed `.spec.ts`.
+
 ```
 login.ts
 login.spec.ts   ← tests Login in isolation
 ```
 
 **Run:**
+
 ```bash
 npm test
 ```
@@ -64,10 +66,11 @@ If a selector changes you fix it in one place — the PO — not across every te
 **`data-cy` attributes** — interactive elements in templates carry a `data-cy="..."` attribute used exclusively by tests. They are unaffected by styling, class, or text changes:
 
 ```html
-<input data-cy="email-input" ... >
+<input data-cy="email-input" ... />
 ```
+
 ```ts
-cy.get('[data-cy="email-input"]')
+cy.get('[data-cy="email-input"]');
 ```
 
 **Base PO** — `cypress/support/base.po.ts` provides shared assertions (`hasText`, `isVisible`, `urlIncludes`) that every PO inherits.
@@ -79,11 +82,13 @@ cy.get('[data-cy="email-input"]')
 **When to run:** Full regression run before releases or after significant changes.
 
 **Run:**
+
 ```bash
 npm run cy:run
 ```
 
 **Example:**
+
 ```ts
 it('shows required-field errors when submitted empty', () => {
   po.visit().submit();
@@ -107,8 +112,14 @@ it('shows required-field errors when submitted empty', () => {
 import { BasePo } from '../../../../support/base.po';
 
 export class FeaturePo extends BasePo {
-  visit() { cy.visit('/feature'); return this; }
-  clickSave() { cy.get('[data-cy="save-btn"]').click(); return this; }
+  visit() {
+    cy.visit('/feature');
+    return this;
+  }
+  clickSave() {
+    cy.get('[data-cy="save-btn"]').click();
+    return this;
+  }
 }
 
 // feature/feature.cy.ts

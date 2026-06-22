@@ -8,10 +8,9 @@ import {
   AccessTokenResponse,
   AuthRequest,
   ResetPasswordRequest,
-  RegisterUserRequest
+  RegisterUserRequest,
 } from '../models/auth.models';
 import { UserResponse } from '@core/models/user.models';
-
 
 @Injectable({
   providedIn: 'root',
@@ -38,13 +37,16 @@ export class AuthService {
   }
 
   register(registerUserRequest: RegisterUserRequest): Observable<UserResponse> {
-    return this.http.post<UserResponse>(`${environment.apiBaseUrl}/auth/register`, registerUserRequest);
+    return this.http.post<UserResponse>(
+      `${environment.apiBaseUrl}/auth/register`,
+      registerUserRequest,
+    );
   }
 
   login(authRequest: AuthRequest): Observable<AuthResponse> {
     return this.http
       .post<AuthResponse>(`${environment.apiBaseUrl}/auth/login`, authRequest, {
-        withCredentials: true
+        withCredentials: true,
       })
       .pipe(
         tap((response) => {
@@ -55,18 +57,22 @@ export class AuthService {
         catchError((error) => {
           this.authStatusSignal.set(false);
           return throwError(() => error);
-        })
+        }),
       );
   }
 
   refreshToken(): Observable<AccessTokenResponse> {
     return this.http
-      .post<AccessTokenResponse>(`${environment.apiBaseUrl}/auth/refresh-token`, {}, {withCredentials: true})
+      .post<AccessTokenResponse>(
+        `${environment.apiBaseUrl}/auth/refresh-token`,
+        {},
+        { withCredentials: true },
+      )
       .pipe(
-        tap(response => {
+        tap((response) => {
           localStorage.setItem(this.ACCESS_TOKEN_KEY, response.token);
           this.authStatusSignal.set(true);
-        })
+        }),
       );
   }
 
@@ -84,15 +90,20 @@ export class AuthService {
   }
 
   logout(): Observable<void> {
-    return this.http.post<void>(`${environment.apiBaseUrl}/auth/logout`, {}, {
-      withCredentials: true
-    })
+    return this.http
+      .post<void>(
+        `${environment.apiBaseUrl}/auth/logout`,
+        {},
+        {
+          withCredentials: true,
+        },
+      )
       .pipe(
         finalize(() => {
           localStorage.removeItem(this.ACCESS_TOKEN_KEY);
           localStorage.removeItem(this.EXTERNAL_ID_KEY);
           this.authStatusSignal.set(false);
-        })
+        }),
       );
   }
 

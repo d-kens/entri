@@ -74,9 +74,18 @@
   flex-shrink: 0;
 }
 
-.status-draft     { background: #fef9c3; color: #854d0e; }
-.status-published { background: #dcfce7; color: #14532d; }
-.status-cancelled { background: #fee2e2; color: #7f1d1d; }
+.status-draft {
+  background: #fef9c3;
+  color: #854d0e;
+}
+.status-published {
+  background: #dcfce7;
+  color: #14532d;
+}
+.status-cancelled {
+  background: #fee2e2;
+  color: #7f1d1d;
+}
 
 /* ── Banner ──────────────────────────────── */
 
@@ -166,7 +175,10 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
-.ticket-row-info { flex: 1; min-width: 0; }
+.ticket-row-info {
+  flex: 1;
+  min-width: 0;
+}
 
 .ticket-row-name-row {
   display: flex;
@@ -251,7 +263,10 @@
   color: var(--mat-sys-on-surface);
 }
 
-.tickets-empty-sub { font-size: 0.83rem; margin: 0; }
+.tickets-empty-sub {
+  font-size: 0.83rem;
+  margin: 0;
+}
 
 /* ── Sidebar ─────────────────────────────── */
 
@@ -309,8 +324,9 @@
 /* ── Responsive ──────────────────────────── */
 
 @media (max-width: 720px) {
-
-  .header-actions-desktop { display: none; }
+  .header-actions-desktop {
+    display: none;
+  }
 
   .header-actions-mobile {
     display: flex;
@@ -322,7 +338,9 @@
     flex: 1;
   }
 
-  .details-title { font-size: 1.15rem; }
+  .details-title {
+    font-size: 1.15rem;
+  }
 
   /* Banner */
   .details-banner {

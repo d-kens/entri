@@ -11,22 +11,17 @@ import { UsersService } from '@core/services/users-service';
 import { SnackbarService } from '@core/services/snackbar-service';
 
 const ROUTE_TITLES: Record<string, string> = {
-  'overview':    'Dashboard',
-  'events':      'Events',
-  'properties':  'Properties',
-  'payments':    'Payments',
-  'profile':     'Profile',
+  overview: 'Dashboard',
+  events: 'Events',
+  properties: 'Properties',
+  payments: 'Payments',
+  profile: 'Profile',
 };
 
 @Component({
   selector: 'app-toolbar',
   standalone: true,
-  imports: [
-    MatToolbarModule,
-    MatButtonModule,
-    MatIconModule,
-    MatTooltipModule,
-  ],
+  imports: [MatToolbarModule, MatButtonModule, MatIconModule, MatTooltipModule],
   templateUrl: './toolbar.html',
   styleUrl: './toolbar.css',
 })
@@ -43,7 +38,7 @@ export class Toolbar implements OnInit {
 
   pageTitle = toSignal(
     this.router.events.pipe(
-      filter(e => e instanceof NavigationEnd),
+      filter((e) => e instanceof NavigationEnd),
       map((e: NavigationEnd) => {
         const segment = e.urlAfterRedirects.split('/')[2] ?? '';
         return ROUTE_TITLES[segment] ?? '';
@@ -73,7 +68,8 @@ export class Toolbar implements OnInit {
   logout() {
     this.authService.logout().subscribe({
       next: () => this.router.navigateByUrl('/auth/login'),
-      error: () => this.snackbarService.showError('An error occurred trying to log you out. Try again later'),
+      error: () =>
+        this.snackbarService.showError('An error occurred trying to log you out. Try again later'),
     });
   }
 }
