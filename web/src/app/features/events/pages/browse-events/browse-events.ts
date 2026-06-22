@@ -31,6 +31,7 @@ export class BrowseEvents {
   error = signal<string | null>(null);
 
   totalEvents = computed(() => this.pageInfo()?.totalElements ?? 0);
+  hasFilters = computed(() => !!this.searchQuery() || this.activeCategoryId() !== null);
 
   private readonly trigger$ = new Subject<{ page: number; searchTerm: string; categoryId?: number }>();
 
@@ -83,6 +84,13 @@ export class BrowseEvents {
   }
 
   retry(): void { this.fire(this.currentPage()); }
+
+  clearFilters(): void {
+    this.searchQuery.set('');
+    this.activeCategoryId.set(null);
+    this.currentPage.set(0);
+    this.fire(0);
+  }
 
   onSearch(event: Event): void {
     this.searchQuery.set((event.target as HTMLInputElement).value);
