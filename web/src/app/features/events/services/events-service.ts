@@ -34,6 +34,32 @@ export class EventsService {
   }
 
   getEvents(filter: EventFilter): Observable<PageResponse<EventResponse>> {
+    const params = this.buildEventParams(filter);
+    return this.http.get<PageResponse<EventResponse>>(`${environment.apiBaseUrl}/events`, {
+      params,
+    });
+  }
+
+  getEvent(id: string): Observable<EventDetailResponse> {
+    return this.http.get<EventDetailResponse>(`${environment.apiBaseUrl}/events/${id}`);
+  }
+
+  updateEvent(id: string, payload: CreateEventRequest): Observable<EventResponse> {
+    return this.http.put<EventResponse>(`${environment.apiBaseUrl}/events/${id}`, payload);
+  }
+
+  getManagedEvents(
+    filter: Omit<EventFilter, 'organizerExternalId'>,
+  ): Observable<PageResponse<EventResponse>> {
+    const params = this.buildEventParams(filter);
+    return this.http.get<PageResponse<EventResponse>>(`${environment.apiBaseUrl}/events/manage`, {
+      params,
+    });
+  }
+
+  private buildEventParams(
+    filter: Omit<EventFilter, 'organizerExternalId'> & { organizerExternalId?: string },
+  ): HttpParams {
     let params = new HttpParams();
     if (filter.page !== undefined) params = params.set('page', filter.page);
     if (filter.size !== undefined) params = params.set('size', filter.size);
@@ -44,12 +70,6 @@ export class EventsService {
       params = params.set('organizerExternalId', filter.organizerExternalId);
     if (filter.startFrom) params = params.set('startFrom', filter.startFrom);
     if (filter.startTo) params = params.set('startTo', filter.startTo);
-    return this.http.get<PageResponse<EventResponse>>(`${environment.apiBaseUrl}/events`, {
-      params,
-    });
-  }
-
-  getEvent(id: string): Observable<EventDetailResponse> {
-    return this.http.get<EventDetailResponse>(`${environment.apiBaseUrl}/events/${id}`);
+    return params;
   }
 }

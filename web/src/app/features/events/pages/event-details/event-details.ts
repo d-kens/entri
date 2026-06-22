@@ -46,7 +46,7 @@ export class EventDetails implements OnInit {
       error: () => {
         this.snackbarService.showError('Failed to load event');
         this.isLoading.set(false);
-        this.router.navigate(['/events']);
+        this.router.navigate(['/dashboard/events']);
       },
     });
   }

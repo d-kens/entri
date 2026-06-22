@@ -78,6 +78,6 @@ class EventFilterTest {
     // ── helpers ───────────────────────────────────────────────────────
 
     private EventFilter filter(String startFrom, String startTo) {
-        return new EventFilter(null, null, null, null, null, null, startFrom, startTo);
+        return new EventFilter(null, null, null, null, null, startFrom, startTo);
     }
 }

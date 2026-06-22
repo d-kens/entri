@@ -2,13 +2,13 @@ html {
   color-scheme: light;
 
   /* ═══════════════════════════════════════════════════════════
-     PRIMARY — Black
+     PRIMARY — Brand Pink
      ═══════════════════════════════════════════════════════════ */
-  --mat-sys-primary: #000000;
+  --mat-sys-primary: #ff1867;
   --mat-sys-on-primary: #ffffff;
-  --mat-sys-primary-container: #e8e8e8;
-  --mat-sys-on-primary-container: #000000;
-  --mat-sys-inverse-primary: #6a6a6a;
+  --mat-sys-primary-container: #ffe4ed;
+  --mat-sys-on-primary-container: #8b0033;
+  --mat-sys-inverse-primary: #ff80a4;
 
   /* ═══════════════════════════════════════════════════════════
      SECONDARY — Mid gray

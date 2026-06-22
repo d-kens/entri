@@ -6,53 +6,71 @@
   }
 
   @if (!isLoading() && event(); as ev) {
-    <!-- Header -->
-    <header class="details-header">
-      <!-- Row 1: nav + title -->
-      <div class="header-nav">
-        <a mat-icon-button [routerLink]="['/events']" matTooltip="Back to events">
-          <mat-icon>arrow_back</mat-icon>
-        </a>
-        <div class="details-title-group">
-          <h1 class="details-title">{{ ev.title }}</h1>
-          <span class="status-badge" [class]="'status-' + ev.status.toLowerCase()">
-            {{ ev.status | titlecase }}
-          </span>
+    <!-- Hero -->
+    <div class="hero" [class.hero--no-banner]="!ev.bannerUrl">
+      @if (ev.bannerUrl) {
+        <img class="hero-img" [src]="ev.bannerUrl" [alt]="ev.title" />
+      }
+      <div class="hero-overlay"></div>
+
+      <a mat-icon-button class="hero-back" [routerLink]="['/dashboard/events']">
+        <mat-icon>arrow_back</mat-icon>
+      </a>
+
+      <div class="hero-content">
+        <div class="hero-meta">
+          <span class="status-badge status-{{ ev.status.toLowerCase() }}">{{
+            ev.status | titlecase
+          }}</span>
+          <span class="hero-category">{{ ev.categoryName }}</span>
         </div>
-        <!-- Desktop: actions inline on same row -->
-        <div class="header-actions-desktop">
-          <a mat-stroked-button [routerLink]="['/events', ev.externalId, 'edit']">
-            <mat-icon>edit</mat-icon>
-            Edit Event
-          </a>
-          @if (ev.status === 'DRAFT') {
-            <button mat-flat-button disabled>Go Live</button>
-          }
+        <div class="hero-bottom">
+          <h1 class="hero-title">{{ ev.title }}</h1>
+          <div class="hero-actions">
+            <a
+              mat-stroked-button
+              class="hero-btn-outline"
+              [routerLink]="['/dashboard/events', ev.externalId, 'edit']"
+            >
+              <mat-icon>edit</mat-icon>
+              Edit
+            </a>
+            @if (ev.status === 'DRAFT') {
+              <button mat-flat-button class="hero-btn-live">
+                <mat-icon>rocket_launch</mat-icon>
+                Go Live
+              </button>
+            }
+          </div>
         </div>
       </div>
+    </div>
 
-      <!-- Row 2: actions on mobile only -->
-      <div class="header-actions-mobile">
-        <a mat-stroked-button [routerLink]="['/events', ev.externalId, 'edit']">
-          <mat-icon>edit</mat-icon>
-          Edit Event
-        </a>
-        @if (ev.status === 'DRAFT') {
-          <button mat-flat-button disabled>Go Live</button>
-        }
+    <!-- Quick-info strip -->
+    <div class="info-strip">
+      <div class="info-strip-item">
+        <mat-icon>location_on</mat-icon>
+        <span>{{ ev.venueName }}, {{ ev.venueCity }}, {{ ev.venueCountry }}</span>
       </div>
-    </header>
-
-    <!-- Banner -->
-    @if (ev.bannerUrl) {
-      <div class="details-banner">
-        <img [src]="ev.bannerUrl" [alt]="ev.title + ' banner'" />
+      <div class="info-strip-divider"></div>
+      <div class="info-strip-item">
+        <mat-icon>calendar_today</mat-icon>
+        <span>{{ ev.startTime | date: 'EEE, d MMM yyyy' }}</span>
       </div>
-    }
+      <div class="info-strip-divider"></div>
+      <div class="info-strip-item">
+        <mat-icon>schedule</mat-icon>
+        <span>{{ ev.startTime | date: 'HH:mm' }} — {{ ev.endTime | date: 'HH:mm' }}</span>
+      </div>
+      <div class="info-strip-divider"></div>
+      <div class="info-strip-item">
+        <mat-icon>{{ ev.isPublic ? 'public' : 'lock' }}</mat-icon>
+        <span>{{ ev.isPublic ? 'Public' : 'Private' }}</span>
+      </div>
+    </div>
 
-    <!-- Body: main content + sidebar -->
+    <!-- Body -->
     <div class="details-body">
-      <!-- Main -->
       <main class="details-main">
         <section class="details-section">
           <h2 class="section-title">About this event</h2>
@@ -61,11 +79,13 @@
 
         <mat-divider></mat-divider>
 
-        <!-- Ticket Types -->
         <section class="details-section">
           <div class="section-header-row">
             <h2 class="section-title">Ticket Types</h2>
-            <a mat-stroked-button [routerLink]="['/events', ev.externalId, 'tickets', 'add']">
+            <a
+              mat-flat-button
+              [routerLink]="['/dashboard/events', ev.externalId, 'tickets', 'add']"
+            >
               <mat-icon>add</mat-icon>
               Add Ticket
             </a>
@@ -94,12 +114,12 @@
                     @if (ticket.description) {
                       <p class="ticket-row-desc">{{ ticket.description }}</p>
                     }
+                    <p class="ticket-row-qty">{{ ticket.quantity }} available</p>
                   </div>
                   <div class="ticket-row-meta">
                     <span class="ticket-row-price"
                       >{{ ticket.currency }} {{ ticket.price | number: '1.2-2' }}</span
                     >
-                    <span class="ticket-row-qty">{{ ticket.quantity }} available</span>
                   </div>
                 </div>
               }
@@ -108,11 +128,12 @@
         </section>
       </main>
 
-      <!-- Sidebar -->
       <aside class="details-sidebar">
         <div class="sidebar-card">
+          <p class="sidebar-card-title">Details</p>
+
           <div class="sidebar-row">
-            <mat-icon class="sidebar-icon">location_on</mat-icon>
+            <div class="sidebar-icon-wrap"><mat-icon>location_on</mat-icon></div>
             <div>
               <p class="sidebar-label">Venue</p>
               <p class="sidebar-value">{{ ev.venueName }}</p>
@@ -120,32 +141,47 @@
             </div>
           </div>
 
-          <mat-divider></mat-divider>
-
           <div class="sidebar-row">
-            <mat-icon class="sidebar-icon">schedule</mat-icon>
+            <div class="sidebar-icon-wrap"><mat-icon>calendar_today</mat-icon></div>
             <div>
-              <p class="sidebar-label">Date & Time</p>
-              <p class="sidebar-value">{{ ev.startTime | date: 'mediumDate' }}</p>
-              <p class="sidebar-sub">
-                {{ ev.startTime | date: 'shortTime' }} — {{ ev.endTime | date: 'shortTime' }}
-              </p>
+              <p class="sidebar-label">Date</p>
+              <p class="sidebar-value">{{ ev.startTime | date: 'EEEE, MMMM d, y' }}</p>
               @if ((ev.startTime | date: 'mediumDate') !== (ev.endTime | date: 'mediumDate')) {
-                <p class="sidebar-sub">Ends {{ ev.endTime | date: 'mediumDate' }}</p>
+                <p class="sidebar-sub">Ends {{ ev.endTime | date: 'MMMM d, y' }}</p>
               }
             </div>
           </div>
 
-          <mat-divider></mat-divider>
+          <div class="sidebar-row">
+            <div class="sidebar-icon-wrap"><mat-icon>schedule</mat-icon></div>
+            <div>
+              <p class="sidebar-label">Time</p>
+              <p class="sidebar-value">
+                {{ ev.startTime | date: 'HH:mm' }} — {{ ev.endTime | date: 'HH:mm' }}
+              </p>
+            </div>
+          </div>
 
           <div class="sidebar-row">
-            <mat-icon class="sidebar-icon">{{ ev.isPublic ? 'public' : 'lock_outline' }}</mat-icon>
+            <div class="sidebar-icon-wrap">
+              <mat-icon>{{ ev.isPublic ? 'public' : 'lock_outline' }}</mat-icon>
+            </div>
             <div>
               <p class="sidebar-label">Visibility</p>
               <p class="sidebar-value">{{ ev.isPublic ? 'Public' : 'Private' }}</p>
               <p class="sidebar-sub">{{ ev.categoryName }}</p>
             </div>
           </div>
+
+          @if (ev.publishedAt) {
+            <div class="sidebar-row">
+              <div class="sidebar-icon-wrap"><mat-icon>verified</mat-icon></div>
+              <div>
+                <p class="sidebar-label">Published</p>
+                <p class="sidebar-value">{{ ev.publishedAt | date: 'dd MMM yyyy' }}</p>
+              </div>
+            </div>
+          }
         </div>
       </aside>
     </div>

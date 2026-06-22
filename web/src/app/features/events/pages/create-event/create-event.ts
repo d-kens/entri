@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -8,7 +8,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -72,12 +72,16 @@ type TicketTypeForm = {
   templateUrl: './create-event.html',
   styleUrl: './create-event.css',
 })
-export class CreateEvent {
+export class CreateEvent implements OnInit {
   private fb = inject(FormBuilder);
+  private route = inject(ActivatedRoute);
   private router = inject(Router);
   private eventsService = inject(EventsService);
   private snackbarService = inject(SnackbarService);
 
+  editId = signal<string | null>(null);
+  isEditMode = signal(false);
+  isLoadingEvent = signal(false);
   isLoading = signal(false);
   isUploadingBanner = signal(false);
   isDeletingBanner = signal(false);
@@ -94,14 +98,7 @@ export class CreateEvent {
   ];
 
   categories = signal<CategoryResponse[]>([]);
-
   readonly currencies = ['KES', 'USD', 'EUR', 'GBP', 'TZS', 'UGX'];
-
-  constructor() {
-    this.eventsService.getCategories().subscribe({
-      next: (cats) => this.categories.set(cats),
-    });
-  }
 
   infoForm: FormGroup<InfoForm> = this.fb.nonNullable.group({
     title: ['', [Validators.required, Validators.minLength(3)]],
@@ -129,6 +126,89 @@ export class CreateEvent {
   }
 
   readonly minDate = new Date();
+
+  ngOnInit(): void {
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.editId.set(id);
+      this.isEditMode.set(true);
+      this.isLoadingEvent.set(true);
+      this.loadForEdit(id);
+    }
+    this.eventsService.getCategories().subscribe({
+      next: (cats) => this.categories.set(cats),
+    });
+  }
+
+  private loadForEdit(id: string): void {
+    this.eventsService.getEvent(id).subscribe({
+      next: (ev) => {
+        this.infoForm.patchValue({
+          title: ev.title,
+          description: ev.description,
+          isPublic: ev.isPublic,
+        });
+
+        // patch categoryId once categories may already be loaded
+        const cat = this.categories().find((c) => c.name === ev.categoryName);
+        if (cat) this.infoForm.patchValue({ categoryId: cat.id });
+        else {
+          // categories not yet loaded — re-patch when they arrive
+          const sub = this.eventsService.getCategories().subscribe((cats) => {
+            const matched = cats.find((c) => c.name === ev.categoryName);
+            if (matched) this.infoForm.patchValue({ categoryId: matched.id });
+            sub.unsubscribe();
+          });
+        }
+
+        const start = new Date(ev.startTime);
+        const end = new Date(ev.endTime);
+        this.venueForm.patchValue({
+          venueName: ev.venueName,
+          venueCity: ev.venueCity,
+          venueCountry: ev.venueCountry,
+          startDate: start,
+          startTime: this.toTimeString(start),
+          endDate: end,
+          endTime: this.toTimeString(end),
+        });
+
+        if (ev.bannerUrl) {
+          this.bannerUrl.set(ev.bannerUrl);
+          this.bannerPreview.set(ev.bannerUrl);
+        }
+
+        ev.ticketTypes.forEach((t) => {
+          this.ticketTypes.push(
+            this.fb.nonNullable.group<TicketTypeForm>({
+              name: this.fb.nonNullable.control(t.name, Validators.required),
+              description: this.fb.nonNullable.control(t.description ?? ''),
+              price: this.fb.nonNullable.control(t.price, [Validators.required, Validators.min(0)]),
+              currency: this.fb.nonNullable.control(t.currency, Validators.required),
+              quantity: this.fb.nonNullable.control(t.quantity, [
+                Validators.required,
+                Validators.min(1),
+              ]),
+              maxPerOrder: this.fb.control<number | null>(t.maxPerOrder ?? null),
+              saleStartDate: this.fb.control<Date | null>(
+                t.saleStartDate ? new Date(t.saleStartDate) : null,
+              ),
+              saleEndDate: this.fb.control<Date | null>(
+                t.saleEndDate ? new Date(t.saleEndDate) : null,
+              ),
+              isHidden: this.fb.nonNullable.control(t.isHidden),
+            }),
+          );
+        });
+
+        this.isLoadingEvent.set(false);
+      },
+      error: () => {
+        this.snackbarService.showError('Failed to load event');
+        this.router.navigate(['/dashboard/events']);
+      },
+    });
+  }
 
   nextStep(): void {
     if (this.currentStep() === 0) {
@@ -238,22 +318,18 @@ export class CreateEvent {
       this.snackbarService.showError('Please wait for the banner to finish uploading');
       return;
     }
-
     if (!this.bannerUrl()) {
       this.snackbarService.showError('Please upload a banner image');
       return;
     }
-
     if (this.ticketTypes.length === 0) {
       this.snackbarService.showError('Add at least one ticket type before saving');
       return;
     }
-
     if (this.infoForm.invalid || this.venueForm.invalid) {
       this.snackbarService.showError('Please complete all required fields');
       return;
     }
-
     this.ticketsForm.markAllAsTouched();
     if (this.ticketsForm.invalid) {
       this.snackbarService.showError('Please complete all ticket type fields');
@@ -261,19 +337,32 @@ export class CreateEvent {
     }
 
     this.isLoading.set(true);
+    const payload = this.buildPayload();
+    const id = this.editId();
 
-    this.eventsService.createEvent(this.buildPayload()).subscribe({
+    const request$ = id
+      ? this.eventsService.updateEvent(id, payload)
+      : this.eventsService.createEvent(payload);
+
+    request$.subscribe({
       next: (event) => {
         this.isLoading.set(false);
-        this.snackbarService.showSuccess('Event saved successfully!');
-        this.router.navigate(['/events', event.externalId]);
+        this.snackbarService.showSuccess(
+          id ? 'Event updated successfully!' : 'Event created successfully!',
+        );
+        this.router.navigate(['/dashboard/events', event.externalId]);
       },
       error: (err) => {
-        const msg = err?.error?.message || 'Failed to create event. Please try again.';
+        const msg =
+          err?.error?.message || (id ? 'Failed to update event.' : 'Failed to create event.');
         this.snackbarService.showError(msg);
         this.isLoading.set(false);
       },
     });
+  }
+
+  private toTimeString(date: Date): string {
+    return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
   }
 
   private combineDateTime(date: Date, time: string): string {
@@ -286,7 +375,6 @@ export class CreateEvent {
   private buildPayload(): CreateEventRequest {
     const info = this.infoForm.getRawValue();
     const venue = this.venueForm.getRawValue();
-
     return {
       title: info.title,
       description: info.description,

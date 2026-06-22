@@ -1,3 +1,11 @@
+/* ── Loading / empty states ───────────────────────────── */
+
+.loading-state {
+  display: flex;
+  justify-content: center;
+  padding: 5rem 1rem;
+}
+
 .empty-state {
   display: flex;
   flex-direction: column;
@@ -27,4 +35,175 @@
   font-size: 0.875rem;
   color: var(--mat-sys-on-surface-variant);
   margin: 0;
+}
+
+/* ── Card wrapper ─────────────────────────────────────── */
+
+.table-card {
+  overflow: hidden;
+}
+
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 1100px) {
+  .table-scroll {
+    overflow-x: scroll;
+    scrollbar-width: thin;
+    scrollbar-color: var(--mat-sys-primary) var(--mat-sys-surface-container);
+  }
+
+  .table-scroll::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .table-scroll::-webkit-scrollbar-track {
+    background: var(--mat-sys-surface-container);
+  }
+
+  .table-scroll::-webkit-scrollbar-thumb {
+    background: var(--mat-sys-primary);
+    border-radius: 999px;
+  }
+}
+
+.table-scroll table {
+  width: 100%;
+  min-width: 1100px;
+}
+
+/* ── Event cell ───────────────────────────────────────── */
+
+.event-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+}
+
+.event-banner {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--mat-sys-corner-small);
+  overflow: hidden;
+  background: var(--mat-sys-surface-container-high);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.event-banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.event-banner mat-icon {
+  font-size: 22px;
+  width: 22px;
+  height: 22px;
+  color: var(--mat-sys-outline);
+}
+
+.event-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.event-title {
+  font-weight: 500;
+  color: var(--mat-sys-on-surface);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.event-title:hover {
+  color: var(--mat-sys-primary);
+  text-decoration: underline;
+}
+
+.event-category {
+  font-size: 0.75rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+/* ── Venue cell ───────────────────────────────────────── */
+
+.venue-name {
+  display: block;
+}
+
+.venue-loc {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+/* ── Date cell ────────────────────────────────────────── */
+
+.date-day {
+  display: block;
+}
+
+.date-time {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+/* ── Visibility badge ─────────────────────────────────── */
+
+.visibility-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.8125rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.visibility-badge mat-icon {
+  font-size: 14px;
+  width: 14px;
+  height: 14px;
+}
+
+.visibility-badge--public {
+  color: var(--mat-sys-on-surface);
+}
+
+/* ── Status badge ─────────────────────────────────────── */
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.625rem;
+  border-radius: var(--mat-sys-corner-full);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.status-badge--draft {
+  background: var(--mat-sys-surface-container-high);
+  color: var(--mat-sys-on-surface);
+  border: 1px solid var(--mat-sys-outline);
+}
+
+.status-badge--published {
+  background: color-mix(in srgb, #2e7d32 15%, transparent);
+  color: color-mix(in srgb, #2e7d32 90%, #000);
+}
+
+.status-badge--cancelled {
+  background: var(--mat-sys-error-container);
+  color: var(--mat-sys-on-error-container);
+}
+
+/* ── Paginator ────────────────────────────────────────── */
+
+.table-paginator {
 }

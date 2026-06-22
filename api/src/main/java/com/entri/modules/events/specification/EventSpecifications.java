@@ -1,11 +1,21 @@
 package com.entri.modules.events.specification;
 
 import com.entri.modules.events.entity.Event;
+import com.entri.modules.events.entity.EventStatus;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.Instant;
 
 public class EventSpecifications {
+    public static Specification<Event> isPublic() {
+        return (root, query, cb) -> cb.isTrue(root.get("isPublic"));
+    }
+
+    public static Specification<Event> hasStatus(EventStatus status) {
+        return (root, query, cb) ->
+                status == null ? null : cb.equal(root.get("status"), status);
+    }
+
     public static Specification<Event> hasCategory(Long categoryId) {
         return (root, query, cb) ->
                 categoryId == null ? null : cb.equal(root.get("category").get("id"), categoryId);
