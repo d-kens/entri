@@ -26,7 +26,7 @@ export type CreateTicketTypeRequest = {
   isHidden: boolean;
 };
 
-export type CreateEventRequest = {
+export type EventRequest = {
   title: string;
   description: string;
   categoryId: number;

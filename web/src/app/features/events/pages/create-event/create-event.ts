@@ -21,7 +21,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { EventsService } from '../../services/events-service';
 import { SnackbarService } from '@core/services/snackbar-service';
-import { CategoryResponse, CreateEventRequest } from '@core/models/event.models';
+import { CategoryResponse, EventRequest } from '@core/models/event.models';
 
 type InfoForm = {
   title: FormControl<string>;
@@ -372,7 +372,7 @@ export class CreateEvent implements OnInit {
     return dt.toISOString();
   }
 
-  private buildPayload(): CreateEventRequest {
+  private buildPayload(): EventRequest {
     const info = this.infoForm.getRawValue();
     const venue = this.venueForm.getRawValue();
     return {
