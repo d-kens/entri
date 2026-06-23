@@ -98,7 +98,7 @@ public class EventService {
         return eventMapper.toEventResponse(event);
     }
 
-    public EventDetailResponse getEventByExternalId(String externalId) {
+    public EventDetailResponse getEventByExternalId(final String externalId) {
         var event = eventRepository.findByExternalId(externalId)
                 .orElseThrow(() -> new NotFoundException("Event with external ID: " + externalId + " not found"));
         return eventMapper.toEventDetailResponse(event);
