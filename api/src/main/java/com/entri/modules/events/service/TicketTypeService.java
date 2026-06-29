@@ -14,9 +14,7 @@ public class TicketTypeService {
 
     private final EventRepository eventRepository;
 
-
     public TicketTypeResponse createTicketType(String eventExternalId, CreateTicketTypeRequest createTicketTypeRequest) {
-
         Event event = eventRepository.findByExternalId(eventExternalId)
                 .orElseThrow(() -> new NotFoundException("Event with ID " + eventExternalId + " not found"));
         return null;
