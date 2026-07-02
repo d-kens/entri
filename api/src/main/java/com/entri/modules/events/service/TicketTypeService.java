@@ -41,11 +41,10 @@ public class TicketTypeService {
                 .price(createTicketTypeRequest.price())
                 .currency(createTicketTypeRequest.currency())
                 .quantity(createTicketTypeRequest.quantity())
-                .maxPerOrder(createTicketTypeRequest.maxPerOrder())
+                .maxTicketsPerOrder(createTicketTypeRequest.maxTicketsPerOrder())
                 .saleStartDate(createTicketTypeRequest.saleStartDate())
                 .saleEndDate(createTicketTypeRequest.saleEndDate())
-                .displayOrder(createTicketTypeRequest.displayOrder())
-                .isHidden(createTicketTypeRequest.isHidden()).build();
+                .build();
 
         ticketTypeRepository.save(ticketType);
 

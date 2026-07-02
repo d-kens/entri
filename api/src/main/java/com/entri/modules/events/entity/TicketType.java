@@ -61,8 +61,8 @@ public class TicketType extends AbstractAuditableEntity {
     @Builder.Default
     private Integer reservedQuantity = 0;
 
-    @Column(name = "max_per_order")
-    private Integer maxPerOrder;
+    @Column(name = "max_tickets_per_order")
+    private Integer maxTicketsPerOrder;
 
     @Column(name = "sale_start_date")
     private Instant saleStartDate;
@@ -70,15 +70,8 @@ public class TicketType extends AbstractAuditableEntity {
     @Column(name = "sale_end_date")
     private Instant saleEndDate;
 
-    @Column(name = "display_order", nullable = false)
-    @Builder.Default
-    private Integer displayOrder = 0;
-
-    @Column(name = "is_hidden", nullable = false)
-    @Builder.Default
-    private boolean isHidden = false;
-
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private TicketStatus status;
+    @Builder.Default
+    private TicketStatus status = TicketStatus.ACTIVE;
 }

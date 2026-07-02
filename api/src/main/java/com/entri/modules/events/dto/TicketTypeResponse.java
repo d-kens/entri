@@ -14,11 +14,9 @@ public record TicketTypeResponse(
         Integer quantity,
         Integer soldQuantity,
         Integer reservedQuantity,
-        Integer maxPerOrder,
+        Integer maxTicketsPerOrder,
         Instant saleStartDate,
         Instant saleEndDate,
-        Integer displayOrder,
-        boolean isHidden,
         TicketStatus status
 ) {
 }
