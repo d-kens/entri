@@ -16,6 +16,4 @@ public interface EventMapper {
 
     @Mapping(source = "category.name", target = "categoryName")
     EventDetailResponse toEventDetailResponse(Event event);
-
-    TicketTypeResponse toTicketTypeResponse(TicketType ticketType);
 }
