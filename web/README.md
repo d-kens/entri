@@ -1,56 +1,54 @@
-# Web
+<div align="center">
 
-Angular 21 frontend for the Puuul platform.
+# Puuul — Web
 
----
+**Angular 21 · Zoneless · Standalone · Fast**
 
-## Tech stack
-
-| Tool             | Version | Purpose                                     |
-| ---------------- | ------- | ------------------------------------------- |
-| Angular          | 21      | Framework — zoneless, standalone components |
-| Angular Material | 21      | UI component library                        |
-| Tailwind CSS     | 4       | Utility styling                             |
-| TypeScript       | 5.9     | Language                                    |
-| Cypress          | 15      | E2E and component testing                   |
+</div>
 
 ---
 
-## Prerequisites
-
-- Node.js `>=20`
-- The API server running on `http://localhost:9096` (see `api/` in the repo root)
-
----
-
-## Getting started
+## Quick start
 
 ```bash
-npm install
-npm start          # serves on http://localhost:4200
+npm install && npm start
+# → http://localhost:4200
+```
+
+> Requires Node `>=20` and the API server on `http://localhost:9096` (see `api/`).
+
+---
+
+## Features
+
+```
+src/app/features/
+├── auth/       → Login, registration, session handling
+├── events/     → Event browsing and management
+├── overview/   → Dashboard views
+└── public/     → Public-facing pages (no auth required)
 ```
 
 ---
 
 ## Scripts
 
-| Command           | What it does                                    |
-| ----------------- | ----------------------------------------------- |
-| `npm start`       | Dev server on `localhost:4200` with live reload |
-| `npm run build`   | Production build to `dist/`                     |
-| `npm test`        | Unit tests                                      |
-| `npm run cy:open` | Open Cypress in interactive mode                |
-| `npm run cy:run`  | Run all E2E tests headlessly                    |
+```bash
+npm start          # Dev server with live reload   → :4200
+npm run build      # Production build              → dist/
+npm test           # Unit tests
+npm run cy:open    # Cypress interactive
+npm run cy:run     # Cypress headless (CI)
+```
 
 ---
 
 ## Environment
 
-| Variable     | Value                   |
-| ------------ | ----------------------- |
-| `apiBaseUrl` | `http://localhost:9096` |
-
-Change this in `src/environments/environment.prod.ts` before deploying.
+```ts
+// src/environments/environment.prod.ts
+apiBaseUrl: 'http://localhost:9096'; // ← change before deploying
+```
 
 ---
 
