@@ -1,69 +1,68 @@
+<div align="center">
+
 # Entri
 
-An event discovery and management platform. Users can browse, search, and register for events. Organizers can create and manage events through an authenticated dashboard.
+**Discover events. Register instantly. Manage everything.**
 
-## Stack
+</div>
 
-| Layer | Technology |
-|---|---|
-| Frontend | Angular 21, Angular Material, Tailwind CSS |
-| Backend | Spring Boot 4, Java 21 |
-| Database | MySQL 8 |
-| Migrations | Liquibase |
-| Auth | JWT (access + refresh tokens) |
-| Storage | Firebase Storage |
-| Notifications | Novu |
-| Reverse proxy | Nginx |
-| Container updates | Watchtower |
-| CI/CD | GitHub Actions → GHCR |
-| Dependency updates | Renovate |
+---
 
-## Getting Started
+## What is this?
 
-### Prerequisites
+A full-stack event discovery and management platform. Attendees browse and register for events; organizers get an authenticated dashboard to create and run them.
 
-- Docker and Docker Compose
-- Java 21
-- Node.js 20+
+---
 
-### Running locally
+## Architecture
 
-Copy the environment variables template and fill in the values:
-
-```bash
-cp .env.example .env
+```
+entri/
+├── api/     → Spring Boot 4 · Java 21 · MySQL 8 · Liquibase
+└── web/     → Angular 21 · Angular Material · Tailwind CSS 4
 ```
 
-Start the services:
+**Auth** — JWT (access + refresh tokens)  
+**Storage** — Firebase Storage  
+**Notifications** — Novu  
+**Infra** — Nginx · Docker · Watchtower · GitHub Actions → GHCR
+
+---
+
+## Running locally
+
+**Full stack (Docker)**
 
 ```bash
+cp .env.example .env   # fill in the values
 docker compose up -d
 ```
 
-The API will be available at `http://localhost:8080` and the web app at `http://localhost:80`.
+| Service | URL |
+|---|---|
+| API | http://localhost:8080 |
+| Web | http://localhost:80 |
 
-### Running the API in development
-
-```bash
-cd api
-./gradlew bootRun
-```
-
-### Running the web in development
+**API only (dev)**
 
 ```bash
-cd web
-npm install
-npm start
+cd api && ./gradlew bootRun
 ```
+
+**Web only (dev)**
+
+```bash
+cd web && npm install && npm start
+# → http://localhost:4200
+```
+
+---
 
 ## CI/CD
 
-Pushing to `master`:
+Every push to `master`:
 
-- Changes in `api/` → runs tests then builds and pushes `ghcr.io/d-kens/entri-api`
-- Changes in `web/` → builds and pushes `ghcr.io/d-kens/entri-web`
+- `api/**` changed → tests run → `ghcr.io/d-kens/entri-api` built and pushed
+- `web/**` changed → `ghcr.io/d-kens/entri-web` built and pushed
 
-Watchtower polls GHCR every 5 minutes and automatically pulls updated images on the server.
-
-Renovate runs every Saturday at 8am and opens PRs for outdated dependencies.
+Watchtower polls GHCR every 5 minutes and hot-swaps containers on the server automatically. Renovate opens dependency PRs every Saturday at 8am.
