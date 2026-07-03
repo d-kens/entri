@@ -1,0 +1,11 @@
+POST {{baseUrl}}/events/00c23d3b-b259-4f51-9242-5c3dd71fd711/ticket-types
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "price": 100,
+  "quantity": 100,
+  "name": "VVIP",
+  "currency": "KES",
+  "maxTicketsPerOrder": 10
+}

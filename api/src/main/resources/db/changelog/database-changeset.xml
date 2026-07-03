@@ -277,4 +277,14 @@
                 referencedColumnNames="id"/>
     </changeSet>
 
+
+    <changeSet id="202607020001" author="d-kens">
+        <renameColumn tableName="ticket_types"
+                      oldColumnName="max_per_order"
+                      newColumnName="max_tickets_per_order"
+                      columnDataType="INT"/>
+        <dropColumn tableName="ticket_types" columnName="display_order"/>
+        <dropColumn tableName="ticket_types" columnName="is_hidden"/>
+    </changeSet>
+
 </databaseChangeLog>

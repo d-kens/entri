@@ -5,7 +5,6 @@ import com.entri.config.JwtConfig;
 import com.entri.modules.users.dto.AccessToken;
 import com.entri.modules.users.dto.CreateUserRequest;
 import com.entri.modules.users.dto.LoginRequest;
-import com.entri.modules.users.dto.LoginResponse;
 import com.entri.modules.users.dto.UserResponse;
 import com.entri.modules.users.entity.Jwt;
 import com.entri.modules.users.entity.User;

@@ -26,15 +26,12 @@ public record CreateTicketTypeRequest(
         @Min(value = 1, message = "Quantity must be at least 1")
         Integer quantity,
 
-        @Min(value = 1, message = "Max per order must be at least 1")
-        Integer maxPerOrder,
+        @NotNull(message = "Max tickets per order is required")
+        @Min(value = 1, message = "Max tickets per order must be at least 1")
+        Integer maxTicketsPerOrder,
 
         Instant saleStartDate,
 
-        Instant saleEndDate,
-
-        Integer displayOrder,
-
-        Boolean isHidden
+        Instant saleEndDate
 ) {
 }

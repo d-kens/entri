@@ -98,7 +98,7 @@ public class EventService {
         return eventMapper.toEventResponse(event);
     }
 
-    public EventDetailResponse getEventByExternalId(String externalId) {
+    public EventDetailResponse getEventByExternalId(final String externalId) {
         var event = eventRepository.findByExternalId(externalId)
                 .orElseThrow(() -> new NotFoundException("Event with external ID: " + externalId + " not found"));
         return eventMapper.toEventDetailResponse(event);
@@ -148,11 +148,9 @@ public class EventService {
                 .price(t.price())
                 .currency(t.currency())
                 .quantity(t.quantity())
-                .maxPerOrder(t.maxPerOrder())
+                .maxTicketsPerOrder(t.maxTicketsPerOrder())
                 .saleStartDate(t.saleStartDate())
                 .saleEndDate(t.saleEndDate())
-                .displayOrder(t.displayOrder() != null ? t.displayOrder() : 0)
-                .isHidden(t.isHidden() != null && t.isHidden())
                 .status(TicketStatus.ACTIVE)
                 .build();
     }
