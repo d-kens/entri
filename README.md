@@ -1,13 +1,3 @@
-<div align="center">
-
-# Entri
-
-**Discover events. Register instantly. Manage everything.**
-
-</div>
-
----
-
 ## What is this?
 
 A full-stack event discovery and management platform. Attendees browse and register for events; organizers get an authenticated dashboard to create and run them.
