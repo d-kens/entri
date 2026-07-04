@@ -125,7 +125,9 @@ export class CreateEvent implements OnInit {
     return this.ticketsForm.get('ticketTypes') as FormArray<FormGroup<TicketTypeForm>>;
   }
 
-  readonly minDate = new Date();
+  get minDate(): Date | null {
+    return this.isEditMode() ? null : new Date();
+  }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
