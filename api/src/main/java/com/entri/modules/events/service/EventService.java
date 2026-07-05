@@ -105,11 +105,18 @@ public class EventService {
     }
 
     @Transactional
-    public EventResponse updateEvent(final String externalId, EventRequest request, String currentUserKey) {
+    public EventResponse updateEvent(
+            final String externalId,
+            final EventRequest request,
+            final String currentUserKey,
+            final boolean isPlatformAdmin
+    ) {
         var event = eventRepository.findByExternalId(externalId)
                 .orElseThrow(() -> new NotFoundException("Event with external ID: " + externalId + " not found"));
 
-        if (!event.getOrganizer().getExternalKey().equals(currentUserKey)) {
+        boolean isEventOwner = event.getOrganizer().getExternalKey().equals(currentUserKey);
+
+        if (!isEventOwner && !isPlatformAdmin) {
             throw new ForbiddenException("You are not authorized to update this event");
         }
 

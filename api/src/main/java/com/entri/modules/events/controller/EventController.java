@@ -59,9 +59,12 @@ public class EventController {
     @PutMapping("/{externalId}")
     public EventResponse updateEvent(
             @PathVariable final String externalId,
-            @AuthenticationPrincipal String currentUserKey,
-            @Valid @RequestBody final EventRequest request
+            @Valid @RequestBody final EventRequest request,
+            Authentication authentication
     ) {
-        return eventService.updateEvent(externalId, request, currentUserKey);
+        final String currentUserKey = (String) authentication.getPrincipal();
+        final boolean isPlatformAdmin = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_PLATFORM_ADMIN"));
+        return eventService.updateEvent(externalId, request, currentUserKey, isPlatformAdmin);
     }
 }

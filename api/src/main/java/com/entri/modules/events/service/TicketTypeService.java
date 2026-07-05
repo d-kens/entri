@@ -28,9 +28,9 @@ public class TicketTypeService {
         Event event = eventRepository.findByExternalId(eventExternalId)
                 .orElseThrow(() -> new NotFoundException("Event with ID " + eventExternalId + " not found"));
 
-        boolean isOwner = event.getOrganizer().getExternalKey().equals(currentUserKey);
+        boolean isEventOwner = event.getOrganizer().getExternalKey().equals(currentUserKey);
 
-        if (!isOwner && !isPlatformAdmin) {
+        if (!isEventOwner && !isPlatformAdmin) {
             throw new ForbiddenException("Only the event owner or a platform administrator can perform this action.");
         }
 
