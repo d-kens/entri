@@ -1,5 +1,6 @@
 package com.entri.config;
 
+import com.entri.common.dto.AuthenticatedUser;
 import com.entri.modules.users.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -34,8 +35,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-        var authentication = new UsernamePasswordAuthenticationToken(
+        var authenticatedUser = new AuthenticatedUser(
                 jwt.getUserExternalKey(),
+                jwt.getRole()
+        );
+        var authentication = new UsernamePasswordAuthenticationToken(
+                authenticatedUser,
                 null,
                 List.of(new SimpleGrantedAuthority("ROLE_" + jwt.getRole()))
         );
