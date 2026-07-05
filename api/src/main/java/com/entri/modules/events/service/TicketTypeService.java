@@ -1,5 +1,6 @@
 package com.entri.modules.events.service;
 
+import com.entri.common.dto.AuthenticatedUser;
 import com.entri.common.exception.ForbiddenException;
 import com.entri.common.exception.NotFoundException;
 import com.entri.modules.events.dto.CreateTicketTypeRequest;
@@ -22,15 +23,14 @@ public class TicketTypeService {
     public TicketTypeResponse createTicketType(
             final String eventExternalId,
             final CreateTicketTypeRequest createTicketTypeRequest,
-            final String currentUserKey,
-            final boolean isPlatformAdmin
+            AuthenticatedUser authenticatedUser
     ) {
         Event event = eventRepository.findByExternalId(eventExternalId)
                 .orElseThrow(() -> new NotFoundException("Event with ID " + eventExternalId + " not found"));
 
-        boolean isEventOwner = event.getOrganizer().getExternalKey().equals(currentUserKey);
+        boolean isEventOwner = event.getOrganizer().getExternalKey().equals(authenticatedUser.userExternalKey());
 
-        if (!isEventOwner && !isPlatformAdmin) {
+        if (!isEventOwner && !authenticatedUser.isPlatformAdmin()) {
             throw new ForbiddenException("Only the event owner or a platform administrator can perform this action.");
         }
 

@@ -1,5 +1,6 @@
 package com.entri.modules.events.service;
 
+import com.entri.common.dto.AuthenticatedUser;
 import com.entri.common.dto.PaginationResponse;
 import com.entri.common.exception.ForbiddenException;
 import com.entri.common.exception.NotFoundException;
@@ -108,15 +109,14 @@ public class EventService {
     public EventResponse updateEvent(
             final String externalId,
             final EventRequest request,
-            final String currentUserKey,
-            final boolean isPlatformAdmin
+            AuthenticatedUser authenticatedUser
     ) {
         var event = eventRepository.findByExternalId(externalId)
                 .orElseThrow(() -> new NotFoundException("Event with external ID: " + externalId + " not found"));
 
-        boolean isEventOwner = event.getOrganizer().getExternalKey().equals(currentUserKey);
+        boolean isEventOwner = event.getOrganizer().getExternalKey().equals(authenticatedUser.userExternalKey());
 
-        if (!isEventOwner && !isPlatformAdmin) {
+        if (!isEventOwner && !authenticatedUser.isPlatformAdmin()) {
             throw new ForbiddenException("You are not authorized to update this event");
         }
 
