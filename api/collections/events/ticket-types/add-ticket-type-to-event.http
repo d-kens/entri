@@ -5,7 +5,7 @@ Authorization: Bearer {{token}}
 {
   "price": 100,
   "quantity": 100,
-  "name": "VVIP",
+  "name": "TEST",
   "currency": "KES",
   "maxTicketsPerOrder": 10
 }
