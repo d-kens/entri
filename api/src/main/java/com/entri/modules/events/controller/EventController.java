@@ -1,5 +1,6 @@
 package com.entri.modules.events.controller;
 
+import com.entri.common.dto.AuthenticatedUser;
 import com.entri.common.dto.PaginationResponse;
 import com.entri.modules.events.dto.EventRequest;
 import com.entri.modules.events.dto.EventDetailResponse;
@@ -62,9 +63,7 @@ public class EventController {
             @Valid @RequestBody final EventRequest request,
             Authentication authentication
     ) {
-        final String currentUserKey = (String) authentication.getPrincipal();
-        final boolean isPlatformAdmin = authentication.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_PLATFORM_ADMIN"));
-        return eventService.updateEvent(externalId, request, currentUserKey, isPlatformAdmin);
+        final AuthenticatedUser authenticatedUser =  (AuthenticatedUser) authentication.getPrincipal();
+        return eventService.updateEvent(externalId, request, authenticatedUser);
     }
 }

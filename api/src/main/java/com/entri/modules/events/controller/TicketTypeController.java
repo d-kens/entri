@@ -1,5 +1,6 @@
 package com.entri.modules.events.controller;
 
+import com.entri.common.dto.AuthenticatedUser;
 import com.entri.modules.events.dto.CreateTicketTypeRequest;
 import com.entri.modules.events.dto.TicketTypeResponse;
 import com.entri.modules.events.service.TicketTypeService;
@@ -20,9 +21,7 @@ public class TicketTypeController {
             @Valid @RequestBody final CreateTicketTypeRequest ticketTypeRequest,
             Authentication authentication
     ) {
-        final String currentUserKey = (String) authentication.getPrincipal();
-        final boolean isPlatformAdmin = authentication.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_PLATFORM_ADMIN"));
-        return ticketTypeService.createTicketType(eventExternalId, ticketTypeRequest, currentUserKey, isPlatformAdmin);
+        final AuthenticatedUser authenticatedUser = (AuthenticatedUser) authentication.getPrincipal();
+        return ticketTypeService.createTicketType(eventExternalId, ticketTypeRequest, authenticatedUser);
     }
 }
