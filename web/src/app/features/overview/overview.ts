@@ -2,7 +2,7 @@ import { Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
-import { UsersService } from '@core/services/users-service';
+import { UsersService } from '@features/users/users-service';
 
 interface StatCard {
   icon: string;

@@ -8,8 +8,8 @@ import {
   EventDetailResponse,
   EventFilter,
   EventResponse,
-} from '@core/models/event.models';
-import { PageResponse } from '@core/models/common.model';
+} from '@features/auth/models/event.models';
+import { PageResponse } from '@features/auth/models/common.model';
 
 @Injectable({ providedIn: 'root' })
 export class EventsService {

@@ -7,10 +7,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { SnackbarService } from '@core/services/snackbar-service';
-import { RegisterUserRequest } from '@core/models/auth.models';
-import { AuthService } from '@core/services/auth-service';
-import { passwordsMatch, PasswordMismatchStateMatcher } from '../../validators/password.validators';
+import { SnackbarService } from '@shared/services/snackbar-service';
+import { RegisterUserRequest } from '@features/auth/models/auth.models';
+import { AuthService } from '@features/auth/auth-service';
+import { passwordsMatch, PasswordMismatchStateMatcher } from '../validators/password.validators';
 
 @Component({
   selector: 'app-register',

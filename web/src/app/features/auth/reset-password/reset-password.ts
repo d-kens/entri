@@ -1,14 +1,14 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ResetPasswordRequest } from '@core/models/auth.models';
-import { AuthService } from '@core/services/auth-service';
-import { SnackbarService } from '@core/services/snackbar-service';
+import { ResetPasswordRequest } from '@features/auth/models/auth.models';
+import { AuthService } from '@features/auth/auth-service';
+import { SnackbarService } from '@shared/services/snackbar-service';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatError, MatFormField, MatInput, MatLabel, MatSuffix } from '@angular/material/input';
 import { MatIcon } from '@angular/material/icon';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { passwordsMatch, PasswordMismatchStateMatcher } from '../../validators/password.validators';
+import { passwordsMatch, PasswordMismatchStateMatcher } from '../validators/password.validators';
 
 @Component({
   selector: 'app-reset-password',

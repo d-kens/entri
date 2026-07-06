@@ -7,14 +7,16 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { SnackbarService } from '@core/services/snackbar-service';
-import { AuthService } from '@core/services/auth-service';
+import { SnackbarService } from '@shared/services/snackbar-service';
+import { AuthService } from '@features/auth/auth-service';
+import { EntriButton } from '@shared/components/button/entri-button.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   host: { class: 'w-full' },
   imports: [
+    EntriButton,
     CommonModule,
     RouterLink,
     MatFormFieldModule,

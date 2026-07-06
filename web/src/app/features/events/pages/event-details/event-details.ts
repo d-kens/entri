@@ -8,8 +8,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { EventsService } from '../../services/events-service';
-import { SnackbarService } from '@core/services/snackbar-service';
-import { EventDetailResponse, EventResponse } from '@core/models/event.models';
+import { SnackbarService } from '@shared/services/snackbar-service';
+import { EventDetailResponse, EventResponse } from '@features/auth/models/event.models';
 
 @Component({
   selector: 'app-event-details',

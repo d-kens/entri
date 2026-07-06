@@ -6,9 +6,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter, map, startWith } from 'rxjs/operators';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { AuthService } from '@core/services/auth-service';
-import { UsersService } from '@core/services/users-service';
-import { SnackbarService } from '@core/services/snackbar-service';
+import { AuthService } from '@features/auth/auth-service';
+import { UsersService } from '@features/users/users-service';
+import { SnackbarService } from '@shared/services/snackbar-service';
 
 const ROUTE_TITLES: Record<string, string> = {
   overview: 'Dashboard',

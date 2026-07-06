@@ -1,15 +1,15 @@
 import { Routes } from '@angular/router';
-import { AuthPage } from './pages/auth-page/auth-page';
-import { Login } from './components/login/login';
-import { Register } from './components/register/register';
-import { noAuthGuard } from '@core/guards/no-auth-guard';
-import { ForgotPassword } from '@features/auth/components/forgot-password/forgot-password';
-import { ResetPassword } from '@features/auth/components/reset-password/reset-password';
+import { Auth } from './auth';
+import { Login } from '@features/auth/login/login';
+import { Register } from '@features/auth/register/register';
+import { noAuthGuard } from '@features/auth/guards/no-auth-guard';
+import { ForgotPassword } from '@features/auth/forgot-password/forgot-password';
+import { ResetPassword } from '@features/auth/reset-password/reset-password';
 
 export const AUTH_ROUTES: Routes = [
   {
     path: '',
-    component: AuthPage,
+    component: Auth,
     canActivate: [noAuthGuard],
     children: [
       { path: '', redirectTo: 'login', pathMatch: 'full' },
