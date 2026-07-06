@@ -12,7 +12,7 @@ import {
   catchError,
   EMPTY,
 } from 'rxjs';
-import { EventsService } from '../../services/events-service';
+import { EventsService } from '../services/events-service';
 import { CategoryResponse, EventFilter, EventResponse } from '@features/auth/models/event.models';
 import { PageResponse } from '@features/auth/models/common.model';
 

@@ -7,7 +7,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { EventsService } from '../../services/events-service';
+import { EventsService } from '../services/events-service';
 import { SnackbarService } from '@shared/services/snackbar-service';
 import { EventDetailResponse, EventResponse } from '@features/auth/models/event.models';
 

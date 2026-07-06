@@ -11,11 +11,13 @@ import { SnackbarService } from '@shared/services/snackbar-service';
 import { RegisterUserRequest } from '@features/auth/models/auth.models';
 import { AuthService } from '@features/auth/auth-service';
 import { passwordsMatch, PasswordMismatchStateMatcher } from '../validators/password.validators';
+import { EntriButton } from '@shared/components/button/entri-button.component';
 
 @Component({
   selector: 'app-register',
   standalone: true,
   imports: [
+    EntriButton,
     CommonModule,
     MatIconModule,
     RouterLink,

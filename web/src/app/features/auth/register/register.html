@@ -141,21 +141,13 @@
       </mat-form-field>
 
       <button
-        mat-flat-button
-        class="w-full auth-brand-btn"
+        appButton
         type="button"
+        class="w-full"
         (click)="createAccount()"
-        [disabled]="isLoading()"
-        data-cy="register-submit"
+        [loading]="isLoading()"
       >
-        @if (isLoading()) {
-          <div class="flex items-center justify-center gap-2">
-            <mat-progress-spinner diameter="16" mode="indeterminate"></mat-progress-spinner>
-            <span>Creating account...</span>
-          </div>
-        } @else {
-          <span>Create Account</span>
-        }
+        Create Account
       </button>
     </form>
   </div>
