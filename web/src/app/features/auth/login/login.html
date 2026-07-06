@@ -1,0 +1,78 @@
+<div class="w-full max-w-md mx-auto">
+  <div class="bg-white rounded-2xl p-3 md:p-4">
+    <div class="text-center mb-5">
+      <h2 class="text-2xl mb-1 text-gray-900 font-bold">Welcome Back</h2>
+      <p class="text-sm text-gray-400">Sign in to your organiser account</p>
+    </div>
+
+    <form [formGroup]="loginForm" class="space-y-4">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
+        <mat-label>Email Address</mat-label>
+        <input
+          matInput
+          type="email"
+          placeholder="john@example.com"
+          formControlName="email"
+          autocomplete="email"
+          data-cy="email-input"
+        />
+        <mat-icon matSuffix>mail_outline</mat-icon>
+        @if (loginForm.get('email')?.hasError('required')) {
+          <mat-error>Email is required</mat-error>
+        } @else if (loginForm.get('email')?.hasError('email')) {
+          <mat-error>Enter a valid email</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-full" subscriptSizing="dynamic">
+        <mat-label>Password</mat-label>
+        <input
+          matInput
+          [type]="hidePassword() ? 'password' : 'text'"
+          placeholder="Enter your password"
+          formControlName="password"
+          autocomplete="current-password"
+          data-cy="password-input"
+        />
+        <button
+          mat-icon-button
+          matSuffix
+          type="button"
+          (mousedown)="$event.preventDefault()"
+          (click)="togglePassword()"
+        >
+          <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+        @if (loginForm.get('password')?.hasError('required')) {
+          <mat-error>Password is required</mat-error>
+        }
+      </mat-form-field>
+
+      <div class="flex justify-end">
+        <a
+          [routerLink]="['/auth/forgot-password']"
+          class="text-xs text-[#FF1867] font-medium hover:underline cursor-pointer"
+          >Forgot password?</a
+        >
+      </div>
+
+      <button
+        appButton
+        class="w-full"
+        type="button"
+        (click)="login()"
+        [loading]="isLoading()"
+        data-cy="login-submit"
+      >
+        Sign In
+      </button>
+    </form>
+  </div>
+
+  <p class="text-center text-sm mt-4 text-gray-500">
+    Don't have an account?
+    <a [routerLink]="['/auth/register']" class="text-[#FF1867] font-semibold hover:underline"
+      >Create account</a
+    >
+  </p>
+</div>
