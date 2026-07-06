@@ -20,8 +20,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { EventsService } from '../../services/events-service';
-import { SnackbarService } from '@core/services/snackbar-service';
-import { CategoryResponse, EventRequest } from '@core/models/event.models';
+import { SnackbarService } from '@shared/services/snackbar-service';
+import { CategoryResponse, EventRequest } from '@features/auth/models/event.models';
 
 type InfoForm = {
   title: FormControl<string>;

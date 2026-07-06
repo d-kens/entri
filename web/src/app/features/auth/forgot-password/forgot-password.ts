@@ -1,8 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '@core/services/auth-service';
-import { SnackbarService } from '@core/services/snackbar-service';
+import { AuthService } from '@features/auth/auth-service';
+import { SnackbarService } from '@shared/services/snackbar-service';
 import { MatButton } from '@angular/material/button';
 import { MatError, MatFormField, MatInput, MatLabel, MatSuffix } from '@angular/material/input';
 import { MatIcon } from '@angular/material/icon';

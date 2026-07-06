@@ -5,7 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-auth-page',
   imports: [RouterOutlet, RouterLink, MatIconModule],
-  templateUrl: './auth-page.html',
-  styleUrl: './auth-page.css',
+  templateUrl: './auth.html',
+  styleUrl: './auth.css',
 })
-export class AuthPage {}
+export class Auth {}

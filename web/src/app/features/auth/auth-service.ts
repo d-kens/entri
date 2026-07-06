@@ -1,6 +1,6 @@
 import { inject, Injectable, signal, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { environment } from 'environments/environment';
+import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { catchError, finalize, Observable, tap, throwError } from 'rxjs';
 import {
@@ -9,8 +9,8 @@ import {
   AuthRequest,
   ResetPasswordRequest,
   RegisterUserRequest,
-} from '../models/auth.models';
-import { UserResponse } from '@core/models/user.models';
+} from './models/auth.models';
+import { UserResponse } from '@features/auth/models/user.models';
 
 @Injectable({
   providedIn: 'root',

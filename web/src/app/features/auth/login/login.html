@@ -57,21 +57,15 @@
       </div>
 
       <button
-        mat-flat-button
-        class="w-full auth-brand-btn"
+        appButton
+        class="w-full"
         type="button"
+        ,
         (click)="login()"
-        [disabled]="isLoading()"
+        [loading]="isLoading()"
         data-cy="login-submit"
       >
-        @if (isLoading()) {
-          <div class="flex items-center justify-center gap-2">
-            <mat-progress-spinner diameter="16" mode="indeterminate"></mat-progress-spinner>
-            <span>Signing in...</span>
-          </div>
-        } @else {
-          <span>Sign In</span>
-        }
+        Sign In
       </button>
     </form>
   </div>

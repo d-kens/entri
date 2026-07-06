@@ -13,8 +13,8 @@ import {
   EMPTY,
 } from 'rxjs';
 import { EventsService } from '../../services/events-service';
-import { CategoryResponse, EventFilter, EventResponse } from '@core/models/event.models';
-import { PageResponse } from '@core/models/common.model';
+import { CategoryResponse, EventFilter, EventResponse } from '@features/auth/models/event.models';
+import { PageResponse } from '@features/auth/models/common.model';
 
 @Component({
   selector: 'app-events-listing',

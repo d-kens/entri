@@ -1,8 +1,8 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '../services/auth-service';
-import { SnackbarService } from '../services/snackbar-service';
+import { AuthService } from '../auth-service';
+import { SnackbarService } from '@shared/services/snackbar-service';
 import { catchError, switchMap, throwError } from 'rxjs';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
