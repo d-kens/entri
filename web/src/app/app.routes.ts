@@ -11,13 +11,13 @@ export const routes: Routes = [
       {
         path: '',
         loadComponent: () =>
-          import('@features/events/pages/browse-events/browse-events').then((m) => m.BrowseEvents),
+          import('@features/events/browse-events/browse-events').then((m) => m.BrowseEvents),
       },
     ],
   },
   {
     path: 'auth',
-    loadChildren: () => import('./features/auth/auth.routes').then((m) => m.AUTH_ROUTES),
+    loadChildren: () => import('@features/auth/auth.routes').then((m) => m.AUTH_ROUTES),
   },
   {
     path: 'dashboard',
@@ -25,17 +25,13 @@ export const routes: Routes = [
     canActivate: [authGuard],
     children: [
       {
-        path: 'overview',
-        loadComponent: () => import('./features/overview/overview').then((m) => m.Overview),
+        path: 'summary',
+        loadComponent: () => import('@features/summary/summary').then((m) => m.Summary),
       },
       {
         path: 'events',
         loadChildren: () => import('./features/events/events.routes').then((m) => m.EVENTS_ROUTES),
       },
     ],
-  },
-  {
-    path: '**',
-    loadComponent: () => import('./features/public/not-found/not-found').then((m) => m.NotFound),
   },
 ];

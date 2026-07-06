@@ -9,19 +9,19 @@ import { MatError, MatFormField, MatInput, MatLabel, MatSuffix } from '@angular/
 import { MatIcon } from '@angular/material/icon';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { passwordsMatch, PasswordMismatchStateMatcher } from '../validators/password.validators';
+import { EntriButton } from '@shared/components/button/entri-button.component';
 
 @Component({
   selector: 'app-reset-password',
   imports: [
+    EntriButton,
     FormsModule,
-    MatButton,
     MatError,
     MatFormField,
     MatIcon,
     MatIconButton,
     MatInput,
     MatLabel,
-    MatProgressSpinner,
     MatSuffix,
     ReactiveFormsModule,
   ],

@@ -25,10 +25,10 @@ export interface RecentPayment {
   selector: 'app-dashboard',
   standalone: true,
   imports: [RouterLink, MatIconModule, MatTableModule],
-  templateUrl: './overview.html',
-  styleUrl: './overview.css',
+  templateUrl: './summary.html',
+  styleUrl: './summary.css',
 })
-export class Overview {
+export class Summary {
   private usersService = inject(UsersService);
 
   user = this.usersService.currentUser;

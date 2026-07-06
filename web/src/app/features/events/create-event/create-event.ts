@@ -19,7 +19,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { EventsService } from '../../services/events-service';
+import { EventsService } from '../services/events-service';
 import { SnackbarService } from '@shared/services/snackbar-service';
 import { CategoryResponse, EventRequest } from '@features/auth/models/event.models';
 

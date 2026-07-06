@@ -11,7 +11,7 @@ import { UsersService } from '@features/users/users-service';
 import { SnackbarService } from '@shared/services/snackbar-service';
 
 const ROUTE_TITLES: Record<string, string> = {
-  overview: 'Dashboard',
+  summary: 'Dashboard',
   events: 'Events',
   properties: 'Properties',
   payments: 'Payments',

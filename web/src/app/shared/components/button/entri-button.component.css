@@ -2,6 +2,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 6px;
   position: relative;
   border: none;
   border-radius: var(--mat-sys-corner-medium);
@@ -66,6 +67,17 @@
   background-color: var(--mat-sys-primary-container);
 }
 
+:host(:disabled) {
+  opacity: 0.38;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+:host(:focus-visible) {
+  outline: 2px solid var(--mat-sys-primary);
+  outline-offset: 2px;
+}
+
 :host(.btn-loading) {
   cursor: not-allowed;
   pointer-events: none;
@@ -77,12 +89,23 @@
 
 .spinner {
   position: absolute;
-  width: 16px;
-  height: 16px;
   border: 2px solid currentColor;
   border-top-color: transparent;
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
+}
+
+:host(.btn-sm) .spinner {
+  width: 14px;
+  height: 14px;
+}
+:host(.btn-md) .spinner {
+  width: 16px;
+  height: 16px;
+}
+:host(.btn-lg) .spinner {
+  width: 20px;
+  height: 20px;
 }
 
 @keyframes spin {
