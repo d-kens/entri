@@ -14,7 +14,7 @@ export type CategoryResponse = {
   name: string;
 };
 
-export type CreateTicketTypeRequest = {
+export type TicketTypeRequest = {
   name: string;
   description?: string | null;
   price: number;
@@ -37,7 +37,7 @@ export type EventRequest = {
   startTime: string;
   endTime: string;
   bannerUrl: string;
-  ticketTypes: CreateTicketTypeRequest[];
+  ticketTypes: TicketTypeRequest[];
 };
 
 export type TicketTypeResponse = {
