@@ -1,0 +1,115 @@
+:host {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  position: relative;
+  border: none;
+  border-radius: var(--mat-sys-corner-medium);
+  font-family: var(--mat-sys-plain-font-family);
+  font-weight: var(--mat-sys-medium-font-weight);
+  cursor: pointer;
+  white-space: nowrap;
+  text-decoration: none;
+  transition:
+    opacity 0.2s,
+    background-color 0.2s;
+  letter-spacing: 0.01em;
+}
+
+:host(.btn-sm) {
+  height: 32px;
+  padding: 0 12px;
+  font-size: 13px;
+}
+:host(.btn-md) {
+  height: 40px;
+  padding: 0 20px;
+  font-size: 14px;
+}
+:host(.btn-lg) {
+  height: 48px;
+  padding: 0 28px;
+  font-size: 15px;
+}
+
+:host(.btn-primary) {
+  background-color: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+}
+
+:host(.btn-secondary) {
+  background-color: var(--mat-sys-secondary);
+  color: var(--mat-sys-on-secondary);
+}
+
+:host(.btn-outline) {
+  background-color: transparent;
+  color: var(--mat-sys-primary);
+  border: 1.5px solid var(--mat-sys-primary);
+}
+
+:host(.btn-ghost) {
+  background-color: transparent;
+  color: var(--mat-sys-primary);
+}
+
+:host(.btn-primary:hover:not(:disabled)) {
+  opacity: 0.88;
+}
+:host(.btn-secondary:hover:not(:disabled)) {
+  opacity: 0.85;
+}
+:host(.btn-outline:hover:not(:disabled)) {
+  background-color: var(--mat-sys-primary-container);
+}
+:host(.btn-ghost:hover:not(:disabled)) {
+  background-color: var(--mat-sys-primary-container);
+}
+
+:host(:disabled) {
+  opacity: 0.38;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+:host(:focus-visible) {
+  outline: 2px solid var(--mat-sys-primary);
+  outline-offset: 2px;
+}
+
+:host(.btn-loading) {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+:host(.btn-loading) .content {
+  visibility: hidden;
+}
+
+.spinner {
+  position: absolute;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+:host(.btn-sm) .spinner {
+  width: 14px;
+  height: 14px;
+}
+:host(.btn-md) .spinner {
+  width: 16px;
+  height: 16px;
+}
+:host(.btn-lg) .spinner {
+  width: 20px;
+  height: 20px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
