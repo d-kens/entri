@@ -1,8 +1,64 @@
-<p>
-  {{ event()?.title }}
-</p>
+<div class="add-edit-ticket-types-page">
+  @if (isLoading()) {
+    <div class="page-loading">
+      <mat-progress-spinner diameter="40" mode="indeterminate"></mat-progress-spinner>
+    </div>
+  }
 
-<!--
-    1. Display few event details for context
-    2. Add form for adding ticket type  (signal based forms)
- -->
+  @if (!isLoading() && event(); as ev) {
+    <div class="hero" [class.hero--no-banner]="!ev.bannerUrl">
+      @if (ev.bannerUrl) {
+        <img class="hero-img" [src]="ev.bannerUrl" [alt]="ev.title" />
+      }
+
+      <div class="hero-overlay"></div>
+
+      <a mat-icon-button class="hero-back" [routerLink]="['/dashboard/events', ev.externalId]">
+        <mat-icon>arrow_back</mat-icon>
+      </a>
+
+      <div class="hero-content">
+        <div class="hero-meta">
+          <span class="status-badge status-{{ ev.status.toLowerCase() }}">{{
+            ev.status | titlecase
+          }}</span>
+          <span class="hero-category">{{ ev.categoryName }}</span>
+        </div>
+        <div class="hero-bottom">
+          <h1 class="hero-title">{{ ev.title }}</h1>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick-info strip -->
+    <div class="info-strip">
+      <div class="info-strip-item">
+        <mat-icon>location_on</mat-icon>
+        <span>{{ ev.venueName }}, {{ ev.venueCity }}, {{ ev.venueCountry }}</span>
+      </div>
+      <div class="info-strip-divider"></div>
+      <div class="info-strip-item">
+        <mat-icon>calendar_today</mat-icon>
+        <span>{{ ev.startTime | date: 'EEE, d MMM yyyy' }}</span>
+      </div>
+      <div class="info-strip-divider"></div>
+      <div class="info-strip-item">
+        <mat-icon>schedule</mat-icon>
+        <span>{{ ev.startTime | date: 'HH:mm' }} — {{ ev.endTime | date: 'HH:mm' }}</span>
+      </div>
+      <div class="info-strip-divider"></div>
+      <div class="info-strip-item">
+        <mat-icon>{{ ev.isPublic ? 'public' : 'lock' }}</mat-icon>
+        <span>{{ ev.isPublic ? 'Public' : 'Private' }}</span>
+      </div>
+    </div>
+
+    <!-- Page header -->
+    <div class="page-header">
+      <div class="page-header-text">
+        <h2 class="page-header-title">Ticket Types</h2>
+        <p class="page-header-sub">Define and manage the ticket types available for this event.</p>
+      </div>
+    </div>
+  }
+</div>
