@@ -1,6 +1,6 @@
 package com.entri.modules.events.service;
 
-import com.entri.common.exception.NotFoundException;
+import com.entri.common.exception.ResourceNotFoundException;
 import com.entri.modules.events.dto.CategoryResponse;
 import com.entri.modules.events.entity.EventCategory;
 import com.entri.modules.events.repository.EventCategoryRepository;
@@ -23,6 +23,6 @@ public class EventCategoryService {
 
     public EventCategory findById(Long id) {
         return eventCategoryRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Category not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
     }
 }
