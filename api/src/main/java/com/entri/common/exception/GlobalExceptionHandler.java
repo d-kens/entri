@@ -3,7 +3,10 @@ package com.entri.common.exception;
 import com.entri.common.dto.ErrorDto;
 import com.entri.modules.users.exception.EmailAlreadyExist;
 import jakarta.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -12,11 +15,34 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
+    @ExceptionHandler(FileUploadException.class)
+    public ResponseEntity<ErrorDto> handleFileUploadException(FileUploadException exception) {
+        log.error("File upload failed", exception.getCause());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                new ErrorDto(exception.getMessage())
+        );
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<ErrorDto> handleMaxUploadSizeExceededException() {
+        return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body(
+                new ErrorDto("File size exceeds the maximum allowed limit")
+        );
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorDto> handleInvalidFileTypeException(InvalidFileTypeException exception) {
+        return ResponseEntity.badRequest().body(new ErrorDto(exception.getMessage()));
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationErrors(
@@ -38,8 +64,8 @@ public class GlobalExceptionHandler {
         );
     }
 
-    @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<ErrorDto> handleNotFoundException(NotFoundException exception) {
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorDto> handleNotFoundException(ResourceNotFoundException exception) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                 new ErrorDto(exception.getMessage())
         );
@@ -66,27 +92,14 @@ public class GlobalExceptionHandler {
         );
     }
 
-    @ExceptionHandler(FileUploadException.class)
-    public ResponseEntity<ErrorDto> handleFileUploadException(FileUploadException exception) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                new ErrorDto(exception.getMessage())
-        );
-    }
-
-    @ExceptionHandler(MaxUploadSizeExceededException.class)
-    public ResponseEntity<ErrorDto> handleMaxUploadSizeExceeded() {
-        return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body(
-                new ErrorDto("File size exceeds the maximum allowed limit")
-        );
-    }
-
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public ResponseEntity<ErrorDto> handleMethodNotAllowed(
+    public ProblemDetail handleMethodNotAllowed(
             HttpRequestMethodNotSupportedException exception,
             HttpServletRequest request
     ) {
-        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(
-                new ErrorDto("Request method '" + exception.getMethod() + "' is not supported on endpoint " + request.getRequestURI())
-        );
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.METHOD_NOT_ALLOWED, exception.getMessage());
+        problemDetail.setDetail("Method Not Allowed");
+        problemDetail.setInstance(URI.create(request.getRequestURI()));
+        return problemDetail;
     }
 }

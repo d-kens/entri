@@ -1,7 +1,7 @@
 package com.entri.modules.users.service;
 
 
-import com.entri.common.exception.NotFoundException;
+import com.entri.common.exception.ResourceNotFoundException;
 import com.entri.common.exception.UnauthorizedException;
 import com.entri.modules.users.dto.ResetPasswordRequest;
 import com.entri.modules.users.entity.PasswordResetToken;
@@ -43,7 +43,7 @@ public class PasswordResetService {
         User user;
         try {
             user = userService.findByEmail(email);
-        } catch (NotFoundException e) {
+        } catch (ResourceNotFoundException e) {
             return;
         }
         String rawToken = generate();
