@@ -80,10 +80,6 @@ Event extends AbstractAuditableEntity {
     @Enumerated(EnumType.STRING)
     private EventStatus status;
 
-    @Column(name = "is_public", nullable = false)
-    @Builder.Default
-    private boolean isPublic = true;
-
     @Column(name = "published_at")
     private Instant publishedAt;
 

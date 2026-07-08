@@ -7,10 +7,6 @@ import org.springframework.data.jpa.domain.Specification;
 import java.time.Instant;
 
 public class EventSpecifications {
-    public static Specification<Event> isPublic() {
-        return (root, query, cb) -> cb.isTrue(root.get("isPublic"));
-    }
-
     public static Specification<Event> hasStatus(EventStatus status) {
         return (root, query, cb) ->
                 status == null ? null : cb.equal(root.get("status"), status);

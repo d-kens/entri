@@ -10,7 +10,7 @@ import {
   ResetPasswordRequest,
   RegisterUserRequest,
 } from './models/auth.models';
-import { UserResponse } from '@features/auth/models/user.models';
+import { UserResponse } from '@features/users/models/user.models';
 
 @Injectable({
   providedIn: 'root',
