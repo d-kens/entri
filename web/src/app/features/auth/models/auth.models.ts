@@ -1,4 +1,4 @@
-import { UserResponse } from './user.models';
+import { UserResponse } from '../../users/models/user.models';
 
 export type RegisterUserRequest = {
   firstName: string;

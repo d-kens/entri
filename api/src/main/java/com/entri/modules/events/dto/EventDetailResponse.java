@@ -17,7 +17,6 @@ public record EventDetailResponse(
         Instant endTime,
         String bannerUrl,
         EventStatus status,
-        boolean isPublic,
         Instant publishedAt,
         Instant dateCreated,
         List<TicketTypeResponse> ticketTypes

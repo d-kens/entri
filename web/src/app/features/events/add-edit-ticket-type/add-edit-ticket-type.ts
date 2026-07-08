@@ -1,24 +1,15 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { EventDetailResponse } from '@features/auth/models/event.models';
+import { ActivatedRoute, Router } from '@angular/router';
+import { EventDetailResponse } from '@features/events/models/event.models';
 import { EventsService } from '@features/events/services/events-service';
 import { SnackbarService } from '@shared/services/snackbar-service';
 import { FormBuilder } from '@angular/forms';
-import { DatePipe, TitleCasePipe } from '@angular/common';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { EventHero } from '../components/event-hero/event-hero';
 
 @Component({
   selector: 'app-add-edit-ticket-type',
-  imports: [
-    TitleCasePipe,
-    DatePipe,
-    RouterLink,
-    MatButtonModule,
-    MatIconModule,
-    MatProgressSpinnerModule,
-  ],
+  imports: [MatProgressSpinnerModule, EventHero],
   templateUrl: './add-edit-ticket-type.html',
   styleUrl: './add-edit-ticket-type.css',
 })

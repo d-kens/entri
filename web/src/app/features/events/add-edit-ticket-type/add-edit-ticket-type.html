@@ -6,52 +6,7 @@
   }
 
   @if (!isLoading() && event(); as ev) {
-    <div class="hero" [class.hero--no-banner]="!ev.bannerUrl">
-      @if (ev.bannerUrl) {
-        <img class="hero-img" [src]="ev.bannerUrl" [alt]="ev.title" />
-      }
-
-      <div class="hero-overlay"></div>
-
-      <a mat-icon-button class="hero-back" [routerLink]="['/dashboard/events', ev.externalId]">
-        <mat-icon>arrow_back</mat-icon>
-      </a>
-
-      <div class="hero-content">
-        <div class="hero-meta">
-          <span class="status-badge status-{{ ev.status.toLowerCase() }}">{{
-            ev.status | titlecase
-          }}</span>
-          <span class="hero-category">{{ ev.categoryName }}</span>
-        </div>
-        <div class="hero-bottom">
-          <h1 class="hero-title">{{ ev.title }}</h1>
-        </div>
-      </div>
-    </div>
-
-    <!-- Quick-info strip -->
-    <div class="info-strip">
-      <div class="info-strip-item">
-        <mat-icon>location_on</mat-icon>
-        <span>{{ ev.venueName }}, {{ ev.venueCity }}, {{ ev.venueCountry }}</span>
-      </div>
-      <div class="info-strip-divider"></div>
-      <div class="info-strip-item">
-        <mat-icon>calendar_today</mat-icon>
-        <span>{{ ev.startTime | date: 'EEE, d MMM yyyy' }}</span>
-      </div>
-      <div class="info-strip-divider"></div>
-      <div class="info-strip-item">
-        <mat-icon>schedule</mat-icon>
-        <span>{{ ev.startTime | date: 'HH:mm' }} — {{ ev.endTime | date: 'HH:mm' }}</span>
-      </div>
-      <div class="info-strip-divider"></div>
-      <div class="info-strip-item">
-        <mat-icon>{{ ev.isPublic ? 'public' : 'lock' }}</mat-icon>
-        <span>{{ ev.isPublic ? 'Public' : 'Private' }}</span>
-      </div>
-    </div>
+    <app-event-hero [event]="ev" [backLink]="['/dashboard/events', ev.externalId]" />
 
     <!-- Page header -->
     <div class="page-header">

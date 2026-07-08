@@ -30,7 +30,6 @@ export type EventRequest = {
   title: string;
   description: string;
   categoryId: number;
-  isPublic: boolean;
   venueName: string;
   venueCity: string;
   venueCountry: string;
@@ -66,7 +65,6 @@ export type EventResponse = {
   endTime: string;
   bannerUrl: string;
   status: 'DRAFT' | 'PUBLISHED' | 'CANCELLED';
-  isPublic: boolean;
   publishedAt?: string;
   dateCreated: string;
 };

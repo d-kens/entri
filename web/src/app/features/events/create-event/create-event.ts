@@ -21,13 +21,12 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { EventsService } from '../services/events-service';
 import { SnackbarService } from '@shared/services/snackbar-service';
-import { CategoryResponse, EventRequest } from '@features/auth/models/event.models';
+import { CategoryResponse, EventRequest } from '@features/events/models/event.models';
 
 type InfoForm = {
   title: FormControl<string>;
   description: FormControl<string>;
   categoryId: FormControl<number | null>;
-  isPublic: FormControl<boolean>;
 };
 
 type VenueForm = {
@@ -104,7 +103,6 @@ export class CreateEvent implements OnInit {
     title: ['', [Validators.required, Validators.minLength(3)]],
     description: ['', [Validators.required, Validators.minLength(20)]],
     categoryId: this.fb.control<number | null>(null, Validators.required),
-    isPublic: [true],
   });
 
   venueForm: FormGroup<VenueForm> = this.fb.nonNullable.group({
@@ -148,7 +146,6 @@ export class CreateEvent implements OnInit {
         this.infoForm.patchValue({
           title: ev.title,
           description: ev.description,
-          isPublic: ev.isPublic,
         });
 
         // patch categoryId once categories may already be loaded
@@ -381,7 +378,6 @@ export class CreateEvent implements OnInit {
       title: info.title,
       description: info.description,
       categoryId: info.categoryId as number,
-      isPublic: info.isPublic,
       venueName: venue.venueName,
       venueCity: venue.venueCity,
       venueCountry: venue.venueCountry,
