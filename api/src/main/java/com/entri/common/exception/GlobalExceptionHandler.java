@@ -1,13 +1,11 @@
 package com.entri.common.exception;
 
-import com.entri.common.dto.ErrorDto;
 import com.entri.modules.users.exception.EmailAlreadyExist;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -25,70 +23,112 @@ public class GlobalExceptionHandler {
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(FileUploadException.class)
-    public ResponseEntity<ErrorDto> handleFileUploadException(FileUploadException exception) {
-        log.error("File upload failed", exception.getCause());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                new ErrorDto(exception.getMessage())
+    public ProblemDetail handleFileUploadException(
+            FileUploadException exception,
+            HttpServletRequest request
+    ) {
+        return createProblemDetail(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                "Internal Server Error",
+                exception.getMessage(),
+                request
         );
     }
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
-    public ResponseEntity<ErrorDto> handleMaxUploadSizeExceededException() {
-        return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body(
-                new ErrorDto("File size exceeds the maximum allowed limit")
+    public ProblemDetail handleMaxUploadSizeExceededException(
+            MaxUploadSizeExceededException exception,
+            HttpServletRequest request
+    ) {
+        return createProblemDetail(
+                HttpStatus.PAYLOAD_TOO_LARGE,
+                "File Too Large",
+                "The uploaded file exceeds the maximum allowed size.",
+                request
         );
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorDto> handleInvalidFileTypeException(InvalidFileTypeException exception) {
-        return ResponseEntity.badRequest().body(new ErrorDto(exception.getMessage()));
+    public ProblemDetail handleInvalidFileTypeException(
+            InvalidFileTypeException exception,
+            HttpServletRequest request
+    ) {
+        return createProblemDetail(
+                HttpStatus.BAD_REQUEST,
+                "Invalid File Upload Type",
+                exception.getMessage(),
+                request
+        );
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleValidationErrors(
-            MethodArgumentNotValidException exception
+    public ProblemDetail handleValidationErrors(
+            MethodArgumentNotValidException exception,
+            HttpServletRequest request
     ) {
-        var errors = new HashMap<String, String>();
+        Map<String, String> errors = new HashMap<>();
 
-        exception.getBindingResult().getFieldErrors().forEach(error -> {
-            errors.put(error.getField(), error.getDefaultMessage());
-        });
+        exception.getBindingResult().getFieldErrors().forEach(error ->
+                errors.put(error.getField(), error.getDefaultMessage())
+        );
 
-        return ResponseEntity.badRequest().body(errors);
+        ProblemDetail problemDetail = createProblemDetail(
+                HttpStatus.BAD_REQUEST,
+                "Validation Failed",
+                "One or more fields contain invalid values.",
+                request
+        );
+
+        problemDetail.setProperty("errors", errors);
+
+        return problemDetail;
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ErrorDto> handleUnreadableMessage() {
-        return ResponseEntity.badRequest().body(
-                new ErrorDto("invalid request body")
+    public ProblemDetail handleUnreadableMessage(
+            HttpServletRequest request
+    ) {
+        return createProblemDetail(
+                HttpStatus.BAD_REQUEST,
+                "Invalid Request Body",
+                "The request body is malformed or contains invalid JSON.",
+                request
         );
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ErrorDto> handleNotFoundException(ResourceNotFoundException exception) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                new ErrorDto(exception.getMessage())
+    public ProblemDetail handleResourceNotFoundException(
+            ResourceNotFoundException exception,
+            HttpServletRequest request
+    ) {
+        return createProblemDetail(
+                HttpStatus.NOT_FOUND,
+                "Resource Not Found",
+                exception.getMessage(),
+                request
         );
     }
 
     @ExceptionHandler(EmailAlreadyExist.class)
-    public ResponseEntity<ErrorDto> handleEmailAlreadyExist(EmailAlreadyExist exception) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(
-                new ErrorDto(exception.getMessage())
+    public ProblemDetail handleEmailAlreadyExist(
+            EmailAlreadyExist exception,
+            HttpServletRequest request
+    ) {
+        return createProblemDetail(
+                HttpStatus.CONFLICT,
+                "Email Already Exist",
+                exception.getMessage(),
+                request
         );
     }
 
     @ExceptionHandler(UnauthorizedException.class)
-    public ResponseEntity<ErrorDto> handleUnauthorizedException(UnauthorizedException exception) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
-                new ErrorDto(exception.getMessage())
-        );
-    }
-
-    @ExceptionHandler(ForbiddenException.class)
-    public ResponseEntity<ErrorDto> handleForbiddenException(ForbiddenException exception) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
-                new ErrorDto(exception.getMessage())
+    public ProblemDetail handleUnauthorizedException(UnauthorizedException exception, HttpServletRequest request) {
+        return createProblemDetail(
+                HttpStatus.FORBIDDEN,
+                "Unauthorized",
+                exception.getMessage(),
+                request
         );
     }
 
@@ -97,8 +137,22 @@ public class GlobalExceptionHandler {
             HttpRequestMethodNotSupportedException exception,
             HttpServletRequest request
     ) {
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.METHOD_NOT_ALLOWED, exception.getMessage());
-        problemDetail.setDetail("Method Not Allowed");
+        return createProblemDetail(
+                HttpStatus.METHOD_NOT_ALLOWED,
+                "Method Not Allowed",
+                exception.getMessage(),
+                request
+        );
+    }
+
+    private ProblemDetail createProblemDetail(
+            HttpStatus status,
+            String title,
+            String detail,
+            HttpServletRequest request
+    ) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(status, detail);
+        problemDetail.setTitle(title);
         problemDetail.setInstance(URI.create(request.getRequestURI()));
         return problemDetail;
     }
