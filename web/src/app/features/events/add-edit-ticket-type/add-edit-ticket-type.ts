@@ -3,7 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { EventDetailResponse } from '@features/events/models/event.models';
 import { EventsService } from '@features/events/services/events-service';
 import { SnackbarService } from '@shared/services/snackbar-service';
-import { FormBuilder } from '@angular/forms';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { EventHero } from '../components/event-hero/event-hero';
 
@@ -14,7 +13,6 @@ import { EventHero } from '../components/event-hero/event-hero';
   styleUrl: './add-edit-ticket-type.css',
 })
 export class AddEditTicketType implements OnInit {
-  private fb = inject(FormBuilder);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private eventService = inject(EventsService);
