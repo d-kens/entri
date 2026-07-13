@@ -1,8 +1,8 @@
 package com.entri.modules.events.service;
 
 import com.entri.common.dto.AuthenticatedUser;
-import com.entri.common.exception.ForbiddenException;
-import com.entri.common.exception.NotFoundException;
+import com.entri.common.exception.ResourceNotFoundException;
+import com.entri.common.exception.UnauthorizedException;
 import com.entri.modules.events.dto.CreateTicketTypeRequest;
 import com.entri.modules.events.dto.TicketTypeResponse;
 import com.entri.modules.events.entity.Event;
@@ -26,12 +26,12 @@ public class TicketTypeService {
             AuthenticatedUser authenticatedUser
     ) {
         Event event = eventRepository.findByExternalId(eventExternalId)
-                .orElseThrow(() -> new NotFoundException("Event with ID " + eventExternalId + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Event with ID " + eventExternalId + " not found"));
 
         boolean isEventOwner = event.getOrganizer().getExternalKey().equals(authenticatedUser.userExternalKey());
 
         if (!isEventOwner && !authenticatedUser.isPlatformAdmin()) {
-            throw new ForbiddenException("Only the event owner or a platform administrator can perform this action.");
+            throw new UnauthorizedException("Only the event owner or a platform administrator can perform this action.");
         }
 
         TicketType ticketType = TicketType.builder()

@@ -1,6 +1,6 @@
 package com.entri.modules.users.service;
 
-import com.entri.common.exception.NotFoundException;
+import com.entri.common.exception.ResourceNotFoundException;
 import com.entri.common.utils.PhoneNumberUtils;
 import com.entri.modules.users.dto.CreateUserRequest;
 import com.entri.modules.users.dto.UserResponse;
@@ -50,13 +50,13 @@ public class UserService {
     @Transactional(readOnly = true)
     public User findEntityByExternalKey(String externalKey) {
         return userRepository.findByExternalKey(externalKey)
-                .orElseThrow(() -> new NotFoundException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
     @Transactional(readOnly = true)
     public User findByEmail(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new NotFoundException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
     public void changeUserPassword(User user, String newPassword) {
