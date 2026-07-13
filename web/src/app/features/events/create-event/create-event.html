@@ -100,31 +100,6 @@
               </mat-form-field>
             </div>
 
-            <div class="section-divider"></div>
-
-            <div class="form-section">
-              <div class="visibility-setting">
-                <div class="visibility-row">
-                  <mat-icon class="vis-icon">{{
-                    infoForm.get('isPublic')?.value ? 'public' : 'lock_outline'
-                  }}</mat-icon>
-                  <div class="vis-text">
-                    <p class="vis-label">
-                      {{ infoForm.get('isPublic')?.value ? 'Public event' : 'Private event' }}
-                    </p>
-                    <p class="vis-desc">
-                      {{
-                        infoForm.get('isPublic')?.value
-                          ? 'Listed — anyone can discover and register'
-                          : 'Only accessible to people with the direct link'
-                      }}
-                    </p>
-                  </div>
-                  <mat-slide-toggle formControlName="isPublic"></mat-slide-toggle>
-                </div>
-              </div>
-            </div>
-
             <div class="step-actions">
               <span class="step-counter">Step 1 of 3</span>
               <button mat-flat-button type="button" (click)="nextStep()">
@@ -483,7 +458,7 @@
                           </mat-form-field>
                         </div>
 
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-center">
+                        <div class="items-center">
                           <mat-form-field
                             appearance="outline"
                             subscriptSizing="dynamic"
@@ -493,18 +468,12 @@
                             <input
                               matInput
                               type="number"
-                              formControlName="maxPerOrder"
+                              formControlName="maxTicketsPerOrder"
                               min="1"
                               placeholder="No limit"
                             />
                             <mat-hint>Optional</mat-hint>
                           </mat-form-field>
-                          <div class="ticket-hidden-field">
-                            <mat-checkbox formControlName="isHidden"
-                              >Hidden from listing</mat-checkbox
-                            >
-                            <p class="ticket-hidden-hint">Only accessible via direct link</p>
-                          </div>
                         </div>
                       </div>
                     }

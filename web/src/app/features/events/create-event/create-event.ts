@@ -45,10 +45,9 @@ type TicketTypeForm = {
   price: FormControl<number>;
   currency: FormControl<string>;
   quantity: FormControl<number>;
-  maxPerOrder: FormControl<number | null>;
+  maxTicketsPerOrder: FormControl<number>;
   saleStartDate: FormControl<Date | null>;
   saleEndDate: FormControl<Date | null>;
-  isHidden: FormControl<boolean>;
 };
 
 @Component({
@@ -188,14 +187,13 @@ export class CreateEvent implements OnInit {
                 Validators.required,
                 Validators.min(1),
               ]),
-              maxPerOrder: this.fb.control<number | null>(t.maxPerOrder ?? null),
+              maxTicketsPerOrder: this.fb.nonNullable.control<number>(t.maxTicketsPerOrder),
               saleStartDate: this.fb.control<Date | null>(
                 t.saleStartDate ? new Date(t.saleStartDate) : null,
               ),
               saleEndDate: this.fb.control<Date | null>(
                 t.saleEndDate ? new Date(t.saleEndDate) : null,
               ),
-              isHidden: this.fb.nonNullable.control(t.isHidden),
             }),
           );
         });
@@ -232,10 +230,9 @@ export class CreateEvent implements OnInit {
         price: this.fb.nonNullable.control(0, [Validators.required, Validators.min(0)]),
         currency: this.fb.nonNullable.control('KES', Validators.required),
         quantity: this.fb.nonNullable.control(100, [Validators.required, Validators.min(1)]),
-        maxPerOrder: this.fb.control<number | null>(null),
+        maxTicketsPerOrder: this.fb.nonNullable.control(1, [Validators.required]),
         saleStartDate: this.fb.control<Date | null>(null),
         saleEndDate: this.fb.control<Date | null>(null),
-        isHidden: this.fb.nonNullable.control(false),
       }),
     );
   }
@@ -392,10 +389,9 @@ export class CreateEvent implements OnInit {
           price: t.price,
           currency: t.currency,
           quantity: t.quantity,
-          maxPerOrder: t.maxPerOrder,
+          maxTicketsPerOrder: t.maxTicketsPerOrder,
           saleStartDate: t.saleStartDate ? t.saleStartDate.toISOString() : null,
           saleEndDate: t.saleEndDate ? t.saleEndDate.toISOString() : null,
-          isHidden: t.isHidden,
         };
       }),
     };

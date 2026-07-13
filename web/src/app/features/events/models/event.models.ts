@@ -20,10 +20,9 @@ export type TicketTypeRequest = {
   price: number;
   currency: string;
   quantity: number;
-  maxPerOrder?: number | null;
+  maxTicketsPerOrder: number;
   saleStartDate?: string | null;
   saleEndDate?: string | null;
-  isHidden: boolean;
 };
 
 export type EventRequest = {
@@ -46,7 +45,7 @@ export type TicketTypeResponse = {
   price: number;
   currency: string;
   quantity: number;
-  maxPerOrder?: number;
+  maxTicketsPerOrder: number;
   saleStartDate?: string;
   saleEndDate?: string;
   status: string;
