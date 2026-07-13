@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, inject, input } from '@angular/core';
+import { Component, ElementRef, inject, input } from '@angular/core';
 
 @Component({
   selector: 'button[appButton], a[appButton]',
@@ -16,6 +16,7 @@ import { Component, ElementRef, HostListener, inject, input } from '@angular/cor
     '[class.btn-loading]': 'loading()',
     '[attr.disabled]': 'isButton && (loading() || null)',
     '[attr.aria-busy]': 'loading() ? "true" : "false"',
+    '(click)': 'onHostClick($event)',
   },
 })
 export class EntriButton {
@@ -25,7 +26,6 @@ export class EntriButton {
 
   protected readonly isButton = inject(ElementRef).nativeElement.tagName.toLowerCase() === 'button';
 
-  @HostListener('click', ['$event'])
   onHostClick(event: Event) {
     if (this.loading() && !this.isButton) {
       event.preventDefault();
