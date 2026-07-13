@@ -1,6 +1,6 @@
 package com.entri.modules.service;
 
-import com.entri.common.exception.NotFoundException;
+import com.entri.common.exception.ResourceNotFoundException;
 import com.entri.common.exception.UnauthorizedException;
 import com.entri.modules.notification.event.NotificationEvent;
 import com.entri.modules.users.dto.ResetPasswordRequest;
@@ -64,7 +64,7 @@ class PasswordResetServiceTest {
     @Test
     void forgotPassword_unknownEmail_doesNothingAndDoesNotRevealUserExistence() {
         injectFields();
-        when(userService.findByEmail("unknown@example.com")).thenThrow(new NotFoundException("User not found"));
+        when(userService.findByEmail("unknown@example.com")).thenThrow(new ResourceNotFoundException("User not found"));
 
         passwordResetService.forgotPassword("unknown@example.com");
 
