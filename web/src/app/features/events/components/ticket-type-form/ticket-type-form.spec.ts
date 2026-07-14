@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AddEditTicketType } from './add-edit-ticket-type';
+import { TicketTypeForm } from './ticket-type-form';
 
-describe('AddEditTicketType', () => {
-  let component: AddEditTicketType;
-  let fixture: ComponentFixture<AddEditTicketType>;
+describe('TicketTypeForm', () => {
+  let component: TicketTypeForm;
+  let fixture: ComponentFixture<TicketTypeForm>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AddEditTicketType],
+      imports: [TicketTypeForm],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(AddEditTicketType);
+    fixture = TestBed.createComponent(TicketTypeForm);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

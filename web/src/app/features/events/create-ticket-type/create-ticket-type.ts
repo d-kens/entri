@@ -5,25 +5,18 @@ import { EventsService } from '@features/events/services/events-service';
 import { SnackbarService } from '@shared/services/snackbar-service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { EventHero } from '../components/event-hero/event-hero';
-import { form, min, required } from '@angular/forms/signals';
-
-export interface TicketTypeFormData {
-  name: string;
-  price: number;
-  quantity: number;
-  description: string;
-  salesStartDate: string;
-  salesEndDate: string;
-  maxPerOrder: number;
-}
+import {
+  TicketTypeForm,
+  TicketTypeFormData,
+} from '@features/events/components/ticket-type-form/ticket-type-form';
 
 @Component({
-  selector: 'app-add-edit-ticket-type',
-  imports: [MatProgressSpinnerModule, EventHero],
-  templateUrl: './add-edit-ticket-type.html',
-  styleUrl: './add-edit-ticket-type.css',
+  selector: 'app-create-ticket-type',
+  imports: [MatProgressSpinnerModule, EventHero, TicketTypeForm],
+  templateUrl: './create-ticket-type.html',
+  styleUrl: './create-ticket-type.css',
 })
-export class AddEditTicketType implements OnInit {
+export class CreateTicketType implements OnInit {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private eventService = inject(EventsService);
@@ -32,23 +25,15 @@ export class AddEditTicketType implements OnInit {
   ticketType = signal<TicketTypeFormData>({
     name: '',
     price: 1,
-    quantity: 0,
+    quantity: 1,
     description: '',
     salesStartDate: '',
     salesEndDate: '',
-    maxPerOrder: 0,
+    maxPerOrder: 1,
   });
 
-  ticketTypeForm = form(this.ticketType, (fields) => {
-    required(fields.name);
-    required(fields.price);
-    required(fields.quantity);
-
-    min(fields.price, 1, { message: 'Price must be a minimum of KES 1' });
-    min(fields.quantity, 1, { message: 'Quantity must be a minimum of 1' });
-  });
-
-  isLoading = signal(true);
+  isLoadingEvent = signal(true);
+  isSaving = signal(false);
   eventId = signal(this.route.snapshot.paramMap.get('eventId')!);
   event = signal<EventDetailResponse | null>(null);
 
@@ -56,18 +41,20 @@ export class AddEditTicketType implements OnInit {
     this.eventService.getEvent(this.eventId()).subscribe({
       next: (event) => {
         this.event.set(event);
-        console.log(event);
-        this.isLoading.set(false);
+        this.isLoadingEvent.set(false);
       },
       error: () => {
         this.snackbarService.showError('Failed to load event');
-        this.isLoading.set(false);
+        this.isLoadingEvent.set(false);
         this.router.navigate(['/dashboard/events']);
       },
     });
   }
 
-  submit() {
-    this.isLoading.set(true);
+  onSaved(data: TicketTypeFormData): void {
+    this.isSaving.set(true);
+    // TODO: call API with data
+    console.log(data);
+    this.isSaving.set(false);
   }
 }
