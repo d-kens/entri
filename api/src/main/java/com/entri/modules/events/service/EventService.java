@@ -130,8 +130,6 @@ public class EventService {
         event.setEndTime(request.endTime());
         event.setBannerUrl(request.bannerUrl());
 
-        // TODO: Update Ticket Types When Updating Event (When Ticket Type Data Is Sent)
-
         eventRepository.save(event);
         return eventMapper.toEventResponse(event);
     }
