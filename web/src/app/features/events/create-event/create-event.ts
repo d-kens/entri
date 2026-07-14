@@ -43,7 +43,6 @@ type TicketTypeForm = {
   name: FormControl<string>;
   description: FormControl<string>;
   price: FormControl<number>;
-  currency: FormControl<string>;
   quantity: FormControl<number>;
   maxTicketsPerOrder: FormControl<number>;
   saleStartDate: FormControl<Date | null>;
@@ -181,7 +180,6 @@ export class CreateEvent implements OnInit {
               name: this.fb.nonNullable.control(t.name, Validators.required),
               description: this.fb.nonNullable.control(t.description ?? ''),
               price: this.fb.nonNullable.control(t.price, [Validators.required, Validators.min(0)]),
-              currency: this.fb.nonNullable.control(t.currency, Validators.required),
               quantity: this.fb.nonNullable.control(t.quantity, [
                 Validators.required,
                 Validators.min(1),
@@ -227,7 +225,6 @@ export class CreateEvent implements OnInit {
         name: this.fb.nonNullable.control('', Validators.required),
         description: this.fb.nonNullable.control(''),
         price: this.fb.nonNullable.control(0, [Validators.required, Validators.min(0)]),
-        currency: this.fb.nonNullable.control('KES', Validators.required),
         quantity: this.fb.nonNullable.control(100, [Validators.required, Validators.min(1)]),
         maxTicketsPerOrder: this.fb.nonNullable.control(1, [Validators.required]),
         saleStartDate: this.fb.control<Date | null>(null),
@@ -367,7 +364,7 @@ export class CreateEvent implements OnInit {
           name: t.name,
           description: t.description || null,
           price: t.price,
-          currency: t.currency,
+          currency: 'KES',
           quantity: t.quantity,
           maxTicketsPerOrder: t.maxTicketsPerOrder,
           saleStartDate: t.saleStartDate ? t.saleStartDate.toISOString() : null,
