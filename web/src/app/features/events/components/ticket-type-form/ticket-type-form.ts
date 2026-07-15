@@ -6,7 +6,7 @@ import {
   OnInit,
   output,
   runInInjectionContext,
-  WritableSignal,
+  signal,
 } from '@angular/core';
 import { form, min, required, submit, FormField } from '@angular/forms/signals';
 import {
@@ -34,7 +34,7 @@ export interface TicketTypeFormData {
   description: string;
   salesStartDate: string;
   salesEndDate: string;
-  maxPerOrder: number | string;
+  maxTicketsPerOrder: number | string;
 }
 
 @Component({
@@ -61,17 +61,30 @@ export interface TicketTypeFormData {
 export class TicketTypeForm implements OnInit {
   private injector = inject(Injector);
 
-  data = input.required<WritableSignal<TicketTypeFormData>>();
+  initialData = input<TicketTypeFormData>();
   submitLabel = input('Add Ticket Type');
   isLoading = input(false);
 
   added = output<TicketTypeFormData>();
 
+  private formData = signal<TicketTypeFormData>({
+    name: '',
+    price: '',
+    quantity: '',
+    description: '',
+    salesStartDate: '',
+    salesEndDate: '',
+    maxTicketsPerOrder: '',
+  });
+
   ticketTypeForm!: ReturnType<typeof form<TicketTypeFormData>>;
 
   ngOnInit(): void {
+    const initial = this.initialData();
+    if (initial) this.formData.set(initial);
+
     this.ticketTypeForm = runInInjectionContext(this.injector, () =>
-      form(this.data(), (fields) => {
+      form(this.formData, (fields) => {
         required(fields.name, { message: 'Name is required' });
         required(fields.price, { message: 'Price is required' });
         required(fields.quantity, { message: 'Quantity is required' });
@@ -84,7 +97,7 @@ export class TicketTypeForm implements OnInit {
 
   async onSubmit(): Promise<void> {
     await submit(this.ticketTypeForm, async () => {
-      this.added.emit(this.data()());
+      this.added.emit(this.formData());
     });
   }
 }

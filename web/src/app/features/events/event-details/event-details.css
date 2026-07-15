@@ -76,22 +76,24 @@
 .ticket-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
 .ticket-row {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
   padding: 16px 20px;
   border: 1px solid var(--mat-sys-outline-variant);
   border-radius: var(--mat-sys-corner-medium);
-  gap: 16px;
-  transition: box-shadow 0.15s ease;
+  transition:
+    box-shadow 0.15s ease,
+    border-color 0.15s ease;
 }
 
 .ticket-row:hover {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  border-color: var(--mat-sys-outline);
 }
 
 .ticket-row-info {
@@ -99,13 +101,14 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 4px;
 }
 
-.ticket-row-name-row {
+.ticket-row-title {
   display: flex;
   align-items: center;
   gap: 8px;
+  flex-wrap: wrap;
 }
 
 .ticket-row-name {
@@ -119,40 +122,70 @@
   font-size: 0.8125rem;
   color: var(--mat-sys-on-surface-variant);
   margin: 0;
-}
-
-.ticket-row-qty {
-  font-size: 0.75rem;
-  color: var(--mat-sys-outline);
-  margin: 0;
+  line-height: 1.5;
 }
 
 .ticket-row-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2px;
+}
+
+.ticket-row-qty,
+.ticket-row-sale {
+  font-size: 0.8125rem;
+  color: var(--mat-sys-on-surface);
+}
+
+.ticket-row-meta-sep {
+  font-size: 0.75rem;
+  color: var(--mat-sys-outline-variant);
+}
+
+.ticket-row-aside {
   flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
 }
 
 .ticket-row-price {
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 1.125rem;
   color: var(--mat-sys-on-surface);
+  line-height: 1;
+  white-space: nowrap;
+  margin: 0;
 }
 
-.ticket-hidden-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  padding: 1px 7px;
-  border-radius: 999px;
-  font-size: 0.7rem;
+.ticket-row-currency {
+  font-size: 0.8125rem;
   font-weight: 500;
-  background: var(--mat-sys-surface-variant);
   color: var(--mat-sys-on-surface-variant);
 }
 
-.ticket-hidden-badge mat-icon {
-  font-size: 12px;
-  width: 12px;
-  height: 12px;
+.ticket-status-badge {
+  flex-shrink: 0;
+  font-size: 0.625rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--mat-sys-surface-container);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.ticket-status-badge[data-status='ACTIVE'] {
+  background: color-mix(in srgb, var(--mat-sys-primary) 15%, transparent);
+  color: var(--mat-sys-primary);
+}
+
+.ticket-status-badge[data-status='SOLD_OUT'] {
+  background: color-mix(in srgb, var(--mat-sys-error) 15%, transparent);
+  color: var(--mat-sys-error);
 }
 
 .tickets-empty {
