@@ -38,8 +38,7 @@ public class EventService {
 
     public PaginationResponse<EventResponse> getEvents(EventFilter filter) {
         Specification<Event> spec = buildSpecification(filter)
-                .and(EventSpecifications.hasStatus(EventStatus.PUBLISHED))
-                .and(EventSpecifications.isPublic());
+                .and(EventSpecifications.hasStatus(EventStatus.PUBLISHED));
         return fetchPage(filter, spec);
     }
 
@@ -86,7 +85,6 @@ public class EventService {
                 .endTime(request.endTime())
                 .bannerUrl(request.bannerUrl())
                 .status(EventStatus.DRAFT)
-                .isPublic(request.isPublic() == null || request.isPublic())
                 .build();
 
         if (request.ticketTypes() != null && !request.ticketTypes().isEmpty()) {
@@ -131,9 +129,6 @@ public class EventService {
         event.setStartTime(request.startTime());
         event.setEndTime(request.endTime());
         event.setBannerUrl(request.bannerUrl());
-        if (request.isPublic() != null) {
-            event.setPublic(request.isPublic());
-        }
 
         eventRepository.save(event);
         return eventMapper.toEventResponse(event);

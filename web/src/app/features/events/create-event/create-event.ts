@@ -21,13 +21,12 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { EventsService } from '../services/events-service';
 import { SnackbarService } from '@shared/services/snackbar-service';
-import { CategoryResponse, EventRequest } from '@features/auth/models/event.models';
+import { CategoryResponse, EventRequest } from '@features/events/models/event.models';
 
 type InfoForm = {
   title: FormControl<string>;
   description: FormControl<string>;
   categoryId: FormControl<number | null>;
-  isPublic: FormControl<boolean>;
 };
 
 type VenueForm = {
@@ -44,12 +43,10 @@ type TicketTypeForm = {
   name: FormControl<string>;
   description: FormControl<string>;
   price: FormControl<number>;
-  currency: FormControl<string>;
   quantity: FormControl<number>;
-  maxPerOrder: FormControl<number | null>;
+  maxTicketsPerOrder: FormControl<number>;
   saleStartDate: FormControl<Date | null>;
   saleEndDate: FormControl<Date | null>;
-  isHidden: FormControl<boolean>;
 };
 
 @Component({
@@ -89,7 +86,6 @@ export class CreateEvent implements OnInit {
   bannerPreview = signal<string | null>(null);
   bannerUrl = signal<string | null>(null);
   currentStep = signal(0);
-  expandedTickets = signal(new Set<number>());
 
   readonly steps = [
     { index: 0, name: 'Event Details', desc: 'Title, category & visibility' },
@@ -104,7 +100,6 @@ export class CreateEvent implements OnInit {
     title: ['', [Validators.required, Validators.minLength(3)]],
     description: ['', [Validators.required, Validators.minLength(20)]],
     categoryId: this.fb.control<number | null>(null, Validators.required),
-    isPublic: [true],
   });
 
   venueForm: FormGroup<VenueForm> = this.fb.nonNullable.group({
@@ -148,7 +143,6 @@ export class CreateEvent implements OnInit {
         this.infoForm.patchValue({
           title: ev.title,
           description: ev.description,
-          isPublic: ev.isPublic,
         });
 
         // patch categoryId once categories may already be loaded
@@ -186,19 +180,17 @@ export class CreateEvent implements OnInit {
               name: this.fb.nonNullable.control(t.name, Validators.required),
               description: this.fb.nonNullable.control(t.description ?? ''),
               price: this.fb.nonNullable.control(t.price, [Validators.required, Validators.min(0)]),
-              currency: this.fb.nonNullable.control(t.currency, Validators.required),
               quantity: this.fb.nonNullable.control(t.quantity, [
                 Validators.required,
                 Validators.min(1),
               ]),
-              maxPerOrder: this.fb.control<number | null>(t.maxPerOrder ?? null),
+              maxTicketsPerOrder: this.fb.nonNullable.control<number>(t.maxTicketsPerOrder),
               saleStartDate: this.fb.control<Date | null>(
                 t.saleStartDate ? new Date(t.saleStartDate) : null,
               ),
               saleEndDate: this.fb.control<Date | null>(
                 t.saleEndDate ? new Date(t.saleEndDate) : null,
               ),
-              isHidden: this.fb.nonNullable.control(t.isHidden),
             }),
           );
         });
@@ -233,41 +225,20 @@ export class CreateEvent implements OnInit {
         name: this.fb.nonNullable.control('', Validators.required),
         description: this.fb.nonNullable.control(''),
         price: this.fb.nonNullable.control(0, [Validators.required, Validators.min(0)]),
-        currency: this.fb.nonNullable.control('KES', Validators.required),
         quantity: this.fb.nonNullable.control(100, [Validators.required, Validators.min(1)]),
-        maxPerOrder: this.fb.control<number | null>(null),
+        maxTicketsPerOrder: this.fb.nonNullable.control(1, [Validators.required]),
         saleStartDate: this.fb.control<Date | null>(null),
         saleEndDate: this.fb.control<Date | null>(null),
-        isHidden: this.fb.nonNullable.control(false),
       }),
     );
   }
 
   removeTicketType(index: number): void {
     this.ticketTypes.removeAt(index);
-    this.expandedTickets.update((set) => {
-      const next = new Set<number>();
-      set.forEach((i) => {
-        if (i !== index) next.add(i > index ? i - 1 : i);
-      });
-      return next;
-    });
   }
 
   ticketGroup(index: number): FormGroup<TicketTypeForm> {
     return this.ticketTypes.at(index);
-  }
-
-  toggleAdvanced(index: number): void {
-    this.expandedTickets.update((set) => {
-      const next = new Set(set);
-      next.has(index) ? next.delete(index) : next.add(index);
-      return next;
-    });
-  }
-
-  isExpanded(index: number): boolean {
-    return this.expandedTickets().has(index);
   }
 
   onBannerSelected(event: Event): void {
@@ -381,7 +352,6 @@ export class CreateEvent implements OnInit {
       title: info.title,
       description: info.description,
       categoryId: info.categoryId as number,
-      isPublic: info.isPublic,
       venueName: venue.venueName,
       venueCity: venue.venueCity,
       venueCountry: venue.venueCountry,
@@ -394,12 +364,11 @@ export class CreateEvent implements OnInit {
           name: t.name,
           description: t.description || null,
           price: t.price,
-          currency: t.currency,
+          currency: 'KES',
           quantity: t.quantity,
-          maxPerOrder: t.maxPerOrder,
+          maxTicketsPerOrder: t.maxTicketsPerOrder,
           saleStartDate: t.saleStartDate ? t.saleStartDate.toISOString() : null,
           saleEndDate: t.saleEndDate ? t.saleEndDate.toISOString() : null,
-          isHidden: t.isHidden,
         };
       }),
     };

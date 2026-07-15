@@ -1,0 +1,48 @@
+<div class="hero" [class.hero--no-banner]="!event().bannerUrl">
+  @if (event().bannerUrl) {
+    <img class="hero-img" [src]="event().bannerUrl" [alt]="event().title" />
+  }
+
+  <div class="hero-overlay"></div>
+
+  <a mat-icon-button class="hero-back" [routerLink]="backLink()">
+    <mat-icon>arrow_back</mat-icon>
+  </a>
+
+  <div class="hero-content">
+    <div class="hero-meta">
+      <span class="status-badge status-{{ event().status.toLowerCase() }}">
+        {{ event().status | titlecase }}
+      </span>
+      <span class="hero-category">{{ event().categoryName }}</span>
+    </div>
+    <div class="hero-bottom">
+      <h1 class="hero-title">{{ event().title }}</h1>
+      <div class="hero-actions">
+        <ng-content select="[heroActions]" />
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="info-strip">
+  <div class="info-strip-item">
+    <mat-icon>location_on</mat-icon>
+    <span>{{ event().venueName }}, {{ event().venueCity }}, {{ event().venueCountry }}</span>
+  </div>
+  <div class="info-strip-divider"></div>
+  <div class="info-strip-item">
+    <mat-icon>calendar_today</mat-icon>
+    <span>{{ event().startTime | date: 'EEE, d MMM yyyy' }}</span>
+  </div>
+  <div class="info-strip-divider"></div>
+  <div class="info-strip-item">
+    <mat-icon>schedule</mat-icon>
+    <span>{{ event().startTime | date: 'HH:mm' }} — {{ event().endTime | date: 'HH:mm' }}</span>
+  </div>
+  <div class="info-strip-divider"></div>
+  <div class="info-strip-item">
+    <mat-icon>{{ event().isPublic ? 'public' : 'lock' }}</mat-icon>
+    <span>{{ event().isPublic ? 'Public' : 'Private' }}</span>
+  </div>
+</div>

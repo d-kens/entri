@@ -9,8 +9,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatMenuModule } from '@angular/material/menu';
 import { EventsService } from '@features/events/services/events-service';
-import { EventResponse } from '@features/auth/models/event.models';
-import { PageResponse } from '@features/auth/models/common.model';
+import { EventResponse } from '@features/events/models/event.models';
+import { PageResponse } from '@shared/models/common.model';
 
 @Component({
   selector: 'app-events-list',

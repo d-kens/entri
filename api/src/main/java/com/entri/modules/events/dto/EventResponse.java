@@ -16,7 +16,6 @@ public record EventResponse(
         Instant endTime,
         String bannerUrl,
         EventStatus status,
-        boolean isPublic,
         Instant publishedAt,
         Instant dateCreated
 ) {

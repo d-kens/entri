@@ -9,7 +9,9 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { EventsService } from '../services/events-service';
 import { SnackbarService } from '@shared/services/snackbar-service';
-import { EventDetailResponse, EventResponse } from '@features/auth/models/event.models';
+import { EventDetailResponse } from '@features/events/models/event.models';
+import { EventHero } from '../components/event-hero/event-hero';
+import { EntriButton } from '@shared/components/button/entri-button.component';
 
 @Component({
   selector: 'app-event-details',
@@ -23,6 +25,8 @@ import { EventDetailResponse, EventResponse } from '@features/auth/models/event.
     MatProgressSpinnerModule,
     MatDividerModule,
     MatTooltipModule,
+    EventHero,
+    EntriButton,
   ],
   templateUrl: './event-details.html',
   styleUrl: './event-details.css',
@@ -37,8 +41,8 @@ export class EventDetails implements OnInit {
   isLoading = signal(true);
 
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id')!;
-    this.eventsService.getEvent(id).subscribe({
+    const eventId = signal(this.route.snapshot.paramMap.get('id')!);
+    this.eventsService.getEvent(eventId()).subscribe({
       next: (event) => {
         this.event.set(event);
         this.isLoading.set(false);

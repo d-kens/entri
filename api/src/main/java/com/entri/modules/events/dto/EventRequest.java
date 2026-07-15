@@ -37,8 +37,6 @@ public record EventRequest(
         @NotBlank(message = "Banner image is required")
         String bannerUrl,
 
-        Boolean isPublic,
-
         @Valid
         List<CreateTicketTypeRequest> ticketTypes
 ) {

@@ -100,31 +100,6 @@
               </mat-form-field>
             </div>
 
-            <div class="section-divider"></div>
-
-            <div class="form-section">
-              <div class="visibility-setting">
-                <div class="visibility-row">
-                  <mat-icon class="vis-icon">{{
-                    infoForm.get('isPublic')?.value ? 'public' : 'lock_outline'
-                  }}</mat-icon>
-                  <div class="vis-text">
-                    <p class="vis-label">
-                      {{ infoForm.get('isPublic')?.value ? 'Public event' : 'Private event' }}
-                    </p>
-                    <p class="vis-desc">
-                      {{
-                        infoForm.get('isPublic')?.value
-                          ? 'Listed — anyone can discover and register'
-                          : 'Only accessible to people with the direct link'
-                      }}
-                    </p>
-                  </div>
-                  <mat-slide-toggle formControlName="isPublic"></mat-slide-toggle>
-                </div>
-              </div>
-            </div>
-
             <div class="step-actions">
               <span class="step-counter">Step 1 of 3</span>
               <button mat-flat-button type="button" (click)="nextStep()">
@@ -426,88 +401,51 @@
                       <mat-hint>Optional</mat-hint>
                     </mat-form-field>
 
-                    <!-- Advanced options toggle -->
-                    <button
-                      type="button"
-                      class="ticket-advanced-toggle"
-                      (click)="toggleAdvanced($index)"
-                    >
-                      <mat-icon class="ticket-advanced-icon">{{
-                        isExpanded($index) ? 'expand_less' : 'expand_more'
-                      }}</mat-icon>
-                      {{ isExpanded($index) ? 'Hide' : 'Show' }} advanced options
-                    </button>
+                    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
+                      <mat-label>Max per order</mat-label>
+                      <input
+                        matInput
+                        type="number"
+                        formControlName="maxTicketsPerOrder"
+                        min="1"
+                        placeholder="No limit"
+                      />
+                    </mat-form-field>
 
-                    @if (isExpanded($index)) {
-                      <div class="ticket-advanced">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-start">
-                          <mat-form-field
-                            appearance="outline"
-                            subscriptSizing="dynamic"
-                            class="w-full"
-                          >
-                            <mat-label>Sale opens</mat-label>
-                            <input
-                              matInput
-                              [matDatepicker]="saleStartPicker"
-                              formControlName="saleStartDate"
-                              placeholder="Select date"
-                              readonly
-                            />
-                            <mat-datepicker-toggle
-                              matIconSuffix
-                              [for]="saleStartPicker"
-                            ></mat-datepicker-toggle>
-                            <mat-datepicker #saleStartPicker></mat-datepicker>
-                            <mat-hint>Optional</mat-hint>
-                          </mat-form-field>
-                          <mat-form-field
-                            appearance="outline"
-                            subscriptSizing="dynamic"
-                            class="w-full"
-                          >
-                            <mat-label>Sale closes</mat-label>
-                            <input
-                              matInput
-                              [matDatepicker]="saleEndPicker"
-                              formControlName="saleEndDate"
-                              placeholder="Select date"
-                              readonly
-                            />
-                            <mat-datepicker-toggle
-                              matIconSuffix
-                              [for]="saleEndPicker"
-                            ></mat-datepicker-toggle>
-                            <mat-datepicker #saleEndPicker></mat-datepicker>
-                            <mat-hint>Optional</mat-hint>
-                          </mat-form-field>
-                        </div>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-center">
-                          <mat-form-field
-                            appearance="outline"
-                            subscriptSizing="dynamic"
-                            class="w-full"
-                          >
-                            <mat-label>Max per order</mat-label>
-                            <input
-                              matInput
-                              type="number"
-                              formControlName="maxPerOrder"
-                              min="1"
-                              placeholder="No limit"
-                            />
-                            <mat-hint>Optional</mat-hint>
-                          </mat-form-field>
-                          <div class="ticket-hidden-field">
-                            <mat-checkbox formControlName="isHidden"
-                              >Hidden from listing</mat-checkbox
-                            >
-                            <p class="ticket-hidden-hint">Only accessible via direct link</p>
-                          </div>
-                        </div>
-                      </div>
-                    }
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-start">
+                      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
+                        <mat-label>Sale opens</mat-label>
+                        <input
+                          matInput
+                          [matDatepicker]="saleStartPicker"
+                          formControlName="saleStartDate"
+                          placeholder="Select date"
+                          readonly
+                        />
+                        <mat-datepicker-toggle
+                          matIconSuffix
+                          [for]="saleStartPicker"
+                        ></mat-datepicker-toggle>
+                        <mat-datepicker #saleStartPicker></mat-datepicker>
+                        <mat-hint>Optional</mat-hint>
+                      </mat-form-field>
+                      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
+                        <mat-label>Sale closes</mat-label>
+                        <input
+                          matInput
+                          [matDatepicker]="saleEndPicker"
+                          formControlName="saleEndDate"
+                          placeholder="Select date"
+                          readonly
+                        />
+                        <mat-datepicker-toggle
+                          matIconSuffix
+                          [for]="saleEndPicker"
+                        ></mat-datepicker-toggle>
+                        <mat-datepicker #saleEndPicker></mat-datepicker>
+                        <mat-hint>Optional</mat-hint>
+                      </mat-form-field>
+                    </div>
                   </div>
                 }
               </div>
