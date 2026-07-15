@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { EditTicketType } from '@features/events/edit-ticket-type/edit-ticket-type';
 
 export const EVENTS_ROUTES: Routes = [
   {
@@ -20,5 +21,17 @@ export const EVENTS_ROUTES: Routes = [
     path: ':id/edit',
     loadComponent: () =>
       import('@features/events/create-event/create-event').then((m) => m.CreateEvent),
+  },
+  {
+    path: ':eventId/ticket-types',
+    loadComponent: () =>
+      import('@features/events/create-ticket-type/create-ticket-type').then(
+        (m) => m.CreateTicketType,
+      ),
+  },
+  {
+    path: ':eventId/ticket-types/:ticketTypeId/edit',
+    loadComponent: () =>
+      import('@features/events/edit-ticket-type/edit-ticket-type').then((m) => m.EditTicketType),
   },
 ];

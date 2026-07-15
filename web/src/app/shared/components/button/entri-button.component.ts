@@ -20,9 +20,9 @@ import { Component, ElementRef, inject, input } from '@angular/core';
   },
 })
 export class EntriButton {
-  readonly variant = input<'primary' | 'secondary' | 'outline' | 'ghost'>('primary');
-  readonly size = input<'sm' | 'md' | 'lg'>('md');
-  readonly loading = input(false);
+  variant = input<'primary' | 'secondary' | 'outline' | 'ghost'>('primary');
+  size = input<'sm' | 'md' | 'lg'>('md');
+  loading = input(false);
 
   protected readonly isButton = inject(ElementRef).nativeElement.tagName.toLowerCase() === 'button';
 

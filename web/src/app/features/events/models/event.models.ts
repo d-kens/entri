@@ -14,30 +14,28 @@ export type CategoryResponse = {
   name: string;
 };
 
-export type CreateTicketTypeRequest = {
+export type TicketTypeRequest = {
   name: string;
   description?: string | null;
   price: number;
   currency: string;
   quantity: number;
-  maxPerOrder?: number | null;
+  maxTicketsPerOrder: number;
   saleStartDate?: string | null;
   saleEndDate?: string | null;
-  isHidden: boolean;
 };
 
 export type EventRequest = {
   title: string;
   description: string;
   categoryId: number;
-  isPublic: boolean;
   venueName: string;
   venueCity: string;
   venueCountry: string;
   startTime: string;
   endTime: string;
   bannerUrl: string;
-  ticketTypes: CreateTicketTypeRequest[];
+  ticketTypes: TicketTypeRequest[];
 };
 
 export type TicketTypeResponse = {
@@ -47,11 +45,10 @@ export type TicketTypeResponse = {
   price: number;
   currency: string;
   quantity: number;
-  maxPerOrder?: number;
+  maxTicketsPerOrder: number;
   saleStartDate?: string;
   saleEndDate?: string;
   status: string;
-  isHidden: boolean;
 };
 
 export type EventResponse = {
@@ -66,7 +63,6 @@ export type EventResponse = {
   endTime: string;
   bannerUrl: string;
   status: 'DRAFT' | 'PUBLISHED' | 'CANCELLED';
-  isPublic: boolean;
   publishedAt?: string;
   dateCreated: string;
 };

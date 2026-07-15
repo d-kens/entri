@@ -1,0 +1,121 @@
+<div class="form-panel">
+  <div class="form-panel-header">
+    <div class="form-panel-header-icon">
+      <mat-icon>confirmation_number</mat-icon>
+    </div>
+    <div>
+      <p class="form-panel-header-title">Ticket Details</p>
+      <p class="form-panel-header-desc">Define pricing, quantity and availability</p>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <!-- Ticket Type Name -->
+    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
+      <mat-label>Name</mat-label>
+      <input matInput [formField]="ticketTypeForm.name" placeholder="e.g. General Admission" />
+      @for (error of ticketTypeForm.name().errors(); track error.message) {
+        <mat-error>{{ error.message }}</mat-error>
+      }
+    </mat-form-field>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-start">
+      <!-- Price -->
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
+        <mat-label>Price</mat-label>
+        <span matTextPrefix class="price-prefix">KES &nbsp;</span>
+        <input
+          matInput
+          type="number"
+          [formField]="ticketTypeForm.price"
+          step="0.01"
+          placeholder="0.00"
+        />
+        @for (error of ticketTypeForm.price().errors(); track error.message) {
+          <mat-error>{{ error.message }}</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Quantity -->
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
+        <mat-label>Quantity</mat-label>
+        <input matInput type="number" [formField]="ticketTypeForm.quantity" placeholder="100" />
+        @for (error of ticketTypeForm.quantity().errors(); track error.message) {
+          <mat-error>{{ error.message }}</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
+      <mat-label>Description</mat-label>
+      <input
+        matInput
+        [formField]="ticketTypeForm.description"
+        placeholder="What's included with this ticket?"
+      />
+      <mat-hint>Optional</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
+      <mat-label>Max per order</mat-label>
+      <input
+        matInput
+        type="number"
+        [formField]="ticketTypeForm.maxTicketsPerOrder"
+        placeholder="No limit"
+      />
+      @for (error of ticketTypeForm.maxTicketsPerOrder().errors(); track error.message) {
+        <mat-error>{{ error.message }}</mat-error>
+      }
+    </mat-form-field>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <div class="form-section">
+    <p class="form-group-label">Sale Window</p>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-start">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
+        <mat-label>Sale opens</mat-label>
+        <input
+          matInput
+          [matDatepicker]="saleStartPicker"
+          [formField]="ticketTypeForm.salesStartDate"
+          placeholder="Select date"
+          readonly
+        />
+        <mat-datepicker-toggle matIconSuffix [for]="saleStartPicker"></mat-datepicker-toggle>
+        <mat-datepicker #saleStartPicker></mat-datepicker>
+        <mat-hint>Optional</mat-hint>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
+        <mat-label>Sale closes</mat-label>
+        <input
+          matInput
+          [matDatepicker]="saleEndPicker"
+          [formField]="ticketTypeForm.salesEndDate"
+          placeholder="Select date"
+          readonly
+        />
+        <mat-datepicker-toggle matIconSuffix [for]="saleEndPicker"></mat-datepicker-toggle>
+        <mat-datepicker #saleEndPicker></mat-datepicker>
+        <mat-hint>Optional</mat-hint>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <button mat-flat-button (click)="onSubmit()" [disabled]="isLoading()">
+      @if (isLoading()) {
+        <div class="flex items-center gap-2">
+          <mat-progress-spinner diameter="16" mode="indeterminate" />
+          <span>Saving...</span>
+        </div>
+      } @else {
+        {{ submitLabel() }}
+      }
+    </button>
+  </div>
+</div>

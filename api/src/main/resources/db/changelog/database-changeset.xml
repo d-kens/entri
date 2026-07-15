@@ -287,4 +287,8 @@
         <dropColumn tableName="ticket_types" columnName="is_hidden"/>
     </changeSet>
 
+    <changeSet id="202607080001" author="d-kens">
+        <dropColumn tableName="events" columnName="is_public"/>
+    </changeSet>
+
 </databaseChangeLog>

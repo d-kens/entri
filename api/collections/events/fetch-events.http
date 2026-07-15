@@ -1,2 +1,2 @@
-GET {{baseUrl}}/api/events
+GET {{baseUrl}}/events
 Content-Type: application/json
