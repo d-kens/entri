@@ -24,12 +24,12 @@ export class CreateTicketType implements OnInit {
 
   ticketType = signal<TicketTypeFormData>({
     name: '',
-    price: 1,
-    quantity: 1,
+    price: '',
+    quantity: '',
     description: '',
     salesStartDate: '',
     salesEndDate: '',
-    maxPerOrder: 1,
+    maxPerOrder: '',
   });
 
   isLoadingEvent = signal(true);
@@ -53,7 +53,6 @@ export class CreateTicketType implements OnInit {
 
   onSaved(data: TicketTypeFormData): void {
     this.isSaving.set(true);
-    // TODO: call API with data
     console.log(data);
     this.isSaving.set(false);
   }
