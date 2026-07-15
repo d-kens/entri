@@ -8,6 +8,8 @@ import {
   EventDetailResponse,
   EventFilter,
   EventResponse,
+  TicketTypeRequest,
+  TicketTypeResponse,
 } from '@features/events/models/event.models';
 import { PageResponse } from '@shared/models/common.model';
 
@@ -55,6 +57,27 @@ export class EventsService {
     return this.http.get<PageResponse<EventResponse>>(`${environment.apiBaseUrl}/events/manage`, {
       params,
     });
+  }
+
+  addEventTicketType(
+    eventExternalId: string,
+    ticketType: TicketTypeRequest,
+  ): Observable<TicketTypeResponse> {
+    return this.http.post<TicketTypeResponse>(
+      `${environment.apiBaseUrl}/events/${eventExternalId}/ticket-types`,
+      ticketType,
+    );
+  }
+
+  updateEventTicketType(
+    eventExternalId: string,
+    ticketTypeId: string,
+    ticketType: TicketTypeRequest,
+  ): Observable<TicketTypeResponse> {
+    return this.http.put<TicketTypeResponse>(
+      `${environment.apiBaseUrl}/events/${eventExternalId}/ticket-types/${ticketTypeId}`,
+      ticketType,
+    );
   }
 
   private buildEventParams(

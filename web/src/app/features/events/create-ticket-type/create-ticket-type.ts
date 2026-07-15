@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { EventDetailResponse } from '@features/events/models/event.models';
+import { EventDetailResponse, TicketTypeRequest } from '@features/events/models/event.models';
 import { EventsService } from '@features/events/services/events-service';
 import { SnackbarService } from '@shared/services/snackbar-service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -22,23 +22,13 @@ export class CreateTicketType implements OnInit {
   private eventService = inject(EventsService);
   private snackbarService = inject(SnackbarService);
 
-  ticketType = signal<TicketTypeFormData>({
-    name: '',
-    price: '',
-    quantity: '',
-    description: '',
-    salesStartDate: '',
-    salesEndDate: '',
-    maxPerOrder: '',
-  });
-
   isLoadingEvent = signal(true);
   isSaving = signal(false);
-  eventId = signal(this.route.snapshot.paramMap.get('eventId')!);
+  eventExternalId = signal(this.route.snapshot.paramMap.get('eventId')!);
   event = signal<EventDetailResponse | null>(null);
 
   ngOnInit() {
-    this.eventService.getEvent(this.eventId()).subscribe({
+    this.eventService.getEvent(this.eventExternalId()).subscribe({
       next: (event) => {
         this.event.set(event);
         this.isLoadingEvent.set(false);
@@ -52,8 +42,31 @@ export class CreateTicketType implements OnInit {
   }
 
   onSaved(data: TicketTypeFormData): void {
+    if (this.isSaving()) return;
+
     this.isSaving.set(true);
-    console.log(data);
-    this.isSaving.set(false);
+
+    const ticketType: TicketTypeRequest = {
+      name: data.name,
+      price: Number(data.price),
+      description: data.description,
+      currency: 'KES',
+      quantity: Number(data.quantity),
+      maxTicketsPerOrder: Number(data.maxTicketsPerOrder),
+      saleStartDate: data.salesStartDate,
+      saleEndDate: data.salesEndDate,
+    };
+
+    this.eventService.addEventTicketType(this.eventExternalId(), ticketType).subscribe({
+      next: () => {
+        this.isSaving.set(false);
+        this.snackbarService.showSuccess('Ticket type add successfully');
+        this.router.navigate(['/dashboard/events', this.eventExternalId()]);
+      },
+      error: () => {
+        this.snackbarService.showError('Failed to add ticket type');
+        this.isSaving.set(false);
+      },
+    });
   }
 }

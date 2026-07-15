@@ -11,6 +11,7 @@ import { EventsService } from '../services/events-service';
 import { SnackbarService } from '@shared/services/snackbar-service';
 import { EventDetailResponse } from '@features/events/models/event.models';
 import { EventHero } from '../components/event-hero/event-hero';
+import { EntriButton } from '@shared/components/button/entri-button.component';
 
 @Component({
   selector: 'app-event-details',
@@ -25,6 +26,7 @@ import { EventHero } from '../components/event-hero/event-hero';
     MatDividerModule,
     MatTooltipModule,
     EventHero,
+    EntriButton,
   ],
   templateUrl: './event-details.html',
   styleUrl: './event-details.css',

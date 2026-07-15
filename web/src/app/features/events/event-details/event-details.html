@@ -55,23 +55,49 @@
               @for (ticket of ev.ticketTypes; track ticket.externalId) {
                 <div class="ticket-row">
                   <div class="ticket-row-info">
-                    <div class="ticket-row-name-row">
+                    <div class="ticket-row-title">
                       <p class="ticket-row-name">{{ ticket.name }}</p>
-                      @if (ticket.isHidden) {
-                        <span class="ticket-hidden-badge">
-                          <mat-icon>visibility_off</mat-icon>
-                          Hidden
-                        </span>
-                      }
+                      <span class="ticket-status-badge" [attr.data-status]="ticket.status">{{
+                        ticket.status
+                      }}</span>
                     </div>
                     @if (ticket.description) {
                       <p class="ticket-row-desc">{{ ticket.description }}</p>
                     }
-                    <p class="ticket-row-qty">{{ ticket.quantity }} available</p>
+                    <div class="ticket-row-meta">
+                      <span class="ticket-row-qty">{{ ticket.quantity }} available</span>
+                      @if (ticket.saleStartDate || ticket.saleEndDate) {
+                        <span class="ticket-row-meta-sep">·</span>
+                        <span class="ticket-row-sale">
+                          @if (ticket.saleStartDate && ticket.saleEndDate) {
+                            {{ ticket.saleStartDate | date: 'MMM d' }} –
+                            {{ ticket.saleEndDate | date: 'MMM d, y' }}
+                          } @else if (ticket.saleStartDate) {
+                            Opens {{ ticket.saleStartDate | date: 'MMM d, y' }}
+                          } @else {
+                            Closes {{ ticket.saleEndDate | date: 'MMM d, y' }}
+                          }
+                        </span>
+                      }
+                    </div>
                   </div>
-                  <div class="ticket-row-meta">
-                    <span class="ticket-row-price"
-                      >{{ ticket.currency }} {{ ticket.price | number: '1.2-2' }}</span
+                  <div class="ticket-row-aside">
+                    <p class="ticket-row-price">
+                      <span class="ticket-row-currency">{{ ticket.currency }}&nbsp;</span
+                      >{{ ticket.price | number: '1.2-2' }}
+                    </p>
+                    <a
+                      appButton
+                      variant="ghost"
+                      size="sm"
+                      [routerLink]="[
+                        '/dashboard/events',
+                        ev.externalId,
+                        'ticket-types',
+                        ticket.externalId,
+                        'edit',
+                      ]"
+                      >Edit</a
                     >
                   </div>
                 </div>
@@ -112,17 +138,6 @@
               <p class="sidebar-value">
                 {{ ev.startTime | date: 'HH:mm' }} — {{ ev.endTime | date: 'HH:mm' }}
               </p>
-            </div>
-          </div>
-
-          <div class="sidebar-row">
-            <div class="sidebar-icon-wrap">
-              <mat-icon>{{ ev.isPublic ? 'public' : 'lock_outline' }}</mat-icon>
-            </div>
-            <div>
-              <p class="sidebar-label">Visibility</p>
-              <p class="sidebar-value">{{ ev.isPublic ? 'Public' : 'Private' }}</p>
-              <p class="sidebar-sub">{{ ev.categoryName }}</p>
             </div>
           </div>
 

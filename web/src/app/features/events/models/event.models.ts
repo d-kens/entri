@@ -49,7 +49,6 @@ export type TicketTypeResponse = {
   saleStartDate?: string;
   saleEndDate?: string;
   status: string;
-  isHidden: boolean;
 };
 
 export type EventResponse = {
