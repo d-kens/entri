@@ -2,13 +2,14 @@ html {
   color-scheme: light;
 
   /* ═══════════════════════════════════════════════════════════
-     PRIMARY — Brand Pink
+     PRIMARY — Brand Purple
      ═══════════════════════════════════════════════════════════ */
-  --mat-sys-primary: #ff1867;
+  --mat-sys-primary: #7c3aed;
+  --mat-sys-primary-dark: color-mix(in srgb, var(--mat-sys-primary) 80%, black);
   --mat-sys-on-primary: #ffffff;
-  --mat-sys-primary-container: #ffe4ed;
-  --mat-sys-on-primary-container: #8b0033;
-  --mat-sys-inverse-primary: #ff80a4;
+  --mat-sys-primary-container: #ede9fe;
+  --mat-sys-on-primary-container: #4c1d95;
+  --mat-sys-inverse-primary: #a78bfa;
 
   /* ═══════════════════════════════════════════════════════════
      SECONDARY — Mid gray

@@ -4,11 +4,11 @@ import { forkJoin } from 'rxjs';
 import { EventDetailResponse, TicketTypeRequest } from '@features/events/models/event.models';
 import { EventsService } from '@features/events/services/events-service';
 import { SnackbarService } from '@shared/services/snackbar-service';
-import { EventHero } from '@features/events/components/event-hero/event-hero';
+import { EventHero } from '@features/events/event-hero/event-hero';
 import {
   TicketTypeForm,
   TicketTypeFormData,
-} from '@features/events/components/ticket-type-form/ticket-type-form';
+} from '@features/events/ticket-type-form/ticket-type-form';
 import { Shimmer } from '@shared/components/shimmer/shimmer';
 import { PageError } from '@shared/components/page-error/page-error';
 
