@@ -38,6 +38,6 @@ public record EventRequest(
         String bannerUrl,
 
         @Valid
-        List<CreateTicketTypeRequest> ticketTypes
+        List<TicketTypeRequest> ticketTypes
 ) {
 }
