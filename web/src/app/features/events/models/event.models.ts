@@ -39,7 +39,7 @@ export type EventRequest = {
 };
 
 export type TicketTypeResponse = {
-  externalId: string;
+  id: number;
   name: string;
   description?: string;
   price: number;

@@ -36,15 +36,19 @@
 }
 
 .snackbar-close {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
   color: inherit !important;
   opacity: 0.75;
-  width: 32px;
-  height: 32px;
+  width: 32px !important;
+  height: 32px !important;
 
   mat-icon {
     font-size: 18px;
     width: 18px;
     height: 18px;
+    line-height: 18px;
   }
 }
 
