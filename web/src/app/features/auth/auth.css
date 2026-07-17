@@ -9,7 +9,7 @@
   display: none;
   position: relative;
   overflow: hidden;
-  background: #ff1867;
+  background: var(--mat-sys-primary);
   flex-direction: column;
   justify-content: flex-end;
   padding: 3rem;
@@ -54,14 +54,14 @@
   gap: 0.375rem;
   font-size: 0.875rem;
   font-weight: 600;
-  color: #ff1867;
+  color: var(--mat-sys-primary);
   text-decoration: none;
   z-index: 1;
   transition: color 0.15s ease;
 }
 
 .brand-back-link:hover {
-  color: #d4144e;
+  color: var(--mat-sys-primary-dark);
 }
 
 .brand-content {

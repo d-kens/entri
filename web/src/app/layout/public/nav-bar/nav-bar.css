@@ -7,16 +7,16 @@
 }
 
 .nav-link:hover {
-  color: #ff1867;
+  color: var(--mat-sys-primary);
 }
 
 .nav-link-active {
-  color: #ff1867 !important;
+  color: var(--mat-sys-primary) !important;
   font-weight: 600;
 }
 
 .nav-cta {
-  background: #ff1867 !important;
+  background: var(--mat-sys-primary) !important;
   color: #ffffff !important;
   border-radius: 0 !important;
   font-size: 0.8125rem !important;
@@ -31,7 +31,11 @@
   position: fixed;
   inset: 0;
   background:
-    radial-gradient(ellipse 85% 60% at 50% 40%, rgba(255, 100, 165, 0.14) 0%, transparent 65%),
+    radial-gradient(
+      ellipse 85% 60% at 50% 40%,
+      color-mix(in srgb, var(--mat-sys-primary) 14%, transparent) 0%,
+      transparent 65%
+    ),
     #ffffff;
   z-index: 50;
   display: flex;
@@ -63,13 +67,13 @@
   justify-content: center;
   background: transparent;
   border: none;
-  color: #ff1867;
+  color: var(--mat-sys-primary);
   cursor: pointer;
   transition: color 0.15s ease;
 }
 
 .mobile-close-btn:hover {
-  color: #d4144e;
+  color: var(--mat-sys-primary-dark);
 }
 
 .mobile-fs-link {
@@ -85,12 +89,12 @@
 }
 
 .mobile-fs-link:hover {
-  color: #ff1867;
+  color: var(--mat-sys-primary);
   transform: translateY(-1px);
 }
 
 .mobile-fs-link-active {
-  color: #ff1867 !important;
+  color: var(--mat-sys-primary) !important;
 }
 
 .mobile-fs-divider {

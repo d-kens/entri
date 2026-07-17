@@ -9,7 +9,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { EventsService } from '../services/events-service';
 import { EventDetailResponse } from '@features/events/models/event.models';
-import { EventHero } from '../components/event-hero/event-hero';
+import { EventHero } from '@features/events/event-hero/event-hero';
 import { EntriButton } from '@shared/components/button/entri-button.component';
 import { PageError } from '@shared/components/page-error/page-error';
 

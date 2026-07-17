@@ -2,7 +2,11 @@
 
 .hero-section {
   background:
-    radial-gradient(ellipse 85% 75% at 50% 50%, rgba(255, 100, 165, 0.18) 0%, transparent 65%),
+    radial-gradient(
+      ellipse 85% 75% at 50% 50%,
+      color-mix(in srgb, var(--mat-sys-primary) 18%, transparent) 0%,
+      transparent 65%
+    ),
     #ffffff;
 }
 
@@ -55,8 +59,8 @@
 }
 
 .search-bar:focus-within {
-  border-color: #ff1867;
-  box-shadow: 0 0 0 3px rgba(255, 24, 103, 0.12);
+  border-color: var(--mat-sys-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--mat-sys-primary) 12%, transparent);
 }
 
 .search-icon {
@@ -127,9 +131,9 @@
 }
 
 .cat-pill.active {
-  background: #ff1867;
+  background: var(--mat-sys-primary);
   color: #ffffff;
-  border-color: #ff1867;
+  border-color: var(--mat-sys-primary);
 }
 
 /* ── Section divider ─────────────────────────────────────────── */
@@ -183,7 +187,7 @@
 }
 
 .event-card:hover {
-  border-color: #ff1867;
+  border-color: var(--mat-sys-primary);
   transform: translateY(-2px);
 }
 
@@ -256,7 +260,7 @@
   position: absolute;
   top: 0.75rem;
   right: 0.75rem;
-  background: #ff1867;
+  background: var(--mat-sys-primary);
   color: #ffffff;
   font-size: 0.65rem;
   font-weight: 800;
@@ -330,7 +334,7 @@
 }
 
 .event-card:hover .footer-arrow {
-  color: #ff1867;
+  color: var(--mat-sys-primary);
   transform: translateX(2px);
 }
 
@@ -372,7 +376,7 @@
   width: 5rem;
   height: 5rem;
   border-radius: 50%;
-  background: #fff0f4;
+  background: var(--mat-sys-primary-container);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -384,11 +388,11 @@
   font-size: 2rem !important;
   width: 2rem !important;
   height: 2rem !important;
-  color: #ff1867;
+  color: var(--mat-sys-primary);
 }
 
 .state-icon-wrap--error {
-  background: #fff0f4;
+  background: var(--mat-sys-primary-container);
 }
 
 .state-title {
@@ -417,7 +421,7 @@
   padding: 0.625rem 1.75rem;
   border-radius: 4px;
   border: none;
-  background: #ff1867;
+  background: var(--mat-sys-primary);
   color: #ffffff;
   font-size: 0.875rem;
   font-weight: 700;
@@ -429,7 +433,7 @@
 }
 
 .state-cta:hover {
-  background: #d4144e;
+  background: var(--mat-sys-primary-dark);
   transform: translateY(-1px);
 }
 
@@ -447,7 +451,7 @@
 
 .state-cta--outline:hover {
   background: #f5f5f5;
-  border-color: #ff1867;
+  border-color: var(--mat-sys-primary);
   transform: none;
 }
 
@@ -478,6 +482,6 @@
 }
 
 .load-more-btn:hover {
-  border-color: #ff1867;
+  border-color: var(--mat-sys-primary);
   background: #f5f5f5;
 }
