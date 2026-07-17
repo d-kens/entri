@@ -1,0 +1,16 @@
+<div class="snackbar">
+  <mat-icon class="snackbar-icon">{{ icon }}</mat-icon>
+
+  <span class="snackbar-message">{{ data.message }}</span>
+
+  <div class="snackbar-actions">
+    @if (data.action) {
+      <button mat-button class="snackbar-action-btn" (click)="onAction()">
+        {{ data.action.label }}
+      </button>
+    }
+    <button mat-icon-button class="snackbar-close" (click)="dismiss()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+</div>

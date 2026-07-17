@@ -1,0 +1,38 @@
+.page-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 24px;
+  text-align: center;
+  gap: 12px;
+}
+
+.page-error-icon {
+  font-size: 56px;
+  width: 56px;
+  height: 56px;
+  color: var(--mat-sys-error);
+  margin-bottom: 8px;
+}
+
+.page-error-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--mat-sys-on-surface);
+  margin: 0;
+}
+
+.page-error-message {
+  font-size: 0.9rem;
+  color: var(--mat-sys-on-surface-variant);
+  margin: 0;
+  max-width: 380px;
+  line-height: 1.5;
+}
+
+.page-error-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}

@@ -16,7 +16,7 @@ public class TicketTypeController {
 
     @GetMapping("/{ticketTypeId}")
     public TicketTypeResponse getTicketTypeById(@PathVariable final Long ticketTypeId) {
-
+        return ticketTypeService.getTicketTypeById(ticketTypeId);
     }
 
     @PutMapping("/{ticketTypeId}")

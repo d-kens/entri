@@ -21,7 +21,7 @@ public class TicketTypeService {
     private final TicketTypeRepository ticketTypeRepository;
 
     public TicketTypeResponse getTicketTypeById(final Long ticketTypeId) {
-        TicketType ticketType = return ticketTypeRepository.findById(ticketTypeId).orElseThrow(
+        TicketType ticketType = ticketTypeRepository.findById(ticketTypeId).orElseThrow(
                 () -> new ResourceNotFoundException("Ticket type with ID " + ticketTypeId + " not found")
         );
 
