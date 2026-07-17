@@ -5,7 +5,15 @@
     </div>
   }
 
-  @if (!isLoading() && event(); as ev) {
+  @if (hasError()) {
+    <app-page-error
+      message="Couldn't load this event. Check your connection and try again."
+      [backLink]="['/dashboard/events']"
+      (retry)="loadEvent()"
+    />
+  }
+
+  @if (!isLoading() && !hasError() && event(); as ev) {
     <app-event-hero [event]="ev" [backLink]="['/dashboard/events']">
       <ng-container heroActions>
         <a

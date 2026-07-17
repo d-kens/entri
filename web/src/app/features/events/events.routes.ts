@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { EditTicketType } from '@features/events/edit-ticket-type/edit-ticket-type';
 
 export const EVENTS_ROUTES: Routes = [
   {
