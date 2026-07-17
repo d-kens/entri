@@ -1,59 +1,45 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { SnackbarComponent, SnackbarData } from '@shared/components/snackbar/snackbar.component';
 
-const SNACKBAR_DURATION = {
+const DURATION = {
   success: 3000,
   error: 5000,
   info: 3000,
   warning: 4000,
 } as const;
 
-@Injectable({
-  providedIn: 'root',
-})
+const BASE_CONFIG: MatSnackBarConfig = {
+  horizontalPosition: 'end',
+  verticalPosition: 'top',
+};
+
+@Injectable({ providedIn: 'root' })
 export class SnackbarService {
   constructor(private snackBar: MatSnackBar) {}
 
-  showSuccess(message: string, duration = SNACKBAR_DURATION.success) {
-    const config: MatSnackBarConfig = {
-      duration,
-      horizontalPosition: 'end',
-      verticalPosition: 'top',
-      panelClass: ['success-snackbar'],
-    };
-
-    this.snackBar.open(message, 'Close', config);
+  showSuccess(message: string) {
+    this.open({ message, type: 'success' });
   }
 
-  showError(message: string, duration = SNACKBAR_DURATION.error) {
-    const config: MatSnackBarConfig = {
-      duration,
-      horizontalPosition: 'end',
-      verticalPosition: 'top',
-      panelClass: ['error-snackbar'],
-    };
-
-    this.snackBar.open(message, 'Close', config);
+  showError(message: string, action?: { label: string; callback: () => void }) {
+    this.open({ message, type: 'error', action });
   }
 
-  showInfo(message: string, duration = SNACKBAR_DURATION.info) {
-    const config: MatSnackBarConfig = {
-      duration,
-      horizontalPosition: 'end',
-      verticalPosition: 'top',
-    };
-
-    this.snackBar.open(message, 'Close', config);
+  showWarning(message: string) {
+    this.open({ message, type: 'warning' });
   }
 
-  showWarning(message: string, duration = SNACKBAR_DURATION.warning) {
-    const config: MatSnackBarConfig = {
-      duration,
-      horizontalPosition: 'end',
-      verticalPosition: 'top',
-      panelClass: ['warning-snackbar'],
-    };
+  showInfo(message: string) {
+    this.open({ message, type: 'info' });
+  }
 
-    this.snackBar.open(message, 'Close', config);
+  private open(data: SnackbarData) {
+    this.snackBar.openFromComponent(SnackbarComponent, {
+      ...BASE_CONFIG,
+      duration: DURATION[data.type],
+      panelClass: [`${data.type}-snackbar`],
+      data,
+    });
   }
 }

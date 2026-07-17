@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.Instant;
 
-public record CreateTicketTypeRequest(
+public record TicketTypeRequest(
 
         @NotBlank(message = "Ticket name is required")
         String name,

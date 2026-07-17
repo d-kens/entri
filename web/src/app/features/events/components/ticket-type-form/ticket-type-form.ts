@@ -88,9 +88,11 @@ export class TicketTypeForm implements OnInit {
         required(fields.name, { message: 'Name is required' });
         required(fields.price, { message: 'Price is required' });
         required(fields.quantity, { message: 'Quantity is required' });
+        required(fields.maxTicketsPerOrder, { message: 'Maximum order per ticket is required' });
 
         min(fields.price, 1, { message: 'Price cannot be negative' });
         min(fields.quantity, 1, { message: 'At least 1 item is required' });
+        min(fields.maxTicketsPerOrder, 1, { message: 'Should be at least 1' });
       }),
     );
   }

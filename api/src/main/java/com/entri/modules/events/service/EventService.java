@@ -5,7 +5,7 @@ import com.entri.common.dto.PaginationResponse;
 import com.entri.common.exception.ResourceNotFoundException;
 import com.entri.common.exception.UnauthorizedException;
 import com.entri.modules.events.dto.EventRequest;
-import com.entri.modules.events.dto.CreateTicketTypeRequest;
+import com.entri.modules.events.dto.TicketTypeRequest;
 import com.entri.modules.events.dto.EventDetailResponse;
 import com.entri.modules.events.dto.EventFilter;
 import com.entri.modules.events.dto.EventResponse;
@@ -142,7 +142,7 @@ public class EventService {
                 .and(EventSpecifications.startTo(filter.startTo()));
     }
 
-    private TicketType toTicketType(CreateTicketTypeRequest t, Event event) {
+    private TicketType toTicketType(TicketTypeRequest t, Event event) {
         return TicketType.builder()
                 .event(event)
                 .name(t.name())
