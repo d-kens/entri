@@ -1,5 +1,50 @@
 <div class="create-ticket-type-page">
-  @if (!isLoadingEvent() && event(); as ev) {
+  @if (isLoadingEvent()) {
+    <app-shimmer height="220px" borderRadius="16px" />
+    <div class="skeleton-info-strip">
+      <app-shimmer width="140px" height="14px" borderRadius="4px" />
+      <app-shimmer width="120px" height="14px" borderRadius="4px" />
+      <app-shimmer width="100px" height="14px" borderRadius="4px" />
+      <app-shimmer width="80px" height="14px" borderRadius="4px" />
+    </div>
+    <div class="skeleton-header">
+      <app-shimmer width="160px" height="22px" borderRadius="6px" />
+      <app-shimmer width="300px" height="14px" borderRadius="4px" />
+    </div>
+    <div class="skeleton-panel">
+      <div class="skeleton-panel-header">
+        <app-shimmer width="40px" height="40px" borderRadius="10px" />
+        <div class="skeleton-panel-header-text">
+          <app-shimmer width="120px" height="16px" borderRadius="4px" />
+          <app-shimmer width="200px" height="13px" borderRadius="4px" />
+        </div>
+      </div>
+      <app-shimmer height="56px" borderRadius="6px" />
+      <div class="skeleton-grid">
+        <app-shimmer height="56px" borderRadius="6px" />
+        <app-shimmer height="56px" borderRadius="6px" />
+      </div>
+      <app-shimmer height="56px" borderRadius="6px" />
+      <app-shimmer height="56px" borderRadius="6px" />
+      <div class="skeleton-grid">
+        <app-shimmer height="56px" borderRadius="6px" />
+        <app-shimmer height="56px" borderRadius="6px" />
+      </div>
+      <div class="skeleton-actions">
+        <app-shimmer width="160px" height="40px" borderRadius="6px" />
+      </div>
+    </div>
+  }
+
+  @if (hasError()) {
+    <app-page-error
+      message="Couldn't load this event. Check your connection and try again."
+      [backLink]="['/dashboard/events']"
+      (retry)="loadEvent()"
+    />
+  }
+
+  @if (!isLoadingEvent() && !hasError() && event(); as ev) {
     <app-event-hero [event]="ev" [backLink]="['/dashboard/events', ev.externalId]" />
 
     <div class="page-header">

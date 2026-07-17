@@ -59,6 +59,12 @@ export class EventsService {
     });
   }
 
+  getTicketTypeById(ticketTypeId: number): Observable<TicketTypeResponse> {
+    return this.http.get<TicketTypeResponse>(
+      `${environment.apiBaseUrl}/ticket-types/${ticketTypeId}`,
+    );
+  }
+
   addEventTicketType(
     eventExternalId: string,
     ticketType: TicketTypeRequest,
@@ -70,12 +76,11 @@ export class EventsService {
   }
 
   updateEventTicketType(
-    eventExternalId: string,
     ticketTypeId: string,
     ticketType: TicketTypeRequest,
   ): Observable<TicketTypeResponse> {
     return this.http.put<TicketTypeResponse>(
-      `${environment.apiBaseUrl}/events/${eventExternalId}/ticket-types/${ticketTypeId}`,
+      `${environment.apiBaseUrl}/ticket-types/${ticketTypeId}`,
       ticketType,
     );
   }

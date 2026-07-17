@@ -3,7 +3,7 @@ package com.entri.modules.events.service;
 import com.entri.common.dto.AuthenticatedUser;
 import com.entri.common.exception.ResourceNotFoundException;
 import com.entri.common.exception.UnauthorizedException;
-import com.entri.modules.events.dto.CreateTicketTypeRequest;
+import com.entri.modules.events.dto.TicketTypeRequest;
 import com.entri.modules.events.dto.TicketTypeResponse;
 import com.entri.modules.events.entity.Event;
 import com.entri.modules.events.entity.TicketType;
@@ -20,9 +20,35 @@ public class TicketTypeService {
     private final TicketTypeMapper ticketTypeMapper;
     private final TicketTypeRepository ticketTypeRepository;
 
+    public TicketTypeResponse getTicketTypeById(final Long ticketTypeId) {
+        TicketType ticketType = ticketTypeRepository.findById(ticketTypeId).orElseThrow(
+                () -> new ResourceNotFoundException("Ticket type with ID " + ticketTypeId + " not found")
+        );
+
+        return ticketTypeMapper.toTicketTypeResponse(ticketType);
+    }
+
+    public TicketTypeResponse updateTicketType(final Long ticketTypeId, final TicketTypeRequest ticketTypeRequest) {
+        TicketType ticketType = ticketTypeRepository.findById(ticketTypeId).orElseThrow(
+                () -> new ResourceNotFoundException("Ticket type with ID " + ticketTypeId + " not found")
+        );
+
+        ticketType.setName(ticketTypeRequest.name());
+        ticketType.setDescription(ticketTypeRequest.description());
+        ticketType.setPrice(ticketTypeRequest.price());
+        ticketType.setCurrency(ticketTypeRequest.currency());
+        ticketType.setQuantity(ticketTypeRequest.quantity());
+        ticketType.setMaxTicketsPerOrder(ticketTypeRequest.maxTicketsPerOrder());
+        ticketType.setSaleStartDate(ticketTypeRequest.saleStartDate());
+        ticketType.setSaleEndDate(ticketTypeRequest.saleEndDate());
+
+        ticketTypeRepository.save(ticketType);
+        return ticketTypeMapper.toTicketTypeResponse(ticketType);
+    }
+
     public TicketTypeResponse createTicketType(
             final String eventExternalId,
-            final CreateTicketTypeRequest createTicketTypeRequest,
+            final TicketTypeRequest ticketTypeRequest,
             AuthenticatedUser authenticatedUser
     ) {
         Event event = eventRepository.findByExternalId(eventExternalId)
@@ -36,14 +62,14 @@ public class TicketTypeService {
 
         TicketType ticketType = TicketType.builder()
                 .event(event)
-                .name(createTicketTypeRequest.name())
-                .description(createTicketTypeRequest.description())
-                .price(createTicketTypeRequest.price())
-                .currency(createTicketTypeRequest.currency())
-                .quantity(createTicketTypeRequest.quantity())
-                .maxTicketsPerOrder(createTicketTypeRequest.maxTicketsPerOrder())
-                .saleStartDate(createTicketTypeRequest.saleStartDate())
-                .saleEndDate(createTicketTypeRequest.saleEndDate())
+                .name(ticketTypeRequest.name())
+                .description(ticketTypeRequest.description())
+                .price(ticketTypeRequest.price())
+                .currency(ticketTypeRequest.currency())
+                .quantity(ticketTypeRequest.quantity())
+                .maxTicketsPerOrder(ticketTypeRequest.maxTicketsPerOrder())
+                .saleStartDate(ticketTypeRequest.saleStartDate())
+                .saleEndDate(ticketTypeRequest.saleEndDate())
                 .build();
 
         ticketTypeRepository.save(ticketType);

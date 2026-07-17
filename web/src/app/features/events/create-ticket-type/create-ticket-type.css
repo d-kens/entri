@@ -4,12 +4,55 @@
   padding-bottom: 64px;
 }
 
-/* ── Loading ─────────────────────────────── */
+/* ── Skeleton ────────────────────────────── */
 
-.page-loading {
+.skeleton-info-strip {
   display: flex;
-  justify-content: center;
-  padding: 80px 0;
+  gap: 24px;
+  padding: 16px 4px;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+  margin-bottom: 32px;
+}
+
+.skeleton-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.skeleton-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.skeleton-panel-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.skeleton-panel-header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.skeleton-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.skeleton-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
 }
 
 /* ── Page header ─────────────────────────── */

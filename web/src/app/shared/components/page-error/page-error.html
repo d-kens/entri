@@ -1,0 +1,11 @@
+<div class="page-error">
+  <mat-icon class="page-error-icon">error_outline</mat-icon>
+  <h2 class="page-error-title">Something went wrong</h2>
+  <p class="page-error-message">{{ message() }}</p>
+  <div class="page-error-actions">
+    <button mat-stroked-button (click)="retry.emit()">Try again</button>
+    @if (backLink().length) {
+      <a mat-flat-button [routerLink]="backLink()">Go back</a>
+    }
+  </div>
+</div>
