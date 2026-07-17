@@ -16,14 +16,14 @@
   @if (!isLoading() && !hasError() && event(); as ev) {
     <app-event-hero [event]="ev" [backLink]="['/dashboard/events']">
       <ng-container heroActions>
-        <a
+        <button
           mat-stroked-button
           class="hero-btn-outline"
-          [routerLink]="['/dashboard/events', ev.externalId, 'edit']"
+          (click)="navigateToEditEvent(ev.externalId)"
         >
           <mat-icon>edit</mat-icon>
           Edit
-        </a>
+        </button>
         @if (ev.status === 'DRAFT') {
           <button mat-flat-button class="hero-btn-live">
             <mat-icon>rocket_launch</mat-icon>
@@ -46,10 +46,10 @@
         <section class="details-section">
           <div class="section-header-row">
             <h2 class="section-title">Ticket Types</h2>
-            <a mat-flat-button [routerLink]="['/dashboard/events', ev.externalId, 'ticket-types']">
+            <button mat-flat-button (click)="navigateToAddTicket(ev.externalId)">
               <mat-icon>add</mat-icon>
               Add Ticket
-            </a>
+            </button>
           </div>
 
           @if (ev.ticketTypes.length === 0) {
@@ -60,7 +60,7 @@
             </div>
           } @else {
             <div class="ticket-list">
-              @for (ticket of ev.ticketTypes; track ticket.externalId) {
+              @for (ticket of ev.ticketTypes; track ticket.id) {
                 <div class="ticket-row">
                   <div class="ticket-row-info">
                     <div class="ticket-row-title">
@@ -94,19 +94,14 @@
                       <span class="ticket-row-currency">{{ ticket.currency }}&nbsp;</span
                       >{{ ticket.price | number: '1.2-2' }}
                     </p>
-                    <a
+                    <button
                       appButton
                       variant="ghost"
                       size="sm"
-                      [routerLink]="[
-                        '/dashboard/events',
-                        ev.externalId,
-                        'ticket-types',
-                        ticket.externalId,
-                        'edit',
-                      ]"
-                      >Edit</a
+                      (click)="navigateToEditTicketType(ev.externalId, ticket.id)"
                     >
+                      Edit
+                    </button>
                   </div>
                 </div>
               }

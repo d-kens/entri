@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 public class TicketTypeController {
     private final TicketTypeService ticketTypeService;
 
-
     @GetMapping("/{ticketTypeId}")
     public TicketTypeResponse getTicketTypeById(@PathVariable final Long ticketTypeId) {
         return ticketTypeService.getTicketTypeById(ticketTypeId);
