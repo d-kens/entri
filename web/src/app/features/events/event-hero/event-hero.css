@@ -80,13 +80,6 @@
   letter-spacing: 0.02em;
 }
 
-.hero-bottom {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 16px;
-}
-
 .hero-title {
   font-size: clamp(1.4rem, 3vw, 2.25rem);
   font-weight: 700;
@@ -96,10 +89,17 @@
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 }
 
+.hero-wrap {
+  position: relative;
+}
+
 .hero-actions {
+  position: absolute;
+  bottom: 24px;
+  right: 28px;
+  z-index: 3;
   display: flex;
   gap: 10px;
-  flex-shrink: 0;
 }
 
 /* ── Status badge ──────────────────────────── */
@@ -173,14 +173,10 @@
     border-radius: var(--mat-sys-corner-medium);
   }
 
-  .hero-bottom {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-  }
-
   .hero-actions {
-    width: 100%;
+    position: static;
+    padding: 12px 0;
+    justify-content: flex-start;
   }
 
   .info-strip-divider {

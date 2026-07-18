@@ -49,10 +49,11 @@ public class EventController {
     @PostMapping
     public ResponseEntity<EventResponse> createEvent(
             UriComponentsBuilder uriComponentsBuilder,
-            @AuthenticationPrincipal String currentUserKey,
+            Authentication authentication,
             @Valid @RequestBody final EventRequest request
     ) {
-        var response = eventService.createEvent(request, currentUserKey);
+        final AuthenticatedUser authenticatedUser = (AuthenticatedUser) authentication.getPrincipal();
+        var response = eventService.createEvent(request, authenticatedUser.userExternalKey());
         var uri = uriComponentsBuilder.path("/events/{external_id}").buildAndExpand(response.externalId()).toUri();
         return ResponseEntity.created(uri).body(response);
     }

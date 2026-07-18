@@ -87,12 +87,6 @@ public class EventService {
                 .status(EventStatus.DRAFT)
                 .build();
 
-        if (request.ticketTypes() != null && !request.ticketTypes().isEmpty()) {
-            event.setTicketTypes(request.ticketTypes().stream()
-                    .map(t -> toTicketType(t, event))
-                    .toList());
-        }
-
         eventRepository.save(event);
         return eventMapper.toEventResponse(event);
     }
@@ -140,20 +134,5 @@ public class EventService {
                 .and(EventSpecifications.search(filter.searchTerm()))
                 .and(EventSpecifications.startFrom(filter.startFrom()))
                 .and(EventSpecifications.startTo(filter.startTo()));
-    }
-
-    private TicketType toTicketType(TicketTypeRequest t, Event event) {
-        return TicketType.builder()
-                .event(event)
-                .name(t.name())
-                .description(t.description())
-                .price(t.price())
-                .currency(t.currency())
-                .quantity(t.quantity())
-                .maxTicketsPerOrder(t.maxTicketsPerOrder())
-                .saleStartDate(t.saleStartDate())
-                .saleEndDate(t.saleEndDate())
-                .status(TicketStatus.ACTIVE)
-                .build();
     }
 }

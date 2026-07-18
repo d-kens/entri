@@ -1,0 +1,212 @@
+<form class="form-panel" (submit)="onSubmit($event)">
+  <!-- Basic Info -->
+  <div class="form-section">
+    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
+      <mat-label>Event Title</mat-label>
+      <input matInput [formField]="eventDetailsForm.title" placeholder="e.g. Nairobi Jazz Night" />
+      @for (error of eventDetailsForm.title().errors(); track error.message) {
+        <mat-error>{{ error.message }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
+      <mat-label>Description</mat-label>
+      <textarea
+        matInput
+        [formField]="eventDetailsForm.description"
+        rows="5"
+        placeholder="Describe your event — agenda, highlights, what's included..."
+      ></textarea>
+      <mat-hint>A clear description drives more registrations</mat-hint>
+      @for (error of eventDetailsForm.description().errors(); track error.message) {
+        <mat-error>{{ error.message }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
+      <mat-label>Category</mat-label>
+      <mat-select [formField]="eventDetailsForm.categoryId">
+        @for (cat of eventCategories(); track cat.id) {
+          <mat-option [value]="cat.id">{{ cat.name }}</mat-option>
+        }
+      </mat-select>
+      @for (error of eventDetailsForm.categoryId().errors(); track error.message) {
+        <mat-error>{{ error.message }}</mat-error>
+      }
+    </mat-form-field>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- Banner -->
+  <div class="form-section">
+    <p class="form-group-label">Banner Image</p>
+    <p class="form-group-hint">1200 × 630 px recommended · PNG, JPG, WEBP · Max 5 MB</p>
+
+    @if (bannerPreview()) {
+      <div class="banner-preview">
+        <img [src]="bannerPreview()" alt="Event banner" />
+        <div class="banner-actions">
+          <label class="banner-change-btn" for="bannerInput">
+            <mat-icon>photo_camera</mat-icon>
+            Change
+          </label>
+          <button mat-icon-button class="banner-remove" type="button" (click)="removeBanner()">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+    } @else {
+      <label class="banner-drop" for="bannerInput">
+        <div class="banner-drop-icon">
+          <mat-icon>add_photo_alternate</mat-icon>
+        </div>
+        <p class="banner-drop-label">Click to upload banner</p>
+        <p class="banner-drop-sub">PNG, JPG, WEBP · up to 5 MB</p>
+      </label>
+    }
+    <input
+      id="bannerInput"
+      type="file"
+      accept="image/*"
+      class="hidden"
+      (change)="onBannerSelected($event)"
+    />
+    @for (error of eventDetailsForm.bannerUrl().errors(); track error.message) {
+      <p class="banner-error">{{ error.message }}</p>
+    }
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- Venue -->
+  <div class="form-section">
+    <p class="form-group-label">Venue</p>
+
+    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
+      <mat-label>Venue name</mat-label>
+      <input
+        matInput
+        [formField]="eventDetailsForm.venueName"
+        placeholder="e.g. Carnivore Grounds"
+      />
+      <mat-icon matSuffix>location_on</mat-icon>
+      @for (error of eventDetailsForm.venueName().errors(); track error.message) {
+        <mat-error>{{ error.message }}</mat-error>
+      }
+    </mat-form-field>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-start">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
+        <mat-label>City</mat-label>
+        <input matInput [formField]="eventDetailsForm.venueCity" placeholder="Nairobi" />
+        @for (error of eventDetailsForm.venueCity().errors(); track error.message) {
+          <mat-error>{{ error.message }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
+        <mat-label>Country</mat-label>
+        <input matInput [formField]="eventDetailsForm.venueCountry" placeholder="Kenya" />
+        @for (error of eventDetailsForm.venueCountry().errors(); track error.message) {
+          <mat-error>{{ error.message }}</mat-error>
+        }
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- Date & Time -->
+  <div class="form-section">
+    <p class="form-group-label">Date & Time</p>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-start">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
+        <mat-label>Start date</mat-label>
+        <input
+          matInput
+          [matDatepicker]="startPicker"
+          [formField]="eventDetailsForm.startDate"
+          placeholder="Select date"
+          readonly
+          (click)="startPicker.open()"
+        />
+        <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
+        <mat-datepicker #startPicker></mat-datepicker>
+        @for (error of eventDetailsForm.startDate().errors(); track error.message) {
+          <mat-error>{{ error.message }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
+        <mat-label>Start time</mat-label>
+        <input
+          matInput
+          type="time"
+          [formField]="eventDetailsForm.startTime"
+          #startTimeInput
+          (click)="startTimeInput.showPicker()"
+          (keydown)="$event.preventDefault()"
+        />
+        <button mat-icon-button matSuffix type="button" (click)="startTimeInput.showPicker()">
+          <mat-icon>schedule</mat-icon>
+        </button>
+        @for (error of eventDetailsForm.startTime().errors(); track error.message) {
+          <mat-error>{{ error.message }}</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-start">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
+        <mat-label>End date</mat-label>
+        <input
+          matInput
+          [matDatepicker]="endPicker"
+          [formField]="eventDetailsForm.endDate"
+          placeholder="Select date"
+          readonly
+          (click)="endPicker.open()"
+        />
+        <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
+        <mat-datepicker #endPicker></mat-datepicker>
+        @for (error of eventDetailsForm.endDate().errors(); track error.message) {
+          <mat-error>{{ error.message }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
+        <mat-label>End time</mat-label>
+        <input
+          matInput
+          type="time"
+          [formField]="eventDetailsForm.endTime"
+          #endTimeInput
+          (click)="endTimeInput.showPicker()"
+          (keydown)="$event.preventDefault()"
+        />
+        <button mat-icon-button matSuffix type="button" (click)="endTimeInput.showPicker()">
+          <mat-icon>schedule</mat-icon>
+        </button>
+        @for (error of eventDetailsForm.endTime().errors(); track error.message) {
+          <mat-error>{{ error.message }}</mat-error>
+        }
+      </mat-form-field>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="form-actions">
+    <button mat-flat-button type="submit" [disabled]="loading()">
+      @if (loading()) {
+        <span class="btn-loading">
+          <mat-progress-spinner diameter="16" mode="indeterminate"></mat-progress-spinner>
+          Saving...
+        </span>
+      } @else {
+        {{ formSubmitButtonLabel() }}
+      }
+    </button>
+  </div>
+</form>
