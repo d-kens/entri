@@ -26,7 +26,7 @@ export class CreateTicketType implements OnInit {
   isLoadingEvent = signal(true);
   hasError = signal(false);
   isSaving = signal(false);
-  eventExternalId = signal(this.route.snapshot.paramMap.get('eventId')!);
+  eventExternalId = signal(this.route.snapshot.paramMap.get('eventExternalId')!);
   event = signal<EventDetailResponse | null>(null);
 
   ngOnInit() {

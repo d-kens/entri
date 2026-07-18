@@ -9,6 +9,7 @@ public record EventResponse(
         String title,
         String description,
         String categoryName,
+        Long categoryId,
         String venueName,
         String venueCity,
         String venueCountry,

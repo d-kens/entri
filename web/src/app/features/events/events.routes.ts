@@ -12,24 +12,23 @@ export const EVENTS_ROUTES: Routes = [
       import('@features/events/create-event/create-event').then((m) => m.CreateEvent),
   },
   {
-    path: ':id',
+    path: ':eventExternalId',
     loadComponent: () =>
       import('@features/events/event-details/event-details').then((m) => m.EventDetails),
   },
   {
-    path: ':id/edit',
-    loadComponent: () =>
-      import('@features/events/create-event/create-event').then((m) => m.CreateEvent),
+    path: ':eventExternalId/edit',
+    loadComponent: () => import('@features/events/edit-event/edit-event').then((m) => m.EditEvent),
   },
   {
-    path: ':eventId/ticket-types',
+    path: ':eventExternalId/ticket-types',
     loadComponent: () =>
       import('@features/events/create-ticket-type/create-ticket-type').then(
         (m) => m.CreateTicketType,
       ),
   },
   {
-    path: ':eventId/ticket-types/:ticketTypeId/edit',
+    path: ':eventExternalId/ticket-types/:ticketTypeId/edit',
     loadComponent: () =>
       import('@features/events/edit-ticket-type/edit-ticket-type').then((m) => m.EditTicketType),
   },

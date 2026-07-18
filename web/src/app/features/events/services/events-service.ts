@@ -25,6 +25,13 @@ export class EventsService {
     return this.http.post<EventResponse>(`${environment.apiBaseUrl}/events`, payload);
   }
 
+  updateEvent(eventExternalId: string, payload: EventRequest): Observable<EventResponse> {
+    return this.http.put<EventResponse>(
+      `${environment.apiBaseUrl}/events/${eventExternalId}`,
+      payload,
+    );
+  }
+
   getEvents(filter: EventFilter): Observable<PageResponse<EventResponse>> {
     const params = this.buildEventParams(filter);
     return this.http.get<PageResponse<EventResponse>>(`${environment.apiBaseUrl}/events`, {

@@ -7,10 +7,8 @@ import { EventsService } from '../services/events-service';
 import { FileService } from '@shared/services/file-service';
 import { SnackbarService } from '@shared/services/snackbar-service';
 import { CategoryResponse } from '@features/events/models/event.models';
-import {
-  EventBasicDetailsFormData,
-  EventDetailsForm,
-} from '../event-details-form/event-details-form';
+import { EventDetailsFormData, EventDetailsForm } from '../event-details-form/event-details-form';
+import { combineDateTime } from '@features/events/utils/date-time.utils';
 
 @Component({
   selector: 'app-create-event',
@@ -20,21 +18,21 @@ import {
 })
 export class CreateEvent implements OnInit {
   private router = inject(Router);
-  private eventsService = inject(EventsService);
+  private eventService = inject(EventsService);
   private fileService = inject(FileService);
   private snackbarService = inject(SnackbarService);
 
-  isLoading = signal(false);
+  loading = signal(false);
   categories = signal<CategoryResponse[]>([]);
 
   ngOnInit(): void {
-    this.eventsService.getCategories().subscribe({
+    this.eventService.getCategories().subscribe({
       next: (cats) => this.categories.set(cats),
     });
   }
 
-  async onSubmitted(data: EventBasicDetailsFormData): Promise<void> {
-    this.isLoading.set(true);
+  async onSubmitted(data: EventDetailsFormData): Promise<void> {
+    this.loading.set(true);
     try {
       let bannerUrl = data.bannerUrl;
       if (data.bannerFile) {
@@ -42,15 +40,15 @@ export class CreateEvent implements OnInit {
       }
 
       const event = await firstValueFrom(
-        this.eventsService.createEvent({
+        this.eventService.createEvent({
           title: data.title,
           description: data.description,
           categoryId: data.categoryId as number,
           venueName: data.venueName,
           venueCity: data.venueCity,
           venueCountry: data.venueCountry,
-          startTime: this.combineDateTime(data.startDate, data.startTime),
-          endTime: this.combineDateTime(data.endDate, data.endTime),
+          startTime: combineDateTime(data.startDate, data.startTime),
+          endTime: combineDateTime(data.endDate, data.endTime),
           bannerUrl,
         }),
       );
@@ -61,14 +59,7 @@ export class CreateEvent implements OnInit {
       const msg = err?.error?.message || 'Failed to create event.';
       this.snackbarService.showError(msg);
     } finally {
-      this.isLoading.set(false);
+      this.loading.set(false);
     }
-  }
-
-  private combineDateTime(date: Date | string, time: string): string {
-    const [hours, minutes] = time.split(':').map(Number);
-    const dt = new Date(date);
-    dt.setHours(hours, minutes, 0, 0);
-    return dt.toISOString();
   }
 }

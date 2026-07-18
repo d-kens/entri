@@ -12,8 +12,10 @@ import org.mapstruct.Mapping;
 public interface EventMapper {
 
     @Mapping(source = "category.name", target = "categoryName")
+    @Mapping(source = "category.id", target = "categoryId")
     EventResponse toEventResponse(Event event);
 
     @Mapping(source = "category.name", target = "categoryName")
+    @Mapping(source = "category.id", target = "categoryId")
     EventDetailResponse toEventDetailResponse(Event event);
 }
