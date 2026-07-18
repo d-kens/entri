@@ -1,4 +1,4 @@
-import { Component, input, OnInit, output, signal } from '@angular/core';
+import { Component, effect, input, output, signal } from '@angular/core';
 import { form, FormField, min, required, submit, validate } from '@angular/forms/signals';
 import {
   MatError,
@@ -21,7 +21,7 @@ import {
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
-export interface EventBasicDetailsFormData {
+export interface EventDetailsFormData {
   title: string;
   description: string;
   categoryId: number | string;
@@ -73,16 +73,16 @@ function notInPast(message: string) {
   templateUrl: './event-details-form.html',
   styleUrl: './event-details-form.css',
 })
-export class EventDetailsForm implements OnInit {
+export class EventDetailsForm {
   loading = input(false);
   formSubmitButtonLabel = input('Create Event');
   eventCategories = input<CategoryResponse[]>([]);
-  data = input<EventBasicDetailsFormData>();
-  submitted = output<EventBasicDetailsFormData>();
+  data = input<EventDetailsFormData>();
+  submitted = output<EventDetailsFormData>();
 
   bannerPreview = signal<string | null>(null);
 
-  private eventDetailsFormData = signal<EventBasicDetailsFormData>({
+  private eventDetailsFormData = signal<EventDetailsFormData>({
     title: '',
     description: '',
     categoryId: '',
@@ -115,24 +115,22 @@ export class EventDetailsForm implements OnInit {
     });
 
     required(fields.startDate, { message: 'Start Date is required' });
-    validate(fields.startDate, notInPast('Start date must be today or later'));
+    validate(fields.startDate, (ctx) =>
+      this.data() ? null : notInPast('Start date must be today or later')(ctx),
+    );
     required(fields.startTime, { message: 'Start Time is required' });
     required(fields.endDate, { message: 'End Date is required' });
-    validate(fields.endDate, notInPast('End date must be today or later'));
+    validate(fields.endDate, (ctx) =>
+      this.data() ? null : notInPast('End date must be today or later')(ctx),
+    );
     required(fields.endTime, { message: 'End Time is required' });
   });
 
-  ngOnInit(): void {
-    const initialFormData = this.data();
-    if (initialFormData) {
-      this.eventDetailsFormData.set({
-        ...initialFormData,
-        bannerFile: null,
-      });
-      if (initialFormData.bannerUrl) {
-        this.bannerPreview.set(initialFormData.bannerUrl);
-      }
-    }
+  constructor() {
+    effect(() => {
+      const data = this.data();
+      if (data) this.populateForm(data);
+    });
   }
 
   onBannerSelected(event: Event): void {
@@ -156,5 +154,15 @@ export class EventDetailsForm implements OnInit {
     await submit(this.eventDetailsForm, async () => {
       this.submitted.emit(this.eventDetailsFormData());
     });
+  }
+
+  private populateForm(data: EventDetailsFormData | undefined): void {
+    if (data) {
+      this.eventDetailsFormData.set(data);
+
+      if (data.bannerUrl) {
+        this.bannerPreview.set(data.bannerUrl);
+      }
+    }
   }
 }

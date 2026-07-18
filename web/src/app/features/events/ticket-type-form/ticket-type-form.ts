@@ -1,4 +1,4 @@
-import { Component, input, OnInit, output, signal } from '@angular/core';
+import { Component, effect, input, output, signal } from '@angular/core';
 import { form, min, required, submit, FormField } from '@angular/forms/signals';
 import {
   MatError,
@@ -49,7 +49,7 @@ export interface TicketTypeFormData {
   templateUrl: './ticket-type-form.html',
   styleUrl: './ticket-type-form.css',
 })
-export class TicketTypeForm implements OnInit {
+export class TicketTypeForm {
   initialData = input<TicketTypeFormData>();
   submitLabel = input('Add Ticket Type');
   isLoading = input(false);
@@ -77,9 +77,11 @@ export class TicketTypeForm implements OnInit {
     min(fields.maxTicketsPerOrder, 1, { message: 'Should be at least 1' });
   });
 
-  ngOnInit(): void {
-    const initial = this.initialData();
-    if (initial) this.formData.set(initial);
+  constructor() {
+    effect(() => {
+      const data = this.initialData();
+      if (data) this.formData.set(data);
+    });
   }
 
   async onSubmit(event: Event): Promise<void> {

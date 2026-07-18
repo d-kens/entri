@@ -39,8 +39,7 @@ export class EventDetails implements OnInit {
   event = signal<EventDetailResponse | null>(null);
   isLoading = signal(true);
   hasError = signal(false);
-
-  private eventId = this.route.snapshot.paramMap.get('id')!;
+  eventExternalId = signal(this.route.snapshot.paramMap.get('eventExternalId')!);
 
   ngOnInit(): void {
     this.loadEvent();
@@ -62,7 +61,7 @@ export class EventDetails implements OnInit {
     this.isLoading.set(true);
     this.hasError.set(false);
 
-    this.eventsService.getEvent(this.eventId).subscribe({
+    this.eventsService.getEvent(this.eventExternalId()).subscribe({
       next: (event) => {
         this.event.set(event);
         this.isLoading.set(false);

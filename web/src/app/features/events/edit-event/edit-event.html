@@ -1,0 +1,77 @@
+<div class="edit-event-page">
+  <header class="edit-event-header">
+    <a mat-stroked-button [routerLink]="['/dashboard/events']" class="back-btn">
+      <mat-icon>arrow_back</mat-icon>
+      Events
+    </a>
+    <div class="edit-event-header-divider"></div>
+    <div>
+      <h1 class="edit-event-title">Edit Event</h1>
+      <p class="edit-evente-subtitle">Edit the details below to update your event.</p>
+    </div>
+  </header>
+
+  @if (loading()) {
+    <div class="skeleton-form-panel">
+      <div class="skeleton-section">
+        <app-shimmer height="56px" borderRadius="6px" />
+        <app-shimmer height="120px" borderRadius="6px" />
+        <app-shimmer height="56px" borderRadius="6px" />
+      </div>
+
+      <div class="skeleton-divider"></div>
+
+      <div class="skeleton-section">
+        <app-shimmer width="100px" height="14px" borderRadius="4px" />
+        <app-shimmer height="160px" borderRadius="12px" />
+      </div>
+
+      <div class="skeleton-divider"></div>
+
+      <div class="skeleton-section">
+        <app-shimmer width="60px" height="14px" borderRadius="4px" />
+        <app-shimmer height="56px" borderRadius="6px" />
+        <div class="skeleton-grid">
+          <app-shimmer height="56px" borderRadius="6px" />
+          <app-shimmer height="56px" borderRadius="6px" />
+        </div>
+      </div>
+
+      <div class="skeleton-divider"></div>
+
+      <div class="skeleton-section">
+        <app-shimmer width="100px" height="14px" borderRadius="4px" />
+        <div class="skeleton-grid">
+          <app-shimmer height="56px" borderRadius="6px" />
+          <app-shimmer height="56px" borderRadius="6px" />
+        </div>
+        <div class="skeleton-grid">
+          <app-shimmer height="56px" borderRadius="6px" />
+          <app-shimmer height="56px" borderRadius="6px" />
+        </div>
+      </div>
+
+      <div class="skeleton-actions">
+        <app-shimmer width="140px" height="40px" borderRadius="6px" />
+      </div>
+    </div>
+  }
+
+  @if (hasError()) {
+    <app-page-error
+      message="Couldn't load this event. Check your connection and try again."
+      [backLink]="['/dashboard/events']"
+      (retry)="loadEventData()"
+    />
+  }
+
+  @if (!loading() && !hasError()) {
+    <app-event-basic-details-form
+      [data]="eventDetailsFormData()"
+      [eventCategories]="categories()"
+      [loading]="loading()"
+      formSubmitButtonLabel="Edit Event"
+      (submitted)="onSubmitted($event)"
+    ></app-event-basic-details-form>
+  }
+</div>

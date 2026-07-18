@@ -24,13 +24,12 @@ export class EditTicketType implements OnInit {
   private eventService = inject(EventsService);
   private snackbarService = inject(SnackbarService);
 
-  isLoading = signal(true);
+  loading = signal(true);
   hasError = signal(false);
-  isSaving = signal(false);
   event = signal<EventDetailResponse | null>(null);
   ticketTypeFormData = signal<TicketTypeFormData | undefined>(undefined);
 
-  eventExternalId = signal(this.route.snapshot.paramMap.get('eventId')!);
+  eventExternalId = signal(this.route.snapshot.paramMap.get('eventExternalId')!);
   ticketTypeId = signal(this.route.snapshot.paramMap.get('ticketTypeId')!);
 
   ngOnInit() {
@@ -38,7 +37,7 @@ export class EditTicketType implements OnInit {
   }
 
   loadData(): void {
-    this.isLoading.set(true);
+    this.loading.set(true);
     this.hasError.set(false);
 
     forkJoin([
@@ -56,19 +55,19 @@ export class EditTicketType implements OnInit {
           salesStartDate: ticketType.saleStartDate ?? '',
           salesEndDate: ticketType.saleEndDate ?? '',
         });
-        this.isLoading.set(false);
+        this.loading.set(false);
       },
       error: () => {
         this.hasError.set(true);
-        this.isLoading.set(false);
+        this.loading.set(false);
       },
     });
   }
 
   onSaved(data: TicketTypeFormData): void {
-    if (this.isSaving()) return;
+    if (this.loading()) return;
 
-    this.isSaving.set(true);
+    this.loading.set(true);
 
     const ticketType: TicketTypeRequest = {
       name: data.name,
@@ -83,13 +82,13 @@ export class EditTicketType implements OnInit {
 
     this.eventService.updateEventTicketType(this.ticketTypeId(), ticketType).subscribe({
       next: () => {
-        this.isSaving.set(false);
+        this.loading.set(false);
         this.snackbarService.showSuccess('Ticket type updated successfully');
         this.router.navigate(['/dashboard/events', this.eventExternalId()]);
       },
       error: () => {
         this.snackbarService.showError('Failed to update ticket type');
-        this.isSaving.set(false);
+        this.loading.set(false);
       },
     });
   }

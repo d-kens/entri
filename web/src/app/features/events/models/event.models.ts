@@ -55,6 +55,7 @@ export type EventResponse = {
   title: string;
   description: string;
   categoryName: string;
+  categoryId: number;
   venueName: string;
   venueCity: string;
   venueCountry: string;
@@ -71,6 +72,7 @@ export type EventDetailResponse = {
   title: string;
   description: string;
   categoryName: string;
+  categoryId: number;
   venueName: string;
   venueCity: string;
   venueCountry: string;

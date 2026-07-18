@@ -1,5 +1,5 @@
 <div class="edit-ticket-type-page">
-  @if (isLoading()) {
+  @if (loading()) {
     <app-shimmer height="220px" borderRadius="16px" />
     <div class="skeleton-info-strip">
       <app-shimmer width="140px" height="14px" borderRadius="4px" />
@@ -44,7 +44,7 @@
     />
   }
 
-  @if (!isLoading() && !hasError() && event(); as ev) {
+  @if (!loading() && !hasError() && event(); as ev) {
     <app-event-hero [event]="ev" [backLink]="['/dashboard/events', ev.externalId]" />
 
     <div class="page-header">
@@ -57,7 +57,7 @@
     <app-tickek-type-form
       [initialData]="ticketTypeFormData()"
       [submitLabel]="'Update Ticket Type'"
-      [isLoading]="isSaving()"
+      [isLoading]="loading()"
       (added)="onSaved($event)"
     />
   }
