@@ -1,12 +1,10 @@
 package com.entri.modules.events.dto;
 
 import com.entri.common.validators.ValidDateRange;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.Instant;
-import java.util.List;
 
 @ValidDateRange(startField = "startTime", endField = "endTime")
 public record EventRequest(
@@ -35,9 +33,6 @@ public record EventRequest(
         Instant endTime,
 
         @NotBlank(message = "Banner image is required")
-        String bannerUrl,
-
-        @Valid
-        List<TicketTypeRequest> ticketTypes
+        String bannerUrl
 ) {
 }

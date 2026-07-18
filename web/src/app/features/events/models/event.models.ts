@@ -35,7 +35,6 @@ export type EventRequest = {
   startTime: string;
   endTime: string;
   bannerUrl: string;
-  ticketTypes: TicketTypeRequest[];
 };
 
 export type TicketTypeResponse = {

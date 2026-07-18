@@ -1,4 +1,4 @@
-<div class="form-panel">
+<form class="form-panel" (submit)="onSubmit($event)">
   <div class="form-panel-header">
     <div class="form-panel-header-icon">
       <mat-icon>confirmation_number</mat-icon>
@@ -107,15 +107,15 @@
   </div>
 
   <div class="form-actions">
-    <button mat-flat-button (click)="onSubmit()" [disabled]="isLoading()">
+    <button mat-flat-button type="submit" [disabled]="isLoading()">
       @if (isLoading()) {
-        <div class="flex items-center gap-2">
+        <span class="btn-loading">
           <mat-progress-spinner diameter="16" mode="indeterminate" />
-          <span>Saving...</span>
-        </div>
+          Saving...
+        </span>
       } @else {
         {{ submitLabel() }}
       }
     </button>
   </div>
-</div>
+</form>

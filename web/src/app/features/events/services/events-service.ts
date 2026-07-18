@@ -21,16 +21,6 @@ export class EventsService {
     return this.http.get<CategoryResponse[]>(`${environment.apiBaseUrl}/categories`);
   }
 
-  uploadBanner(file: File): Observable<{ url: string }> {
-    const fd = new FormData();
-    fd.append('file', file);
-    return this.http.post<{ url: string }>(`${environment.apiBaseUrl}/media/upload`, fd);
-  }
-
-  deleteBanner(url: string): Observable<void> {
-    return this.http.delete<void>(`${environment.apiBaseUrl}/media/upload`, { params: { url } });
-  }
-
   createEvent(payload: EventRequest): Observable<EventResponse> {
     return this.http.post<EventResponse>(`${environment.apiBaseUrl}/events`, payload);
   }
@@ -44,10 +34,6 @@ export class EventsService {
 
   getEvent(id: string): Observable<EventDetailResponse> {
     return this.http.get<EventDetailResponse>(`${environment.apiBaseUrl}/events/${id}`);
-  }
-
-  updateEvent(id: string, payload: EventRequest): Observable<EventResponse> {
-    return this.http.put<EventResponse>(`${environment.apiBaseUrl}/events/${id}`, payload);
   }
 
   getManagedEvents(

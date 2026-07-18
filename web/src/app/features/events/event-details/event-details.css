@@ -300,9 +300,11 @@
 /* ── Responsive ──────────────────────────── */
 
 @media (max-width: 768px) {
-  .hero-actions a,
-  .hero-actions button {
-    flex: 1;
+  .hero-btn-outline {
+    color: var(--mat-sys-on-surface) !important;
+    border-color: var(--mat-sys-outline) !important;
+    background: transparent !important;
+    backdrop-filter: none;
   }
 
   .details-body {

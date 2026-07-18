@@ -1,27 +1,28 @@
-<div class="hero" [class.hero--no-banner]="!event().bannerUrl">
-  @if (event().bannerUrl) {
-    <img class="hero-img" [src]="event().bannerUrl" [alt]="event().title" />
-  }
+<div class="hero-wrap">
+  <div class="hero" [class.hero--no-banner]="!event().bannerUrl">
+    @if (event().bannerUrl) {
+      <img class="hero-img" [src]="event().bannerUrl" [alt]="event().title" />
+    }
 
-  <div class="hero-overlay"></div>
+    <div class="hero-overlay"></div>
 
-  <a mat-icon-button class="hero-back" [routerLink]="backLink()">
-    <mat-icon>arrow_back</mat-icon>
-  </a>
+    <a mat-icon-button class="hero-back" [routerLink]="backLink()">
+      <mat-icon>arrow_back</mat-icon>
+    </a>
 
-  <div class="hero-content">
-    <div class="hero-meta">
-      <span class="status-badge status-{{ event().status.toLowerCase() }}">
-        {{ event().status | titlecase }}
-      </span>
-      <span class="hero-category">{{ event().categoryName }}</span>
-    </div>
-    <div class="hero-bottom">
-      <h1 class="hero-title">{{ event().title }}</h1>
-      <div class="hero-actions">
-        <ng-content select="[heroActions]" />
+    <div class="hero-content">
+      <div class="hero-meta">
+        <span class="status-badge status-{{ event().status.toLowerCase() }}">
+          {{ event().status | titlecase }}
+        </span>
+        <span class="hero-category">{{ event().categoryName }}</span>
       </div>
+      <h1 class="hero-title">{{ event().title }}</h1>
     </div>
+  </div>
+
+  <div class="hero-actions">
+    <ng-content select="[heroActions]" />
   </div>
 </div>
 
