@@ -2,7 +2,12 @@ package com.entri.modules.events.controller;
 
 import com.entri.common.dto.AuthenticatedUser;
 import com.entri.common.dto.PaginationResponse;
-import com.entri.modules.events.dto.*;
+import com.entri.modules.events.dto.EventResponse;
+import com.entri.modules.events.dto.EventFilter;
+import com.entri.modules.events.dto.EventRequest;
+import com.entri.modules.events.dto.EventDetailResponse;
+import com.entri.modules.events.dto.TicketTypeRequest;
+import com.entri.modules.events.dto.TicketTypeResponse;
 import com.entri.modules.events.service.EventService;
 import com.entri.modules.events.service.TicketTypeService;
 import jakarta.validation.Valid;
