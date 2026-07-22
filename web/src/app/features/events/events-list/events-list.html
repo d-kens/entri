@@ -85,16 +85,6 @@
             </td>
           </ng-container>
 
-          <ng-container matColumnDef="visibility">
-            <th mat-header-cell *matHeaderCellDef>Visibility</th>
-            <td mat-cell *matCellDef="let event" data-label="Visibility">
-              <span class="visibility-badge" [class.visibility-badge--public]="event.isPublic">
-                <mat-icon>{{ event.isPublic ? 'public' : 'lock' }}</mat-icon>
-                {{ event.isPublic ? 'Public' : 'Private' }}
-              </span>
-            </td>
-          </ng-container>
-
           <ng-container matColumnDef="dateCreated">
             <th mat-header-cell *matHeaderCellDef>Created</th>
             <td mat-cell *matCellDef="let event" data-label="Created">
