@@ -1,4 +1,3 @@
-1. In dashboard/events page, pagination for the table should be a the tob of the page
-2. Remove the visibility column in the events table
+
 3. Fix session errors when you access the auth pages
 4. Create a reusable table component

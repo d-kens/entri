@@ -38,6 +38,15 @@
     </div>
   } @else {
     <div class="table-card">
+      <mat-paginator
+        class="table-paginator"
+        [length]="page().totalElements"
+        [pageSize]="page().pageSize"
+        [pageIndex]="page().pageNumber"
+        [pageSizeOptions]="[10, 25, 50]"
+        (page)="onPage($event)"
+      />
+
       <div class="table-scroll events-table">
         <table mat-table [dataSource]="page().content">
           <ng-container matColumnDef="title">
@@ -123,15 +132,6 @@
           ></tr>
         </table>
       </div>
-
-      <mat-paginator
-        class="table-paginator"
-        [length]="page().totalElements"
-        [pageSize]="page().pageSize"
-        [pageIndex]="page().pageNumber"
-        [pageSizeOptions]="[10, 25, 50]"
-        (page)="onPage($event)"
-      />
     </div>
   }
 </div>
