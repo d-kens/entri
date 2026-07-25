@@ -55,7 +55,7 @@ dependencies {
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.6")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.6")
 
-    implementation("co.novu:novu-java:3.15.0")
+    implementation("co.novu:novu-java:3.18.0")
     implementation("com.google.firebase:firebase-admin:9.4.2")
 
     implementation("org.springframework.boot:spring-boot-starter-actuator")
