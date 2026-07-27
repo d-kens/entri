@@ -1,4 +1,4 @@
-package com.entri.common.dto;
+package com.entri.common.security;
 
 import com.entri.modules.users.entity.Role;
 

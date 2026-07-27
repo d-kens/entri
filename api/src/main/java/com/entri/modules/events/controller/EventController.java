@@ -1,6 +1,6 @@
 package com.entri.modules.events.controller;
 
-import com.entri.common.dto.AuthenticatedUser;
+import com.entri.common.security.AuthenticatedUser;
 import com.entri.common.dto.PaginationResponse;
 import com.entri.modules.events.dto.EventResponse;
 import com.entri.modules.events.dto.EventFilter;
@@ -13,7 +13,6 @@ import com.entri.modules.events.service.TicketTypeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -36,12 +35,10 @@ public class EventController {
     @GetMapping("/manage")
     public PaginationResponse<EventResponse> manageEvents(
             @Valid final EventFilter filter,
-            @AuthenticationPrincipal String currentUserKey,
-            Authentication authentication
+            @AuthenticationPrincipal AuthenticatedUser user
     ) {
-        boolean isAdmin = authentication.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_PLATFORM_ADMIN"));
-        return eventService.getEventsForManagement(filter, isAdmin ? null : currentUserKey);
+        String userKey = user.isPlatformAdmin() ? null : user.userExternalKey();
+        return eventService.getEventsForManagement(filter, userKey);
     }
 
     @GetMapping("/{externalId}")
@@ -54,11 +51,10 @@ public class EventController {
     @PostMapping
     public ResponseEntity<EventResponse> createEvent(
             UriComponentsBuilder uriComponentsBuilder,
-            Authentication authentication,
-            @Valid @RequestBody final EventRequest request
+            @Valid @RequestBody final EventRequest request,
+            @AuthenticationPrincipal AuthenticatedUser user
     ) {
-        final AuthenticatedUser authenticatedUser = (AuthenticatedUser) authentication.getPrincipal();
-        var response = eventService.createEvent(request, authenticatedUser.userExternalKey());
+        var response = eventService.createEvent(request, user.userExternalKey());
         var uri = uriComponentsBuilder.path("/events/{external_id}").buildAndExpand(response.externalId()).toUri();
         return ResponseEntity.created(uri).body(response);
     }
@@ -67,19 +63,17 @@ public class EventController {
     public EventResponse updateEvent(
             @PathVariable final String externalId,
             @Valid @RequestBody final EventRequest request,
-            Authentication authentication
+            @AuthenticationPrincipal AuthenticatedUser user
     ) {
-        final AuthenticatedUser authenticatedUser =  (AuthenticatedUser) authentication.getPrincipal();
-        return eventService.updateEvent(externalId, request, authenticatedUser);
+        return eventService.updateEvent(externalId, request, user);
     }
 
     @PostMapping(value = "/{eventExternalId}/ticket-types")
     public TicketTypeResponse createTicketType(
             @PathVariable final String eventExternalId,
             @Valid @RequestBody final TicketTypeRequest ticketTypeRequest,
-            Authentication authentication
+            @AuthenticationPrincipal AuthenticatedUser user
     ) {
-        final AuthenticatedUser authenticatedUser = (AuthenticatedUser) authentication.getPrincipal();
-        return ticketTypeService.createTicketType(eventExternalId, ticketTypeRequest, authenticatedUser);
+        return ticketTypeService.createTicketType(eventExternalId, ticketTypeRequest, user);
     }
 }
