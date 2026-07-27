@@ -1,6 +1,6 @@
 package com.entri.config;
 
-import com.entri.common.dto.AuthenticatedUser;
+import com.entri.common.security.AuthenticatedUser;
 import com.entri.modules.users.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

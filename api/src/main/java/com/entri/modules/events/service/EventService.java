@@ -1,9 +1,9 @@
 package com.entri.modules.events.service;
 
-import com.entri.common.dto.AuthenticatedUser;
+import com.entri.common.security.AuthenticatedUser;
+import com.entri.common.exception.UnauthorizedException;
 import com.entri.common.dto.PaginationResponse;
 import com.entri.common.exception.ResourceNotFoundException;
-import com.entri.common.exception.UnauthorizedException;
 import com.entri.modules.events.dto.EventRequest;
 import com.entri.modules.events.dto.EventDetailResponse;
 import com.entri.modules.events.dto.EventFilter;
@@ -98,15 +98,13 @@ public class EventService {
     public EventResponse updateEvent(
             final String externalId,
             final EventRequest request,
-            AuthenticatedUser authenticatedUser
+            final AuthenticatedUser user
     ) {
         var event = eventRepository.findByExternalId(externalId)
                 .orElseThrow(() -> new ResourceNotFoundException("Event with external ID: " + externalId + " not found"));
 
-        boolean isEventOwner = event.getOrganizer().getExternalKey().equals(authenticatedUser.userExternalKey());
-
-        if (!isEventOwner && !authenticatedUser.isPlatformAdmin()) {
-            throw new UnauthorizedException("You are not authorized to update this event");
+        if (!user.isPlatformAdmin() && !user.userExternalKey().equals(event.getOrganizer().getExternalKey())) {
+            throw new UnauthorizedException("You are not authorized to perform this action");
         }
 
         var category = eventCategoryService.findById(request.categoryId());

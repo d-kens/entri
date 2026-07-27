@@ -1,6 +1,6 @@
 package com.entri.modules.events.service;
 
-import com.entri.common.dto.AuthenticatedUser;
+import com.entri.common.security.AuthenticatedUser;
 import com.entri.common.exception.ResourceNotFoundException;
 import com.entri.common.exception.UnauthorizedException;
 import com.entri.modules.events.dto.TicketTypeRequest;
@@ -28,10 +28,14 @@ public class TicketTypeService {
         return ticketTypeMapper.toTicketTypeResponse(ticketType);
     }
 
-    public TicketTypeResponse updateTicketType(final Long ticketTypeId, final TicketTypeRequest ticketTypeRequest) {
+    public TicketTypeResponse updateTicketType(final Long ticketTypeId, final TicketTypeRequest ticketTypeRequest, final AuthenticatedUser user) {
         TicketType ticketType = ticketTypeRepository.findById(ticketTypeId).orElseThrow(
                 () -> new ResourceNotFoundException("Ticket type with ID " + ticketTypeId + " not found")
         );
+
+        if (!user.isPlatformAdmin() && !user.userExternalKey().equals(ticketType.getEvent().getOrganizer().getExternalKey())) {
+            throw new UnauthorizedException("You are not authorized to perform this action");
+        }
 
         ticketType.setName(ticketTypeRequest.name());
         ticketType.setDescription(ticketTypeRequest.description());
@@ -49,15 +53,13 @@ public class TicketTypeService {
     public TicketTypeResponse createTicketType(
             final String eventExternalId,
             final TicketTypeRequest ticketTypeRequest,
-            AuthenticatedUser authenticatedUser
+            final AuthenticatedUser user
     ) {
         Event event = eventRepository.findByExternalId(eventExternalId)
                 .orElseThrow(() -> new ResourceNotFoundException("Event with ID " + eventExternalId + " not found"));
 
-        boolean isEventOwner = event.getOrganizer().getExternalKey().equals(authenticatedUser.userExternalKey());
-
-        if (!isEventOwner && !authenticatedUser.isPlatformAdmin()) {
-            throw new UnauthorizedException("Only the event owner or a platform administrator can perform this action.");
+        if (!user.isPlatformAdmin() && !user.userExternalKey().equals(event.getOrganizer().getExternalKey())) {
+            throw new UnauthorizedException("You are not authorized to perform this action");
         }
 
         TicketType ticketType = TicketType.builder()
