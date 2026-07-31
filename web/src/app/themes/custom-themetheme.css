@@ -2,7 +2,7 @@ html {
   color-scheme: light;
 
   /* ═══════════════════════════════════════════════════════════
-     PRIMARY — Brand Purple
+     PRIMARY - Brand Purple
      ═══════════════════════════════════════════════════════════ */
   --mat-sys-primary: #7c3aed;
   --mat-sys-primary-dark: color-mix(in srgb, var(--mat-sys-primary) 80%, black);
@@ -12,7 +12,7 @@ html {
   --mat-sys-inverse-primary: #a78bfa;
 
   /* ═══════════════════════════════════════════════════════════
-     SECONDARY — Mid gray
+     SECONDARY - Mid gray
      ═══════════════════════════════════════════════════════════ */
   --mat-sys-secondary: #6a6a6a;
   --mat-sys-on-secondary: #ffffff;
@@ -20,7 +20,7 @@ html {
   --mat-sys-on-secondary-container: #000000;
 
   /* ═══════════════════════════════════════════════════════════
-     SURFACES — Light
+     SURFACES - Light
      ═══════════════════════════════════════════════════════════ */
   --mat-sys-background: #ffffff;
   --mat-sys-on-background: #000000;
@@ -49,7 +49,7 @@ html {
   --mat-sys-on-error-container: #7f1d1d;
 
   /* ═══════════════════════════════════════════════════════════
-     TYPOGRAPHY — Coustard (display) + Inter (body)
+     TYPOGRAPHY - Coustard (display) + Inter (body)
      ═══════════════════════════════════════════════════════════ */
   --mat-sys-brand-font-family: 'Poppins', -apple-system, sans-serif;
   --mat-sys-plain-font-family: 'Inter', -apple-system, sans-serif;
@@ -84,7 +84,7 @@ html {
   --mat-sys-pressed-state-layer-opacity: 0.12;
 
   /* ═══════════════════════════════════════════════════════════
-     FORM FIELD — Angular Material 21 tokens for outlined text fields
+     FORM FIELD - Angular Material 21 tokens for outlined text fields
      ═══════════════════════════════════════════════════════════ */
 
   /* Default */
@@ -101,7 +101,7 @@ html {
   --mat-form-field-outlined-error-caret-color: #dc2626;
 
   /* ═══════════════════════════════════════════════════════════
-     APP SEMANTIC — ticket/payment status
+     APP SEMANTIC - ticket/payment status
      ═══════════════════════════════════════════════════════════ */
   --app-paid: #16a34a;
   --app-on-paid: #ffffff;

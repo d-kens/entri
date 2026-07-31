@@ -13,6 +13,14 @@ export const routes: Routes = [
         loadComponent: () =>
           import('@features/events/browse-events/browse-events').then((m) => m.BrowseEvents),
       },
+      {
+        path: 'about',
+        loadComponent: () => import('@features/about/about').then((m) => m.About),
+      },
+      {
+        path: 'support',
+        loadComponent: () => import('@features/support/support').then((m) => m.Support),
+      },
     ],
   },
   {
