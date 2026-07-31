@@ -1,15 +1,14 @@
 <mat-toolbar
   class="toolbar !bg-surface border-b border-outline-variant !h-16 flex items-center justify-between px-4"
 >
-  <!-- Left: hamburger (mobile) or page title (desktop) -->
+  <!-- Left: hamburger (mobile only) + page title -->
   <div class="flex items-center gap-2">
     @if (isMobile()) {
       <button mat-icon-button (click)="onToggleSidenav()" class="hamburger-btn">
         <mat-icon>menu</mat-icon>
       </button>
-    } @else {
-      <span class="page-title">{{ pageTitle() }}</span>
     }
+    <span class="page-title">{{ pageTitle() }}</span>
   </div>
 
   <!-- Right: user badge + logout -->

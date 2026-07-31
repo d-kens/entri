@@ -1,3 +1,0 @@
-
-3. Fix session errors when you access the auth pages
-4. Create a reusable table component
