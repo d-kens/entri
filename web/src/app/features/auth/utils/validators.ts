@@ -33,7 +33,7 @@ export const passwordsMatchValidator = (group: AbstractControl): ValidationError
     return { passwordMismatch: true };
   }
 
-  // Passwords match — clear mismatch error if present
+  // Passwords match - clear mismatch error if present
   clearMismatchError();
   return null;
 };

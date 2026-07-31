@@ -1,0 +1,204 @@
+<!-- ── Hero ─────────────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="hero-inner">
+    <h1 class="hero-title">How can we help?</h1>
+    <p class="hero-subtitle">
+      Find answers to the most common questions below. If you can't find what you're looking for,
+      reach out directly.
+    </p>
+  </div>
+</section>
+
+<!-- ── FAQ ───────────────────────────────────────────────────────── -->
+<section class="faq-section">
+  <div class="faq-container">
+    <!-- Group: Tickets & Booking -->
+    <div class="faq-group">
+      <h2 class="faq-group-title">Tickets &amp; Booking</h2>
+
+      <div class="faq-list">
+        <div class="faq-item" [class.is-open]="activeIndex() === 0">
+          <button
+            class="faq-trigger"
+            (click)="toggle(0)"
+            [attr.aria-expanded]="activeIndex() === 0"
+          >
+            <span>How do I purchase tickets?</span>
+            <mat-icon class="faq-icon">expand_more</mat-icon>
+          </button>
+          <div class="faq-body">
+            <div class="faq-body-inner">
+              <p class="faq-answer">
+                Browse events on the home page, click the event you want to attend, then select your
+                ticket type and quantity. You'll be taken through a short checkout. No account is
+                required to buy tickets.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item" [class.is-open]="activeIndex() === 1">
+          <button
+            class="faq-trigger"
+            (click)="toggle(1)"
+            [attr.aria-expanded]="activeIndex() === 1"
+          >
+            <span>Where are my tickets after I book?</span>
+            <mat-icon class="faq-icon">expand_more</mat-icon>
+          </button>
+          <div class="faq-body">
+            <div class="faq-body-inner">
+              <p class="faq-answer">
+                Your tickets are sent to the email address you provided at checkout. You can show
+                the ticket directly from your email at the venue - no printing needed.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item" [class.is-open]="activeIndex() === 2">
+          <button
+            class="faq-trigger"
+            (click)="toggle(2)"
+            [attr.aria-expanded]="activeIndex() === 2"
+          >
+            <span>Can I get a refund on my tickets?</span>
+            <mat-icon class="faq-icon">expand_more</mat-icon>
+          </button>
+          <div class="faq-body">
+            <div class="faq-body-inner">
+              <p class="faq-answer">
+                Refund policies are set by the event organizer, not entri. Check the event details
+                page for the organizer's policy before you purchase. If you believe you're owed a
+                refund, contact the organizer directly.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item" [class.is-open]="activeIndex() === 3">
+          <button
+            class="faq-trigger"
+            (click)="toggle(3)"
+            [attr.aria-expanded]="activeIndex() === 3"
+          >
+            <span>What happens if an event is cancelled?</span>
+            <mat-icon class="faq-icon">expand_more</mat-icon>
+          </button>
+          <div class="faq-body">
+            <div class="faq-body-inner">
+              <p class="faq-answer">
+                If an organizer cancels their event, attendees are notified by email. Whether
+                refunds are issued depends on the organizer's stated policy. entri does not process
+                refunds on behalf of organizers.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-divider"></div>
+
+    <!-- Group: For Organizers -->
+    <div class="faq-group">
+      <h2 class="faq-group-title">For Organizers</h2>
+
+      <div class="faq-list">
+        <div class="faq-item" [class.is-open]="activeIndex() === 4">
+          <button
+            class="faq-trigger"
+            (click)="toggle(4)"
+            [attr.aria-expanded]="activeIndex() === 4"
+          >
+            <span>How do I create an event?</span>
+            <mat-icon class="faq-icon">expand_more</mat-icon>
+          </button>
+          <div class="faq-body">
+            <div class="faq-body-inner">
+              <p class="faq-answer">
+                Sign in to your account, open the dashboard, and click "New event." Fill in your
+                event details - title, date, venue, and description - then add your ticket tiers and
+                publish when you're ready.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item" [class.is-open]="activeIndex() === 5">
+          <button
+            class="faq-trigger"
+            (click)="toggle(5)"
+            [attr.aria-expanded]="activeIndex() === 5"
+          >
+            <span>Can I sell different ticket types at different prices?</span>
+            <mat-icon class="faq-icon">expand_more</mat-icon>
+          </button>
+          <div class="faq-body">
+            <div class="faq-body-inner">
+              <p class="faq-answer">
+                Yes. When setting up your event you can add multiple ticket tiers - early bird, VIP,
+                general admission, or anything else - each with its own name, price, and quantity
+                cap.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item" [class.is-open]="activeIndex() === 6">
+          <button
+            class="faq-trigger"
+            (click)="toggle(6)"
+            [attr.aria-expanded]="activeIndex() === 6"
+          >
+            <span>How do I track ticket sales?</span>
+            <mat-icon class="faq-icon">expand_more</mat-icon>
+          </button>
+          <div class="faq-body">
+            <div class="faq-body-inner">
+              <p class="faq-answer">
+                Your dashboard shows a real-time summary of sales, revenue, and remaining capacity
+                for every active event. No manual exports or spreadsheets needed.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item" [class.is-open]="activeIndex() === 7">
+          <button
+            class="faq-trigger"
+            (click)="toggle(7)"
+            [attr.aria-expanded]="activeIndex() === 7"
+          >
+            <span>How do I check in attendees on the day?</span>
+            <mat-icon class="faq-icon">expand_more</mat-icon>
+          </button>
+          <div class="faq-body">
+            <div class="faq-body-inner">
+              <p class="faq-answer">
+                Open the event from your dashboard and go to the attendee list. You can scan ticket
+                QR codes or manually mark attendees as checked in as they arrive.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Contact strip ──────────────────────────────────────────────── -->
+<section class="contact-strip">
+  <div class="contact-inner">
+    <div class="contact-icon-wrap">
+      <mat-icon>mail_outline</mat-icon>
+    </div>
+    <div class="contact-copy">
+      <p class="contact-title">Still need help?</p>
+      <p class="contact-body">
+        If your question isn't covered above, email us and we'll get back to you as soon as we can.
+      </p>
+    </div>
+    <a href="mailto:support@entri.co" class="contact-cta">Email support</a>
+  </div>
+</section>

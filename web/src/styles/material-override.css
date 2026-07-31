@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-   Auth brand button — primary CTA used on all auth pages
+   Auth brand button - primary CTA used on all auth pages
    -------------------------------------------------------------------------- */
 
 .auth-brand-btn {
@@ -19,11 +19,11 @@
    -------------------------------------------------------------------------- */
 
 /* --------------------------------------------------------------------------
-   Form field focus — #1A1A1A, clearly distinct from red error state
+   Form field focus - #1A1A1A, clearly distinct from red error state
    -------------------------------------------------------------------------- */
 
 /* --------------------------------------------------------------------------
-   Global Form Field — tiny and neat
+   Global Form Field - tiny and neat
    -------------------------------------------------------------------------- */
 
 .mat-mdc-form-field .mat-mdc-form-field-infix {
@@ -93,7 +93,7 @@
 }
 
 /* --------------------------------------------------------------------------
-   Global button sizing — mat-flat-button and mat-raised-button
+   Global button sizing - mat-flat-button and mat-raised-button
    -------------------------------------------------------------------------- */
 
 .mat-mdc-unelevated-button.mat-mdc-button-base,
@@ -116,7 +116,7 @@
 }
 
 /* --------------------------------------------------------------------------
-   Utility — .compact-field kept for backwards compatibility
+   Utility - .compact-field kept for backwards compatibility
    -------------------------------------------------------------------------- */
 
 .compact-field .mat-mdc-form-field-infix {

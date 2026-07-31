@@ -15,7 +15,7 @@
         matInput
         [formField]="eventDetailsForm.description"
         rows="5"
-        placeholder="Describe your event — agenda, highlights, what's included..."
+        placeholder="Describe your event - agenda, highlights, what's included..."
       ></textarea>
       <mat-hint>A clear description drives more registrations</mat-hint>
       @for (error of eventDetailsForm.description().errors(); track error.message) {
