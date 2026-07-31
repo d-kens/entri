@@ -34,8 +34,8 @@ public class EventService {
     private final EventCategoryService eventCategoryService;
 
     public PaginationResponse<EventResponse> getEvents(EventFilter filter) {
-        Specification<Event> spec = buildSpecification(filter)
-                .and(EventSpecifications.hasStatus(EventStatus.PUBLISHED));
+        Specification<Event> spec = buildSpecification(filter);
+//        .and(EventSpecifications.hasStatus(EventStatus.PUBLISHED)) TODO: This filter should bbe specified by the client
         return fetchPage(filter, spec);
     }
 

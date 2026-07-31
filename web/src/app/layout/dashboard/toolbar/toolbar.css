@@ -29,7 +29,7 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: #1a1a1a;
+  background: var(--mat-sys-primary);
   color: #ffffff;
   display: flex;
   align-items: center;

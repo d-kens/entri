@@ -104,7 +104,7 @@
           @if (hasFilters()) {
             Try a different keyword or clear your filters to see all events.
           } @else {
-            Nothing's on sale right now — check back soon for upcoming events.
+            Nothing's on sale right now - check back soon for upcoming events.
           }
         </p>
         @if (hasFilters()) {
@@ -124,7 +124,9 @@
               @if (event.bannerUrl) {
                 <img class="card-img" [src]="event.bannerUrl" [alt]="event.title" />
               } @else {
-                <div class="card-img-placeholder"></div>
+                <div class="card-img-placeholder">
+                  <mat-icon class="placeholder-icon">local_activity</mat-icon>
+                </div>
               }
 
               <!-- Date badge -->
@@ -140,14 +142,14 @@
 
             <!-- Info -->
             <div class="card-info">
-              <p class="card-venue">{{ event.venueName.toUpperCase() }}</p>
-              <h3 class="card-title-text">{{ event.title.toUpperCase() }}</h3>
+              <p class="card-venue">{{ event.venueName }}</p>
+              <h3 class="card-title-text">{{ event.title }}</h3>
               <p class="card-location">
                 <mat-icon class="!text-sm !w-4 !h-4">location_on</mat-icon>
                 {{ event.venueName }} · {{ event.venueCity }}, {{ event.venueCountry }}
               </p>
               <div class="card-footer">
-                <span class="get-tickets">GET TICKETS</span>
+                <span class="get-tickets">Get Tickets</span>
                 <mat-icon class="footer-arrow">arrow_forward</mat-icon>
               </div>
             </div>

@@ -1,4 +1,4 @@
-<header class="sticky top-0 z-50 bg-white/95 backdrop-blur-sm">
+<header class="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-black/[0.06]">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
     <!-- Logo -->
     <a [routerLink]="['/']" (click)="closeMenu()" class="flex items-center gap-1.5 flex-shrink-0">
@@ -10,7 +10,8 @@
     </a>
 
     <!-- Desktop nav + actions -->
-    <nav class="hidden md:flex items-center gap-6">
+    <nav class="hidden md:flex items-center gap-7">
+      <!-- Primary links -->
       <a
         [routerLink]="['/']"
         routerLinkActive="nav-link-active"
@@ -20,10 +21,15 @@
       >
       <a href="#" class="nav-link">About Us</a>
       <a href="#" class="nav-link">Support</a>
+
+      <!-- Divider -->
+      <span class="nav-divider" aria-hidden="true"></span>
+
+      <!-- Auth actions -->
       <a [routerLink]="['/auth/login']" routerLinkActive="nav-link-active" class="nav-link"
         >Sign In</a
       >
-      <a [routerLink]="['/auth/register']" routerLinkActive="nav-link-active" class="nav-link"
+      <a [routerLink]="['/auth/register']" routerLinkActive="nav-cta-active" class="nav-cta"
         >Sign Up</a
       >
     </nav>
@@ -56,35 +62,43 @@
       </button>
     </div>
 
-    <!-- Centered links -->
-    <nav class="flex flex-col items-center">
-      <a
-        [routerLink]="['/']"
-        routerLinkActive="mobile-fs-link-active"
-        [routerLinkActiveOptions]="{ exact: true }"
-        (click)="closeMenu()"
-        class="mobile-fs-link"
-        >Events</a
-      >
-      <a href="#" (click)="closeMenu()" class="mobile-fs-link">About Us</a>
-      <a href="#" (click)="closeMenu()" class="mobile-fs-link">Support</a>
+    <!-- Top: tagline + primary nav links -->
+    <div class="mobile-top">
+      <p class="mobile-tagline">Join events near you</p>
+      <nav class="mobile-nav">
+        <a
+          [routerLink]="['/']"
+          routerLinkActive="mobile-nav-active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          (click)="closeMenu()"
+          class="mobile-nav-link"
+          style="--i: 0"
+          >Events</a
+        >
+        <a href="#" (click)="closeMenu()" class="mobile-nav-link" style="--i: 1">About Us</a>
+        <a href="#" (click)="closeMenu()" class="mobile-nav-link" style="--i: 2">Support</a>
+      </nav>
+    </div>
 
-      <div class="mobile-fs-divider"></div>
-
-      <a
-        [routerLink]="['/auth/login']"
-        routerLinkActive="mobile-fs-link-active"
-        (click)="closeMenu()"
-        class="mobile-fs-link"
-        >Sign In</a
-      >
-      <a
-        [routerLink]="['/auth/register']"
-        routerLinkActive="mobile-fs-link-active"
-        (click)="closeMenu()"
-        class="mobile-fs-link"
-        >Sign Up</a
-      >
-    </nav>
+    <!-- Bottom CTA: auth actions -->
+    <div class="mobile-cta" style="--i: 3">
+      <div class="mobile-cta-buttons">
+        <a
+          [routerLink]="['/auth/login']"
+          routerLinkActive="mobile-signin-active"
+          (click)="closeMenu()"
+          class="mobile-btn-signin"
+          >Sign In</a
+        >
+        <a
+          [routerLink]="['/auth/register']"
+          routerLinkActive="mobile-signup-active"
+          (click)="closeMenu()"
+          class="mobile-btn-signup"
+          >Sign Up</a
+        >
+      </div>
+      <p class="mobile-cta-note">Sign in is for organizers</p>
+    </div>
   </div>
 }
