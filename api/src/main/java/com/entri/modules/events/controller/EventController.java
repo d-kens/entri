@@ -29,7 +29,7 @@ public class EventController {
     public PaginationResponse<EventResponse> browseEvents(
             @Valid final EventFilter filter
     ) {
-        return eventService.getEvents(filter);
+        return eventService.getPublishedEvents(filter);
     }
 
     @GetMapping("/manage")
@@ -38,7 +38,7 @@ public class EventController {
             @AuthenticationPrincipal AuthenticatedUser user
     ) {
         String userKey = user.isPlatformAdmin() ? null : user.userExternalKey();
-        return eventService.getEventsForManagement(filter, userKey);
+        return eventService.getOrganizerEvents(filter, userKey);
     }
 
     @GetMapping("/{externalId}")
