@@ -14,6 +14,11 @@ export const routes: Routes = [
           import('@features/events/browse-events/browse-events').then((m) => m.BrowseEvents),
       },
       {
+        path: 'events/:externalId',
+        loadComponent: () =>
+          import('@features/events/event-view/event-view').then((m) => m.EventView),
+      },
+      {
         path: 'about',
         loadComponent: () => import('@features/about/about').then((m) => m.About),
       },

@@ -53,6 +53,7 @@ public class SecurityConfig {
                         .requestMatchers("/auth/forgot-password").permitAll()
                         .requestMatchers("/auth/reset-password").permitAll()
                         .requestMatchers(HttpMethod.GET,"/events").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/events/{externalId}").permitAll()
                         .requestMatchers(HttpMethod.GET,"/categories").permitAll()
                         .anyRequest().authenticated()
                 )
