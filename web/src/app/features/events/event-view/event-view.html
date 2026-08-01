@@ -1,0 +1,218 @@
+<!-- ── Loading skeleton ───────────────────────────────────────── -->
+@if (loading()) {
+  <div class="skeleton-wrap">
+    <div class="skeleton-banner shimmer"></div>
+    <div class="skeleton-meta shimmer"></div>
+    <div class="skeleton-body">
+      <div class="skeleton-main">
+        <div class="shimmer skeleton-line w-40 h-5 mb-2"></div>
+        <div class="shimmer skeleton-line w-full h-4 mb-1"></div>
+        <div class="shimmer skeleton-line w-full h-4 mb-1"></div>
+        <div class="shimmer skeleton-line w-3/4 h-4 mb-6"></div>
+        <div class="shimmer skeleton-line w-32 h-5 mb-3"></div>
+        <div class="shimmer skeleton-line w-full h-24 rounded-lg"></div>
+      </div>
+      <div class="skeleton-aside">
+        <div class="shimmer skeleton-panel"></div>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ── Error ──────────────────────────────────────────────────── -->
+@if (error()) {
+  <div class="error-wrap">
+    <app-page-error
+      message="Couldn't load this event. Check your connection and try again."
+      [backLink]="['/']"
+      (retry)="loadEvent()"
+    />
+  </div>
+}
+
+<!-- ── Event ──────────────────────────────────────────────────── -->
+@if (!loading() && !error() && event(); as ev) {
+  <!-- Banner -->
+  <div class="banner" [class.banner--plain]="!ev.bannerUrl">
+    @if (ev.bannerUrl) {
+      <img class="banner-img" [src]="ev.bannerUrl" [alt]="ev.title" />
+    }
+    <div class="banner-overlay"></div>
+    <div class="banner-inner">
+      <a [routerLink]="['/']" class="back-btn">
+        <mat-icon>arrow_back</mat-icon>
+      </a>
+      <div class="banner-foot">
+        <span class="banner-category">{{ ev.categoryName }}</span>
+        <h1 class="banner-title">{{ ev.title }}</h1>
+      </div>
+    </div>
+  </div>
+
+  <!-- Meta strip -->
+  <div class="meta-strip">
+    <div class="meta-inner">
+      <div class="meta-item">
+        <mat-icon>calendar_today</mat-icon>
+        <span>{{ ev.startTime | date: 'EEE, d MMM yyyy' }}</span>
+      </div>
+      <div class="meta-sep"></div>
+      <div class="meta-item">
+        <mat-icon>schedule</mat-icon>
+        <span>{{ ev.startTime | date: 'HH:mm' }} - {{ ev.endTime | date: 'HH:mm' }}</span>
+      </div>
+      <div class="meta-sep"></div>
+      <div class="meta-item">
+        <mat-icon>location_on</mat-icon>
+        <span>{{ ev.venueName }}, {{ ev.venueCity }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Body -->
+  <div class="page-body">
+    <div class="page-inner">
+      <!-- Main content -->
+      <main class="main">
+        <section class="content-section">
+          <h2 class="section-heading">About this event</h2>
+          <p class="description">{{ ev.description }}</p>
+        </section>
+
+        <div class="content-divider"></div>
+
+        <section class="content-section">
+          <h2 class="section-heading">Details</h2>
+          <div class="details-list">
+            <div class="detail-item">
+              <div class="detail-icon-wrap">
+                <mat-icon>location_on</mat-icon>
+              </div>
+              <div>
+                <p class="detail-label">Venue</p>
+                <p class="detail-value">{{ ev.venueName }}</p>
+                <p class="detail-sub">{{ ev.venueCity }}, {{ ev.venueCountry }}</p>
+              </div>
+            </div>
+            <div class="detail-item">
+              <div class="detail-icon-wrap">
+                <mat-icon>calendar_today</mat-icon>
+              </div>
+              <div>
+                <p class="detail-label">Date</p>
+                <p class="detail-value">{{ ev.startTime | date: 'EEEE, MMMM d, y' }}</p>
+                @if ((ev.startTime | date: 'mediumDate') !== (ev.endTime | date: 'mediumDate')) {
+                  <p class="detail-sub">Ends {{ ev.endTime | date: 'MMMM d, y' }}</p>
+                }
+              </div>
+            </div>
+            <div class="detail-item">
+              <div class="detail-icon-wrap">
+                <mat-icon>schedule</mat-icon>
+              </div>
+              <div>
+                <p class="detail-label">Time</p>
+                <p class="detail-value">
+                  {{ ev.startTime | date: 'HH:mm' }} - {{ ev.endTime | date: 'HH:mm' }}
+                </p>
+              </div>
+            </div>
+            <div class="detail-item">
+              <div class="detail-icon-wrap">
+                <mat-icon>sell</mat-icon>
+              </div>
+              <div>
+                <p class="detail-label">Category</p>
+                <p class="detail-value">{{ ev.categoryName }}</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <!-- Ticket sidebar -->
+      <aside class="sidebar">
+        <div class="ticket-panel">
+          <p class="panel-heading">Tickets</p>
+
+          @if (activeTickets().length === 0) {
+            <div class="no-tickets">
+              <mat-icon>confirmation_number</mat-icon>
+              <p class="no-tickets-title">No tickets available</p>
+              <p class="no-tickets-sub">Check back closer to the event date.</p>
+            </div>
+          } @else {
+            <div class="ticket-list">
+              @for (ticket of activeTickets(); track ticket.id) {
+                <div class="ticket-card" [class.ticket-card--active]="qty(ticket.id) > 0">
+                  <div class="ticket-info">
+                    <p class="ticket-name">{{ ticket.name }}</p>
+                    @if (ticket.description) {
+                      <p class="ticket-desc">{{ ticket.description }}</p>
+                    }
+                    <div class="ticket-price-row">
+                      <p class="ticket-price">
+                        {{ ticket.currency }} {{ ticket.price | number: '1.2-2' }}
+                      </p>
+                      @if (qty(ticket.id) > 0) {
+                        <span class="ticket-qty-tag">×{{ qty(ticket.id) }}</span>
+                      }
+                    </div>
+                  </div>
+                  <div class="ticket-controls">
+                    @if (qty(ticket.id) === 0) {
+                      <button
+                        class="add-btn"
+                        (click)="increment(ticket)"
+                        aria-label="Add {{ ticket.name }}"
+                      >
+                        <mat-icon>add</mat-icon>
+                        Add
+                      </button>
+                    } @else {
+                      <div class="qty-pill">
+                        <button
+                          class="qty-pill-btn"
+                          (click)="decrement(ticket.id)"
+                          aria-label="Remove one"
+                        >
+                          <mat-icon>remove</mat-icon>
+                        </button>
+                        <span class="qty-pill-value">{{ qty(ticket.id) }}</span>
+                        <button
+                          class="qty-pill-btn"
+                          (click)="increment(ticket)"
+                          [disabled]="qty(ticket.id) >= ticket.maxTicketsPerOrder"
+                          aria-label="Add one"
+                        >
+                          <mat-icon>add</mat-icon>
+                        </button>
+                      </div>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+
+            @if (totalTickets() > 0) {
+              <div class="panel-footer">
+                <div class="panel-total">
+                  <span class="panel-total-label">
+                    {{ totalTickets() }} ticket{{ totalTickets() !== 1 ? 's' : '' }}
+                  </span>
+                  <span class="panel-total-price">
+                    {{ currency() }} {{ totalPrice() | number: '1.2-2' }}
+                  </span>
+                </div>
+                <button class="checkout-btn">
+                  Buy Tickets
+                  <mat-icon>arrow_forward</mat-icon>
+                </button>
+              </div>
+            }
+          }
+        </div>
+      </aside>
+    </div>
+  </div>
+}
