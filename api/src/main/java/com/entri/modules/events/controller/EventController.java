@@ -2,6 +2,7 @@ package com.entri.modules.events.controller;
 
 import com.entri.common.security.AuthenticatedUser;
 import com.entri.common.dto.PaginationResponse;
+import com.entri.modules.events.controller.api.EventApi;
 import com.entri.modules.events.dto.EventResponse;
 import com.entri.modules.events.dto.EventFilter;
 import com.entri.modules.events.dto.EventRequest;
@@ -20,7 +21,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/events")
-public class EventController {
+public class EventController implements EventApi {
 
     private final EventService eventService;
     private final TicketTypeService ticketTypeService;
@@ -41,14 +42,14 @@ public class EventController {
         return eventService.getOrganizerEvents(filter, userKey);
     }
 
-    @GetMapping("/{externalId}")
+    @Override
     public EventDetailResponse getEventByExternalId(
-            @PathVariable final String externalId
+            @PathVariable final String eventExternalId
     ) {
-        return eventService.getEventByExternalId(externalId);
+        return eventService.getEventByExternalId(eventExternalId);
     }
 
-    @PostMapping
+    @Override
     public ResponseEntity<EventResponse> createEvent(
             UriComponentsBuilder uriComponentsBuilder,
             @Valid @RequestBody final EventRequest request,
