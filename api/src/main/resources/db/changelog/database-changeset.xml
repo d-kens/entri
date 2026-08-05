@@ -291,4 +291,10 @@
         <dropColumn tableName="events" columnName="is_public"/>
     </changeSet>
 
+    <changeSet id="202608050001" author="d-kens">
+        <addColumn tableName="ticket_types">
+            <column name="deleted_at" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
