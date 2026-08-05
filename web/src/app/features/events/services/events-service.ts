@@ -58,6 +58,10 @@ export class EventsService {
     );
   }
 
+  deleteTicketType(ticketTypeId: number): Observable<void> {
+    return this.http.delete<void>(`${environment.apiBaseUrl}/ticket-types/${ticketTypeId}`);
+  }
+
   addEventTicketType(
     eventExternalId: string,
     ticketType: TicketTypeRequest,

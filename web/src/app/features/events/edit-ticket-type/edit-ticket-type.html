@@ -49,9 +49,19 @@
 
     <div class="page-header">
       <div class="page-header-text">
-        <h2 class="page-header-title">Ticket Types</h2>
-        <p class="page-header-sub">Define and manage the ticket types available for this event.</p>
+        <h2 class="page-header-title">Edit Ticket Type</h2>
+        <p class="page-header-sub">Update the details for this ticket type.</p>
       </div>
+      <button
+        appButton
+        variant="danger"
+        size="sm"
+        class="header-delete-btn"
+        (click)="openDeleteDialog()"
+      >
+        <mat-icon class="delete-btn-icon">delete_outline</mat-icon>
+        Delete
+      </button>
     </div>
 
     <app-tickek-type-form
