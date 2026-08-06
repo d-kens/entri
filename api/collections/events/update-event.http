@@ -1,4 +1,4 @@
-PUT {{baseUrl}}/api/events/224705b4-0a5f-4e63-ba7b-e72ee103016d
+PUT {{baseUrl}}/events/224705b4-0a5f-4e63-ba7b-e72ee103016d
 Content-Type: application/json
 Authorization: Bearer {{token}}
 

@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -31,15 +32,52 @@ public interface EventApi {
     );
 
 
-    @Operation(summary = "Create event")
+    @Operation(
+            operationId = "createEvent",
+            summary = "Create event",
+            description = "Creates a new event using the provided details. On success, the API returns the newly created event."
+    )
     @SecurityRequirement(name = "bearerAuth")
-    @ApiResponse(responseCode = "201", description = "Event created")
-    @ApiResponse(responseCode = "400", description = "Validation failed",
-            content = @Content(schema = @Schema(implementation = ProblemDetail.class)))
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Authentication is required or the access token is invalid.",
+                    content = @Content(mediaType = "application/problem+json", schema = @Schema(implementation = ProblemDetail.class))
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "The specified category was not found.",
+                    content = @Content(mediaType = "application/problem+json", schema = @Schema(implementation = ProblemDetail.class))
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "The request is invalid. One or more validation errors were found.",
+                    content = @Content(mediaType = "application/problem+json", schema = @Schema(implementation = ProblemDetail.class))
+            ),
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "Event created successfully",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = EventResponse.class))),
+    })
     @PostMapping
     ResponseEntity<EventResponse> createEvent(
             @Parameter(hidden = true) UriComponentsBuilder uriComponentsBuilder,
             @RequestBody @Valid EventRequest request,
             @AuthenticationPrincipal AuthenticatedUser user
     );
+
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Authentication is required or the access token is invalid.",
+                    content = @Content(mediaType = "application/problem+json", schema = @Schema(implementation = ProblemDetail.class))
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "The authenticated user is not authorized to create events.",
+                    content = @Content(mediaType = "application/problem+json", schema = @Schema(implementation = ProblemDetail.class))
+            )
+    })
+    @PutMapping
+    EventResponse updateEvent();
 }
