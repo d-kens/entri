@@ -26,22 +26,6 @@ public class EventController implements EventApi {
     private final EventService eventService;
     private final TicketTypeService ticketTypeService;
 
-    @GetMapping
-    public PaginationResponse<EventResponse> browseEvents(
-            @Valid final EventFilter filter
-    ) {
-        return eventService.getPublishedEvents(filter);
-    }
-
-    @GetMapping("/manage")
-    public PaginationResponse<EventResponse> manageEvents(
-            @Valid final EventFilter filter,
-            @AuthenticationPrincipal AuthenticatedUser user
-    ) {
-        String userKey = user.isPlatformAdmin() ? null : user.userExternalKey();
-        return eventService.getOrganizerEvents(filter, userKey);
-    }
-
     @Override
     public EventDetailResponse getEventByExternalId(
             @PathVariable final String eventExternalId
@@ -60,13 +44,29 @@ public class EventController implements EventApi {
         return ResponseEntity.created(uri).body(response);
     }
 
-    @PutMapping("/{externalId}")
+    @Override
     public EventResponse updateEvent(
             @PathVariable final String externalId,
             @Valid @RequestBody final EventRequest request,
             @AuthenticationPrincipal AuthenticatedUser user
     ) {
         return eventService.updateEvent(externalId, request, user);
+    }
+
+    @GetMapping
+    public PaginationResponse<EventResponse> browseEvents(
+            @Valid final EventFilter filter
+    ) {
+        return eventService.getPublishedEvents(filter);
+    }
+
+    @GetMapping("/manage")
+    public PaginationResponse<EventResponse> manageEvents(
+            @Valid final EventFilter filter,
+            @AuthenticationPrincipal AuthenticatedUser user
+    ) {
+        String userKey = user.isPlatformAdmin() ? null : user.userExternalKey();
+        return eventService.getOrganizerEvents(filter, userKey);
     }
 
     @PostMapping(value = "/{eventExternalId}/ticket-types")
