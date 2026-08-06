@@ -20,7 +20,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/events")
 public class EventController implements EventApi {
 
     private final EventService eventService;
@@ -53,28 +52,28 @@ public class EventController implements EventApi {
         return eventService.updateEvent(externalId, request, user);
     }
 
-    @GetMapping
-    public PaginationResponse<EventResponse> browseEvents(
+    @Override
+    public PaginationResponse<EventResponse> listEvents(
             @Valid final EventFilter filter
     ) {
-        return eventService.getPublishedEvents(filter);
+        return eventService.listEvents(filter);
     }
 
-    @GetMapping("/manage")
-    public PaginationResponse<EventResponse> manageEvents(
+    @Override
+    public PaginationResponse<EventResponse> listOrganizerEvents(
             @Valid final EventFilter filter,
             @AuthenticationPrincipal AuthenticatedUser user
     ) {
         String userKey = user.isPlatformAdmin() ? null : user.userExternalKey();
-        return eventService.getOrganizerEvents(filter, userKey);
+        return eventService.listOrganizerEvents(filter, userKey);
     }
 
-    @PostMapping(value = "/{eventExternalId}/ticket-types")
-    public TicketTypeResponse createTicketType(
+    @Override
+    public TicketTypeResponse createEventTicketType(
             @PathVariable final String eventExternalId,
             @Valid @RequestBody final TicketTypeRequest ticketTypeRequest,
             @AuthenticationPrincipal AuthenticatedUser user
     ) {
-        return ticketTypeService.createTicketType(eventExternalId, ticketTypeRequest, user);
+        return ticketTypeService.createEventTicketType(eventExternalId, ticketTypeRequest, user);
     }
 }

@@ -50,7 +50,7 @@ public class TicketTypeService {
         return ticketTypeMapper.toTicketTypeResponse(ticketType);
     }
 
-    public TicketTypeResponse createTicketType(
+    public TicketTypeResponse createEventTicketType(
             final String eventExternalId,
             final TicketTypeRequest ticketTypeRequest,
             final AuthenticatedUser user
