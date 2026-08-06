@@ -1,9 +1,8 @@
 package com.entri.modules.events.controller.api;
 
+import com.entri.common.dto.PaginationResponse;
 import com.entri.common.security.AuthenticatedUser;
-import com.entri.modules.events.dto.EventDetailResponse;
-import com.entri.modules.events.dto.EventRequest;
-import com.entri.modules.events.dto.EventResponse;
+import com.entri.modules.events.dto.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -14,6 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -28,19 +28,78 @@ import org.springframework.web.util.UriComponentsBuilder;
 public interface EventApi {
 
     @Operation(
-            operationId = "getEventByExternalId",
-            summary = "Get event details",
-            description = "Retrieves the details of an event identified by its external identifier"
+            operationId = "listEvents",
+            summary = "List Published Events",
+            description = "Returns a paginated list of published events. Results can be filtered using the supported query parameters"
     )
     @ApiResponses({
             @ApiResponse(
-                    responseCode = "200",
-                    description = "Event retrieved successfully",
+                    responseCode = "400",
+                    description = "The request contains invalid query parameters",
                     content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = EventDetailResponse.class)
+                            mediaType = "application/problem+json",
+                            schema = @Schema(implementation = ProblemDetail.class)
                     )
             ),
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Published events retrieved successfully"
+            )
+    })
+    @GetMapping
+    PaginationResponse<EventResponse> listEvents(
+           @ParameterObject @Valid final EventFilter filter
+    );
+
+
+    @Operation(
+            operationId = "listOrganizerEvents",
+            summary = "List Organizer Events",
+            description = "Retrieves a paginated list of events that the authenticated user is authorized to manage. Platform administrators can retrieve all events."
+    )
+    @SecurityRequirement(name = "bearerAuth")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Authentication is required or the access token is invalid",
+                    content = @Content(
+                            mediaType = "application/problem+json",
+                            schema = @Schema(implementation = ProblemDetail.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "The authenticated user is not authorized to view organizer events",
+                    content = @Content(
+                            mediaType = "application/problem+json",
+                            schema = @Schema(implementation = ProblemDetail.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "The request contains invalid query parameters",
+                    content = @Content(
+                            mediaType = "application/problem+json",
+                            schema = @Schema(implementation = ProblemDetail.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Organizer events retrieved successfully"
+            ),
+    })
+    @GetMapping("/manage")
+    PaginationResponse<EventResponse> listOrganizerEvents(
+            @ParameterObject @Valid final EventFilter filter,
+            @Parameter(hidden = true) @AuthenticationPrincipal AuthenticatedUser user
+    );
+
+    @Operation(
+            operationId = "getEventByExternalId",
+            summary = "Get Event Details",
+            description = "Retrieves the details of an event identified by its external identifier"
+    )
+    @ApiResponses({
             @ApiResponse(
                     responseCode = "404",
                     description = "The specified event was not found",
@@ -48,7 +107,11 @@ public interface EventApi {
                             mediaType = "application/problem+json",
                             schema = @Schema(implementation = ProblemDetail.class)
                     )
-            )
+            ),
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Event retrieved successfully"
+            ),
     })
     @GetMapping("/{eventExternalId}")
     EventDetailResponse getEventByExternalId(
@@ -62,7 +125,7 @@ public interface EventApi {
 
     @Operation(
             operationId = "createEvent",
-            summary = "Create event",
+            summary = "Create Event",
             description = "Creates a new event using the provided details. On success, the API returns the newly created event"
     )
     @SecurityRequirement(name = "bearerAuth")
@@ -93,11 +156,7 @@ public interface EventApi {
             ),
             @ApiResponse(
                     responseCode = "201",
-                    description = "Event created successfully",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = EventResponse.class)
-                    )
+                    description = "Event created successfully"
             )
     })
     @PostMapping
@@ -120,18 +179,14 @@ public interface EventApi {
 
     @Operation(
             operationId = "updateEvent",
-            summary = "Update event",
+            summary = "Update Event",
             description = "Updates an existing event identified by its external identifier using the provided details. On success, the API returns the updated event"
     )
     @SecurityRequirement(name = "bearerAuth")
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
-                    description = "Event updated successfully",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = EventResponse.class)
-                    )
+                    description = "Event updated successfully"
             ),
             @ApiResponse(
                     responseCode = "400",
@@ -186,5 +241,69 @@ public interface EventApi {
             @Parameter(hidden = true)
             @AuthenticationPrincipal
             AuthenticatedUser user
+    );
+
+    @Operation(
+            operationId = "createEventTicketType",
+            summary = "Create Event Ticket Type",
+            description = "Creates a new ticket type for the specified event using the provided details. On success, the API returns the newly created ticket type"
+    )
+    @SecurityRequirement(name = "bearerAuth")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Authentication is required or the access token is invalid",
+                    content = @Content(
+                            mediaType = "application/problem+json",
+                            schema = @Schema(implementation = ProblemDetail.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "The authenticated user is not authorized to create event ticket types",
+                    content = @Content(
+                            mediaType = "application/problem+json",
+                            schema = @Schema(implementation = ProblemDetail.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "The request is invalid. One or more validation errors were found",
+                    content = @Content(
+                            mediaType = "application/problem+json",
+                            schema = @Schema(implementation = ProblemDetail.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "The specified event was not found",
+                    content = @Content(
+                            mediaType = "application/problem+json",
+                            schema = @Schema(implementation = ProblemDetail.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "Ticket type created successfully"
+            ),
+    })
+    @PostMapping("/{eventExternalId}/ticket-types")
+    TicketTypeResponse createEventTicketType(
+            @Parameter(
+                    description = "The unique external identifier of the event",
+                    required = true
+            )
+            @PathVariable final String eventExternalId,
+
+            @RequestBody(
+                    description = "The ticket type details",
+                    required = true
+            )
+            @Valid
+            @org.springframework.web.bind.annotation.RequestBody
+            final TicketTypeRequest ticketTypeRequest,
+
+            @Parameter(hidden = true)
+            @AuthenticationPrincipal final  AuthenticatedUser user
     );
 }
