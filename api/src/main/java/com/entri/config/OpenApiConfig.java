@@ -17,7 +17,7 @@ public class OpenApiConfig {
                 .info(new Info()
                         .title("entri API")
                         .version("1.0.0")
-                        .description("API powering the entri platform"))
+                        .description("entri API endpoints"))
                 .components(new Components()
                         .addSecuritySchemes("bearerAuth", new SecurityScheme()
                                 .name("bearerAuth")
