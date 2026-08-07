@@ -86,7 +86,7 @@ public interface EventApi {
             @ApiResponse(
                     responseCode = "200",
                     description = "Organizer events retrieved successfully"
-            ),
+            )
     })
     @GetMapping("/manage")
     PaginationResponse<EventResponse> listOrganizerEvents(
@@ -185,10 +185,6 @@ public interface EventApi {
     @SecurityRequirement(name = "bearerAuth")
     @ApiResponses({
             @ApiResponse(
-                    responseCode = "200",
-                    description = "Event updated successfully"
-            ),
-            @ApiResponse(
                     responseCode = "400",
                     description = "The request is invalid. One or more validation errors were found",
                     content = @Content(
@@ -219,7 +215,11 @@ public interface EventApi {
                             mediaType = "application/problem+json",
                             schema = @Schema(implementation = ProblemDetail.class)
                     )
-            )
+            ),
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Event updated successfully"
+            ),
     })
     @PutMapping("/{externalId}")
     EventResponse updateEvent(
