@@ -1,6 +1,7 @@
 package com.entri.modules.users.controller;
 
 import com.entri.config.JwtConfig;
+import com.entri.modules.users.controller.api.AuthApi;
 import com.entri.modules.users.dto.AccessToken;
 import com.entri.modules.users.dto.CreateUserRequest;
 import com.entri.modules.users.dto.ForgotPasswordRequest;
@@ -18,9 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -28,9 +27,8 @@ import java.util.Arrays;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/auth")
 @RequiredArgsConstructor
-public class AuthController {
+public class AuthController implements AuthApi {
     private final JwtConfig jwtConfig;
     private final AuthService authService;
     private final PasswordResetService passwordResetService;
@@ -38,7 +36,7 @@ public class AuthController {
     @Value("${cookie.secure}")
     private boolean cookieSecure;
 
-    @PostMapping("/register")
+    @Override
     public ResponseEntity<UserResponse> register(
             UriComponentsBuilder uriComponentsBuilder,
             @Valid @RequestBody CreateUserRequest userDto
@@ -48,7 +46,7 @@ public class AuthController {
         return ResponseEntity.created(uri).body(response);
     }
 
-    @PostMapping("/login")
+    @Override
     public LoginResponse login(
             HttpServletResponse response,
             @Valid @RequestBody LoginRequest loginRequest
@@ -58,7 +56,7 @@ public class AuthController {
         return result.loginResponse();
     }
 
-    @PostMapping("/forgot-password")
+    @Override
     public ResponseEntity<?> forgotPassword(
             @Valid @RequestBody ForgotPasswordRequest request
     ) {
@@ -66,7 +64,7 @@ public class AuthController {
         return ResponseEntity.ok(Map.of("message", "A reset link has successfully been sent to your email if it was found in our system"));
     }
 
-    @PostMapping("/reset-password")
+    @Override
     public ResponseEntity<Void> resetPassword(
             @Valid @RequestBody ResetPasswordRequest request
     ) {
@@ -74,7 +72,7 @@ public class AuthController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("refresh-token")
+    @Override
     public AccessToken refreshToken(
             HttpServletResponse response,
             @CookieValue(value = "refresh_token") String refreshToken
@@ -82,7 +80,7 @@ public class AuthController {
         return authService.refreshToken(refreshToken);
     }
 
-    @PostMapping("/logout")
+    @Override
     public ResponseEntity<Void> logout(HttpServletRequest request, HttpServletResponse response) {
         if (request.getCookies() != null) {
             Arrays.stream(request.getCookies())

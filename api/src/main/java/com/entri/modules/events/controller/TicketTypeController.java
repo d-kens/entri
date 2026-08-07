@@ -30,7 +30,7 @@ public class TicketTypeController implements TicketTypeApi {
         return ticketTypeService.updateTicketType(ticketTypeId, ticketTypeRequest, user);
     }
 
-    @DeleteMapping("/{ticketTypeId}")
+    @Override
     public ResponseEntity<Void> deleteTicketType(
             @PathVariable final long ticketTypeId,
             @AuthenticationPrincipal final AuthenticatedUser user
