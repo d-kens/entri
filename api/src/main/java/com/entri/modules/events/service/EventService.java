@@ -33,13 +33,13 @@ public class EventService {
     private final EventRepository eventRepository;
     private final EventCategoryService eventCategoryService;
 
-    public PaginationResponse<EventResponse> getPublishedEvents(EventFilter filter) {
+    public PaginationResponse<EventResponse> listEvents(EventFilter filter) {
         Specification<Event> spec = buildSpecification(filter)
                 .and(EventSpecifications.hasStatus(EventStatus.PUBLISHED));
         return fetchPage(filter, spec);
     }
 
-    public PaginationResponse<EventResponse> getOrganizerEvents(EventFilter filter, String organizerKey) {
+    public PaginationResponse<EventResponse> listOrganizerEvents(EventFilter filter, String organizerKey) {
         Specification<Event> spec = buildSpecification(filter);
         if (organizerKey != null) {
             spec = spec.and(EventSpecifications.hasOrganizer(organizerKey));

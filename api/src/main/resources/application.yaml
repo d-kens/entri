@@ -51,9 +51,3 @@ management:
       enabled: true
     env:
       enabled: true
-
-info:
-  app:
-    name: ${spring.application.name}
-    description: ${project.description:Backend API that powers the entri platform}
-    version: ${project.version:1.0.0}
