@@ -1,6 +1,8 @@
 package com.entri.modules.users.service;
 
 import com.entri.common.exception.ResourceNotFoundException;
+import com.entri.common.exception.UnauthorizedException;
+import com.entri.common.security.AuthenticatedUser;
 import com.entri.common.utils.PhoneNumberUtils;
 import com.entri.modules.users.dto.CreateUserRequest;
 import com.entri.modules.users.dto.UserResponse;
@@ -43,7 +45,10 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public UserResponse getUserByExternalKey(String externalKey) {
+    public UserResponse getUserByExternalKey(String externalKey, AuthenticatedUser requestingUser) {
+        if (!requestingUser.isPlatformAdmin() && !requestingUser.userExternalKey().equals(externalKey)) {
+            throw new UnauthorizedException("You are not authorized to perform this action");
+        }
         return userMapper.toResponse(findEntityByExternalKey(externalKey));
     }
 
