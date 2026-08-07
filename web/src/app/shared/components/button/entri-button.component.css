@@ -54,6 +54,11 @@
   color: var(--mat-sys-primary);
 }
 
+:host(.btn-danger) {
+  background-color: var(--mat-sys-error);
+  color: var(--mat-sys-on-error);
+}
+
 :host(.btn-primary:hover:not(:disabled)) {
   opacity: 0.88;
 }
@@ -65,6 +70,9 @@
 }
 :host(.btn-ghost:hover:not(:disabled)) {
   background-color: var(--mat-sys-primary-container);
+}
+:host(.btn-danger:hover:not(:disabled)) {
+  opacity: 0.88;
 }
 
 :host(:disabled) {

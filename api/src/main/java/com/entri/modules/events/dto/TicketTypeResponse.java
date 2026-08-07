@@ -1,6 +1,6 @@
 package com.entri.modules.events.dto;
 
-import com.entri.modules.events.entity.TicketStatus;
+import com.entri.modules.events.entity.TicketTypeStatus;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -17,6 +17,6 @@ public record TicketTypeResponse(
         Integer maxTicketsPerOrder,
         Instant saleStartDate,
         Instant saleEndDate,
-        TicketStatus status
+        TicketTypeStatus status
 ) {
 }
