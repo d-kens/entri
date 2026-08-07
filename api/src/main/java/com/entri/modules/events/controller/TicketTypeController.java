@@ -1,5 +1,6 @@
 package com.entri.modules.events.controller;
 import com.entri.common.security.AuthenticatedUser;
+import com.entri.modules.events.controller.api.TicketTypeApi;
 import com.entri.modules.events.dto.TicketTypeRequest;
 import com.entri.modules.events.dto.TicketTypeResponse;
 import com.entri.modules.events.service.TicketTypeService;
@@ -11,20 +12,19 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/ticket-types")
-public class TicketTypeController {
+public class TicketTypeController implements TicketTypeApi {
     private final TicketTypeService ticketTypeService;
 
-    @GetMapping("/{ticketTypeId}")
-    public TicketTypeResponse getTicketTypeById(@PathVariable final Long ticketTypeId) {
-        return ticketTypeService.getTicketTypeById(ticketTypeId);
+    @Override
+    public TicketTypeResponse getTicketType(@PathVariable final Long ticketTypeId) {
+        return ticketTypeService.getTicketType(ticketTypeId);
     }
 
-    @PutMapping("/{ticketTypeId}")
+    @Override
     public TicketTypeResponse updateTicketType(
             @PathVariable final Long ticketTypeId,
             @Valid @RequestBody final TicketTypeRequest ticketTypeRequest,
-            @AuthenticationPrincipal AuthenticatedUser user
+            @AuthenticationPrincipal final AuthenticatedUser user
     ) {
         return ticketTypeService.updateTicketType(ticketTypeId, ticketTypeRequest, user);
     }

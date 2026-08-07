@@ -20,7 +20,7 @@ public class TicketTypeService {
     private final TicketTypeMapper ticketTypeMapper;
     private final TicketTypeRepository ticketTypeRepository;
 
-    public TicketTypeResponse getTicketTypeById(final Long ticketTypeId) {
+    public TicketTypeResponse getTicketType(final Long ticketTypeId) {
         TicketType ticketType = ticketTypeRepository.findById(ticketTypeId).orElseThrow(
                 () -> new ResourceNotFoundException("Ticket type with ID " + ticketTypeId + " not found")
         );
