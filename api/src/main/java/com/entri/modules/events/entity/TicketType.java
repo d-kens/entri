@@ -17,6 +17,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -28,6 +29,7 @@ import java.time.Instant;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "ticket_types")
+@SQLRestriction("deleted_at IS NULL")
 public class TicketType extends AbstractAuditableEntity {
 
     @Id
@@ -73,5 +75,8 @@ public class TicketType extends AbstractAuditableEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     @Builder.Default
-    private TicketStatus status = TicketStatus.ACTIVE;
+    private TicketTypeStatus status = TicketTypeStatus.ACTIVE;
+
+    @Column(name = "deleted_at")
+    private Instant deletedAt;
 }

@@ -11,10 +11,14 @@ import {
 } from '@features/events/ticket-type-form/ticket-type-form';
 import { Shimmer } from '@shared/components/shimmer/shimmer';
 import { PageError } from '@shared/components/page-error/page-error';
+import { MatDialog } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { EntriButton } from '@shared/components/button/entri-button.component';
+import { ConfirmDialog } from '@shared/components/confirm-dialog/confirm-dialog';
 
 @Component({
   selector: 'app-edit-ticket-type',
-  imports: [EventHero, TicketTypeForm, Shimmer, PageError],
+  imports: [EventHero, TicketTypeForm, Shimmer, PageError, EntriButton, MatIconModule],
   templateUrl: './edit-ticket-type.html',
   styleUrl: './edit-ticket-type.css',
 })
@@ -23,6 +27,7 @@ export class EditTicketType implements OnInit {
   private route = inject(ActivatedRoute);
   private eventService = inject(EventsService);
   private snackbarService = inject(SnackbarService);
+  private dialog = inject(MatDialog);
 
   loading = signal(true);
   hasError = signal(false);
@@ -61,6 +66,29 @@ export class EditTicketType implements OnInit {
         this.hasError.set(true);
         this.loading.set(false);
       },
+    });
+  }
+
+  openDeleteDialog(): void {
+    const dialogRef = this.dialog.open(ConfirmDialog, {
+      panelClass: 'entri-confirm-dialog',
+      data: {
+        message: 'This ticket type will be permanently deleted. This action cannot be undone.',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (!confirmed) return;
+
+      this.eventService.deleteTicketType(Number(this.ticketTypeId())).subscribe({
+        next: () => {
+          this.snackbarService.showSuccess('Ticket type deleted');
+          this.router.navigate(['/dashboard/events', this.eventExternalId()]);
+        },
+        error: () => {
+          this.snackbarService.showError('Failed to delete ticket type');
+        },
+      });
     });
   }
 

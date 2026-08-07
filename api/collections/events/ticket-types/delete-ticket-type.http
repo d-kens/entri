@@ -1,0 +1,4 @@
+DELETE {{baseUrl}}/ticket-types/2
+Content-Type: application/json
+Authorization: Bearer {{token}}
+

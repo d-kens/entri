@@ -10,6 +10,7 @@ import { Component, ElementRef, inject, input } from '@angular/core';
     '[class.btn-secondary]': `variant() === 'secondary'`,
     '[class.btn-outline]': `variant() === 'outline'`,
     '[class.btn-ghost]': `variant() === 'ghost'`,
+    '[class.btn-danger]': `variant() === 'danger'`,
     '[class.btn-sm]': `size() === 'sm'`,
     '[class.btn-md]': `size() === 'md'`,
     '[class.btn-lg]': `size() === 'lg'`,
@@ -20,7 +21,7 @@ import { Component, ElementRef, inject, input } from '@angular/core';
   },
 })
 export class EntriButton {
-  variant = input<'primary' | 'secondary' | 'outline' | 'ghost'>('primary');
+  variant = input<'primary' | 'secondary' | 'outline' | 'ghost' | 'danger'>('primary');
   size = input<'sm' | 'md' | 'lg'>('md');
   loading = input(false);
 

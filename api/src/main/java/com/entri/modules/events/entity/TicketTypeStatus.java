@@ -1,6 +1,6 @@
 package com.entri.modules.events.entity;
 
-public enum TicketStatus {
+public enum TicketTypeStatus {
     ACTIVE,
     INACTIVE,
     SOLD_OUT
