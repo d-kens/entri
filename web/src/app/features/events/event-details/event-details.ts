@@ -7,11 +7,14 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialog } from '@angular/material/dialog';
 import { EventsService } from '../services/events-service';
 import { EventDetailResponse } from '@features/events/models/event.models';
 import { EventHero } from '@features/events/event-hero/event-hero';
 import { EntriButton } from '@shared/components/button/entri-button.component';
 import { PageError } from '@shared/components/page-error/page-error';
+import { SnackbarService } from '@shared/services/snackbar-service';
+import { ConfirmDialog } from '@shared/components/confirm-dialog/confirm-dialog';
 
 @Component({
   selector: 'app-event-details',
@@ -35,6 +38,8 @@ export class EventDetails implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private eventsService = inject(EventsService);
+  private dialog = inject(MatDialog);
+  private snackbarService = inject(SnackbarService);
 
   event = signal<EventDetailResponse | null>(null);
   isLoading = signal(true);
@@ -55,6 +60,29 @@ export class EventDetails implements OnInit {
 
   navigateToEditTicketType(externalId: string, ticketId: number): void {
     this.router.navigate(['/dashboard/events', externalId, 'ticket-types', ticketId, 'edit']);
+  }
+
+  openDeleteTicketTypeDialog(ticketId: number, ticketName: string): void {
+    const dialogRef = this.dialog.open(ConfirmDialog, {
+      panelClass: 'entri-confirm-dialog',
+      data: {
+        message: `"${ticketName}" will be permanently deleted. This action cannot be undone.`,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (!confirmed) return;
+
+      this.eventsService.deleteTicketType(ticketId).subscribe({
+        next: () => {
+          this.snackbarService.showSuccess('Ticket type deleted');
+          this.loadEvent();
+        },
+        error: () => {
+          this.snackbarService.showError('Failed to delete ticket type');
+        },
+      });
+    });
   }
 
   loadEvent(): void {

@@ -12,6 +12,9 @@ import com.entri.modules.events.repository.TicketTypeRepository;
 import com.entri.modules.events.service.mapper.TicketTypeMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.Instant;
 
 @Service
 @RequiredArgsConstructor
@@ -28,28 +31,7 @@ public class TicketTypeService {
         return ticketTypeMapper.toTicketTypeResponse(ticketType);
     }
 
-    public TicketTypeResponse updateTicketType(final Long ticketTypeId, final TicketTypeRequest ticketTypeRequest, final AuthenticatedUser user) {
-        TicketType ticketType = ticketTypeRepository.findById(ticketTypeId).orElseThrow(
-                () -> new ResourceNotFoundException("Ticket type with ID " + ticketTypeId + " not found")
-        );
-
-        if (!user.isPlatformAdmin() && !user.userExternalKey().equals(ticketType.getEvent().getOrganizer().getExternalKey())) {
-            throw new UnauthorizedException("You are not authorized to perform this action");
-        }
-
-        ticketType.setName(ticketTypeRequest.name());
-        ticketType.setDescription(ticketTypeRequest.description());
-        ticketType.setPrice(ticketTypeRequest.price());
-        ticketType.setCurrency(ticketTypeRequest.currency());
-        ticketType.setQuantity(ticketTypeRequest.quantity());
-        ticketType.setMaxTicketsPerOrder(ticketTypeRequest.maxTicketsPerOrder());
-        ticketType.setSaleStartDate(ticketTypeRequest.saleStartDate());
-        ticketType.setSaleEndDate(ticketTypeRequest.saleEndDate());
-
-        ticketTypeRepository.save(ticketType);
-        return ticketTypeMapper.toTicketTypeResponse(ticketType);
-    }
-
+    @Transactional
     public TicketTypeResponse createTicketType(
             final String eventExternalId,
             final TicketTypeRequest ticketTypeRequest,
@@ -77,5 +59,45 @@ public class TicketTypeService {
         ticketTypeRepository.save(ticketType);
 
         return ticketTypeMapper.toTicketTypeResponse(ticketType);
+    }
+
+    @Transactional
+    public TicketTypeResponse updateTicketType(final Long ticketTypeId, final TicketTypeRequest ticketTypeRequest, final AuthenticatedUser user) {
+        TicketType ticketType = ticketTypeRepository.findById(ticketTypeId).orElseThrow(
+                () -> new ResourceNotFoundException("Ticket type with ID " + ticketTypeId + " not found")
+        );
+
+        if (!user.isPlatformAdmin() && !user.userExternalKey().equals(ticketType.getEvent().getOrganizer().getExternalKey())) {
+            throw new UnauthorizedException("You are not authorized to perform this action");
+        }
+
+        ticketType.setName(ticketTypeRequest.name());
+        ticketType.setDescription(ticketTypeRequest.description());
+        ticketType.setPrice(ticketTypeRequest.price());
+        ticketType.setCurrency(ticketTypeRequest.currency());
+        ticketType.setQuantity(ticketTypeRequest.quantity());
+        ticketType.setMaxTicketsPerOrder(ticketTypeRequest.maxTicketsPerOrder());
+        ticketType.setSaleStartDate(ticketTypeRequest.saleStartDate());
+        ticketType.setSaleEndDate(ticketTypeRequest.saleEndDate());
+
+        ticketTypeRepository.save(ticketType);
+        return ticketTypeMapper.toTicketTypeResponse(ticketType);
+    }
+
+    @Transactional
+    public void deleteTicketType(final Long ticketTypeId, final AuthenticatedUser user) {
+        TicketType ticketType = ticketTypeRepository.findById(ticketTypeId).orElseThrow(
+                () -> new ResourceNotFoundException("Ticket type with ID " + ticketTypeId + " not found")
+        );
+
+        if (!user.isPlatformAdmin() && !user.userExternalKey().equals(ticketType.getEvent().getOrganizer().getExternalKey())) {
+            throw new UnauthorizedException("You are not authorized to perform this action");
+        }
+
+        if (ticketType.getDeletedAt() != null) {
+            return;
+        }
+
+        ticketType.setDeletedAt(Instant.now());
     }
 }

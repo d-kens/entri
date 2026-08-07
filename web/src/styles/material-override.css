@@ -191,3 +191,11 @@
 .success-snackbar .mat-mdc-snack-bar-action .mdc-button__label {
   color: #fff !important;
 }
+
+/* --------------------------------------------------------------------------
+   Confirm dialog
+   -------------------------------------------------------------------------- */
+
+.entri-confirm-dialog .mdc-dialog__surface {
+  border-radius: 16px !important;
+}
