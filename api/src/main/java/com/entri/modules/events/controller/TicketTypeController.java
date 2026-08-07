@@ -6,6 +6,7 @@ import com.entri.modules.events.dto.TicketTypeResponse;
 import com.entri.modules.events.service.TicketTypeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,5 +28,14 @@ public class TicketTypeController implements TicketTypeApi {
             @AuthenticationPrincipal final AuthenticatedUser user
     ) {
         return ticketTypeService.updateTicketType(ticketTypeId, ticketTypeRequest, user);
+    }
+
+    @DeleteMapping("/{ticketTypeId}")
+    public ResponseEntity<Void> deleteTicketType(
+            @PathVariable final long ticketTypeId,
+            @AuthenticationPrincipal final AuthenticatedUser user
+    ) {
+        ticketTypeService.deleteTicketType(ticketTypeId, user);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -1,0 +1,10 @@
+<div class="dialog-container">
+  <p class="dialog-message">{{ data.message }}</p>
+
+  <div class="dialog-actions">
+    <button appButton variant="outline" (click)="cancel()">Cancel</button>
+    <button appButton variant="danger" (click)="confirm()">
+      {{ data.confirmLabel ?? 'Delete' }}
+    </button>
+  </div>
+</div>
