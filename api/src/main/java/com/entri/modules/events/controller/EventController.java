@@ -3,12 +3,7 @@ package com.entri.modules.events.controller;
 import com.entri.common.security.AuthenticatedUser;
 import com.entri.common.dto.PaginationResponse;
 import com.entri.modules.events.controller.api.EventApi;
-import com.entri.modules.events.dto.EventResponse;
-import com.entri.modules.events.dto.EventFilter;
-import com.entri.modules.events.dto.EventRequest;
-import com.entri.modules.events.dto.EventDetailResponse;
-import com.entri.modules.events.dto.TicketTypeRequest;
-import com.entri.modules.events.dto.TicketTypeResponse;
+import com.entri.modules.events.dto.*;
 import com.entri.modules.events.service.EventService;
 import com.entri.modules.events.service.TicketTypeService;
 import jakarta.validation.Valid;
@@ -69,11 +64,26 @@ public class EventController implements EventApi {
     }
 
     @Override
-    public TicketTypeResponse createEventTicketType(
+    public ResponseEntity<EventTicketReservationResponse> reserveEventTickets(
+            UriComponentsBuilder uriComponentsBuilder,
+            @PathVariable final String eventExternalId,
+            @Valid @RequestBody final EventTicketReservationRequest eventTicketReservationRequest
+    ) {
+        var response = ticketTypeService.reserveEventTickets(eventExternalId, eventTicketReservationRequest);
+        var uri = uriComponentsBuilder.path("/ticket-types/{id}").buildAndExpand(response.reservationId()).toUri();
+        return ResponseEntity.created(uri).body(response);
+    }
+
+    @Override
+    public ResponseEntity<TicketTypeResponse> createEventTicketType(
+            UriComponentsBuilder uriComponentsBuilder,
             @PathVariable final String eventExternalId,
             @Valid @RequestBody final TicketTypeRequest ticketTypeRequest,
             @AuthenticationPrincipal final AuthenticatedUser user
     ) {
-        return ticketTypeService.createEventTicketType(eventExternalId, ticketTypeRequest, user);
+        var response = ticketTypeService.createEventTicketType(eventExternalId, ticketTypeRequest, user);
+        var uri = uriComponentsBuilder.path("/ticket-types/{id}").buildAndExpand(response.id()).toUri();
+        return ResponseEntity.created(uri).body(response);
     }
+
 }

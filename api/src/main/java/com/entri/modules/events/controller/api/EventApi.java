@@ -288,7 +288,10 @@ public interface EventApi {
             ),
     })
     @PostMapping("/{eventExternalId}/ticket-types")
-    TicketTypeResponse createEventTicketType(
+    ResponseEntity<TicketTypeResponse> createEventTicketType(
+            @Parameter(hidden = true)
+            UriComponentsBuilder uriComponentsBuilder,
+
             @Parameter(
                     description = "The unique external identifier of the event",
                     required = true
@@ -304,6 +307,54 @@ public interface EventApi {
             final TicketTypeRequest ticketTypeRequest,
 
             @Parameter(hidden = true)
-            @AuthenticationPrincipal final  AuthenticatedUser user
+            @AuthenticationPrincipal final AuthenticatedUser user
+    );
+
+
+    @Operation(
+            operationId = "reserveEventTickets",
+            summary = "Reserve Event Tickets",
+            description = "Temporarily reserves the requested tickets for the specified event and ticket types. The reservation holds the requested ticket quantities for a limited period, subject to ticket availability. On success, the API returns the created ticket reservation details."
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Ticket reservation created successfully"
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "The request is invalid. One or more validation errors were found",
+                    content = @Content(
+                            mediaType = "application/problem+json",
+                            schema = @Schema(implementation = ProblemDetail.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "The specified event was not found",
+                    content = @Content(
+                            mediaType = "application/problem+json",
+                            schema = @Schema(implementation = ProblemDetail.class)
+                    )
+            )
+    })
+    @PostMapping("/{eventExternalId}/reserve-tickets")
+    ResponseEntity<EventTicketReservationResponse> reserveEventTickets(
+            @Parameter(hidden = true)
+            UriComponentsBuilder uriComponentsBuilder,
+
+            @Parameter(
+                    description = "The unique external identifier of the event",
+                    required = true
+            )
+            @PathVariable final String eventExternalId,
+
+            @RequestBody(
+                    description = "The ticket type details",
+                    required = true
+            )
+            @Valid
+            @org.springframework.web.bind.annotation.RequestBody
+            final EventTicketReservationRequest eventTicketReservationRequest
     );
 }

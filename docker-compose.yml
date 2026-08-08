@@ -1,5 +1,5 @@
 services:
-  db:
+  entri_db:
     image: 'mysql:8.0.32'
     environment:
       MYSQL_DATABASE: entri
@@ -18,7 +18,7 @@ services:
       retries: 5
       start_period: 30s
 
-  api:
+  entri_api:
     image: ghcr.io/d-kens/entri-api:latest
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/entri?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
@@ -36,7 +36,7 @@ services:
     expose:
       - '8080'
     depends_on:
-      db:
+      entri_db:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:8080/actuator/health"]
@@ -46,12 +46,12 @@ services:
       start_period: 60s
     restart: unless-stopped
 
-  web:
+  entri_web:
     image: ghcr.io/d-kens/entri-web:latest
     expose:
       - '80'
     depends_on:
-      api:
+      entri_api:
         condition: service_healthy
     restart: unless-stopped
 
@@ -77,8 +77,8 @@ services:
       - /etc/letsencrypt:/etc/letsencrypt:ro
       - certbot-webroot:/var/www/certbot
     depends_on:
-      - web
-      - api
+      - entri_web
+      - entri_api
     restart: unless-stopped
 
 volumes:
