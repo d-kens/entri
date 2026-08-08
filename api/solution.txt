@@ -1,0 +1,126 @@
+# Ticket Reservation Solution
+
+## Agreed Approach
+Reservation Table + Computed Availability + Pessimistic Locking
+
+---
+
+## Availability Formula
+
+    availableCount = quantity - soldQuantity - SUM(PENDING reservations where expiresAt > NOW())
+
+No counter. The reservations table is the single source of truth.
+This formula is used both when:
+  - Creating a reservation (to check if tickets are available)
+  - Returning a TicketType (to show users the real available count)
+
+---
+
+## New DB Table: reservations
+
+    id              BIGINT PK AUTO_INCREMENT
+    ticket_type_id  BIGINT NOT NULL  FK -> ticket_types(id)
+    user_id         BIGINT NOT NULL  FK -> users(id)
+    quantity        INT NOT NULL
+    status          VARCHAR(20) NOT NULL  -- PENDING | CONFIRMED | CANCELLED | EXPIRED
+    expires_at      TIMESTAMP NOT NULL
+    created_at      TIMESTAMP NOT NULL
+    updated_at      TIMESTAMP NOT NULL
+
+    Index on: (ticket_type_id, status, expires_at)  -- for fast availability queries
+
+---
+
+## The Full Flow
+
+### 1. User picks tickets → POST /reservations
+  - DB acquires pessimistic lock on the TicketType row (SELECT ... FOR UPDATE)
+  - Queries active reservations: SUM(quantity) WHERE status=PENDING AND expiresAt > NOW()
+  - Computes: availableCount = quantity - soldQuantity - activeReservedSum
+  - If availableCount < requested quantity → throw InsufficientTicketsException
+  - If enough → insert Reservation row with status=PENDING, expiresAt = now + 15 minutes
+  - Release lock
+  - Return reservation ID to client — user has 15 minutes to complete payment
+
+### 2. User pays → POST /purchase (future)
+  - Find reservation by ID
+  - Check it is still PENDING and not expired
+  - Mark reservation CONFIRMED
+  - Increment soldQuantity on TicketType
+  - Issue ticket
+
+### 3. User abandons → @Scheduled job
+  - Runs every minute
+  - Finds all PENDING reservations where expiresAt < NOW()
+  - Marks them EXPIRED
+  - Tickets automatically become available again (formula excludes non-PENDING rows)
+  - Note: scheduler is for cleanup only, not for correctness
+
+### 4. User cancels → DELETE /reservations/{id}
+  - Mark reservation CANCELLED
+  - Tickets immediately available again (formula excludes CANCELLED rows)
+
+---
+
+## Returning TicketType Available Count
+
+When returning a TicketType response, availableCount must reflect reality.
+Do NOT return raw quantity. Compute it:
+
+    availableCount = quantity - soldQuantity - SUM(PENDING reservations where expiresAt > NOW())
+
+Example:
+    quantity        = 100
+    soldQuantity    =  30
+    active reserved =  10   (5 users mid-checkout)
+    ─────────────────────
+    availableCount  =  60   ← what the user sees
+
+This ensures users mid-checkout holding tickets are accounted for,
+and other users see the correct count.
+
+Repository query:
+    SELECT COALESCE(SUM(r.quantity), 0) FROM Reservation r
+    WHERE r.ticketType.id = :ticketTypeId
+    AND r.status = 'PENDING'
+    AND r.expiresAt > :now
+
+---
+
+## Why Pessimistic Locking
+
+Without a lock, this race condition occurs:
+
+    User A: sees 1 ticket available → proceeds
+    User B: sees 1 ticket available → proceeds simultaneously
+    Both insert reservations → oversold by 1
+
+The pessimistic lock (SELECT ... FOR UPDATE) forces User B to wait until
+User A's transaction commits, then reads the updated value. No overselling.
+
+---
+
+## Why No reservedQuantity Counter
+
+TicketType already has a reservedQuantity field. It is NOT used.
+Reason: if a crash or exception occurs mid-transaction, the counter drifts
+out of sync with the actual reservations. With the computed approach,
+the reservations table IS reality — no drift possible.
+
+---
+
+## Endpoints to Build
+
+    POST   /reservations          - create a reservation
+    DELETE /reservations/{id}     - cancel a reservation
+
+---
+
+## What Changes in Existing Code
+
+- TicketTypeResponse: replace quantity with availableCount (computed)
+- TicketTypeService: inject ReservationRepository to compute availableCount
+- Add Reservation entity, ReservationStatus enum, ReservationRepository,
+  ReservationService, ReservationController
+- Add @Scheduled cleanup job for expired reservations
+- Add DB migration for reservations table

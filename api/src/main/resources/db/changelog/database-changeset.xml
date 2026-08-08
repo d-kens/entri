@@ -297,4 +297,8 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="202608820001" author="d-kens">
+        <dropColumn tableName="ticket_types" columnName="reserved_quantity"/>
+    </changeSet>
+
 </databaseChangeLog>
