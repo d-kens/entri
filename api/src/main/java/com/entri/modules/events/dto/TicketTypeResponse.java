@@ -13,7 +13,6 @@ public record TicketTypeResponse(
         String currency,
         Integer quantity,
         Integer soldQuantity,
-        Integer reservedQuantity,
         Integer maxTicketsPerOrder,
         Instant saleStartDate,
         Instant saleEndDate,

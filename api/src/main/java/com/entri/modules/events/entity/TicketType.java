@@ -59,10 +59,6 @@ public class TicketType extends AbstractAuditableEntity {
     @Builder.Default
     private Integer soldQuantity = 0;
 
-    @Column(name = "reserved_quantity", nullable = false)
-    @Builder.Default
-    private Integer reservedQuantity = 0;
-
     @Column(name = "max_tickets_per_order")
     private Integer maxTicketsPerOrder;
 
