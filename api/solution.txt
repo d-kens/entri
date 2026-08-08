@@ -20,7 +20,6 @@ This formula is used both when:
 
     id              BIGINT PK AUTO_INCREMENT
     ticket_type_id  BIGINT NOT NULL  FK -> ticket_types(id)
-    user_id         BIGINT NOT NULL  FK -> users(id)
     quantity        INT NOT NULL
     status          VARCHAR(20) NOT NULL  -- PENDING | CONFIRMED | CANCELLED | EXPIRED
     expires_at      TIMESTAMP NOT NULL
