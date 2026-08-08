@@ -111,6 +111,19 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler(InsufficientTicketsException.class)
+    public ProblemDetail handleInsufficientTicketsException(
+            final InsufficientTicketsException exception,
+            final HttpServletRequest request
+    ) {
+        return createProblemDetail(
+                HttpStatus.CONFLICT,
+                "Insufficient Tickets",
+                exception.getMessage(),
+                request
+        );
+    }
+
     @ExceptionHandler(EmailAlreadyExist.class)
     public ProblemDetail handleEmailAlreadyExist(
             EmailAlreadyExist exception,

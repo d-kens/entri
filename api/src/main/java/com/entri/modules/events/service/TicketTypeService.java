@@ -1,20 +1,25 @@
 package com.entri.modules.events.service;
 
+import com.entri.common.exception.InsufficientTicketsException;
 import com.entri.common.security.AuthenticatedUser;
 import com.entri.common.exception.ResourceNotFoundException;
 import com.entri.common.exception.UnauthorizedException;
-import com.entri.modules.events.dto.TicketTypeRequest;
-import com.entri.modules.events.dto.TicketTypeResponse;
-import com.entri.modules.events.entity.Event;
-import com.entri.modules.events.entity.TicketType;
+import com.entri.modules.events.dto.*;
+import com.entri.modules.events.entity.*;
 import com.entri.modules.events.repository.EventRepository;
+import com.entri.modules.events.repository.EventTicketReservationRepository;
 import com.entri.modules.events.repository.TicketTypeRepository;
 import com.entri.modules.events.service.mapper.TicketTypeMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +27,7 @@ public class TicketTypeService {
     private final EventRepository eventRepository;
     private final TicketTypeMapper ticketTypeMapper;
     private final TicketTypeRepository ticketTypeRepository;
+    private final EventTicketReservationRepository eventTicketReservationRepository;
 
     public TicketTypeResponse getTicketType(final Long ticketTypeId) {
         TicketType ticketType = ticketTypeRepository.findById(ticketTypeId).orElseThrow(
@@ -100,4 +106,140 @@ public class TicketTypeService {
 
         return ticketTypeMapper.toTicketTypeResponse(ticketType);
     }
+
+    @Transactional
+    public EventTicketReservationResponse reserveEventTickets(
+            final String eventExternalId,
+            final EventTicketReservationRequest request
+    ) {
+        var event = eventRepository.findByExternalId(eventExternalId)
+                .orElseThrow(() -> new ResourceNotFoundException("Event with ID " + eventExternalId + " not found"));
+
+        var ticketTypeIds = request.itemRequests()
+                .stream()
+                .map(EventTicketReservationItemRequest::ticketTypeId)
+                .sorted()
+                .toList();
+
+        var ticketTypes = ticketTypeRepository.findAllForUpdate(ticketTypeIds);
+
+        validateTicketTypes(ticketTypes, ticketTypeIds, event);
+        validateAvailability(ticketTypes, request);
+
+        var reservation = createReservation(ticketTypes, request);
+        eventTicketReservationRepository.save(reservation);
+
+        return new EventTicketReservationResponse(
+                reservation.getExpiresAt(),
+                reservation.getExternalId(),
+                reservation.getTotalAmount());
+    }
+
+    private void validateTicketTypes(
+            final List<TicketType> ticketTypes,
+            final List<Long> requestedTicketTypeIds,
+            final Event event
+    ) {
+        var foundTicketTypeIds = ticketTypes.stream()
+                .map(TicketType::getId)
+                .collect(Collectors.toSet());
+
+        if (!foundTicketTypeIds.containsAll(requestedTicketTypeIds)) {
+            throw new ResourceNotFoundException(
+                    "One or more ticket types were not found"
+            );
+        }
+
+        var belongsToEvent = ticketTypes.stream()
+                .allMatch(ticketType ->
+                        ticketType.getEvent().getId().equals(event.getId())
+                );
+
+        if (!belongsToEvent) {
+            throw new ResourceNotFoundException(
+                    "One or more ticket types do not belong to event "
+                            + event.getExternalId()
+            );
+        }
+    }
+
+    private void validateAvailability(
+            final List<TicketType> ticketTypes,
+            final EventTicketReservationRequest request
+    ) {
+        var ticketTypesById = ticketTypes.stream()
+                .collect(Collectors.toMap(
+                        TicketType::getId,
+                        Function.identity()
+                ));
+
+        for (var item : request.itemRequests()) {
+
+            var ticketType = ticketTypesById.get(item.ticketTypeId());
+
+            var activeReservedQuantity =
+                    eventTicketReservationRepository.sumActiveReservations(
+                            ticketType.getId(),
+                            TicketReservationStatus.PENDING
+                    );
+
+            var availableQuantity =
+                    ticketType.getQuantity()
+                            - ticketType.getSoldQuantity()
+                            - activeReservedQuantity;
+
+            if (item.quantity() > availableQuantity) {
+                throw new InsufficientTicketsException(
+                        "Insufficient tickets available for ticket type "
+                                + ticketType.getId()
+                );
+            }
+        }
+    }
+
+    private EventTicketReservation createReservation(
+            final List<TicketType> ticketTypes,
+            final EventTicketReservationRequest request
+    ) {
+        var ticketTypesById = ticketTypes.stream()
+                .collect(Collectors.toMap(
+                        TicketType::getId,
+                        Function.identity()
+                ));
+
+        var reservation = EventTicketReservation.builder()
+                .status(TicketReservationStatus.PENDING)
+                .expiresAt(Instant.now().plus(15, ChronoUnit.MINUTES))
+                .totalAmount(BigDecimal.ZERO)
+                .build();
+
+        var totalAmount = BigDecimal.ZERO;
+
+        for (var item : request.itemRequests()) {
+
+            var ticketType = ticketTypesById.get(item.ticketTypeId());
+
+            var unitPrice = ticketType.getPrice();
+
+            var itemTotal = unitPrice.multiply(
+                    BigDecimal.valueOf(item.quantity())
+            );
+
+            var reservationItem = EventTicketReservationItem.builder()
+                    .ticketType(ticketType)
+                    .quantity(item.quantity())
+                    .unitPrice(unitPrice)
+                    .build();
+
+            reservation.addItem(reservationItem);
+
+            totalAmount = totalAmount.add(itemTotal);
+        }
+
+        reservation.setTotalAmount(totalAmount);
+
+        return reservation;
+    }
+
+
 }

@@ -1,0 +1,16 @@
+POST {{baseUrl}}/events/111111/reserve-tickets
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "itemRequests": [
+    {
+      "ticketTypeId": 101,
+      "quantity": 0
+    },
+    {
+      "ticketTypeId": 102,
+      "quantity": 0
+    }
+  ]
+}
