@@ -318,10 +318,6 @@ public interface EventApi {
     )
     @ApiResponses({
             @ApiResponse(
-                    responseCode = "200",
-                    description = "Ticket reservation created successfully"
-            ),
-            @ApiResponse(
                     responseCode = "400",
                     description = "The request is invalid. One or more validation errors were found",
                     content = @Content(
@@ -336,7 +332,19 @@ public interface EventApi {
                             mediaType = "application/problem+json",
                             schema = @Schema(implementation = ProblemDetail.class)
                     )
-            )
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "Insufficient Tickets",
+                    content = @Content(
+                            mediaType = "application/problem+json",
+                            schema = @Schema(implementation = ProblemDetail.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "Ticket reservation created successfully"
+            ),
     })
     @PostMapping("/{eventExternalId}/reserve-tickets")
     ResponseEntity<EventTicketReservationResponse> reserveEventTickets(
@@ -350,7 +358,7 @@ public interface EventApi {
             @PathVariable final String eventExternalId,
 
             @RequestBody(
-                    description = "The ticket type details",
+                    description = "The ticket reservation request",
                     required = true
             )
             @Valid

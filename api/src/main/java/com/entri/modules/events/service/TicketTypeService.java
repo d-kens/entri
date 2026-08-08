@@ -6,6 +6,7 @@ import com.entri.common.exception.ResourceNotFoundException;
 import com.entri.common.exception.UnauthorizedException;
 import com.entri.modules.events.dto.*;
 import com.entri.modules.events.entity.*;
+import com.entri.modules.events.repository.TicketTypeReservationSum;
 import com.entri.modules.events.repository.EventRepository;
 import com.entri.modules.events.repository.EventTicketReservationRepository;
 import com.entri.modules.events.repository.TicketTypeRepository;
@@ -112,6 +113,18 @@ public class TicketTypeService {
             final String eventExternalId,
             final EventTicketReservationRequest request
     ) {
+
+        /**
+         * TODO:
+         1.  Event status not checked - Should be a published event
+         2.  Ticket type status not checked - Should be an active ticket type
+         3.  maxTicketsPerOrder not enforced
+         4.  Sale date window not checked
+         */
+
+
+
+
         var event = eventRepository.findByExternalId(eventExternalId)
                 .orElseThrow(() -> new ResourceNotFoundException("Event with ID " + eventExternalId + " not found"));
 
@@ -167,22 +180,22 @@ public class TicketTypeService {
             final List<TicketType> ticketTypes,
             final EventTicketReservationRequest request
     ) {
-        var ticketTypesById = ticketTypes.stream()
+        var ticketTypeIds = ticketTypes.stream().map(TicketType::getId).toList();
+
+        var reservedByTicketType = eventTicketReservationRepository
+                .sumActiveReservationsByTicketTypes(ticketTypeIds, TicketReservationStatus.PENDING)
+                .stream()
                 .collect(Collectors.toMap(
-                        TicketType::getId,
-                        Function.identity()
+                        TicketTypeReservationSum::ticketTypeId,
+                        TicketTypeReservationSum::reservedQuantity
                 ));
 
+        var ticketTypesById = ticketTypes.stream()
+                .collect(Collectors.toMap(TicketType::getId, Function.identity()));
+
         for (var item : request.itemRequests()) {
-
             var ticketType = ticketTypesById.get(item.ticketTypeId());
-
-            var activeReservedQuantity =
-                    eventTicketReservationRepository.sumActiveReservations(
-                            ticketType.getId(),
-                            TicketReservationStatus.PENDING
-                    );
-
+            var activeReservedQuantity = reservedByTicketType.getOrDefault(ticketType.getId(), 0L);
             var availableQuantity =
                     ticketType.getQuantity()
                             - ticketType.getSoldQuantity()
@@ -209,7 +222,7 @@ public class TicketTypeService {
 
         var reservation = EventTicketReservation.builder()
                 .status(TicketReservationStatus.PENDING)
-                .expiresAt(Instant.now().plus(15, ChronoUnit.MINUTES))
+                .expiresAt(Instant.now().plus(10, ChronoUnit.MINUTES))
                 .totalAmount(BigDecimal.ZERO)
                 .build();
 
