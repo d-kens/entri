@@ -2,7 +2,7 @@ package com.entri.client.novu;
 
 import co.novu.Novu;
 import co.novu.models.components.CreateSubscriberRequestDto;
-import co.novu.models.components.To2;
+import co.novu.models.components.TriggerEventRequestDtoTo2;
 import co.novu.models.components.TriggerEventRequestDto;
 import co.novu.models.errors.ErrorDto;
 import co.novu.models.errors.ValidationErrorDto;
@@ -46,7 +46,7 @@ public class NovuClient {
     public void triggerWorkflow(WorkflowType workflow, String subscriberId, Map<String, Object> payload) {
         var request = TriggerEventRequestDto.builder()
                 .workflowId(workflow.getWorkflowId())
-                .to(To2.of(subscriberId))
+                .to(TriggerEventRequestDtoTo2.of(subscriberId))
                 .payload(payload)
                 .build();
 

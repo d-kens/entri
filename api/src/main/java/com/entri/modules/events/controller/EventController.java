@@ -70,7 +70,13 @@ public class EventController implements EventApi {
             @Valid @RequestBody final EventTicketReservationRequest eventTicketReservationRequest
     ) {
         var response = ticketTypeService.reserveEventTickets(eventExternalId, eventTicketReservationRequest);
-        var uri = uriComponentsBuilder.path("/ticket-types/{id}").buildAndExpand(response.reservationId()).toUri();
+        var uri = uriComponentsBuilder
+                .path("/events/{eventExternalId}/reservations/{reservationId}")
+                .buildAndExpand(
+                        eventExternalId,
+                        response.reservationId()
+                )
+                .toUri();
         return ResponseEntity.created(uri).body(response);
     }
 

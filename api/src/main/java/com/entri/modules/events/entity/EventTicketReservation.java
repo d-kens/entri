@@ -1,5 +1,6 @@
 package com.entri.modules.events.entity;
 
+import com.entri.common.entity.AbstractAuditableEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -29,7 +30,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "event_ticket_reservations")
-public class EventTicketReservation {
+public class EventTicketReservation extends AbstractAuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
