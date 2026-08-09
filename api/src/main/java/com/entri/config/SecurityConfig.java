@@ -62,7 +62,7 @@ public class SecurityConfig {
                         .requestMatchers("/auth/reset-password").permitAll()
                         .requestMatchers(HttpMethod.GET,"/events").permitAll()
                         .requestMatchers(HttpMethod.GET,"/events/{externalId}").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/events/{eventExternalId}/reserve-tickets").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/events/{eventExternalId}/reservations").permitAll()
                         .requestMatchers(HttpMethod.GET,"/categories").permitAll()
                         .anyRequest().authenticated()
                 )
