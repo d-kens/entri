@@ -26,8 +26,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(FileUploadException.class)
     public ProblemDetail handleFileUploadException(
-            FileUploadException exception,
-            HttpServletRequest request
+            final FileUploadException exception,
+            final HttpServletRequest request
     ) {
         return createProblemDetail(
                 HttpStatus.INTERNAL_SERVER_ERROR,
@@ -39,8 +39,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public ProblemDetail handleMaxUploadSizeExceededException(
-            MaxUploadSizeExceededException exception,
-            HttpServletRequest request
+            final MaxUploadSizeExceededException exception,
+            final HttpServletRequest request
     ) {
         return createProblemDetail(
                 HttpStatus.PAYLOAD_TOO_LARGE,
@@ -52,8 +52,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ProblemDetail handleInvalidFileTypeException(
-            InvalidFileTypeException exception,
-            HttpServletRequest request
+            final InvalidFileTypeException exception,
+            final HttpServletRequest request
     ) {
         return createProblemDetail(
                 HttpStatus.BAD_REQUEST,
@@ -65,8 +65,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ProblemDetail handleValidationErrors(
-            MethodArgumentNotValidException exception,
-            HttpServletRequest request
+            final MethodArgumentNotValidException exception,
+            final HttpServletRequest request
     ) {
         Map<String, String> errors = new HashMap<>();
 
@@ -88,7 +88,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ProblemDetail handleUnreadableMessage(
-            HttpServletRequest request
+            final HttpServletRequest request
     ) {
         return createProblemDetail(
                 HttpStatus.BAD_REQUEST,
@@ -100,8 +100,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ProblemDetail handleResourceNotFoundException(
-            ResourceNotFoundException exception,
-            HttpServletRequest request
+            final ResourceNotFoundException exception,
+            final HttpServletRequest request
     ) {
         return createProblemDetail(
                 HttpStatus.NOT_FOUND,
@@ -124,10 +124,63 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler(EventNotOnSaleException.class)
+    public ProblemDetail handleEventNotOnSaleException(
+            final EventNotOnSaleException exception,
+            final HttpServletRequest request
+    ) {
+        return createProblemDetail(
+                HttpStatus.CONFLICT,
+                "Event Tickets Not On Sale",
+                exception.getMessage(),
+                request
+        );
+    }
+
+    @ExceptionHandler(TicketTypeNotForEventException.class)
+    public ProblemDetail handleTicketTypeNotForEventException(
+            final TicketTypeNotForEventException exception,
+            final HttpServletRequest request
+    ) {
+        return createProblemDetail(
+                HttpStatus.BAD_REQUEST,
+                "Invalid Ticket Type",
+                exception.getMessage(),
+                request
+        );
+    }
+
+    @ExceptionHandler(TicketTypeNotAvailableException.class)
+    public ProblemDetail handleTicketTypeNotAvailableException(
+            final TicketTypeNotAvailableException exception,
+            final HttpServletRequest request
+    ) {
+        return createProblemDetail(
+                HttpStatus.CONFLICT,
+                "Ticket Type Not Available",
+                exception.getMessage(),
+                request
+        );
+    }
+
+    @ExceptionHandler(MaxTicketsPerOrderExceededException.class)
+    public ProblemDetail handleMaxTicketsPerOrderExceededException(
+            final MaxTicketsPerOrderExceededException exception,
+            final HttpServletRequest request
+    ) {
+        return createProblemDetail(
+                HttpStatus.BAD_REQUEST,
+                "Max Tickets Per Order Exceeded",
+                exception.getMessage(),
+                request
+        );
+    }
+
+
     @ExceptionHandler(EmailAlreadyExist.class)
     public ProblemDetail handleEmailAlreadyExist(
-            EmailAlreadyExist exception,
-            HttpServletRequest request
+            final EmailAlreadyExist exception,
+            final HttpServletRequest request
     ) {
         return createProblemDetail(
                 HttpStatus.CONFLICT,
@@ -138,7 +191,9 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(UnauthorizedException.class)
-    public ProblemDetail handleUnauthorizedException(UnauthorizedException exception, HttpServletRequest request) {
+    public ProblemDetail handleUnauthorizedException(
+            final UnauthorizedException exception,
+            final HttpServletRequest request) {
         return createProblemDetail(
                 HttpStatus.FORBIDDEN,
                 "Unauthorized",
@@ -148,19 +203,25 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(AuthenticationException.class)
-    public ProblemDetail handleAuthenticationException(AuthenticationException exception, HttpServletRequest request) {
+    public ProblemDetail handleAuthenticationException(
+            final AuthenticationException exception,
+            final HttpServletRequest request
+    ) {
         return createProblemDetail(HttpStatus.UNAUTHORIZED, "Unauthorized", exception.getMessage(), request);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ProblemDetail handleAccessDeniedException(AccessDeniedException exception, HttpServletRequest request) {
+    public ProblemDetail handleAccessDeniedException(
+            final AccessDeniedException exception,
+            final HttpServletRequest request
+    ) {
         return createProblemDetail(HttpStatus.FORBIDDEN, "Forbidden", exception.getMessage(), request);
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ProblemDetail handleMethodNotAllowed(
-            HttpRequestMethodNotSupportedException exception,
-            HttpServletRequest request
+            final HttpRequestMethodNotSupportedException exception,
+            final HttpServletRequest request
     ) {
         return createProblemDetail(
                 HttpStatus.METHOD_NOT_ALLOWED,

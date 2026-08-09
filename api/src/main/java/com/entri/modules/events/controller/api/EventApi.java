@@ -169,6 +169,7 @@ public interface EventApi {
                     required = true
             )
             @Valid
+            // FQN required — collides with io.swagger.v3.oas.annotations.parameters.RequestBody
             @org.springframework.web.bind.annotation.RequestBody
             final EventRequest request,
 
@@ -235,6 +236,7 @@ public interface EventApi {
                     required = true
             )
             @Valid
+            // FQN required — collides with io.swagger.v3.oas.annotations.parameters.RequestBody
             @org.springframework.web.bind.annotation.RequestBody
             final EventRequest request,
 
@@ -303,6 +305,7 @@ public interface EventApi {
                     required = true
             )
             @Valid
+            // FQN required — collides with io.swagger.v3.oas.annotations.parameters.RequestBody
             @org.springframework.web.bind.annotation.RequestBody
             final TicketTypeRequest ticketTypeRequest,
 
@@ -335,7 +338,12 @@ public interface EventApi {
             ),
             @ApiResponse(
                     responseCode = "409",
-                    description = "Insufficient Tickets",
+                    description = """
+                        The booking request conflicts with the current state of the event or ticket.
+                        This may occur when the event is not currently on sale, the ticket type is not
+                        available, there are insufficient tickets available, or the maximum number of
+                        tickets allowed per order has been exceeded.
+                    """,
                     content = @Content(
                             mediaType = "application/problem+json",
                             schema = @Schema(implementation = ProblemDetail.class)
@@ -346,7 +354,7 @@ public interface EventApi {
                     description = "Ticket reservation created successfully"
             ),
     })
-    @PostMapping("/{eventExternalId}/reserve-tickets")
+    @PostMapping("/{eventExternalId}/reservations")
     ResponseEntity<EventTicketReservationResponse> reserveEventTickets(
             @Parameter(hidden = true)
             UriComponentsBuilder uriComponentsBuilder,
@@ -362,6 +370,7 @@ public interface EventApi {
                     required = true
             )
             @Valid
+            // FQN required — collides with io.swagger.v3.oas.annotations.parameters.RequestBody
             @org.springframework.web.bind.annotation.RequestBody
             final EventTicketReservationRequest eventTicketReservationRequest
     );

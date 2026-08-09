@@ -50,7 +50,7 @@ public class EventTicketReservation extends AbstractAuditableEntity {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private TicketReservationStatus status;
+    private EventTicketReservationStatus status;
 
     @Column(name = "total_amount", nullable = false, precision = 10, scale = 2)
     private BigDecimal totalAmount;

@@ -1,4 +1,4 @@
-POST {{baseUrl}}/events/5c0ff148-a479-420f-8b97-44f9fe1f68fe/reserve-tickets
+POST {{baseUrl}}/events/5c0ff148-a479-420f-8b97-44f9fe1f68fe/reservations
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
