@@ -1,0 +1,16 @@
+POST {{baseUrl}}/events/5c0ff148-a479-420f-8b97-44f9fe1f68fe/reservations
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "itemRequests": [
+    {
+      "ticketTypeId": 1,
+      "quantity": 3
+    },
+    {
+      "ticketTypeId": 3,
+      "quantity": 3
+    }
+  ]
+}

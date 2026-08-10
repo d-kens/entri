@@ -1,8 +1,8 @@
 package com.entri.modules.events.service;
 
-import com.entri.common.security.AuthenticatedUser;
 import com.entri.common.exception.ResourceNotFoundException;
 import com.entri.common.exception.UnauthorizedException;
+import com.entri.common.security.AuthenticatedUser;
 import com.entri.modules.events.dto.TicketTypeRequest;
 import com.entri.modules.events.dto.TicketTypeResponse;
 import com.entri.modules.events.entity.Event;
