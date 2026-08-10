@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 public class EventController implements EventApi {
@@ -35,6 +37,11 @@ public class EventController implements EventApi {
             @PathVariable final String eventExternalId
     ) {
         return eventService.getEventByExternalId(eventExternalId);
+    }
+
+    @Override
+    public List<TicketTypeResponse> getEventTicketTypes(@PathVariable String eventExternalId) {
+
     }
 
     @Override

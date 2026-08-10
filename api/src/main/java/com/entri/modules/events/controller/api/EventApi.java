@@ -20,6 +20,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.List;
+
 @RequestMapping("/events")
 @Tag(
         name = "Events",
@@ -115,6 +117,35 @@ public interface EventApi {
     })
     @GetMapping("/{eventExternalId}")
     EventResponse getEventByExternalId(
+            @Parameter(
+                    description = "The unique external identifier of the event",
+                    required = true
+            )
+            @PathVariable
+            final String eventExternalId
+    );
+
+    @Operation(
+            operationId = "getEventTicketTypes",
+            summary = "Get Ticket Types for an Event",
+            description = "Retrieves the ticket types of an event identified by its external identifier"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "The specified event was not found",
+                    content = @Content(
+                            mediaType = "application/problem+json",
+                            schema = @Schema(implementation = ProblemDetail.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Event ticket types retrieved successfully"
+            ),
+    })
+    @GetMapping("/{eventExternalId}/ticket-types")
+    List<TicketTypeResponse> getEventTicketTypes(
             @Parameter(
                     description = "The unique external identifier of the event",
                     required = true
