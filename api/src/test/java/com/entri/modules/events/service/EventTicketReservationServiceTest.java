@@ -71,7 +71,6 @@ class EventTicketReservationServiceTest {
                 .quantity(quantity)
                 .soldQuantity(soldQuantity)
                 .price(price)
-                .currency("KES")
                 .name("General Admission")
                 .build();
     }
@@ -83,7 +82,6 @@ class EventTicketReservationServiceTest {
                 .quantity(quantity)
                 .soldQuantity(soldQuantity)
                 .price(price)
-                .currency("KES")
                 .name("General Admission")
                 .maxTicketsPerOrder(maxPerOrder)
                 .build();
@@ -164,7 +162,6 @@ class EventTicketReservationServiceTest {
                 .soldQuantity(0)
                 .reservedQuantity(8)
                 .price(BigDecimal.valueOf(50))
-                .currency("KES")
                 .name("General Admission")
                 .build();
 
@@ -225,7 +222,6 @@ class EventTicketReservationServiceTest {
                 .soldQuantity(3)
                 .reservedQuantity(5)
                 .price(BigDecimal.valueOf(100))
-                .currency("KES")
                 .name("General Admission")
                 .build();
 
@@ -402,7 +398,6 @@ class EventTicketReservationServiceTest {
                 .quantity(100)
                 .soldQuantity(0)
                 .price(BigDecimal.valueOf(50))
-                .currency("KES")
                 .name("General Admission")
                 .status(TicketTypeStatus.INACTIVE)
                 .build();
@@ -478,7 +473,6 @@ class EventTicketReservationServiceTest {
                 .quantity(100)
                 .soldQuantity(100)
                 .price(BigDecimal.valueOf(50))
-                .currency("KES")
                 .name("General Admission")
                 .status(TicketTypeStatus.SOLD_OUT)
                 .build();
@@ -504,7 +498,6 @@ class EventTicketReservationServiceTest {
                 .quantity(100)
                 .soldQuantity(0)
                 .price(BigDecimal.valueOf(50))
-                .currency("KES")
                 .name("VIP")
                 .status(TicketTypeStatus.INACTIVE)
                 .build();

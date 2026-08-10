@@ -3,7 +3,6 @@ package com.entri.modules.events.controller;
 import com.entri.common.security.AuthenticatedUser;
 import com.entri.common.dto.PaginationResponse;
 import com.entri.modules.events.controller.api.EventApi;
-import com.entri.modules.events.dto.EventDetailResponse;
 import com.entri.modules.events.dto.EventFilter;
 import com.entri.modules.events.dto.EventRequest;
 import com.entri.modules.events.dto.EventResponse;
@@ -32,7 +31,7 @@ public class EventController implements EventApi {
     private final EventTicketReservationService eventTicketReservationService;
 
     @Override
-    public EventDetailResponse getEventByExternalId(
+    public EventResponse getEventByExternalId(
             @PathVariable final String eventExternalId
     ) {
         return eventService.getEventByExternalId(eventExternalId);

@@ -114,7 +114,7 @@ public interface EventApi {
             ),
     })
     @GetMapping("/{eventExternalId}")
-    EventDetailResponse getEventByExternalId(
+    EventResponse getEventByExternalId(
             @Parameter(
                     description = "The unique external identifier of the event",
                     required = true
