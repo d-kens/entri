@@ -44,7 +44,6 @@ public class TicketTypeService {
         ticketType.setName(ticketTypeRequest.name());
         ticketType.setDescription(ticketTypeRequest.description());
         ticketType.setPrice(ticketTypeRequest.price());
-        ticketType.setCurrency(ticketTypeRequest.currency());
         ticketType.setQuantity(ticketTypeRequest.quantity());
         ticketType.setMaxTicketsPerOrder(ticketTypeRequest.maxTicketsPerOrder());
         ticketType.setSaleStartDate(ticketTypeRequest.saleStartDate());
@@ -89,7 +88,6 @@ public class TicketTypeService {
                 .name(ticketTypeRequest.name())
                 .description(ticketTypeRequest.description())
                 .price(ticketTypeRequest.price())
-                .currency(ticketTypeRequest.currency())
                 .quantity(ticketTypeRequest.quantity())
                 .maxTicketsPerOrder(ticketTypeRequest.maxTicketsPerOrder())
                 .saleStartDate(ticketTypeRequest.saleStartDate())

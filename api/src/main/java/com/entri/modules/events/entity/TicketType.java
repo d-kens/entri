@@ -49,9 +49,6 @@ public class TicketType extends AbstractAuditableEntity {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
 
-    @Column(nullable = false, length = 10)
-    private String currency;
-
     @Column(nullable = false)
     private Integer quantity;
 

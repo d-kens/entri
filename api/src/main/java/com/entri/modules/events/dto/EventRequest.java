@@ -33,6 +33,9 @@ public record EventRequest(
         Instant endTime,
 
         @NotBlank(message = "Banner image is required")
-        String bannerUrl
+        String bannerUrl,
+
+        @NotBlank(message = "Currency is required")
+        String currency
 ) {
 }
