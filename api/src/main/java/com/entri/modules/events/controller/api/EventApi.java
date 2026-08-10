@@ -169,6 +169,7 @@ public interface EventApi {
                     required = true
             )
             @Valid
+            // FQN required — collides with io.swagger.v3.oas.annotations.parameters.RequestBody
             @org.springframework.web.bind.annotation.RequestBody
             final EventRequest request,
 
@@ -235,6 +236,7 @@ public interface EventApi {
                     required = true
             )
             @Valid
+            // FQN required — collides with io.swagger.v3.oas.annotations.parameters.RequestBody
             @org.springframework.web.bind.annotation.RequestBody
             final EventRequest request,
 
@@ -288,7 +290,10 @@ public interface EventApi {
             ),
     })
     @PostMapping("/{eventExternalId}/ticket-types")
-    TicketTypeResponse createEventTicketType(
+    ResponseEntity<TicketTypeResponse> createEventTicketType(
+            @Parameter(hidden = true)
+            UriComponentsBuilder uriComponentsBuilder,
+
             @Parameter(
                     description = "The unique external identifier of the event",
                     required = true
@@ -300,10 +305,73 @@ public interface EventApi {
                     required = true
             )
             @Valid
+            // FQN required — collides with io.swagger.v3.oas.annotations.parameters.RequestBody
             @org.springframework.web.bind.annotation.RequestBody
             final TicketTypeRequest ticketTypeRequest,
 
             @Parameter(hidden = true)
-            @AuthenticationPrincipal final  AuthenticatedUser user
+            @AuthenticationPrincipal final AuthenticatedUser user
+    );
+
+
+    @Operation(
+            operationId = "reserveEventTickets",
+            summary = "Reserve Event Tickets",
+            description = "Temporarily reserves the requested tickets for the specified event and ticket types. The reservation holds the requested ticket quantities for a limited period, subject to ticket availability. On success, the API returns the created ticket reservation details."
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "The request is invalid. One or more validation errors were found",
+                    content = @Content(
+                            mediaType = "application/problem+json",
+                            schema = @Schema(implementation = ProblemDetail.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "The specified event was not found",
+                    content = @Content(
+                            mediaType = "application/problem+json",
+                            schema = @Schema(implementation = ProblemDetail.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = """
+                        The booking request conflicts with the current state of the event or ticket.
+                        This may occur when the event is not currently on sale, the ticket type is not
+                        available, there are insufficient tickets available, or the maximum number of
+                        tickets allowed per order has been exceeded.
+                    """,
+                    content = @Content(
+                            mediaType = "application/problem+json",
+                            schema = @Schema(implementation = ProblemDetail.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "Ticket reservation created successfully"
+            ),
+    })
+    @PostMapping("/{eventExternalId}/reservations")
+    ResponseEntity<EventTicketReservationResponse> reserveEventTickets(
+            @Parameter(hidden = true)
+            UriComponentsBuilder uriComponentsBuilder,
+
+            @Parameter(
+                    description = "The unique external identifier of the event",
+                    required = true
+            )
+            @PathVariable final String eventExternalId,
+
+            @RequestBody(
+                    description = "The ticket reservation request",
+                    required = true
+            )
+            @Valid
+            // FQN required — collides with io.swagger.v3.oas.annotations.parameters.RequestBody
+            @org.springframework.web.bind.annotation.RequestBody
+            final EventTicketReservationRequest eventTicketReservationRequest
     );
 }
