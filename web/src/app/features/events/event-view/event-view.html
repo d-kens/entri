@@ -135,7 +135,7 @@
         <div class="ticket-panel">
           <p class="panel-heading">Tickets</p>
 
-          @if (activeTickets().length === 0) {
+          @if (ticketTypes().length === 0) {
             <div class="no-tickets">
               <mat-icon>confirmation_number</mat-icon>
               <p class="no-tickets-title">No tickets available</p>
@@ -143,16 +143,29 @@
             </div>
           } @else {
             <div class="ticket-list">
-              @for (ticket of activeTickets(); track ticket.id) {
-                <div class="ticket-card" [class.ticket-card--active]="qty(ticket.id) > 0">
+              @for (ticket of ticketTypes(); track ticket.id) {
+                <div
+                  class="ticket-card"
+                  [class.ticket-card--active]="qty(ticket.id) > 0"
+                  [class.ticket-card--unavailable]="ticket.status !== 'ACTIVE'"
+                >
                   <div class="ticket-info">
-                    <p class="ticket-name">{{ ticket.name }}</p>
+                    <div class="ticket-name-row">
+                      <p class="ticket-name">{{ ticket.name }}</p>
+                      @if (ticket.status === 'SOLD_OUT') {
+                        <span class="ticket-status-tag ticket-status-tag--sold-out">Sold Out</span>
+                      } @else if (ticket.status === 'INACTIVE') {
+                        <span class="ticket-status-tag ticket-status-tag--inactive"
+                          >Unavailable</span
+                        >
+                      }
+                    </div>
                     @if (ticket.description) {
                       <p class="ticket-desc">{{ ticket.description }}</p>
                     }
                     <div class="ticket-price-row">
                       <p class="ticket-price">
-                        {{ ticket.currency }} {{ ticket.price | number: '1.2-2' }}
+                        {{ currency() }} {{ ticket.price | number: '1.2-2' }}
                       </p>
                       @if (qty(ticket.id) > 0) {
                         <span class="ticket-qty-tag">×{{ qty(ticket.id) }}</span>
@@ -160,34 +173,36 @@
                     </div>
                   </div>
                   <div class="ticket-controls">
-                    @if (qty(ticket.id) === 0) {
-                      <button
-                        class="add-btn"
-                        (click)="increment(ticket)"
-                        aria-label="Add {{ ticket.name }}"
-                      >
-                        <mat-icon>add</mat-icon>
-                        Add
-                      </button>
-                    } @else {
-                      <div class="qty-pill">
+                    @if (ticket.status === 'ACTIVE') {
+                      @if (qty(ticket.id) === 0) {
                         <button
-                          class="qty-pill-btn"
-                          (click)="decrement(ticket.id)"
-                          aria-label="Remove one"
-                        >
-                          <mat-icon>remove</mat-icon>
-                        </button>
-                        <span class="qty-pill-value">{{ qty(ticket.id) }}</span>
-                        <button
-                          class="qty-pill-btn"
+                          class="add-btn"
                           (click)="increment(ticket)"
-                          [disabled]="qty(ticket.id) >= ticket.maxTicketsPerOrder"
-                          aria-label="Add one"
+                          aria-label="Add {{ ticket.name }}"
                         >
                           <mat-icon>add</mat-icon>
+                          Add
                         </button>
-                      </div>
+                      } @else {
+                        <div class="qty-pill">
+                          <button
+                            class="qty-pill-btn"
+                            (click)="decrement(ticket.id)"
+                            aria-label="Remove one"
+                          >
+                            <mat-icon>remove</mat-icon>
+                          </button>
+                          <span class="qty-pill-value">{{ qty(ticket.id) }}</span>
+                          <button
+                            class="qty-pill-btn"
+                            (click)="increment(ticket)"
+                            [disabled]="qty(ticket.id) >= ticket.maxTicketsPerOrder"
+                            aria-label="Add one"
+                          >
+                            <mat-icon>add</mat-icon>
+                          </button>
+                        </div>
+                      }
                     }
                   </div>
                 </div>

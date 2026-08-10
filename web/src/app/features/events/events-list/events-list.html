@@ -94,6 +94,13 @@
             </td>
           </ng-container>
 
+          <ng-container matColumnDef="currency">
+            <th mat-header-cell *matHeaderCellDef>Currency</th>
+            <td mat-cell *matCellDef="let event" data-label="Currency">
+              <span class="currency-badge">{{ event.currency }}</span>
+            </td>
+          </ng-container>
+
           <ng-container matColumnDef="dateCreated">
             <th mat-header-cell *matHeaderCellDef>Created</th>
             <td mat-cell *matCellDef="let event" data-label="Created">
