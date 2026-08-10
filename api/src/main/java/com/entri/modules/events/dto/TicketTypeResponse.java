@@ -10,7 +10,7 @@ public record TicketTypeResponse(
         String name,
         String description,
         BigDecimal price,
-        Integer availableCount,
+        Integer availableQuantity,
         Integer maxTicketsPerOrder,
         Instant saleStartDate,
         Instant saleEndDate,

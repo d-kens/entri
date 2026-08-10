@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -23,12 +24,33 @@ public class TicketTypeService {
     private final TicketTypeMapper ticketTypeMapper;
     private final TicketTypeRepository ticketTypeRepository;
 
+    @Transactional(readOnly = true)
     public TicketTypeResponse getTicketType(final Long ticketTypeId) {
         TicketType ticketType = ticketTypeRepository.findById(ticketTypeId).orElseThrow(
                 () -> new ResourceNotFoundException("Ticket type with ID " + ticketTypeId + " not found")
         );
 
-        return ticketTypeMapper.toTicketTypeResponse(ticketType);
+        return ticketTypeMapper.toTicketTypeResponse(ticketType, ticketType.getAvailableQuantity());
+    }
+
+    @Transactional(readOnly = true)
+    public List<TicketTypeResponse> getTicketTypesByEventExternalId(
+            final String eventExternalId) {
+
+        Event event = eventRepository.findByExternalId(eventExternalId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Event with ID " + eventExternalId + " not found"));
+
+        return event.getTicketTypes().stream()
+                .map(ticketType -> {
+
+                    return ticketTypeMapper.toTicketTypeResponse(
+                            ticketType,
+                            ticketType.getAvailableQuantity()
+                    );
+                })
+                .toList();
     }
 
     @Transactional
@@ -50,7 +72,7 @@ public class TicketTypeService {
         ticketType.setSaleEndDate(ticketTypeRequest.saleEndDate());
 
         ticketTypeRepository.save(ticketType);
-        return ticketTypeMapper.toTicketTypeResponse(ticketType);
+        return ticketTypeMapper.toTicketTypeResponse(ticketType, ticketType.getAvailableQuantity());
     }
 
     @Transactional
@@ -96,6 +118,6 @@ public class TicketTypeService {
 
         ticketTypeRepository.save(ticketType);
 
-        return ticketTypeMapper.toTicketTypeResponse(ticketType);
+        return ticketTypeMapper.toTicketTypeResponse(ticketType, ticketType.getAvailableQuantity());
     }
 }

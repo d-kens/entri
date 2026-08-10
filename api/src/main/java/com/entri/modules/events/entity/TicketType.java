@@ -77,7 +77,7 @@ public class TicketType extends AbstractAuditableEntity {
     @Column(name = "deleted_at")
     private Instant deletedAt;
 
-    public int getAvailableCount() {
+    public int getAvailableQuantity() {
         return quantity - soldQuantity - reservedQuantity;
     }
 }
