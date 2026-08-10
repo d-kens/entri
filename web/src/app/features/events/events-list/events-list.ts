@@ -46,7 +46,16 @@ export class EventsList implements OnInit {
     last: true,
   });
 
-  readonly columns = ['title', 'venue', 'startTime', 'endTime', 'dateCreated', 'status', 'actions'];
+  readonly columns = [
+    'title',
+    'venue',
+    'startTime',
+    'endTime',
+    'currency',
+    'dateCreated',
+    'status',
+    'actions',
+  ];
 
   ngOnInit(): void {
     this.load(0, 10);

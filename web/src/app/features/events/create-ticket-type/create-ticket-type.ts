@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { EventDetailResponse, TicketTypeRequest } from '@features/events/models/event.models';
+import { EventResponse, TicketTypeRequest } from '@features/events/models/event.models';
 import { EventsService } from '@features/events/services/events-service';
 import { SnackbarService } from '@shared/services/snackbar-service';
 import { EventHero } from '@features/events/event-hero/event-hero';
@@ -27,7 +27,7 @@ export class CreateTicketType implements OnInit {
   hasError = signal(false);
   isSaving = signal(false);
   eventExternalId = signal(this.route.snapshot.paramMap.get('eventExternalId')!);
-  event = signal<EventDetailResponse | null>(null);
+  event = signal<EventResponse | null>(null);
 
   ngOnInit() {
     this.loadEvent();
@@ -58,7 +58,6 @@ export class CreateTicketType implements OnInit {
       name: data.name,
       price: Number(data.price),
       description: data.description,
-      currency: 'KES',
       quantity: Number(data.quantity),
       maxTicketsPerOrder: Number(data.maxTicketsPerOrder),
       saleStartDate: data.salesStartDate,
