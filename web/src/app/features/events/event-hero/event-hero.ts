@@ -3,7 +3,7 @@ import { DatePipe, TitleCasePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { EventDetailResponse } from '@features/events/models/event.models';
+import { EventResponse } from '@features/events/models/event.models';
 
 @Component({
   selector: 'app-event-hero',
@@ -13,6 +13,6 @@ import { EventDetailResponse } from '@features/events/models/event.models';
   styleUrl: './event-hero.css',
 })
 export class EventHero {
-  event = input.required<EventDetailResponse>();
+  event = input.required<EventResponse>();
   backLink = input<string[]>(['/dashboard/events']);
 }

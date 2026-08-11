@@ -83,6 +83,9 @@ Event extends AbstractAuditableEntity {
     @Column(name = "published_at")
     private Instant publishedAt;
 
+    @Column(nullable = false, length = 10)
+    private String currency;
+
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<TicketType> ticketTypes = new ArrayList<>();

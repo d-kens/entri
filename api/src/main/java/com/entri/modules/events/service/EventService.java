@@ -4,7 +4,6 @@ import com.entri.common.security.AuthenticatedUser;
 import com.entri.common.exception.UnauthorizedException;
 import com.entri.common.dto.PaginationResponse;
 import com.entri.common.exception.ResourceNotFoundException;
-import com.entri.modules.events.dto.EventDetailResponse;
 import com.entri.modules.events.dto.EventFilter;
 import com.entri.modules.events.dto.EventRequest;
 import com.entri.modules.events.dto.EventResponse;
@@ -81,6 +80,7 @@ public class EventService {
                 .startTime(request.startTime())
                 .endTime(request.endTime())
                 .bannerUrl(request.bannerUrl())
+                .currency(request.currency())
                 .status(EventStatus.DRAFT)
                 .build();
 
@@ -88,10 +88,10 @@ public class EventService {
         return eventMapper.toEventResponse(event);
     }
 
-    public EventDetailResponse getEventByExternalId(final String externalId) {
+    public EventResponse getEventByExternalId(final String externalId) {
         var event = eventRepository.findByExternalId(externalId)
                 .orElseThrow(() -> new ResourceNotFoundException("Event with external ID: " + externalId + " not found"));
-        return eventMapper.toEventDetailResponse(event);
+        return eventMapper.toEventResponse(event);
     }
 
     @Transactional
@@ -118,6 +118,7 @@ public class EventService {
         event.setStartTime(request.startTime());
         event.setEndTime(request.endTime());
         event.setBannerUrl(request.bannerUrl());
+        event.setCurrency(request.currency());
 
         eventRepository.save(event);
         return eventMapper.toEventResponse(event);

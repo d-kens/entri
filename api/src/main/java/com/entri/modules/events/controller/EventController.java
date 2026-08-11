@@ -3,7 +3,6 @@ package com.entri.modules.events.controller;
 import com.entri.common.security.AuthenticatedUser;
 import com.entri.common.dto.PaginationResponse;
 import com.entri.modules.events.controller.api.EventApi;
-import com.entri.modules.events.dto.EventDetailResponse;
 import com.entri.modules.events.dto.EventFilter;
 import com.entri.modules.events.dto.EventRequest;
 import com.entri.modules.events.dto.EventResponse;
@@ -23,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 public class EventController implements EventApi {
@@ -32,10 +33,15 @@ public class EventController implements EventApi {
     private final EventTicketReservationService eventTicketReservationService;
 
     @Override
-    public EventDetailResponse getEventByExternalId(
+    public EventResponse getEventByExternalId(
             @PathVariable final String eventExternalId
     ) {
         return eventService.getEventByExternalId(eventExternalId);
+    }
+
+    @Override
+    public List<TicketTypeResponse> getEventTicketTypes(@PathVariable String eventExternalId) {
+        return ticketTypeService.getTicketTypesByEventExternalId(eventExternalId);
     }
 
     @Override
