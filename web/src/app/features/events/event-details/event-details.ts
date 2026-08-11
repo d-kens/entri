@@ -8,13 +8,14 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog } from '@angular/material/dialog';
+import { forkJoin } from 'rxjs';
 import { EventsService } from '../services/events-service';
-import { EventDetailResponse } from '@features/events/models/event.models';
 import { EventHero } from '@features/events/event-hero/event-hero';
 import { EntriButton } from '@shared/components/button/entri-button.component';
 import { PageError } from '@shared/components/page-error/page-error';
 import { SnackbarService } from '@shared/services/snackbar-service';
 import { ConfirmDialog } from '@shared/components/confirm-dialog/confirm-dialog';
+import { EventResponse, TicketTypeResponse } from '@features/events/models/event.models';
 
 @Component({
   selector: 'app-event-details',
@@ -41,7 +42,8 @@ export class EventDetails implements OnInit {
   private dialog = inject(MatDialog);
   private snackbarService = inject(SnackbarService);
 
-  event = signal<EventDetailResponse | null>(null);
+  event = signal<EventResponse | null>(null);
+  ticketTypes = signal<TicketTypeResponse[]>([]);
   isLoading = signal(true);
   hasError = signal(false);
   eventExternalId = signal(this.route.snapshot.paramMap.get('eventExternalId')!);
@@ -89,9 +91,13 @@ export class EventDetails implements OnInit {
     this.isLoading.set(true);
     this.hasError.set(false);
 
-    this.eventsService.getEvent(this.eventExternalId()).subscribe({
-      next: (event) => {
+    forkJoin([
+      this.eventsService.getEvent(this.eventExternalId()),
+      this.eventsService.getEventTicketTypes(this.eventExternalId()),
+    ]).subscribe({
+      next: ([event, ticketTypes]) => {
         this.event.set(event);
+        this.ticketTypes.set(ticketTypes);
         this.isLoading.set(false);
       },
       error: () => {

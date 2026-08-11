@@ -44,6 +44,7 @@ export class CreateEvent implements OnInit {
           title: data.title,
           description: data.description,
           categoryId: data.categoryId as number,
+          currency: data.currency,
           venueName: data.venueName,
           venueCity: data.venueCity,
           venueCountry: data.venueCountry,

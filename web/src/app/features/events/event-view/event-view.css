@@ -415,6 +415,44 @@
   background: color-mix(in srgb, var(--mat-sys-primary) 5%, transparent);
 }
 
+.ticket-card--unavailable {
+  opacity: 0.6;
+}
+
+.ticket-name-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.ticket-name-row .ticket-name {
+  margin: 0;
+}
+
+.ticket-status-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.ticket-status-tag--sold-out {
+  background: var(--mat-sys-error-container);
+  color: var(--mat-sys-on-error-container);
+}
+
+.ticket-status-tag--inactive {
+  background: var(--mat-sys-surface-container-high);
+  color: var(--mat-sys-on-surface-variant);
+  border: 1px solid var(--mat-sys-outline-variant);
+}
+
 .ticket-info {
   flex: 1;
   min-width: 0;

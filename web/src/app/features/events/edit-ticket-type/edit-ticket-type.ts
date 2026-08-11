@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
-import { EventDetailResponse, TicketTypeRequest } from '@features/events/models/event.models';
+import { EventResponse, TicketTypeRequest } from '@features/events/models/event.models';
 import { EventsService } from '@features/events/services/events-service';
 import { SnackbarService } from '@shared/services/snackbar-service';
 import { EventHero } from '@features/events/event-hero/event-hero';
@@ -31,7 +31,7 @@ export class EditTicketType implements OnInit {
 
   loading = signal(true);
   hasError = signal(false);
-  event = signal<EventDetailResponse | null>(null);
+  event = signal<EventResponse | null>(null);
   ticketTypeFormData = signal<TicketTypeFormData | undefined>(undefined);
 
   eventExternalId = signal(this.route.snapshot.paramMap.get('eventExternalId')!);
@@ -55,7 +55,7 @@ export class EditTicketType implements OnInit {
           name: ticketType.name,
           description: ticketType.description ?? '',
           price: String(ticketType.price),
-          quantity: String(ticketType.quantity),
+          quantity: String(ticketType.availableQuantity),
           maxTicketsPerOrder: ticketType.maxTicketsPerOrder,
           salesStartDate: ticketType.saleStartDate ?? '',
           salesEndDate: ticketType.saleEndDate ?? '',
@@ -101,7 +101,6 @@ export class EditTicketType implements OnInit {
       name: data.name,
       price: Number(data.price),
       description: data.description,
-      currency: 'KES',
       quantity: Number(data.quantity),
       maxTicketsPerOrder: Number(data.maxTicketsPerOrder),
       saleStartDate: data.salesStartDate,

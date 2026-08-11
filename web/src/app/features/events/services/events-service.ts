@@ -5,7 +5,6 @@ import { environment } from 'environments/environment';
 import {
   CategoryResponse,
   EventRequest,
-  EventDetailResponse,
   EventFilter,
   EventResponse,
   TicketTypeRequest,
@@ -39,8 +38,8 @@ export class EventsService {
     });
   }
 
-  getEvent(id: string): Observable<EventDetailResponse> {
-    return this.http.get<EventDetailResponse>(`${environment.apiBaseUrl}/events/${id}`);
+  getEvent(id: string): Observable<EventResponse> {
+    return this.http.get<EventResponse>(`${environment.apiBaseUrl}/events/${id}`);
   }
 
   getManagedEvents(
@@ -55,6 +54,12 @@ export class EventsService {
   getTicketTypeById(ticketTypeId: number): Observable<TicketTypeResponse> {
     return this.http.get<TicketTypeResponse>(
       `${environment.apiBaseUrl}/ticket-types/${ticketTypeId}`,
+    );
+  }
+
+  getEventTicketTypes(eventExternalId: string): Observable<TicketTypeResponse[]> {
+    return this.http.get<TicketTypeResponse[]>(
+      `${environment.apiBaseUrl}/events/${eventExternalId}/ticket-types`,
     );
   }
 

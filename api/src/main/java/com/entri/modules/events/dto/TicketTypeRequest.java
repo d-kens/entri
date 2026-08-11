@@ -19,9 +19,6 @@ public record TicketTypeRequest(
         @DecimalMin(value = "0.00", inclusive = true, message = "Price must be 0.00 or greater")
         BigDecimal price,
 
-        @NotBlank(message = "Currency is required")
-        String currency,
-
         @NotNull(message = "Quantity is required")
         @Min(value = 1, message = "Quantity must be at least 1")
         Integer quantity,

@@ -26,14 +26,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     catchError((error: HttpErrorResponse) => {
       if (error.status === 401 && !isRefreshCall) {
         return authService.refreshToken().pipe(
-          switchMap((response) => {
-            const retryReq = req.clone({
-              setHeaders: {
-                Authorization: `Bearer ${response.token}`,
-              },
-            });
-            return next(retryReq);
-          }),
           catchError((refreshError) => {
             if (refreshError.status === 401 || refreshError.status === 403) {
               authService.clearSession();
@@ -41,6 +33,14 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
               router.navigate(['/auth/login']);
             }
             return throwError(() => refreshError);
+          }),
+          switchMap((response) => {
+            const retryReq = req.clone({
+              setHeaders: {
+                Authorization: `Bearer ${response.token}`,
+              },
+            });
+            return next(retryReq);
           }),
         );
       }

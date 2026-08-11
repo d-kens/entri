@@ -52,7 +52,7 @@
             </button>
           </div>
 
-          @if (ev.ticketTypes.length === 0) {
+          @if (ticketTypes().length === 0) {
             <div class="tickets-empty">
               <mat-icon>confirmation_number</mat-icon>
               <p class="tickets-empty-label">No ticket types yet</p>
@@ -60,7 +60,7 @@
             </div>
           } @else {
             <div class="ticket-list">
-              @for (ticket of ev.ticketTypes; track ticket.id) {
+              @for (ticket of ticketTypes(); track ticket.id) {
                 <div class="ticket-row">
                   <div class="ticket-row-info">
                     <div class="ticket-row-title">
@@ -73,7 +73,7 @@
                       <p class="ticket-row-desc">{{ ticket.description }}</p>
                     }
                     <div class="ticket-row-meta">
-                      <span class="ticket-row-qty">{{ ticket.quantity }} available</span>
+                      <span class="ticket-row-qty">{{ ticket.availableQuantity }} available</span>
                       @if (ticket.saleStartDate || ticket.saleEndDate) {
                         <span class="ticket-row-meta-sep">·</span>
                         <span class="ticket-row-sale">
@@ -91,7 +91,7 @@
                   </div>
                   <div class="ticket-row-aside">
                     <p class="ticket-row-price">
-                      <span class="ticket-row-currency">{{ ticket.currency }}&nbsp;</span
+                      <span class="ticket-row-currency">{{ ev.currency }}&nbsp;</span
                       >{{ ticket.price | number: '1.2-2' }}
                     </p>
                     <div class="ticket-row-actions">
@@ -151,6 +151,14 @@
               <p class="sidebar-value">
                 {{ ev.startTime | date: 'HH:mm' }} - {{ ev.endTime | date: 'HH:mm' }}
               </p>
+            </div>
+          </div>
+
+          <div class="sidebar-row">
+            <div class="sidebar-icon-wrap"><mat-icon>payments</mat-icon></div>
+            <div>
+              <p class="sidebar-label">Currency</p>
+              <p class="sidebar-value">{{ ev.currency }}</p>
             </div>
           </div>
 

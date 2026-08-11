@@ -2,9 +2,10 @@ import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
+import { forkJoin } from 'rxjs';
 import { EventsService } from '../services/events-service';
-import { EventDetailResponse, TicketTypeResponse } from '@features/events/models/event.models';
 import { PageError } from '@shared/components/page-error/page-error';
+import { EventResponse, TicketTypeResponse } from '@features/events/models/event.models';
 
 @Component({
   selector: 'app-event-view',
@@ -19,15 +20,14 @@ export class EventView implements OnInit {
 
   readonly externalId = this.route.snapshot.paramMap.get('externalId')!;
 
-  event = signal<EventDetailResponse | null>(null);
+  event = signal<EventResponse | null>(null);
+  ticketTypes = signal<TicketTypeResponse[]>([]);
   loading = signal(true);
   error = signal(false);
 
   selections = signal<Map<number, number>>(new Map());
 
-  activeTickets = computed(() =>
-    (this.event()?.ticketTypes ?? []).filter((t) => t.status === 'ACTIVE'),
-  );
+  activeTickets = computed(() => this.ticketTypes().filter((t) => t.status === 'ACTIVE'));
 
   totalTickets = computed(() => {
     let n = 0;
@@ -37,28 +37,17 @@ export class EventView implements OnInit {
 
   totalPrice = computed(() => {
     let total = 0;
-    const ev = this.event();
-    if (!ev) return 0;
     this.selections().forEach((qty, id) => {
-      const ticket = ev.ticketTypes.find((t) => t.id === id);
+      const ticket = this.ticketTypes().find((t) => t.id === id);
       if (ticket) total += ticket.price * qty;
     });
     return total;
   });
 
-  currency = computed(() => this.activeTickets()[0]?.currency ?? '');
+  currency = computed(() => this.event()?.currency ?? '');
 
   ngOnInit(): void {
-    this.eventsService.getEvent(this.externalId).subscribe({
-      next: (ev) => {
-        this.event.set(ev);
-        this.loading.set(false);
-      },
-      error: () => {
-        this.error.set(true);
-        this.loading.set(false);
-      },
-    });
+    this.loadEvent();
   }
 
   qty(ticketId: number): number {
@@ -84,9 +73,14 @@ export class EventView implements OnInit {
   loadEvent(): void {
     this.loading.set(true);
     this.error.set(false);
-    this.eventsService.getEvent(this.externalId).subscribe({
-      next: (ev) => {
+
+    forkJoin([
+      this.eventsService.getEvent(this.externalId),
+      this.eventsService.getEventTicketTypes(this.externalId),
+    ]).subscribe({
+      next: ([ev, ticketTypes]) => {
         this.event.set(ev);
+        this.ticketTypes.set(ticketTypes);
         this.loading.set(false);
       },
       error: () => {

@@ -49,9 +49,6 @@ public class TicketType extends AbstractAuditableEntity {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
 
-    @Column(nullable = false, length = 10)
-    private String currency;
-
     @Column(nullable = false)
     private Integer quantity;
 
@@ -80,7 +77,7 @@ public class TicketType extends AbstractAuditableEntity {
     @Column(name = "deleted_at")
     private Instant deletedAt;
 
-    public int getAvailableCount() {
+    public int getAvailableQuantity() {
         return quantity - soldQuantity - reservedQuantity;
     }
 }
