@@ -28,6 +28,7 @@ export type EventRequest = {
   title: string;
   description: string;
   categoryId: number;
+  currency: string;
   venueName: string;
   venueCity: string;
   venueCountry: string;

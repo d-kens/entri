@@ -25,6 +25,7 @@ export interface EventDetailsFormData {
   title: string;
   description: string;
   categoryId: number | string;
+  currency: string;
 
   bannerUrl: string;
   bannerFile: File | null;
@@ -86,6 +87,7 @@ export class EventDetailsForm {
     title: '',
     description: '',
     categoryId: '',
+    currency: '',
     bannerUrl: '',
     bannerFile: null,
     venueName: '',
@@ -105,6 +107,8 @@ export class EventDetailsForm {
     min(fields.description, 1, { message: 'Description should be at least 20 characters' });
 
     required(fields.categoryId, { message: 'Please select category for the event' });
+
+    required(fields.currency, { message: 'Currency is required' });
 
     required(fields.venueName, { message: 'Event venues is required' });
     required(fields.venueCity, { message: 'Venue city is required' });

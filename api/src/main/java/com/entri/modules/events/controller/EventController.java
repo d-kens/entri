@@ -41,7 +41,7 @@ public class EventController implements EventApi {
 
     @Override
     public List<TicketTypeResponse> getEventTicketTypes(@PathVariable String eventExternalId) {
-
+        return ticketTypeService.getTicketTypesByEventExternalId(eventExternalId);
     }
 
     @Override
