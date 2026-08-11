@@ -42,3 +42,4 @@ On reservation creation, `reservedQuantity` is incremented inside the same locke
    - When creating ticket-types, ticket-types with future sale window should be macked as active
    - Background job to mark ticket types as `ACTIVE` when sales begin.
 6. Background job to mark events as `COMPLETED` when their end date and time has passed.
+   - Browse events should not return DRAFT events. It should return PUBLISHED, CANCELLED and COMPLETED events
