@@ -59,7 +59,7 @@ export class EventsService {
 
   getEventTicketTypes(eventExternalId: string): Observable<TicketTypeResponse[]> {
     return this.http.get<TicketTypeResponse[]>(
-      `${environment.apiBaseUrl}/${eventExternalId}/ticket-types`,
+      `${environment.apiBaseUrl}/events/${eventExternalId}/ticket-types`,
     );
   }
 

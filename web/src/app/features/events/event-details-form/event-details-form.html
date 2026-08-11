@@ -34,6 +34,16 @@
         <mat-error>{{ error.message }}</mat-error>
       }
     </mat-form-field>
+
+    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
+      <mat-label>Currency</mat-label>
+      <mat-select [formField]="eventDetailsForm.currency">
+        <mat-option value="KES">KES - Kenyan Shilling</mat-option>
+      </mat-select>
+      @for (error of eventDetailsForm.currency().errors(); track error.message) {
+        <mat-error>{{ error.message }}</mat-error>
+      }
+    </mat-form-field>
   </div>
 
   <div class="section-divider"></div>
