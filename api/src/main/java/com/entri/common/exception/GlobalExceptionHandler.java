@@ -176,6 +176,19 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler(InvalidReservationStatusException.class)
+    public ProblemDetail handleInvalidReservationStatusException(
+            final InvalidReservationStatusException exception,
+            final HttpServletRequest request
+    ) {
+        return createProblemDetail(
+                HttpStatus.CONFLICT,
+                "Reservation Not Available",
+                exception.getMessage(),
+                request
+        );
+    }
+
 
     @ExceptionHandler(EmailAlreadyExist.class)
     public ProblemDetail handleEmailAlreadyExist(
