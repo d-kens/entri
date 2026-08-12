@@ -7,7 +7,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public record IntaSendProperties(
         String baseUrl,
         String publishableKey,
-        String redirectUrl,
-        String webhookUrl
+        String redirectUrl
 ) {
 }

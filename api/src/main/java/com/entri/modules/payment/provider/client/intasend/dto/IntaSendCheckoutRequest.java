@@ -20,8 +20,6 @@ public record IntaSendCheckoutRequest(
         @JsonProperty("api_ref")
         String apiRef,
 
-        String method,
-
         String channel,
 
         @JsonProperty("redirect_url")

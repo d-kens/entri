@@ -71,7 +71,7 @@ public class EventTicketReservationService {
 
         validateAvailability(ticketTypesById, request);
 
-        var reservation = createReservation(ticketTypesById, request);
+        var reservation = createReservation(event, ticketTypesById, request);
         eventTicketReservationRepository.save(reservation);
 
         return new EventTicketReservationResponse(
@@ -143,10 +143,12 @@ public class EventTicketReservationService {
     }
 
     private EventTicketReservation createReservation(
+            Event event,
             final Map<Long, TicketType> ticketTypesById,
             final EventTicketReservationRequest request
     ) {
         var reservation = EventTicketReservation.builder()
+                .event(event)
                 .status(EventTicketReservationStatus.PENDING)
                 .expiresAt(clock.instant().plus(holdDuration))
                 .totalAmount(BigDecimal.ZERO)
