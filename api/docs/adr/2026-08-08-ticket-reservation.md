@@ -14,7 +14,7 @@ On reservation creation, `reservedQuantity` is incremented inside the same locke
 
 ## Planned Work
 
-1. `POST /reservations` — create a reservation
+1. ~~`POST /reservations` — create a reservation~~
 2. `DELETE /reservations/{id}` — user cancels; mark reservation `CANCELLED` and decrement `reservedQuantity` on each ticket type
 3. Background job (every minute) — find all `PENDING` reservations where `expiresAt < NOW()`, mark them `EXPIRED`, and decrement `reservedQuantity` on each ticket type. This job affects correctness: until it runs, expired slots are not returned to the available pool.
 
@@ -36,10 +36,11 @@ On reservation creation, `reservedQuantity` is incremented inside the same locke
    COMMIT
    ```
    `SKIP LOCKED` allows multiple job instances to process disjoint batches safely without blocking each other.
-4. When returning a `TicketType` response, `availableCount` must reflect reality — do not return raw `quantity`.
-    - UPDATE FE to expect avalableCount for ticket types
+4. ~~When returning a `TicketType` response, `availableCount` must reflect reality do not return raw `quantity`.~~
+    - ~~UPDATE FE to expect availableQuantity for ticket types~~
 5. Return all ticket types but UI should distinguish status: `ACTIVE` vs `SOLD_OUT`.
-   - When creating ticket-types, ticket-types with future sale window should be macked as active
+   - When creating ticket-types, ticket-types with a future sale window should be marked as active
    - Background job to mark ticket types as `ACTIVE` when sales begin.
 6. Background job to mark events as `COMPLETED` when their end date and time has passed.
-   - Browse events should not return DRAFT events. It should return PUBLISHED, CANCELLED and COMPLETED events
+   - Browse events should not return DRAFT events. It should return PUBLISHED, CANCELLED, and COMPLETED events
+   - UI messaging should be clear to the user if the event status is CANCELLED or COMPLETED that they can't purchase tickets for it.

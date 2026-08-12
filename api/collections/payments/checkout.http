@@ -1,0 +1,10 @@
+POST {{baseUrl}}/payments/checkout
+Content-Type: application/json
+
+{
+  "firstName": "Onyango",
+  "lastName": "Dickens",
+  "phoneNumber": "254707127309",
+  "email": "omondikens1@gmail.com",
+  "reservationId": "3bf0e9d7-c561-4318-8d2b-33f0c2486bf7"
+}
