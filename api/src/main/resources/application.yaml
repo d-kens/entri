@@ -41,6 +41,11 @@ novu:
     locale: ${NOVU_SUBSCRIBER_LOCALE:en-KE}
     timezone: ${NOVU_SUBSCRIBER_TIMEZONE:Africa/Nairobi}
 
+intasend:
+  base-url: https://api.intasend.com
+  publishable-key: ${INTASEND_PUBLISHABLE_KEY}
+  redirect-url: ${INTASEND_REDIRECT_URL}
+
 management:
   endpoints:
     web:
