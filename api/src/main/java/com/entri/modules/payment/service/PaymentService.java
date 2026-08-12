@@ -1,6 +1,7 @@
 package com.entri.modules.payment.service;
 
 import com.entri.common.exception.InvalidReservationStatusException;
+import com.entri.common.exception.PaymentProviderException;
 import com.entri.common.exception.ResourceNotFoundException;
 import com.entri.modules.events.entity.EventTicketReservationStatus;
 import com.entri.modules.events.repository.EventTicketReservationRepository;
@@ -15,6 +16,8 @@ import com.entri.modules.payment.provider.config.IntaSendProperties;
 import com.entri.modules.payment.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
 
 @Service
 @RequiredArgsConstructor
@@ -37,7 +40,7 @@ public class PaymentService {
             );
         }
 
-        var amount = eventTicketReservation.getTotalAmount();
+        var amount = new BigDecimal(1);
         var currency = eventTicketReservation.getEvent().getCurrency();
         var paymentProvider = PaymentProvider.INTA_SEND.toString();
 
@@ -57,23 +60,22 @@ public class PaymentService {
                 checkoutRequest.phoneNumber(),
                 checkoutRequest.email(),
                 payment.getExternalId(),
-                null,
                 "WEBSITE",
                 intaSendProperties.redirectUrl(),
                 amount,
                 currency
         );
 
-        var intaSendResponse = intaSendClient.createCheckout(intaSendRequest);
-
-        payment.setProviderReference(intaSendResponse.id());
-        payment.setStatus(PaymentStatus.PROCESSING);
-
-        paymentRepository.save(payment);
-
-        return new CheckoutResponse(
-                payment.getExternalId(),
-                intaSendResponse.url()
-        );
+        try {
+            var intaSendResponse = intaSendClient.createCheckout(intaSendRequest);
+            payment.setProviderReference(intaSendResponse.id());
+            payment.setStatus(PaymentStatus.PROCESSING);
+            paymentRepository.save(payment);
+            return new CheckoutResponse(payment.getExternalId(), intaSendResponse.url());
+        } catch (PaymentProviderException e) {
+            payment.setStatus(PaymentStatus.FAILED);
+            paymentRepository.save(payment);
+            throw e;
+        }
     }
 }

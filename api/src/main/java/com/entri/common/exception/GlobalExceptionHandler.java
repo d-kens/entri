@@ -50,7 +50,7 @@ public class GlobalExceptionHandler {
         );
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
+    @ExceptionHandler(InvalidFileTypeException.class)
     public ProblemDetail handleInvalidFileTypeException(
             final InvalidFileTypeException exception,
             final HttpServletRequest request
@@ -211,6 +211,20 @@ public class GlobalExceptionHandler {
                 HttpStatus.FORBIDDEN,
                 "Unauthorized",
                 exception.getMessage(),
+                request
+        );
+    }
+
+    @ExceptionHandler(PaymentProviderException.class)
+    public ProblemDetail handlePaymentProviderException(
+            final PaymentProviderException exception,
+            final HttpServletRequest request
+    ) {
+        log.error("Payment provider error: {}", exception.getMessage());
+        return createProblemDetail(
+                HttpStatus.BAD_GATEWAY,
+                "Payment Provider Error",
+                "An error occurred while processing your payment. Please try again later.",
                 request
         );
     }
