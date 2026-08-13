@@ -36,6 +36,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class EventTicketReservationService {
+
     private final Clock clock;
     private final EventRepository eventRepository;
     private final TicketTypeRepository ticketTypeRepository;
@@ -43,6 +44,41 @@ public class EventTicketReservationService {
 
     @Value("${events.reservation.hold-duration:PT10M}")
     private Duration holdDuration;
+
+    @Value("${events.reservation.expiration.batch-size:500}")
+    private int batchSize;
+
+    @Transactional
+    public int expireReservations() {
+        List<EventTicketReservation> reservations = eventTicketReservationRepository
+                .findExpiredPendingReservations(clock.instant(), batchSize);
+
+        if (reservations.isEmpty()) {
+            return 0;
+        }
+
+        List<Long> ticketTypeIds = reservations.stream()
+                .flatMap(r -> r.getItems().stream())
+                .map(item -> item.getTicketType().getId())
+                .distinct()
+                .sorted()
+                .toList();
+
+        Map<Long, TicketType> ticketTypesById = ticketTypeRepository
+                .findAllForUpdate(ticketTypeIds)
+                .stream()
+                .collect(Collectors.toMap(TicketType::getId, Function.identity()));
+
+        for (EventTicketReservation reservation : reservations) {
+            for (EventTicketReservationItem item : reservation.getItems()) {
+                TicketType ticketType = ticketTypesById.get(item.getTicketType().getId());
+                ticketType.setReservedQuantity(ticketType.getReservedQuantity() - item.getQuantity());
+            }
+            reservation.setStatus(EventTicketReservationStatus.EXPIRED);
+        }
+
+        return reservations.size();
+    }
 
     @Transactional
     public EventTicketReservationResponse reserveEventTickets(

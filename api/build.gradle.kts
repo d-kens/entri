@@ -61,6 +61,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.3")
 
+    implementation("net.javacrumbs.shedlock:shedlock-spring:6.9.0")
+    implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:6.9.0")
+
     testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
     testImplementation("org.springframework.boot:spring-boot-starter-security-test")
     testImplementation("org.springframework.boot:spring-boot-starter-validation-test")
