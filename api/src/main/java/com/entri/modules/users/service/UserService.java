@@ -9,7 +9,7 @@ import com.entri.modules.users.dto.UserResponse;
 import com.entri.modules.users.entity.Role;
 import com.entri.modules.users.entity.User;
 import com.entri.modules.users.event.UserCreatedEvent;
-import com.entri.modules.users.exception.EmailAlreadyExist;
+import com.entri.common.exception.EmailAlreadyExist;
 import com.entri.modules.users.service.mapper.UserMapper;
 import com.entri.modules.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

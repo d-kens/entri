@@ -3,13 +3,7 @@ package com.entri.modules.events.controller;
 import com.entri.common.security.AuthenticatedUser;
 import com.entri.common.dto.PaginationResponse;
 import com.entri.modules.events.controller.api.EventApi;
-import com.entri.modules.events.dto.EventFilter;
-import com.entri.modules.events.dto.EventRequest;
-import com.entri.modules.events.dto.EventResponse;
-import com.entri.modules.events.dto.EventTicketReservationRequest;
-import com.entri.modules.events.dto.EventTicketReservationResponse;
-import com.entri.modules.events.dto.TicketTypeRequest;
-import com.entri.modules.events.dto.TicketTypeResponse;
+import com.entri.modules.events.dto.*;
 import com.entri.modules.events.service.EventService;
 import com.entri.modules.events.service.EventTicketReservationService;
 import com.entri.modules.events.service.TicketTypeService;
@@ -95,6 +89,14 @@ public class EventController implements EventApi {
                 )
                 .toUri();
         return ResponseEntity.created(uri).body(response);
+    }
+
+    @Override
+    public EventTicketReservationDetailDto getEventTicketReservation(
+            @PathVariable final String eventExternalId,
+            @PathVariable  String reservationId
+    ) {
+        return eventTicketReservationService.getEventTicketReservation(eventExternalId, reservationId);
     }
 
     @Override

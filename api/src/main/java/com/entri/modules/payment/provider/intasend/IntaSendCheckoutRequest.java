@@ -1,4 +1,4 @@
-package com.entri.modules.payment.provider.client.intasend.dto;
+package com.entri.modules.payment.provider.intasend;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
