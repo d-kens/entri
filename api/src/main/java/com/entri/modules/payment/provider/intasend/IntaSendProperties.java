@@ -1,5 +1,4 @@
-package com.entri.modules.payment.provider.config;
-
+package com.entri.modules.payment.provider.intasend;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

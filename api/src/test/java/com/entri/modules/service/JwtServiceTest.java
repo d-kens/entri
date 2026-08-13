@@ -1,6 +1,6 @@
 package com.entri.modules.service;
 
-import com.entri.config.JwtConfig;
+import com.entri.infrastructure.config.JwtConfig;
 import com.entri.modules.users.entity.Role;
 import com.entri.modules.users.entity.User;
 import com.entri.modules.users.service.JwtService;

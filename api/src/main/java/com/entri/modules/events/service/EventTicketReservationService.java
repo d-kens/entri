@@ -6,6 +6,7 @@ import com.entri.common.exception.MaxTicketsPerOrderExceededException;
 import com.entri.common.exception.ResourceNotFoundException;
 import com.entri.common.exception.TicketTypeNotAvailableException;
 import com.entri.common.exception.TicketTypeNotForEventException;
+import com.entri.modules.events.dto.EventTicketReservationDetailDto;
 import com.entri.modules.events.dto.EventTicketReservationItemRequest;
 import com.entri.modules.events.dto.EventTicketReservationRequest;
 import com.entri.modules.events.dto.EventTicketReservationResponse;
@@ -47,6 +48,21 @@ public class EventTicketReservationService {
 
     @Value("${events.reservation.expiration.batch-size:500}")
     private int batchSize;
+
+
+    @Transactional(readOnly = true)
+    public EventTicketReservationDetailDto getEventTicketReservation(final String eventExternalId, final String reservationExternalId) {
+        var event = eventRepository.findByExternalId(eventExternalId)
+                .orElseThrow(() -> new ResourceNotFoundException("Event with ID " + eventExternalId + " not found"));
+
+        var reservation = eventTicketReservationRepository.findByExternalId(reservationExternalId)
+                .orElseThrow(() -> new ResourceNotFoundException("Reservation with ID " + reservationExternalId + " not found"));
+
+
+
+
+        return null;
+    }
 
     @Transactional
     public int expireReservations() {
@@ -113,7 +129,9 @@ public class EventTicketReservationService {
         return new EventTicketReservationResponse(
                 reservation.getExpiresAt(),
                 reservation.getExternalId(),
-                reservation.getTotalAmount());
+                reservation.getTotalAmount(),
+                eventExternalId
+        );
     }
 
     private void validateTicketTypes(

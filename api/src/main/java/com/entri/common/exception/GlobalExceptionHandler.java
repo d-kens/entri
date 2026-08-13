@@ -1,6 +1,6 @@
 package com.entri.common.exception;
 
-import com.entri.modules.users.exception.EmailAlreadyExist;
+import com.entri.common.exception.EmailAlreadyExist;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

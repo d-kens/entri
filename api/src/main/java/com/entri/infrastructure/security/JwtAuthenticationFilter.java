@@ -1,4 +1,4 @@
-package com.entri.config;
+package com.entri.infrastructure.security;
 
 import com.entri.common.security.AuthenticatedUser;
 import com.entri.modules.users.service.JwtService;
