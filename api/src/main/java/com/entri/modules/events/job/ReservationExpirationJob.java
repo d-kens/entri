@@ -13,8 +13,8 @@ import org.springframework.stereotype.Component;
 public class ReservationExpirationJob {
     private final EventTicketReservationService eventTicketReservationService;
 
-    @Scheduled(cron = "${events.reservation.expiration.cron:0 * * * * *}")
-    @SchedulerLock(name = "expireReservations", lockAtMostFor = "PT2M", lockAtLeastFor = "PT30S")
+    @Scheduled(cron = "${events.reservation.expiration.cron:0 */2 * * * *}")
+    @SchedulerLock(name = "expireReservations", lockAtMostFor = "PT1M", lockAtLeastFor = "PT30S")
     public void expireReservations() {
         int total = 0;
         int expired;
