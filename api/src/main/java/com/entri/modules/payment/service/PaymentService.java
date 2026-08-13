@@ -16,6 +16,7 @@ import com.entri.modules.payment.provider.config.IntaSendProperties;
 import com.entri.modules.payment.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
@@ -29,8 +30,9 @@ public class PaymentService {
     private final PaymentRepository paymentRepository;
     private final EventTicketReservationRepository eventTicketReservationRepository;
 
+    @Transactional
     public CheckoutResponse checkout(final CheckoutRequest checkoutRequest) {
-        var eventTicketReservation = eventTicketReservationRepository.findByExternalId(checkoutRequest.reservationId())
+        var eventTicketReservation = eventTicketReservationRepository.findByExternalIdForUpdate(checkoutRequest.reservationId())
                 .orElseThrow(() -> new ResourceNotFoundException("Reservation with ID " + checkoutRequest.reservationId() + " not found"));
 
         if (eventTicketReservation.getStatus() != EventTicketReservationStatus.PENDING) {
