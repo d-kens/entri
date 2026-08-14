@@ -12,7 +12,14 @@ import java.util.List;
 import java.util.Optional;
 
 public interface EventTicketReservationRepository extends JpaRepository<EventTicketReservation, Long> {
-    Optional<EventTicketReservation> findByExternalId(String externalId);
+
+    @Query("""                                                                                                                                                                    
+          SELECT r FROM EventTicketReservation r                                                                                                                                    
+          JOIN FETCH r.items i                                                                                                                                                    
+          JOIN FETCH i.ticketType                                                                                                                                                 
+          WHERE r.externalId = :externalId
+    """)
+    Optional<EventTicketReservation> findByExternalIdWithItems(@Param("externalId") String externalId);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT r FROM EventTicketReservation r WHERE r.externalId = :externalId")
