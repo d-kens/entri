@@ -422,6 +422,14 @@ public interface EventApi {
                     )
             ),
             @ApiResponse(
+                    responseCode = "400",
+                    description = "The request is invalid. One or more validation errors were found",
+                    content = @Content(
+                            mediaType = "application/problem+json",
+                            schema = @Schema(implementation = ProblemDetail.class)
+                    )
+            ),
+            @ApiResponse(
                     responseCode = "200",
                     description = "Reservation for an event retrieved successfully"
             ),

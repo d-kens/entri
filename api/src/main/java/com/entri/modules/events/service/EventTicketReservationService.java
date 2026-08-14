@@ -4,12 +4,8 @@ import com.entri.common.exception.EventNotOnSaleException;
 import com.entri.common.exception.InsufficientTicketsException;
 import com.entri.common.exception.MaxTicketsPerOrderExceededException;
 import com.entri.common.exception.ResourceNotFoundException;
-import com.entri.common.exception.TicketTypeNotAvailableException;
-import com.entri.common.exception.TicketTypeNotForEventException;
-import com.entri.modules.events.dto.EventTicketReservationDetailDto;
-import com.entri.modules.events.dto.EventTicketReservationItemRequest;
-import com.entri.modules.events.dto.EventTicketReservationRequest;
-import com.entri.modules.events.dto.EventTicketReservationResponse;
+import com.entri.common.exception.BadRequestException;
+import com.entri.modules.events.dto.*;
 import com.entri.modules.events.entity.Event;
 import com.entri.modules.events.entity.EventStatus;
 import com.entri.modules.events.entity.EventTicketReservation;
@@ -55,13 +51,28 @@ public class EventTicketReservationService {
         var event = eventRepository.findByExternalId(eventExternalId)
                 .orElseThrow(() -> new ResourceNotFoundException("Event with ID " + eventExternalId + " not found"));
 
-        var reservation = eventTicketReservationRepository.findByExternalId(reservationExternalId)
+        var reservation = eventTicketReservationRepository.findByExternalIdWithItems(reservationExternalId)
                 .orElseThrow(() -> new ResourceNotFoundException("Reservation with ID " + reservationExternalId + " not found"));
 
+        if (!reservation.getEvent().getId().equals(event.getId())) {
+            throw new BadRequestException("Reservation " + reservationExternalId + " does not belong to event " + eventExternalId);
+        }
 
+        var items = reservation.getItems().stream()
+                .map(item -> new EventTicketReservationItemDto(
+                        item.getQuantity(),
+                        item.getTicketType().getName(),
+                        item.getUnitPrice(),
+                        item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity()))
+                )).toList();
 
-
-        return null;
+        return new EventTicketReservationDetailDto(
+                reservation.getExpiresAt(),
+                reservation.getExternalId(),
+                reservation.getTotalAmount(),
+                eventExternalId,
+                items
+        );
     }
 
     @Transactional
@@ -156,12 +167,12 @@ public class EventTicketReservationService {
                 .allMatch(ticketType -> ticketType.getEvent().getId().equals(event.getId()));
 
         if (!belongsToEvent) {
-            throw new TicketTypeNotForEventException("One or more ticket types do not belong to this event");
+            throw new BadRequestException("One or more ticket types do not belong to this event");
         }
 
         for (TicketType ticketType : ticketTypes) {
             if (ticketType.getStatus() != TicketTypeStatus.ACTIVE) {
-                throw new TicketTypeNotAvailableException("Ticket type is not available for purchase");
+                throw new BadRequestException("Ticket type is not available for purchase");
             }
         }
     }
