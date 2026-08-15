@@ -219,7 +219,7 @@
                     {{ currency() }} {{ totalPrice() | number: '1.2-2' }}
                   </span>
                 </div>
-                <button class="checkout-btn">
+                <button class="checkout-btn" [disabled]="loading()" (click)="buyTickets()">
                   Buy Tickets
                   <mat-icon>arrow_forward</mat-icon>
                 </button>

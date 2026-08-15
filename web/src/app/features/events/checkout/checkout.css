@@ -1,0 +1,545 @@
+/* ── Shimmer ─────────────────────────────────────────────────── */
+
+.shimmer {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e4e4e4 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+  border-radius: 8px;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* ── Skeleton ────────────────────────────────────────────────── */
+
+.sk-back {
+  width: 110px;
+  height: 1rem;
+  margin-bottom: 1.75rem;
+}
+
+.sk-event-header {
+  margin-bottom: 2rem;
+}
+
+.sk-title {
+  width: 60%;
+  height: 2.25rem;
+  margin-bottom: 0.875rem;
+}
+
+.sk-chips {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.sk-chip {
+  width: 120px;
+  height: 1.75rem;
+  border-radius: 6px;
+}
+
+.sk-chip--long {
+  width: 160px;
+}
+
+.sk-card {
+  height: 280px;
+}
+
+.sk-panel {
+  height: 300px;
+}
+
+/* ── Page wrap ───────────────────────────────────────────────── */
+
+.page-wrap {
+  max-width: 920px;
+  margin-inline: auto;
+  padding: 2.5rem 1.5rem 5rem;
+}
+
+/* ── Back link ───────────────────────────────────────────────── */
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #5a5a5a;
+  text-decoration: none;
+  margin-bottom: 1.75rem;
+  transition: color 0.15s ease;
+}
+
+.back-link:hover {
+  color: var(--mat-sys-primary);
+}
+
+.back-link mat-icon {
+  font-size: 1rem !important;
+  width: 1rem !important;
+  height: 1rem !important;
+}
+
+/* ── Event header ────────────────────────────────────────────── */
+
+.event-header {
+  margin-bottom: 2rem;
+}
+
+.event-title {
+  font-family:
+    'Poppins',
+    -apple-system,
+    sans-serif;
+  font-size: clamp(1.5rem, 3vw, 2.125rem);
+  font-weight: 800;
+  color: #000000;
+  letter-spacing: -0.03em;
+  margin: 0 0 0.875rem;
+  line-height: 1.1;
+}
+
+.event-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.meta-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.8125rem;
+  color: #444444;
+  background: #f4f4f5;
+  border-radius: 6px;
+  padding: 0.3125rem 0.625rem;
+  white-space: nowrap;
+}
+
+.meta-chip mat-icon {
+  font-size: 0.875rem !important;
+  width: 0.875rem !important;
+  height: 0.875rem !important;
+  color: var(--mat-sys-primary);
+  flex-shrink: 0;
+}
+
+/* ── Layout ──────────────────────────────────────────────────── */
+
+.checkout-layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 1.75rem;
+  align-items: start;
+}
+
+/* ── Summary section ─────────────────────────────────────────── */
+
+.summary-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.summary-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.summary-title {
+  font-family:
+    'Poppins',
+    -apple-system,
+    sans-serif;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #000000;
+  margin: 0;
+}
+
+.ticket-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--mat-sys-primary);
+  background: var(--mat-sys-primary-container);
+  border-radius: 999px;
+  padding: 0.2rem 0.625rem;
+}
+
+/* ── Item list ───────────────────────────────────────────────── */
+
+.item-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.item-row {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 0.875rem 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.item-row:last-child {
+  border-bottom: none;
+}
+
+.item-icon {
+  flex-shrink: 0;
+  width: 2.125rem;
+  height: 2.125rem;
+  border-radius: 8px;
+  background: var(--mat-sys-primary-container);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.item-icon mat-icon {
+  font-size: 1rem !important;
+  width: 1rem !important;
+  height: 1rem !important;
+  color: var(--mat-sys-primary);
+}
+
+.item-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.item-name {
+  font-family:
+    'Poppins',
+    -apple-system,
+    sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #111111;
+  margin: 0;
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.item-qty {
+  font-size: 0.8125rem;
+  color: #8a8a8a;
+  margin: 0;
+}
+
+.item-subtotal {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: #111111;
+  margin: 0;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ── Total row ───────────────────────────────────────────────── */
+
+.total-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 0 0;
+  border-top: 1px solid #e8e8e8;
+}
+
+.total-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #5a5a5a;
+}
+
+.total-value {
+  font-family:
+    'Poppins',
+    -apple-system,
+    sans-serif;
+  font-size: 1.0625rem;
+  font-weight: 800;
+  color: #000000;
+  letter-spacing: -0.02em;
+}
+
+/* ── Payment panel ───────────────────────────────────────────── */
+
+.payment-panel {
+  position: sticky;
+  top: 80px;
+  border: 1px solid #e8e8e8;
+  border-radius: 12px;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+/* ── Timer ───────────────────────────────────────────────────── */
+
+.timer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.375rem;
+  border-bottom: 1px solid #e8e8e8;
+  background: color-mix(in srgb, var(--mat-sys-primary) 5%, transparent);
+}
+
+.timer-left {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.timer-left mat-icon {
+  font-size: 1rem !important;
+  width: 1rem !important;
+  height: 1rem !important;
+  color: var(--mat-sys-primary);
+  flex-shrink: 0;
+}
+
+.timer-label {
+  font-size: 0.8125rem;
+  color: #5a5a5a;
+}
+
+.timer-digits {
+  font-family:
+    'Poppins',
+    -apple-system,
+    sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111111;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.timer--urgent {
+  background: #fff7ed;
+  border-bottom-color: #fed7aa;
+}
+
+.timer--urgent .timer-left mat-icon {
+  color: #c2410c;
+}
+
+.timer--urgent .timer-label {
+  color: #9a3412;
+}
+
+.timer--urgent .timer-digits {
+  color: #c2410c;
+}
+
+/* ── Expired block ───────────────────────────────────────────── */
+
+.expired-block {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+  padding: 1rem 1.375rem;
+  border-bottom: 1px solid #e8e8e8;
+  background: var(--mat-sys-error-container);
+}
+
+.expired-block mat-icon {
+  font-size: 1.125rem !important;
+  width: 1.125rem !important;
+  height: 1.125rem !important;
+  color: var(--mat-sys-error);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.expired-title {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--mat-sys-on-error-container);
+  margin: 0 0 0.125rem;
+}
+
+.expired-hint {
+  font-size: 0.8125rem;
+  color: var(--mat-sys-on-error-container);
+  opacity: 0.75;
+  margin: 0;
+}
+
+/* ── Pay block ───────────────────────────────────────────────── */
+
+.pay-block {
+  padding: 1.375rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.pay-amount-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.pay-amount-label {
+  font-size: 0.8125rem;
+  color: #8a8a8a;
+}
+
+.pay-amount {
+  font-family:
+    'Poppins',
+    -apple-system,
+    sans-serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #000000;
+  letter-spacing: -0.025em;
+  line-height: 1;
+}
+
+/* ── Pay button ──────────────────────────────────────────────── */
+
+.pay-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.9375rem 1.5rem;
+  border-radius: 8px;
+  border: none;
+  background: var(--mat-sys-primary);
+  color: #ffffff;
+  font-family:
+    'Poppins',
+    -apple-system,
+    sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.pay-btn:hover:not(:disabled) {
+  background: var(--mat-sys-primary-dark);
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--mat-sys-primary) 30%, transparent);
+}
+
+.pay-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Spinner ─────────────────────────────────────────────────── */
+
+.spinner {
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 0.65s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ── Footer notes ────────────────────────────────────────────── */
+
+.secure-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  font-size: 0.75rem;
+  color: #9a9a9a;
+  margin: 0;
+}
+
+.secure-note mat-icon {
+  font-size: 0.875rem !important;
+  width: 0.875rem !important;
+  height: 0.875rem !important;
+}
+
+.reselect-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0.875rem 1.5rem;
+  border-radius: 8px;
+  border: 1.5px solid var(--mat-sys-primary);
+  background: transparent;
+  color: var(--mat-sys-primary);
+  font-family:
+    'Poppins',
+    -apple-system,
+    sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  text-decoration: none;
+  text-align: center;
+  transition: background 0.15s ease;
+}
+
+.reselect-btn:hover {
+  background: color-mix(in srgb, var(--mat-sys-primary) 6%, transparent);
+}
+
+/* ── Responsive ──────────────────────────────────────────────── */
+
+@media (max-width: 760px) {
+  .checkout-layout {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  .payment-panel {
+    position: static;
+    order: -1;
+  }
+}
+
+@media (max-width: 480px) {
+  .event-meta {
+    gap: 0.375rem;
+  }
+
+  .meta-chip {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+  }
+}

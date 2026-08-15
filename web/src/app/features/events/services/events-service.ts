@@ -9,6 +9,9 @@ import {
   EventResponse,
   TicketTypeRequest,
   TicketTypeResponse,
+  EventTicketReservationRequest,
+  EventTicketReservationResponse,
+  EventTicketReservationDetailResponse,
 } from '@features/events/models/event.models';
 import { PageResponse } from '@shared/models/common.model';
 
@@ -84,6 +87,25 @@ export class EventsService {
     return this.http.put<TicketTypeResponse>(
       `${environment.apiBaseUrl}/ticket-types/${ticketTypeId}`,
       ticketType,
+    );
+  }
+
+  reserveEventTickets(
+    externalId: string,
+    request: EventTicketReservationRequest,
+  ): Observable<EventTicketReservationResponse> {
+    return this.http.post<EventTicketReservationResponse>(
+      `${environment.apiBaseUrl}/events/${externalId}/reservations`,
+      request,
+    );
+  }
+
+  getEventTicketReservation(
+    externalId: string,
+    reservationId: string,
+  ): Observable<EventTicketReservationDetailResponse> {
+    return this.http.get<EventTicketReservationDetailResponse>(
+      `${environment.apiBaseUrl}/events/${externalId}/reservations/${reservationId}`,
     );
   }
 

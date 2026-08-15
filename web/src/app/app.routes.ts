@@ -19,6 +19,10 @@ export const routes: Routes = [
           import('@features/events/event-view/event-view').then((m) => m.EventView),
       },
       {
+        path: 'events/:externalId/checkout/:reservationId',
+        loadComponent: () => import('@features/events/checkout/checkout').then((m) => m.Checkout),
+      },
+      {
         path: 'about',
         loadComponent: () => import('@features/about/about').then((m) => m.About),
       },
