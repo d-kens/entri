@@ -2,7 +2,7 @@ package com.entri.modules.users.service;
 
 
 import com.entri.common.exception.UnauthorizedException;
-import com.entri.config.JwtConfig;
+import com.entri.infrastructure.config.JwtConfig;
 import com.entri.modules.users.dto.AccessToken;
 import com.entri.modules.users.dto.CreateUserRequest;
 import com.entri.modules.users.dto.LoginRequest;

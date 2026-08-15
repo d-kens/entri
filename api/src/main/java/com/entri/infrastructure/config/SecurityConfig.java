@@ -1,6 +1,7 @@
-package com.entri.config;
+package com.entri.infrastructure.config;
 
 
+import com.entri.infrastructure.security.JwtAuthenticationFilter;
 import com.entri.modules.users.service.UserDetailsService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;

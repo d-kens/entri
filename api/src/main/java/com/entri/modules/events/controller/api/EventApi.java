@@ -405,4 +405,47 @@ public interface EventApi {
             @org.springframework.web.bind.annotation.RequestBody
             final EventTicketReservationRequest eventTicketReservationRequest
     );
+
+
+    @Operation(
+            operationId = "getEventTicketsReservation",
+            summary = "Retrieve Ticket Reservation for an Event",
+            description = "Retrieves the ticket reservation for an event, including the reserved ticket quantities and reservation details."
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "The specified reservation was not found",
+                    content = @Content(
+                            mediaType = "application/problem+json",
+                            schema = @Schema(implementation = ProblemDetail.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "The request is invalid. One or more validation errors were found",
+                    content = @Content(
+                            mediaType = "application/problem+json",
+                            schema = @Schema(implementation = ProblemDetail.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Reservation for an event retrieved successfully"
+            ),
+    })
+    @GetMapping("/{eventExternalId}/reservations/{reservationId}")
+    EventTicketReservationDetailDto getEventTicketReservation(
+            @Parameter(
+                    description = "The unique external identifier of the event",
+                    required = true
+            )
+            @PathVariable final String eventExternalId,
+
+            @Parameter(
+                    description = "The unique external identifier of the reservation",
+                    required = true
+            )
+            @PathVariable final String reservationId
+    );
 }
