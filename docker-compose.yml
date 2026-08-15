@@ -18,12 +18,26 @@ services:
       retries: 5
       start_period: 30s
 
+  entri_redis:
+    image: 'redis:7-alpine'
+    mem_limit: 256m
+    ports:
+      - '127.0.0.1:6379:6379'
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
   entri_api:
     image: ghcr.io/d-kens/entri-api:latest
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://entri_db:3306/entri?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
       SPRING_DATASOURCE_USERNAME: ${MYSQL_USER}
       SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}
+      REDIS_HOST: entri_redis
+      REDIS_PORT: 6379
       JWT_SECRET: ${JWT_SECRET}
       APP_BASE_URL: ${APP_BASE_URL}
       APP_CORS_ALLOWED_ORIGIN: ${APP_CORS_ALLOWED_ORIGIN}
@@ -37,6 +51,8 @@ services:
       - '8080'
     depends_on:
       entri_db:
+        condition: service_healthy
+      entri_redis:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:8080/actuator/health"]

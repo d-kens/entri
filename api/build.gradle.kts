@@ -64,6 +64,10 @@ dependencies {
     implementation("net.javacrumbs.shedlock:shedlock-spring:6.9.0")
     implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:6.9.0")
 
+    implementation("org.aspectj:aspectjweaver")
+    implementation("io.lettuce:lettuce-core")
+    implementation("com.bucket4j:bucket4j_jdk17-lettuce:8.14.0")
+
     testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
     testImplementation("org.springframework.boot:spring-boot-starter-security-test")
     testImplementation("org.springframework.boot:spring-boot-starter-validation-test")

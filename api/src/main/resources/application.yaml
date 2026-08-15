@@ -51,6 +51,14 @@ intasend:
   publishable-key: ${INTASEND_PUBLISHABLE_KEY}
   redirect-url: ${INTASEND_REDIRECT_URL}
 
+rate-limit:
+  redis:
+    host: ${REDIS_HOST:localhost}
+    port: ${REDIS_PORT:6379}
+  reservation:
+    capacity: 5
+    refill-period-seconds: 60
+
 management:
   endpoints:
     web:
