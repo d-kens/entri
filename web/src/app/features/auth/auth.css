@@ -132,7 +132,7 @@
 
 @media (max-width: 1023px) {
   .auth-form-panel {
-    justify-content: flex-start;
+    align-items: flex-start;
     padding-top: 3rem;
     padding-bottom: 5rem;
   }

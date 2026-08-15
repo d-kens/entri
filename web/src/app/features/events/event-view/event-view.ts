@@ -1,11 +1,16 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { forkJoin } from 'rxjs';
 import { EventsService } from '../services/events-service';
 import { PageError } from '@shared/components/page-error/page-error';
-import { EventResponse, TicketTypeResponse } from '@features/events/models/event.models';
+import {
+  EventResponse,
+  TicketTypeResponse,
+  EventTicketReservationItemRequest,
+} from '@features/events/models/event.models';
+import { SnackbarService } from '@shared/services/snackbar-service';
 
 @Component({
   selector: 'app-event-view',
@@ -16,7 +21,9 @@ import { EventResponse, TicketTypeResponse } from '@features/events/models/event
 })
 export class EventView implements OnInit {
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
   private eventsService = inject(EventsService);
+  private snackbar = inject(SnackbarService);
 
   readonly externalId = this.route.snapshot.paramMap.get('externalId')!;
 
@@ -26,8 +33,6 @@ export class EventView implements OnInit {
   error = signal(false);
 
   selections = signal<Map<number, number>>(new Map());
-
-  activeTickets = computed(() => this.ticketTypes().filter((t) => t.status === 'ACTIVE'));
 
   totalTickets = computed(() => {
     let n = 0;
@@ -86,6 +91,32 @@ export class EventView implements OnInit {
       error: () => {
         this.error.set(true);
         this.loading.set(false);
+      },
+    });
+  }
+
+  buyTickets(): void {
+    if (this.totalTickets() === 0 || this.loading()) return;
+
+    const itemRequests: EventTicketReservationItemRequest[] = Array.from(
+      this.selections(),
+      ([ticketTypeId, quantity]) => ({ ticketTypeId, quantity }),
+    );
+
+    this.loading.set(true);
+
+    this.eventsService.reserveEventTickets(this.externalId, { itemRequests }).subscribe({
+      next: (reservation) => {
+        this.loading.set(false);
+        this.router.navigate(['/events', this.externalId, 'checkout', reservation.reservationId]);
+      },
+      error: (err) => {
+        this.loading.set(false);
+        const message = err?.error?.detail ?? 'Could not reserve tickets. Please try again.';
+        this.snackbar.showError(message, {
+          label: 'Retry',
+          callback: () => this.buyTickets(),
+        });
       },
     });
   }

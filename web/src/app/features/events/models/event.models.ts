@@ -66,3 +66,34 @@ export type EventResponse = {
   publishedAt?: string;
   dateCreated: string;
 };
+
+export interface EventTicketReservationItemRequest {
+  ticketTypeId: number;
+  quantity: number;
+}
+
+export interface EventTicketReservationRequest {
+  itemRequests: EventTicketReservationItemRequest[];
+}
+
+export interface EventTicketReservationResponse {
+  expiresAt: string;
+  reservationId: string;
+  totalAmount: number;
+  externalEventId: string;
+}
+
+export interface EventTicketReservationItemResponse {
+  quantity: number;
+  ticketType: string;
+  unitPrice: number;
+  totalAmount: number;
+}
+
+export interface EventTicketReservationDetailResponse {
+  expiresAt: string;
+  reservationId: string;
+  totalAmount: number;
+  externalEventId: string;
+  reservationItems: EventTicketReservationItemResponse[];
+}

@@ -1,0 +1,150 @@
+<!-- ── Loading skeleton ───────────────────────────────────────── -->
+@if (loading()) {
+  <div class="page-wrap">
+    <div class="shimmer sk-back"></div>
+    <div class="sk-event-header">
+      <div class="shimmer sk-title"></div>
+      <div class="sk-chips">
+        <div class="shimmer sk-chip"></div>
+        <div class="shimmer sk-chip"></div>
+        <div class="shimmer sk-chip sk-chip--long"></div>
+      </div>
+    </div>
+    <div class="checkout-layout">
+      <div class="shimmer sk-card"></div>
+      <div class="shimmer sk-panel"></div>
+    </div>
+  </div>
+}
+
+<!-- ── Error ──────────────────────────────────────────────────── -->
+@if (error()) {
+  <div class="page-wrap">
+    <app-page-error
+      message="Couldn't load your reservation. Check your connection and try again."
+      [backLink]="['/events', externalId]"
+      (retry)="load()"
+    />
+  </div>
+}
+
+<!-- ── Content ────────────────────────────────────────────────── -->
+@if (!loading() && !error() && reservation(); as res) {
+  <div class="page-wrap">
+    <a [routerLink]="['/events', externalId]" class="back-link">
+      <mat-icon>arrow_back</mat-icon>
+      Back to tickets
+    </a>
+
+    @if (event(); as ev) {
+      <div class="event-header">
+        <h1 class="event-title">{{ ev.title }}</h1>
+        <div class="event-meta">
+          <span class="meta-chip">
+            <mat-icon>calendar_today</mat-icon>
+            {{ ev.startTime | date: 'EEE, d MMM yyyy' }}
+          </span>
+          <span class="meta-chip">
+            <mat-icon>schedule</mat-icon>
+            {{ ev.startTime | date: 'HH:mm' }} – {{ ev.endTime | date: 'HH:mm' }}
+          </span>
+          <span class="meta-chip">
+            <mat-icon>location_on</mat-icon>
+            {{ ev.venueName }}, {{ ev.venueCity }}
+          </span>
+        </div>
+      </div>
+    }
+
+    <div class="checkout-layout">
+      <!-- ── Left: Order summary ──────────────────────────────── -->
+      <section class="summary-section">
+        <div class="summary-header">
+          <p class="summary-title">Summary</p>
+          <span class="ticket-badge">
+            {{ totalTickets() }} {{ totalTickets() === 1 ? 'ticket' : 'tickets' }}
+          </span>
+        </div>
+
+        <ul class="item-list">
+          @for (item of res.reservationItems; track item.ticketType) {
+            <li class="item-row">
+              <div class="item-icon">
+                <mat-icon>confirmation_number</mat-icon>
+              </div>
+              <div class="item-info">
+                <p class="item-name">{{ item.ticketType }}</p>
+                <p class="item-qty">
+                  {{ item.quantity }} × {{ event()?.currency }}
+                  {{ item.unitPrice | number: '1.2-2' }}
+                </p>
+              </div>
+              <p class="item-subtotal">
+                {{ event()?.currency }} {{ item.totalAmount | number: '1.2-2' }}
+              </p>
+            </li>
+          }
+        </ul>
+
+        <div class="total-row">
+          <span class="total-label">Total</span>
+          <span class="total-value">
+            {{ event()?.currency }} {{ res.totalAmount | number: '1.2-2' }}
+          </span>
+        </div>
+      </section>
+
+      <!-- ── Right: Payment ───────────────────────────────────── -->
+      <aside class="payment-panel">
+        @if (!expired()) {
+          <div class="timer" [class.timer--urgent]="urgentTimer()">
+            <div class="timer-left">
+              <mat-icon>timer</mat-icon>
+              <span class="timer-label">Reserved for</span>
+            </div>
+            <p class="timer-digits">{{ timeLeft() }}</p>
+          </div>
+        } @else {
+          <div class="expired-block">
+            <mat-icon>timer_off</mat-icon>
+            <div>
+              <p class="expired-title">Reservation expired</p>
+              <p class="expired-hint">Your seats were released.</p>
+            </div>
+          </div>
+        }
+
+        <div class="pay-block">
+          <div class="pay-amount-row">
+            <span class="pay-amount-label">Amount due</span>
+            <span class="pay-amount">
+              {{ event()?.currency }} {{ res.totalAmount | number: '1.2-2' }}
+            </span>
+          </div>
+
+          <button class="pay-btn" [disabled]="paying() || expired()" (click)="pay()">
+            @if (paying()) {
+              <span class="spinner"></span>
+              Processing…
+            } @else if (expired()) {
+              Reservation expired
+            } @else {
+              Pay {{ event()?.currency }} {{ res.totalAmount | number: '1.2-2' }}
+            }
+          </button>
+
+          @if (expired()) {
+            <a [routerLink]="['/events', externalId]" class="reselect-btn">
+              Select tickets again
+            </a>
+          } @else {
+            <p class="secure-note">
+              <mat-icon>lock</mat-icon>
+              Secure checkout
+            </p>
+          }
+        </div>
+      </aside>
+    </div>
+  </div>
+}
