@@ -201,6 +201,19 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler(TooManyRequestsException.class)
+    public ProblemDetail handleTooManyRequestsException(
+            final TooManyRequestsException exception,
+            final HttpServletRequest request
+    ) {
+        return createProblemDetail(
+                HttpStatus.TOO_MANY_REQUESTS,
+                "Too Many Requests",
+                exception.getMessage(),
+                request
+        );
+    }
+
     @ExceptionHandler(PaymentProviderException.class)
     public ProblemDetail handlePaymentProviderException(
             final PaymentProviderException exception,

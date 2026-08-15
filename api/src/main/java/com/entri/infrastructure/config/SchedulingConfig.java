@@ -10,7 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import javax.sql.DataSource;
 
 @Configuration
-@EnableSchedulerLock(defaultLockAtMostFor = "PT10")
+@EnableSchedulerLock(defaultLockAtMostFor = "PT10M")
 public class SchedulingConfig {
 
     @Bean
