@@ -90,10 +90,13 @@ export interface EventTicketReservationItemResponse {
   totalAmount: number;
 }
 
+export type ReservationStatus = 'PENDING' | 'CONFIRMED' | 'EXPIRED';
+
 export interface EventTicketReservationDetailResponse {
   expiresAt: string;
   reservationId: string;
   totalAmount: number;
   externalEventId: string;
+  status: ReservationStatus;
   reservationItems: EventTicketReservationItemResponse[];
 }

@@ -30,16 +30,24 @@ export class Checkout implements OnInit, OnDestroy {
   reservation = signal<EventTicketReservationDetailResponse | null>(null);
   loading = signal(true);
   error = signal(false);
-  paying = signal(false);
-  expired = signal(false);
-  timeLeft = signal('');
-  urgentTimer = signal(false);
+
+  private timerExpired = signal(false);
+  private remainingMs = signal(0);
+
+  expired = computed(() => this.reservation()?.status === 'EXPIRED' || this.timerExpired());
+  confirmed = computed(() => this.reservation()?.status === 'CONFIRMED');
+  timeLeft = computed(() => {
+    const r = this.remainingMs();
+    const mins = Math.floor(r / 60000);
+    const secs = Math.floor((r % 60000) / 1000);
+    return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+  });
+  urgentTimer = computed(() => this.remainingMs() > 0 && this.remainingMs() < 120000);
 
   totalTickets = computed(
     () => this.reservation()?.reservationItems.reduce((sum, item) => sum + item.quantity, 0) ?? 0,
   );
 
-  private initialRemaining = 0;
   private timerSub?: Subscription;
 
   ngOnInit(): void {
@@ -53,7 +61,7 @@ export class Checkout implements OnInit, OnDestroy {
   load(): void {
     this.loading.set(true);
     this.error.set(false);
-    this.expired.set(false);
+    this.timerExpired.set(false);
     this.timerSub?.unsubscribe();
 
     forkJoin([
@@ -64,7 +72,9 @@ export class Checkout implements OnInit, OnDestroy {
         this.event.set(ev);
         this.reservation.set(reservation);
         this.loading.set(false);
-        this.startTimer(reservation.expiresAt);
+        if (reservation.status === 'PENDING') {
+          this.startTimer(reservation.expiresAt);
+        }
       },
       error: () => {
         this.error.set(true);
@@ -74,29 +84,21 @@ export class Checkout implements OnInit, OnDestroy {
   }
 
   pay(): void {
-    if (this.paying() || this.expired()) return;
-    this.paying.set(true);
     this.snackbar.showInfo('Payment processing coming soon.');
-    this.paying.set(false);
   }
 
   private startTimer(expiresAt: string): void {
     const expiry = new Date(expiresAt).getTime();
-    this.initialRemaining = expiry - Date.now();
 
     const tick = () => {
       const remaining = expiry - Date.now();
       if (remaining <= 0) {
-        this.expired.set(true);
-        this.timeLeft.set('00:00');
-        this.urgentTimer.set(false);
+        this.remainingMs.set(0);
+        this.timerExpired.set(true);
         this.timerSub?.unsubscribe();
         return;
       }
-      const mins = Math.floor(remaining / 60000);
-      const secs = Math.floor((remaining % 60000) / 1000);
-      this.timeLeft.set(`${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`);
-      this.urgentTimer.set(remaining < 120000);
+      this.remainingMs.set(remaining);
     };
 
     tick();
