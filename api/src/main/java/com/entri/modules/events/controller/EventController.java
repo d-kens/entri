@@ -1,6 +1,7 @@
 package com.entri.modules.events.controller;
 
 import com.entri.common.security.AuthenticatedUser;
+import com.entri.infrastructure.ratelimit.RateLimited;
 import com.entri.common.dto.PaginationResponse;
 import com.entri.modules.events.controller.api.EventApi;
 import com.entri.modules.events.dto.*;
@@ -74,6 +75,7 @@ public class EventController implements EventApi {
         return eventService.listOrganizerEvents(filter, userKey);
     }
 
+    @RateLimited
     @Override
     public ResponseEntity<EventTicketReservationResponse> reserveEventTickets(
             UriComponentsBuilder uriComponentsBuilder,
