@@ -71,6 +71,7 @@ public class EventTicketReservationService {
                 reservation.getExternalId(),
                 reservation.getTotalAmount(),
                 eventExternalId,
+                reservation.getStatus(),
                 items
         );
     }
