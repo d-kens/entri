@@ -4,8 +4,7 @@ import com.entri.common.exception.EventNotOnSaleException;
 import com.entri.common.exception.InsufficientTicketsException;
 import com.entri.common.exception.MaxTicketsPerOrderExceededException;
 import com.entri.common.exception.ResourceNotFoundException;
-import com.entri.common.exception.TicketTypeNotAvailableException;
-import com.entri.common.exception.TicketTypeNotForEventException;
+import com.entri.common.exception.BadRequestException;
 import com.entri.modules.events.dto.EventTicketReservationItemRequest;
 import com.entri.modules.events.dto.EventTicketReservationRequest;
 import com.entri.modules.events.entity.Event;
@@ -129,7 +128,7 @@ class EventTicketReservationServiceTest {
         ));
 
         assertThatThrownBy(() -> eventTicketReservationService.reserveEventTickets(EVENT_EXTERNAL_ID, request))
-                .isInstanceOf(TicketTypeNotForEventException.class);
+                .isInstanceOf(BadRequestException.class);
     }
 
     @Test
@@ -410,7 +409,7 @@ class EventTicketReservationServiceTest {
         ));
 
         assertThatThrownBy(() -> eventTicketReservationService.reserveEventTickets(EVENT_EXTERNAL_ID, request))
-                .isInstanceOf(TicketTypeNotAvailableException.class);
+                .isInstanceOf(BadRequestException.class);
     }
 
     @Test
@@ -485,7 +484,7 @@ class EventTicketReservationServiceTest {
         ));
 
         assertThatThrownBy(() -> eventTicketReservationService.reserveEventTickets(EVENT_EXTERNAL_ID, request))
-                .isInstanceOf(TicketTypeNotAvailableException.class);
+                .isInstanceOf(BadRequestException.class);
     }
 
     @Test
@@ -511,7 +510,7 @@ class EventTicketReservationServiceTest {
         ));
 
         assertThatThrownBy(() -> eventTicketReservationService.reserveEventTickets(EVENT_EXTERNAL_ID, request))
-                .isInstanceOf(TicketTypeNotAvailableException.class);
+                .isInstanceOf(BadRequestException.class);
     }
 
     @Test

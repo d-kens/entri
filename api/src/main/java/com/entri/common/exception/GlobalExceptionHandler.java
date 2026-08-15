@@ -1,6 +1,5 @@
 package com.entri.common.exception;
 
-import com.entri.modules.users.exception.EmailAlreadyExist;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -137,27 +136,14 @@ public class GlobalExceptionHandler {
         );
     }
 
-    @ExceptionHandler(TicketTypeNotForEventException.class)
+    @ExceptionHandler(BadRequestException.class)
     public ProblemDetail handleTicketTypeNotForEventException(
-            final TicketTypeNotForEventException exception,
+            final BadRequestException exception,
             final HttpServletRequest request
     ) {
         return createProblemDetail(
                 HttpStatus.BAD_REQUEST,
                 "Invalid Ticket Type",
-                exception.getMessage(),
-                request
-        );
-    }
-
-    @ExceptionHandler(TicketTypeNotAvailableException.class)
-    public ProblemDetail handleTicketTypeNotAvailableException(
-            final TicketTypeNotAvailableException exception,
-            final HttpServletRequest request
-    ) {
-        return createProblemDetail(
-                HttpStatus.CONFLICT,
-                "Ticket Type Not Available",
                 exception.getMessage(),
                 request
         );

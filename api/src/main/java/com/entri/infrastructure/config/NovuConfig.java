@@ -1,4 +1,4 @@
-package com.entri.config;
+package com.entri.infrastructure.config;
 
 
 import co.novu.Novu;

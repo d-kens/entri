@@ -1,4 +1,4 @@
-package com.entri.modules.users.exception;
+package com.entri.common.exception;
 
 public class EmailAlreadyExist extends RuntimeException {
     public EmailAlreadyExist() {

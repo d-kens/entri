@@ -1,9 +1,8 @@
-package com.entri.modules.payment.provider.config;
+package com.entri.modules.payment.provider.intasend;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestClient;
-
 
 @Configuration
 public class IntaSendConfiguration {
