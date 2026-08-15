@@ -33,8 +33,11 @@ public class EventService {
     private final EventCategoryService eventCategoryService;
 
     public PaginationResponse<EventResponse> listEvents(EventFilter filter) {
-        Specification<Event> spec = buildSpecification(filter)
-                .and(EventSpecifications.hasStatus(EventStatus.PUBLISHED));
+        Specification<Event> statusSpec = EventSpecifications.hasStatus(EventStatus.PUBLISHED)
+                .or(EventSpecifications.hasStatus(EventStatus.COMPLETED))
+                .or(EventSpecifications.hasStatus(EventStatus.CANCELLED));
+
+        Specification<Event> spec = buildSpecification(filter).and(statusSpec);
         return fetchPage(filter, spec);
     }
 

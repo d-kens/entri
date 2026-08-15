@@ -62,7 +62,7 @@ export type EventResponse = {
   startTime: string;
   endTime: string;
   bannerUrl: string;
-  status: 'DRAFT' | 'PUBLISHED' | 'CANCELLED';
+  status: 'DRAFT' | 'PUBLISHED' | 'CANCELLED' | 'COMPLETED';
   publishedAt?: string;
   dateCreated: string;
 };

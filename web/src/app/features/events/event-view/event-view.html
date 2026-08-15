@@ -135,7 +135,23 @@
         <div class="ticket-panel">
           <p class="panel-heading">Tickets</p>
 
-          @if (ticketTypes().length === 0) {
+          @if (ev.status === 'CANCELLED') {
+            <div class="event-unavailable-strip event-unavailable-strip--cancelled">
+              <mat-icon>cancel</mat-icon>
+              <div>
+                <p class="unavailable-title">Event Cancelled</p>
+                <p class="unavailable-hint">Ticket sales are no longer available.</p>
+              </div>
+            </div>
+          } @else if (ev.status === 'COMPLETED') {
+            <div class="event-unavailable-strip event-unavailable-strip--completed">
+              <mat-icon>event_available</mat-icon>
+              <div>
+                <p class="unavailable-title">Event Ended</p>
+                <p class="unavailable-hint">This event has already taken place.</p>
+              </div>
+            </div>
+          } @else if (ticketTypes().length === 0) {
             <div class="no-tickets">
               <mat-icon>confirmation_number</mat-icon>
               <p class="no-tickets-title">No tickets available</p>
