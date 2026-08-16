@@ -210,11 +210,6 @@
   color: var(--mat-sys-primary);
 }
 
-.ticket-status-badge[data-status='SOLD_OUT'] {
-  background: color-mix(in srgb, var(--mat-sys-error) 15%, transparent);
-  color: var(--mat-sys-error);
-}
-
 .tickets-empty {
   display: flex;
   flex-direction: column;

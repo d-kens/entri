@@ -1,4 +1,4 @@
-import { Component, effect, input, output, signal } from '@angular/core';
+import { Component, computed, effect, input, output, signal } from '@angular/core';
 import { form, min, required, submit, FormField } from '@angular/forms/signals';
 import {
   MatError,
@@ -23,8 +23,8 @@ export interface TicketTypeFormData {
   price: number | string;
   quantity: number | string;
   description: string;
-  salesStartDate: string;
-  salesEndDate: string;
+  salesStartDate: string | Date;
+  salesEndDate: string | Date;
   maxTicketsPerOrder: number | string;
 }
 
@@ -53,8 +53,15 @@ export class TicketTypeForm {
   initialData = input<TicketTypeFormData>();
   submitLabel = input('Add Ticket Type');
   isLoading = input(false);
+  eventStartTime = input<string>();
+  eventEndTime = input<string>();
 
   added = output<TicketTypeFormData>();
+
+  minDate = computed(() => (this.eventStartTime() ? new Date(this.eventStartTime()!) : null));
+  maxDate = computed(() => (this.eventEndTime() ? new Date(this.eventEndTime()!) : null));
+
+  saleDateError = signal<string | null>(null);
 
   private formData = signal<TicketTypeFormData>({
     name: '',
@@ -86,6 +93,17 @@ export class TicketTypeForm {
 
   async onSubmit(event: Event): Promise<void> {
     event.preventDefault();
+
+    const start = this.formData().salesStartDate;
+    const end = this.formData().salesEndDate;
+
+    if (!!start !== !!end) {
+      this.saleDateError.set('Both sale start and end dates must be provided together');
+      return;
+    }
+
+    this.saleDateError.set(null);
+
     await submit(this.ticketTypeForm, async () => {
       this.added.emit(this.formData());
     });

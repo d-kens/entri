@@ -60,8 +60,10 @@ export class CreateTicketType implements OnInit {
       description: data.description,
       quantity: Number(data.quantity),
       maxTicketsPerOrder: Number(data.maxTicketsPerOrder),
-      saleStartDate: data.salesStartDate,
-      saleEndDate: data.salesEndDate,
+      saleStartDate: data.salesStartDate
+        ? new Date(data.salesStartDate as string).toISOString()
+        : null,
+      saleEndDate: data.salesEndDate ? new Date(data.salesEndDate as string).toISOString() : null,
     };
 
     this.eventService.addEventTicketType(this.eventExternalId(), ticketType).subscribe({

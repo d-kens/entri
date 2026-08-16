@@ -76,6 +76,12 @@
   padding: 0 2rem 1.75rem;
 }
 
+.sale-date-error {
+  font-size: 0.75rem;
+  color: var(--mat-sys-error);
+  margin: 0;
+}
+
 .btn-loading {
   display: flex;
   align-items: center;

@@ -57,6 +57,8 @@
     <app-tickek-type-form
       [submitLabel]="'Save Ticket Type'"
       [isLoading]="isSaving()"
+      [eventStartTime]="ev.startTime"
+      [eventEndTime]="ev.endTime"
       (added)="onSaved($event)"
     />
   }

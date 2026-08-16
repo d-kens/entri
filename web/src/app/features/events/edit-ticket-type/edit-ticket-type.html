@@ -68,6 +68,8 @@
       [initialData]="ticketTypeFormData()"
       [submitLabel]="'Update Ticket Type'"
       [isLoading]="loading()"
+      [eventStartTime]="ev.startTime"
+      [eventEndTime]="ev.endTime"
       (added)="onSaved($event)"
     />
   }
