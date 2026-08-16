@@ -31,7 +31,7 @@ public class TicketTypeService {
                 () -> new ResourceNotFoundException("Ticket type with ID " + ticketTypeId + " not found")
         );
 
-        return ticketTypeMapper.toTicketTypeResponse(ticketType, ticketType.getAvailableQuantity());
+        return ticketTypeMapper.toTicketTypeResponse(ticketType);
     }
 
     @Transactional(readOnly = true)
@@ -46,10 +46,7 @@ public class TicketTypeService {
         return event.getTicketTypes().stream()
                 .map(ticketType -> {
 
-                    return ticketTypeMapper.toTicketTypeResponse(
-                            ticketType,
-                            ticketType.getAvailableQuantity()
-                    );
+                    return ticketTypeMapper.toTicketTypeResponse(ticketType);
                 })
                 .toList();
     }
@@ -75,7 +72,7 @@ public class TicketTypeService {
         ticketType.setSaleEndDate(ticketTypeRequest.saleEndDate());
 
         ticketTypeRepository.save(ticketType);
-        return ticketTypeMapper.toTicketTypeResponse(ticketType, ticketType.getAvailableQuantity());
+        return ticketTypeMapper.toTicketTypeResponse(ticketType);
     }
 
     @Transactional
@@ -123,7 +120,7 @@ public class TicketTypeService {
 
         ticketTypeRepository.save(ticketType);
 
-        return ticketTypeMapper.toTicketTypeResponse(ticketType, ticketType.getAvailableQuantity());
+        return ticketTypeMapper.toTicketTypeResponse(ticketType);
     }
 
     private void validateSaleDates(TicketTypeRequest request, Event event) {

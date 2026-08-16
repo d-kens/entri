@@ -7,6 +7,6 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface TicketTypeMapper {
-    @Mapping(target = "availableQuantity", source = "availableQuantity")
-    TicketTypeResponse toTicketTypeResponse(TicketType ticketType, Integer availableQuantity);
+    @Mapping(target = "availableQuantity", expression = "java(ticketType.getAvailableQuantity())")
+    TicketTypeResponse toTicketTypeResponse(TicketType ticketType);
 }

@@ -55,7 +55,7 @@ export class EditTicketType implements OnInit {
           name: ticketType.name,
           description: ticketType.description ?? '',
           price: String(ticketType.price),
-          quantity: String(ticketType.availableQuantity),
+          quantity: String(ticketType.quantity),
           maxTicketsPerOrder: ticketType.maxTicketsPerOrder,
           salesStartDate: ticketType.saleStartDate ?? '',
           salesEndDate: ticketType.saleEndDate ?? '',

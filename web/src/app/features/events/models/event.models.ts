@@ -42,6 +42,8 @@ export type TicketTypeResponse = {
   name: string;
   description?: string;
   price: number;
+  quantity: number;
+  soldQuantity: number;
   availableQuantity: number;
   maxTicketsPerOrder: number;
   saleStartDate?: string;
