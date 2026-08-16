@@ -1,5 +1,6 @@
 package com.entri.modules.events.service;
 
+import com.entri.common.exception.BadRequestException;
 import com.entri.common.exception.ResourceNotFoundException;
 import com.entri.common.exception.UnauthorizedException;
 import com.entri.common.security.AuthenticatedUser;
@@ -63,6 +64,8 @@ public class TicketTypeService {
             throw new UnauthorizedException("You are not authorized to perform this action");
         }
 
+        validateSaleDates(ticketTypeRequest, ticketType.getEvent());
+
         ticketType.setName(ticketTypeRequest.name());
         ticketType.setDescription(ticketTypeRequest.description());
         ticketType.setPrice(ticketTypeRequest.price());
@@ -105,6 +108,8 @@ public class TicketTypeService {
             throw new UnauthorizedException("You are not authorized to perform this action");
         }
 
+        validateSaleDates(ticketTypeRequest, event);
+
         TicketType ticketType = TicketType.builder()
                 .event(event)
                 .name(ticketTypeRequest.name())
@@ -119,5 +124,30 @@ public class TicketTypeService {
         ticketTypeRepository.save(ticketType);
 
         return ticketTypeMapper.toTicketTypeResponse(ticketType, ticketType.getAvailableQuantity());
+    }
+
+    private void validateSaleDates(TicketTypeRequest request, Event event) {
+        Instant start = request.saleStartDate();
+        Instant end = request.saleEndDate();
+
+        if ((start == null) != (end == null)) {
+            throw new BadRequestException("Sale start date and end date must both be provided or both omitted");
+        }
+
+        if (start == null) {
+            return;
+        }
+
+        if (start.isAfter(end)) {
+            throw new BadRequestException("Sale start date must not be after sale end date");
+        }
+
+        if (start.isBefore(event.getStartTime())) {
+            throw new BadRequestException("Sale start date must not be before the event start date");
+        }
+
+        if (end.isAfter(event.getEndTime())) {
+            throw new BadRequestException("Sale end date must not be after the event end date");
+        }
     }
 }

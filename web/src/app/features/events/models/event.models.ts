@@ -46,7 +46,7 @@ export type TicketTypeResponse = {
   maxTicketsPerOrder: number;
   saleStartDate?: string;
   saleEndDate?: string;
-  status: string;
+  status: 'ACTIVE' | 'INACTIVE';
 };
 
 export type EventResponse = {

@@ -500,11 +500,6 @@
   flex-shrink: 0;
 }
 
-.ticket-status-tag--sold-out {
-  background: var(--mat-sys-error-container);
-  color: var(--mat-sys-on-error-container);
-}
-
 .ticket-status-tag--inactive {
   background: var(--mat-sys-surface-container-high);
   color: var(--mat-sys-on-surface-variant);

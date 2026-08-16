@@ -82,6 +82,8 @@
           matInput
           [matDatepicker]="saleStartPicker"
           [formField]="ticketTypeForm.salesStartDate"
+          [min]="minDate()"
+          [max]="maxDate()"
           placeholder="Select date"
           readonly
         />
@@ -96,6 +98,8 @@
           matInput
           [matDatepicker]="saleEndPicker"
           [formField]="ticketTypeForm.salesEndDate"
+          [min]="minDate()"
+          [max]="maxDate()"
           placeholder="Select date"
           readonly
         />
@@ -104,6 +108,10 @@
         <mat-hint>Optional</mat-hint>
       </mat-form-field>
     </div>
+
+    @if (saleDateError()) {
+      <p class="sale-date-error">{{ saleDateError() }}</p>
+    }
   </div>
 
   <div class="form-actions">

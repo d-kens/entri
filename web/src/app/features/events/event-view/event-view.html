@@ -168,9 +168,7 @@
                   <div class="ticket-info">
                     <div class="ticket-name-row">
                       <p class="ticket-name">{{ ticket.name }}</p>
-                      @if (ticket.status === 'SOLD_OUT') {
-                        <span class="ticket-status-tag ticket-status-tag--sold-out">Sold Out</span>
-                      } @else if (ticket.status === 'INACTIVE') {
+                      @if (ticket.status === 'INACTIVE') {
                         <span class="ticket-status-tag ticket-status-tag--inactive"
                           >Unavailable</span
                         >
