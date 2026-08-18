@@ -12,7 +12,7 @@ import com.entri.modules.events.entity.EventTicketReservation;
 import com.entri.modules.events.entity.EventTicketReservationItem;
 import com.entri.modules.events.entity.EventTicketReservationStatus;
 import com.entri.modules.events.entity.TicketType;
-import com.entri.modules.events.entity.TicketTypeStatus;
+import com.entri.modules.events.entity.TicketTypeSaleStatus;
 import com.entri.modules.events.repository.EventRepository;
 import com.entri.modules.events.repository.EventTicketReservationRepository;
 import com.entri.modules.events.repository.TicketTypeRepository;
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.time.Clock;
+import java.time.Instant;
 import java.time.Duration;
 import java.util.HashSet;
 import java.util.List;
@@ -34,7 +34,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class EventTicketReservationService {
 
-    private final Clock clock;
     private final EventRepository eventRepository;
     private final TicketTypeRepository ticketTypeRepository;
     private final EventTicketReservationRepository eventTicketReservationRepository;
@@ -79,7 +78,7 @@ public class EventTicketReservationService {
     @Transactional
     public int expireReservations() {
         List<EventTicketReservation> reservations = eventTicketReservationRepository
-                .findExpiredPendingReservations(clock.instant(), batchSize);
+                .findExpiredPendingReservations(Instant.now(), batchSize);
 
         if (reservations.isEmpty()) {
             return 0;
@@ -172,7 +171,7 @@ public class EventTicketReservationService {
         }
 
         for (TicketType ticketType : ticketTypes) {
-            if (ticketType.getStatus() != TicketTypeStatus.ACTIVE) {
+            if (ticketType.getSaleStatus() != TicketTypeSaleStatus.ON_SALE) {
                 throw new BadRequestException("Ticket type is not available for purchase");
             }
         }
@@ -216,7 +215,7 @@ public class EventTicketReservationService {
         var reservation = EventTicketReservation.builder()
                 .event(event)
                 .status(EventTicketReservationStatus.PENDING)
-                .expiresAt(clock.instant().plus(holdDuration))
+                .expiresAt(Instant.now().plus(holdDuration))
                 .totalAmount(BigDecimal.ZERO)
                 .build();
 

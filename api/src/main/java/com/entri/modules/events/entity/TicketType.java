@@ -3,8 +3,6 @@ package com.entri.modules.events.entity;
 import com.entri.common.entity.AbstractAuditableEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -69,13 +67,28 @@ public class TicketType extends AbstractAuditableEntity {
     @Column(name = "sale_end_date")
     private Instant saleEndDate;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    @Builder.Default
-    private TicketTypeStatus status = TicketTypeStatus.ACTIVE;
-
     @Column(name = "deleted_at")
     private Instant deletedAt;
+
+    public TicketTypeSaleStatus getSaleStatus() {
+        Instant now = Instant.now();
+        if (saleStartDate != null && now.isBefore(saleStartDate)) {
+            return TicketTypeSaleStatus.UPCOMING;
+        }
+
+        if (saleEndDate != null && now.isAfter(saleEndDate)) {
+            return TicketTypeSaleStatus.ENDED;
+        }
+
+        return TicketTypeSaleStatus.ON_SALE;
+    }
+
+    public TicketTypeAvailabilityStatus getAvailabilityStatus() {
+        return getAvailableQuantity() > 0
+                ? TicketTypeAvailabilityStatus.AVAILABLE
+                : TicketTypeAvailabilityStatus.SOLD_OUT;
+    }
+
 
     public int getAvailableQuantity() {
         return quantity - soldQuantity - reservedQuantity;

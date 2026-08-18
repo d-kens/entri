@@ -15,7 +15,12 @@ import { EntriButton } from '@shared/components/button/entri-button.component';
 import { PageError } from '@shared/components/page-error/page-error';
 import { SnackbarService } from '@shared/services/snackbar-service';
 import { ConfirmDialog } from '@shared/components/confirm-dialog/confirm-dialog';
-import { EventResponse, TicketTypeResponse } from '@features/events/models/event.models';
+import {
+  EventResponse,
+  TicketTypeResponse,
+  TicketTypeSaleStatus,
+  TicketTypeAvailabilityStatus,
+} from '@features/events/models/event.models';
 
 @Component({
   selector: 'app-event-details',
@@ -36,6 +41,16 @@ import { EventResponse, TicketTypeResponse } from '@features/events/models/event
   styleUrl: './event-details.css',
 })
 export class EventDetails implements OnInit {
+  readonly saleStatusLabel: Record<TicketTypeSaleStatus, string> = {
+    ON_SALE: 'On Sale',
+    UPCOMING: 'Upcoming',
+    ENDED: 'Sale Ended',
+  };
+
+  readonly availabilityStatusLabel: Record<TicketTypeAvailabilityStatus, string> = {
+    AVAILABLE: 'Available',
+    SOLD_OUT: 'Sold Out',
+  };
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private eventsService = inject(EventsService);

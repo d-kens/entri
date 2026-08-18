@@ -143,14 +143,6 @@
                 <p class="unavailable-hint">Ticket sales are no longer available.</p>
               </div>
             </div>
-          } @else if (ev.status === 'COMPLETED') {
-            <div class="event-unavailable-strip event-unavailable-strip--completed">
-              <mat-icon>event_available</mat-icon>
-              <div>
-                <p class="unavailable-title">Event Ended</p>
-                <p class="unavailable-hint">This event has already taken place.</p>
-              </div>
-            </div>
           } @else if (ticketTypes().length === 0) {
             <div class="no-tickets">
               <mat-icon>confirmation_number</mat-icon>
@@ -163,14 +155,20 @@
                 <div
                   class="ticket-card"
                   [class.ticket-card--active]="qty(ticket.id) > 0"
-                  [class.ticket-card--unavailable]="ticket.status !== 'ACTIVE'"
+                  [class.ticket-card--unavailable]="
+                    ticket.saleStatus !== 'ON_SALE' || ticket.availabilityStatus !== 'AVAILABLE'
+                  "
                 >
                   <div class="ticket-info">
                     <div class="ticket-name-row">
                       <p class="ticket-name">{{ ticket.name }}</p>
-                      @if (ticket.status === 'INACTIVE') {
+                      @if (ticket.availabilityStatus === 'SOLD_OUT') {
+                        <span class="ticket-status-tag ticket-status-tag--inactive">Sold Out</span>
+                      } @else if (ticket.saleStatus === 'UPCOMING') {
+                        <span class="ticket-status-tag ticket-status-tag--inactive">Upcoming</span>
+                      } @else if (ticket.saleStatus === 'ENDED') {
                         <span class="ticket-status-tag ticket-status-tag--inactive"
-                          >Unavailable</span
+                          >Sale Ended</span
                         >
                       }
                     </div>
@@ -187,7 +185,9 @@
                     </div>
                   </div>
                   <div class="ticket-controls">
-                    @if (ticket.status === 'ACTIVE') {
+                    @if (
+                      ticket.saleStatus === 'ON_SALE' && ticket.availabilityStatus === 'AVAILABLE'
+                    ) {
                       @if (qty(ticket.id) === 0) {
                         <button
                           class="add-btn"
@@ -210,7 +210,7 @@
                           <button
                             class="qty-pill-btn"
                             (click)="increment(ticket)"
-                            [disabled]="qty(ticket.id) >= ticket.maxTicketsPerOrder"
+                            [disabled]="qty(ticket.id) >= maxQty(ticket)"
                             aria-label="Add one"
                           >
                             <mat-icon>add</mat-icon>
