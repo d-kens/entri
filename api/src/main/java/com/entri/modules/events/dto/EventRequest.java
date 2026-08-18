@@ -1,12 +1,10 @@
 package com.entri.modules.events.dto;
 
-import com.entri.common.validators.ValidDateRange;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.Instant;
 
-@ValidDateRange(startField = "startTime", endField = "endTime")
 public record EventRequest(
         @NotBlank(message = "Event title is required")
         String title,

@@ -1,5 +1,5 @@
 import { Component, computed, effect, input, output, signal } from '@angular/core';
-import { form, min, required, submit, FormField } from '@angular/forms/signals';
+import { form, min, required, submit, validate, FormField } from '@angular/forms/signals';
 import {
   MatError,
   MatFormField,
@@ -61,8 +61,6 @@ export class TicketTypeForm {
   minDate = computed(() => (this.eventStartTime() ? new Date(this.eventStartTime()!) : null));
   maxDate = computed(() => (this.eventEndTime() ? new Date(this.eventEndTime()!) : null));
 
-  saleDateError = signal<string | null>(null);
-
   private formData = signal<TicketTypeFormData>({
     name: '',
     price: '',
@@ -82,6 +80,23 @@ export class TicketTypeForm {
     min(fields.price, 1, { message: 'Price cannot be negative' });
     min(fields.quantity, 1, { message: 'At least 1 item is required' });
     min(fields.maxTicketsPerOrder, 1, { message: 'Should be at least 1' });
+
+    validate(fields.salesEndDate, (ctx) => {
+      const end = ctx.value();
+      const start = this.formData().salesStartDate;
+      if (!end && !start) return null;
+      if (!!start !== !!end) {
+        return {
+          kind: 'required',
+          message: 'Both sale start and end dates must be provided together',
+        };
+      }
+      const endDate = end instanceof Date ? end : new Date(end as string);
+      const startDate = start instanceof Date ? start : new Date(start as string);
+      return endDate >= startDate
+        ? null
+        : { kind: 'minDate', message: 'End date must be after start date' };
+    });
   });
 
   constructor() {
@@ -93,17 +108,6 @@ export class TicketTypeForm {
 
   async onSubmit(event: Event): Promise<void> {
     event.preventDefault();
-
-    const start = this.formData().salesStartDate;
-    const end = this.formData().salesEndDate;
-
-    if (!!start !== !!end) {
-      this.saleDateError.set('Both sale start and end dates must be provided together');
-      return;
-    }
-
-    this.saleDateError.set(null);
-
     await submit(this.ticketTypeForm, async () => {
       this.added.emit(this.formData());
     });

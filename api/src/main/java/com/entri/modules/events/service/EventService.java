@@ -1,6 +1,7 @@
 package com.entri.modules.events.service;
 
 import com.entri.common.security.AuthenticatedUser;
+import com.entri.common.exception.BadRequestException;
 import com.entri.common.exception.UnauthorizedException;
 import com.entri.common.dto.PaginationResponse;
 import com.entri.common.exception.ResourceNotFoundException;
@@ -22,6 +23,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -68,6 +70,7 @@ public class EventService {
 
     @Transactional
     public EventResponse createEvent(EventRequest request, String currentUserKey) {
+        validateEventDates(request, true);
         var user = userService.findEntityByExternalKey(currentUserKey);
         var category = eventCategoryService.findById(request.categoryId());
 
@@ -109,6 +112,7 @@ public class EventService {
             throw new UnauthorizedException("You are not authorized to perform this action");
         }
 
+        validateEventDates(request, false);
         var category = eventCategoryService.findById(request.categoryId());
 
         event.setTitle(request.title());
@@ -124,6 +128,15 @@ public class EventService {
 
         eventRepository.save(event);
         return eventMapper.toEventResponse(event);
+    }
+
+    private void validateEventDates(EventRequest request, boolean isCreate) {
+        if (isCreate && request.startTime().isBefore(Instant.now())) {
+            throw new BadRequestException("Start time must not be in the past");
+        }
+        if (!request.endTime().isAfter(request.startTime())) {
+            throw new BadRequestException("End time must be after start time");
+        }
     }
 
     private Specification<Event> buildSpecification(EventFilter filter) {
