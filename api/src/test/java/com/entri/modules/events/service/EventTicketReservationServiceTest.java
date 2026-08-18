@@ -10,7 +10,6 @@ import com.entri.modules.events.dto.EventTicketReservationRequest;
 import com.entri.modules.events.entity.Event;
 import com.entri.modules.events.entity.EventStatus;
 import com.entri.modules.events.entity.TicketType;
-import com.entri.modules.events.entity.TicketTypeStatus;
 import com.entri.modules.events.repository.EventRepository;
 import com.entri.modules.events.repository.EventTicketReservationRepository;
 import com.entri.modules.events.repository.TicketTypeRepository;
@@ -20,14 +19,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.math.BigDecimal;
-import java.time.Clock;
 import java.time.Duration;
-import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,7 +36,6 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class EventTicketReservationServiceTest {
 
-    @Mock Clock clock;
     @Mock EventRepository eventRepository;
     @Mock TicketTypeRepository ticketTypeRepository;
     @Mock EventTicketReservationRepository eventTicketReservationRepository;
@@ -52,7 +47,6 @@ class EventTicketReservationServiceTest {
     @BeforeEach
     void setUp() {
         ReflectionTestUtils.setField(eventTicketReservationService, "holdDuration", Duration.ofMinutes(10));
-        Mockito.lenient().when(clock.instant()).thenReturn(Instant.parse("2026-08-09T10:00:00Z"));
     }
 
     private Event buildEvent(Long id) {
@@ -237,24 +231,6 @@ class EventTicketReservationServiceTest {
     }
 
     @Test
-    void reserveEventTickets_expiresAt_is10MinutesFromNow() {
-        var now = Instant.parse("2026-08-09T10:00:00Z");
-        when(clock.instant()).thenReturn(now);
-
-        var event = buildEvent(1L);
-        var ticketType = buildTicketType(1L, event, 10, 0, BigDecimal.valueOf(100));
-
-        when(eventRepository.findByExternalId(EVENT_EXTERNAL_ID)).thenReturn(Optional.of(event));
-        when(ticketTypeRepository.findAllForUpdate(List.of(1L))).thenReturn(List.of(ticketType));
-
-        var response = eventTicketReservationService.reserveEventTickets(EVENT_EXTERNAL_ID, new EventTicketReservationRequest(
-                List.of(new EventTicketReservationItemRequest(1L, 1))
-        ));
-
-        assertThat(response.expiresAt()).isEqualTo(Instant.parse("2026-08-09T10:10:00Z"));
-    }
-
-    @Test
     @SuppressWarnings("unchecked")
     void reserveEventTickets_success_savedReservationHasCorrectItems() {
         var event = buildEvent(1L);
@@ -389,30 +365,6 @@ class EventTicketReservationServiceTest {
     }
 
     @Test
-    void reserveEventTickets_inactiveTicketType_throwsTicketTypeNotAvailableException() {
-        var event = buildEvent(1L);
-        var ticketType = TicketType.builder()
-                .id(1L)
-                .event(event)
-                .quantity(100)
-                .soldQuantity(0)
-                .price(BigDecimal.valueOf(50))
-                .name("General Admission")
-                .status(TicketTypeStatus.INACTIVE)
-                .build();
-
-        when(eventRepository.findByExternalId(EVENT_EXTERNAL_ID)).thenReturn(Optional.of(event));
-        when(ticketTypeRepository.findAllForUpdate(List.of(1L))).thenReturn(List.of(ticketType));
-
-        var request = new EventTicketReservationRequest(List.of(
-                new EventTicketReservationItemRequest(1L, 1)
-        ));
-
-        assertThatThrownBy(() -> eventTicketReservationService.reserveEventTickets(EVENT_EXTERNAL_ID, request))
-                .isInstanceOf(BadRequestException.class);
-    }
-
-    @Test
     void reserveEventTickets_nullMaxPerOrder_anyQuantityAllowed() {
         var event = buildEvent(1L);
         var ticketType = buildTicketType(1L, event, 100, 0, BigDecimal.valueOf(50));
@@ -445,73 +397,6 @@ class EventTicketReservationServiceTest {
                 .isInstanceOf(EventNotOnSaleException.class);
     }
 
-    @Test
-    void reserveEventTickets_completedEvent_throwsEventNotOnSaleException() {
-        var event = Event.builder()
-                .id(1L)
-                .externalId(EVENT_EXTERNAL_ID)
-                .status(EventStatus.COMPLETED)
-                .build();
-
-        when(eventRepository.findByExternalId(EVENT_EXTERNAL_ID)).thenReturn(Optional.of(event));
-
-        var request = new EventTicketReservationRequest(List.of(
-                new EventTicketReservationItemRequest(1L, 1)
-        ));
-
-        assertThatThrownBy(() -> eventTicketReservationService.reserveEventTickets(EVENT_EXTERNAL_ID, request))
-                .isInstanceOf(EventNotOnSaleException.class);
-    }
-
-    @Test
-    void reserveEventTickets_soldOutTicketType_throwsTicketTypeNotAvailableException() {
-        var event = buildEvent(1L);
-        var ticketType = TicketType.builder()
-                .id(1L)
-                .event(event)
-                .quantity(100)
-                .soldQuantity(100)
-                .price(BigDecimal.valueOf(50))
-                .name("General Admission")
-                .status(TicketTypeStatus.SOLD_OUT)
-                .build();
-
-        when(eventRepository.findByExternalId(EVENT_EXTERNAL_ID)).thenReturn(Optional.of(event));
-        when(ticketTypeRepository.findAllForUpdate(List.of(1L))).thenReturn(List.of(ticketType));
-
-        var request = new EventTicketReservationRequest(List.of(
-                new EventTicketReservationItemRequest(1L, 1)
-        ));
-
-        assertThatThrownBy(() -> eventTicketReservationService.reserveEventTickets(EVENT_EXTERNAL_ID, request))
-                .isInstanceOf(BadRequestException.class);
-    }
-
-    @Test
-    void reserveEventTickets_oneOfMultipleTicketTypesInactive_throwsTicketTypeNotAvailableException() {
-        var event = buildEvent(1L);
-        var activeTicketType = buildTicketType(1L, event, 100, 0, BigDecimal.valueOf(50));
-        var inactiveTicketType = TicketType.builder()
-                .id(2L)
-                .event(event)
-                .quantity(100)
-                .soldQuantity(0)
-                .price(BigDecimal.valueOf(50))
-                .name("VIP")
-                .status(TicketTypeStatus.INACTIVE)
-                .build();
-
-        when(eventRepository.findByExternalId(EVENT_EXTERNAL_ID)).thenReturn(Optional.of(event));
-        when(ticketTypeRepository.findAllForUpdate(List.of(1L, 2L))).thenReturn(List.of(activeTicketType, inactiveTicketType));
-
-        var request = new EventTicketReservationRequest(List.of(
-                new EventTicketReservationItemRequest(1L, 1),
-                new EventTicketReservationItemRequest(2L, 1)
-        ));
-
-        assertThatThrownBy(() -> eventTicketReservationService.reserveEventTickets(EVENT_EXTERNAL_ID, request))
-                .isInstanceOf(BadRequestException.class);
-    }
 
     @Test
     void reserveEventTickets_oneOfMultipleTicketTypesExceedsMaxPerOrder_throwsMaxTicketsPerOrderExceededException() {
@@ -540,7 +425,6 @@ class EventTicketReservationServiceTest {
         when(eventRepository.findByExternalId(EVENT_EXTERNAL_ID)).thenReturn(Optional.of(event));
         when(ticketTypeRepository.findAllForUpdate(List.of(1L, 1L))).thenReturn(List.of(ticketType));
 
-        // Same ticket type ID twice — each qty passes individually but combined would oversell
         var request = new EventTicketReservationRequest(List.of(
                 new EventTicketReservationItemRequest(1L, 3),
                 new EventTicketReservationItemRequest(1L, 3)

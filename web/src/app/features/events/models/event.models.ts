@@ -37,18 +37,21 @@ export type EventRequest = {
   bannerUrl: string;
 };
 
+export type TicketTypeSaleStatus = 'UPCOMING' | 'ON_SALE' | 'ENDED';
+export type TicketTypeAvailabilityStatus = 'AVAILABLE' | 'SOLD_OUT';
+
 export type TicketTypeResponse = {
   id: number;
   name: string;
   description?: string;
   price: number;
   quantity: number;
-  soldQuantity: number;
   availableQuantity: number;
-  maxTicketsPerOrder: number;
+  maxTicketsPerOrder?: number;
   saleStartDate?: string;
   saleEndDate?: string;
-  status: 'ACTIVE' | 'INACTIVE';
+  saleStatus: TicketTypeSaleStatus;
+  availabilityStatus: TicketTypeAvailabilityStatus;
 };
 
 export type EventResponse = {
@@ -64,7 +67,7 @@ export type EventResponse = {
   startTime: string;
   endTime: string;
   bannerUrl: string;
-  status: 'DRAFT' | 'PUBLISHED' | 'CANCELLED' | 'COMPLETED';
+  status: 'DRAFT' | 'PUBLISHED' | 'CANCELLED';
   publishedAt?: string;
   dateCreated: string;
 };

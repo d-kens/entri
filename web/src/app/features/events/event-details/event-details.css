@@ -205,9 +205,29 @@
   color: var(--mat-sys-on-surface-variant);
 }
 
-.ticket-status-badge[data-status='ACTIVE'] {
+.ticket-status-badge[data-status='ON_SALE'] {
   background: color-mix(in srgb, var(--mat-sys-primary) 15%, transparent);
   color: var(--mat-sys-primary);
+}
+
+.ticket-status-badge[data-status='UPCOMING'] {
+  background: color-mix(in srgb, var(--mat-sys-tertiary) 15%, transparent);
+  color: var(--mat-sys-tertiary);
+}
+
+.ticket-status-badge[data-status='ENDED'] {
+  background: color-mix(in srgb, var(--mat-sys-on-surface) 10%, transparent);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.ticket-status-badge[data-status='AVAILABLE'] {
+  background: color-mix(in srgb, var(--mat-sys-secondary) 15%, transparent);
+  color: var(--mat-sys-secondary);
+}
+
+.ticket-status-badge[data-status='SOLD_OUT'] {
+  background: color-mix(in srgb, #f59e0b 15%, transparent);
+  color: #b45309;
 }
 
 .tickets-empty {

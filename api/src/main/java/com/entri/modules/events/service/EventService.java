@@ -34,7 +34,6 @@ public class EventService {
 
     public PaginationResponse<EventResponse> listEvents(EventFilter filter) {
         Specification<Event> statusSpec = EventSpecifications.hasStatus(EventStatus.PUBLISHED)
-                .or(EventSpecifications.hasStatus(EventStatus.COMPLETED))
                 .or(EventSpecifications.hasStatus(EventStatus.CANCELLED));
 
         Specification<Event> spec = buildSpecification(filter).and(statusSpec);

@@ -247,9 +247,6 @@
             <column name="max_tickets_per_order" type="INT"/>
             <column name="sale_start_date" type="DATETIME"/>
             <column name="sale_end_date" type="DATETIME"/>
-            <column name="status" type="VARCHAR(50)">
-                <constraints nullable="false"/>
-            </column>
             <column name="deleted_at" type="DATETIME"/>
             <column name="date_created" type="DATETIME">
                 <constraints nullable="false"/>

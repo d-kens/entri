@@ -1,6 +1,7 @@
 package com.entri.modules.events.dto;
 
-import com.entri.modules.events.entity.TicketTypeStatus;
+import com.entri.modules.events.entity.TicketTypeAvailabilityStatus;
+import com.entri.modules.events.entity.TicketTypeSaleStatus;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -11,11 +12,11 @@ public record TicketTypeResponse(
         String description,
         BigDecimal price,
         Integer quantity,
-        Integer soldQuantity,
         Integer availableQuantity,
         Integer maxTicketsPerOrder,
         Instant saleStartDate,
         Instant saleEndDate,
-        TicketTypeStatus status
+        TicketTypeSaleStatus saleStatus,
+        TicketTypeAvailabilityStatus availabilityStatus
 ) {
 }

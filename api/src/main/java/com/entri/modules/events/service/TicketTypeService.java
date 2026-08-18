@@ -44,10 +44,7 @@ public class TicketTypeService {
                                 "Event with ID " + eventExternalId + " not found"));
 
         return event.getTicketTypes().stream()
-                .map(ticketType -> {
-
-                    return ticketTypeMapper.toTicketTypeResponse(ticketType);
-                })
+                .map(ticketTypeMapper::toTicketTypeResponse)
                 .toList();
     }
 

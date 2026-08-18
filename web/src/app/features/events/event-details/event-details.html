@@ -65,9 +65,14 @@
                   <div class="ticket-row-info">
                     <div class="ticket-row-title">
                       <p class="ticket-row-name">{{ ticket.name }}</p>
-                      <span class="ticket-status-badge" [attr.data-status]="ticket.status">{{
-                        ticket.status
+                      <span class="ticket-status-badge" [attr.data-status]="ticket.saleStatus">{{
+                        saleStatusLabel[ticket.saleStatus]
                       }}</span>
+                      <span
+                        class="ticket-status-badge"
+                        [attr.data-status]="ticket.availabilityStatus"
+                        >{{ availabilityStatusLabel[ticket.availabilityStatus] }}</span
+                      >
                     </div>
                     @if (ticket.description) {
                       <p class="ticket-row-desc">{{ ticket.description }}</p>

@@ -59,8 +59,15 @@ export class EventView implements OnInit {
     return this.selections().get(ticketId) ?? 0;
   }
 
+  maxQty(ticket: TicketTypeResponse): number {
+    return Math.min(
+      ticket.availableQuantity,
+      ticket.maxTicketsPerOrder ?? ticket.availableQuantity,
+    );
+  }
+
   increment(ticket: TicketTypeResponse): void {
-    if (this.qty(ticket.id) >= ticket.maxTicketsPerOrder) return;
+    if (this.qty(ticket.id) >= this.maxQty(ticket)) return;
     const next = new Map(this.selections());
     next.set(ticket.id, this.qty(ticket.id) + 1);
     this.selections.set(next);
