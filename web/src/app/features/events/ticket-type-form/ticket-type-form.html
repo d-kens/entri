@@ -105,13 +105,14 @@
         />
         <mat-datepicker-toggle matIconSuffix [for]="saleEndPicker"></mat-datepicker-toggle>
         <mat-datepicker #saleEndPicker></mat-datepicker>
-        <mat-hint>Optional</mat-hint>
+        @for (error of ticketTypeForm.salesEndDate().errors(); track error.message) {
+          <mat-error>{{ error.message }}</mat-error>
+        }
+        @if (!ticketTypeForm.salesEndDate().errors().length) {
+          <mat-hint>Optional</mat-hint>
+        }
       </mat-form-field>
     </div>
-
-    @if (saleDateError()) {
-      <p class="sale-date-error">{{ saleDateError() }}</p>
-    }
   </div>
 
   <div class="form-actions">

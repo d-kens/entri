@@ -58,7 +58,7 @@ public class TicketTypeService {
             throw new UnauthorizedException("You are not authorized to perform this action");
         }
 
-        validateSaleDates(ticketTypeRequest, ticketType.getEvent());
+        validateSaleDateBounds(ticketTypeRequest, ticketType.getEvent());
 
         ticketType.setName(ticketTypeRequest.name());
         ticketType.setDescription(ticketTypeRequest.description());
@@ -102,7 +102,7 @@ public class TicketTypeService {
             throw new UnauthorizedException("You are not authorized to perform this action");
         }
 
-        validateSaleDates(ticketTypeRequest, event);
+        validateSaleDateBounds(ticketTypeRequest, event);
 
         TicketType ticketType = TicketType.builder()
                 .event(event)
@@ -120,7 +120,7 @@ public class TicketTypeService {
         return ticketTypeMapper.toTicketTypeResponse(ticketType);
     }
 
-    private void validateSaleDates(TicketTypeRequest request, Event event) {
+    private void validateSaleDateBounds(TicketTypeRequest request, Event event) {
         Instant start = request.saleStartDate();
         Instant end = request.saleEndDate();
 
@@ -132,8 +132,8 @@ public class TicketTypeService {
             return;
         }
 
-        if (start.isAfter(end)) {
-            throw new BadRequestException("Sale start date must not be after sale end date");
+        if (!end.isAfter(start)) {
+            throw new BadRequestException("Sale end date must be after sale start date");
         }
 
         if (start.isBefore(event.getStartTime())) {

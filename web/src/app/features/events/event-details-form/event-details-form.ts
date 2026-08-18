@@ -127,6 +127,16 @@ export class EventDetailsForm {
     validate(fields.endDate, (ctx) =>
       this.data() ? null : notInPast('End date must be today or later')(ctx),
     );
+    validate(fields.endDate, (ctx) => {
+      const end = ctx.value();
+      const start = this.eventDetailsFormData().startDate;
+      if (!end || !start) return null;
+      const endDate = end instanceof Date ? end : new Date(end);
+      const startDate = start instanceof Date ? start : new Date(start);
+      return endDate >= startDate
+        ? null
+        : { kind: 'minDate', message: 'End date must be after start date' };
+    });
     required(fields.endTime, { message: 'End Time is required' });
   });
 
