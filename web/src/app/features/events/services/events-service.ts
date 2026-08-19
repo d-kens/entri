@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
+import { Observable, catchError, throwError } from 'rxjs';
 import { environment } from 'environments/environment';
 import {
   CategoryResponse,
@@ -41,8 +41,18 @@ export class EventsService {
     });
   }
 
-  getEvent(id: string): Observable<EventResponse> {
-    return this.http.get<EventResponse>(`${environment.apiBaseUrl}/events/${id}`);
+  getEvent(eventExternalID: string): Observable<EventResponse> {
+    return this.http.get<EventResponse>(`${environment.apiBaseUrl}/events/${eventExternalID}`);
+  }
+
+  publishEvent(eventExternalID: string): Observable<EventResponse> {
+    return this.http
+      .patch<EventResponse>(`${environment.apiBaseUrl}/events/${eventExternalID}/publish`, {})
+      .pipe(
+        catchError((err: HttpErrorResponse) =>
+          throwError(() => new Error(err.error?.detail ?? 'Failed to publish event')),
+        ),
+      );
   }
 
   getManagedEvents(

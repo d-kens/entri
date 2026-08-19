@@ -100,13 +100,30 @@ public class EventService {
     }
 
     @Transactional
-    public EventResponse publishEvent(final String eventExternalId) {
+    public EventResponse publishEvent(final String eventExternalId, final AuthenticatedUser user) {
         var event = eventRepository.findByExternalId(eventExternalId)
                 .orElseThrow(() -> new ResourceNotFoundException("Event with external ID: " + eventExternalId + " not found"));
+
+        if (!user.isPlatformAdmin() && !user.userExternalKey().equals(event.getOrganizer().getExternalKey())) {
+            throw new UnauthorizedException("You are not authorized to perform this action");
+        }
 
         if (event.getTicketTypes().isEmpty()) {
             throw new BadRequestException(
                     "Event: " + eventExternalId + " cannot be published because it has no ticket types"
+            );
+        }
+
+        if (event.getStatus() != EventStatus.DRAFT &&
+                event.getStatus() != EventStatus.CANCELLED) {
+            throw new BadRequestException(
+                    "Event cannot be published because its status is not DRAFT or CANCELLED"
+            );
+        }
+
+        if (event.getStartTime().isBefore(Instant.now())) {
+            throw new BadRequestException(
+                    "Event cannot be published because its start time is in the past"
             );
         }
 

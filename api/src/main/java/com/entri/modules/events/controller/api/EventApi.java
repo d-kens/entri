@@ -132,6 +132,22 @@ public interface EventApi {
     )
     @ApiResponses({
             @ApiResponse(
+                    responseCode = "401",
+                    description = "Authentication is required or the access token is invalid",
+                    content = @Content(
+                            mediaType = "application/problem+json",
+                            schema = @Schema(implementation = ProblemDetail.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "The authenticated user is not authorized to update events",
+                    content = @Content(
+                            mediaType = "application/problem+json",
+                            schema = @Schema(implementation = ProblemDetail.class)
+                    )
+            ),
+            @ApiResponse(
                     responseCode = "404",
                     description = "The specified event was not found",
                     content = @Content(
@@ -139,7 +155,14 @@ public interface EventApi {
                             schema = @Schema(implementation = ProblemDetail.class)
                     )
             ),
-
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "The event cannot be published because it has no ticket types, its status is not DRAFT or CANCELLED, or its start time is in the past",
+                    content = @Content(
+                            mediaType = "application/problem+json",
+                            schema = @Schema(implementation = ProblemDetail.class)
+                    )
+            ),
             @ApiResponse(
                     responseCode = "200",
                     description = "Event published successfully"
@@ -151,7 +174,11 @@ public interface EventApi {
                     description = "The unique external identifier of the event",
                     required = true
             )
-            @PathVariable final String eventExternalId
+            @PathVariable final String eventExternalId,
+
+            @Parameter(hidden = true)
+            @AuthenticationPrincipal
+            AuthenticatedUser user
     );
 
     @Operation(
@@ -163,14 +190,6 @@ public interface EventApi {
             @ApiResponse(
                     responseCode = "404",
                     description = "The specified event was not found",
-                    content = @Content(
-                            mediaType = "application/problem+json",
-                            schema = @Schema(implementation = ProblemDetail.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "The event cannot be published because it has no ticket types",
                     content = @Content(
                             mediaType = "application/problem+json",
                             schema = @Schema(implementation = ProblemDetail.class)
