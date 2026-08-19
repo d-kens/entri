@@ -131,6 +131,22 @@ public class EventService {
     }
 
     @Transactional
+    public EventResponse cancelEvent(final String eventExternalId, final AuthenticatedUser user) {
+        var event = eventRepository.findByExternalId(eventExternalId)
+                .orElseThrow(() -> new ResourceNotFoundException("Event with external ID: " + eventExternalId + " not found"));
+
+        assertCanManage(event, user);
+
+        if (event.getStatus() != EventStatus.PUBLISHED) {
+            throw new BadRequestException(
+                    "Event cannot be cancelled because its status is not PUBLISHED"
+            );
+        }
+        event.setStatus(EventStatus.CANCELLED);
+        return eventMapper.toEventResponse(event);
+    }
+
+    @Transactional
     public EventResponse updateEvent(
             final String externalId,
             final EventRequest request,
