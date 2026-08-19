@@ -13,12 +13,7 @@ import {
   EventTicketReservationResponse,
   EventTicketReservationDetailResponse,
 } from '@features/events/models/event.models';
-import { PageResponse } from '@shared/models/common.model';
-
-interface ProblemDetail {
-  detail?: string;
-  title?: string;
-}
+import { ApiError, PageResponse } from '@shared/models/common.model';
 
 @Injectable({ providedIn: 'root' })
 export class EventsService {
@@ -122,7 +117,7 @@ export class EventsService {
 
   private toDisplayError(fallback: string) {
     return (err: HttpErrorResponse) => {
-      const detail = (err.error as ProblemDetail | null)?.detail;
+      const detail = (err.error as ApiError | null)?.detail;
       return throwError(() => new Error(typeof detail === 'string' ? detail : fallback));
     };
   }
