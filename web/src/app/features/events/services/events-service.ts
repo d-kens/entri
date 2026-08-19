@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
+import { Observable, catchError, throwError } from 'rxjs';
 import { environment } from 'environments/environment';
 import {
   CategoryResponse,
@@ -13,7 +13,7 @@ import {
   EventTicketReservationResponse,
   EventTicketReservationDetailResponse,
 } from '@features/events/models/event.models';
-import { PageResponse } from '@shared/models/common.model';
+import { ApiError, PageResponse } from '@shared/models/common.model';
 
 @Injectable({ providedIn: 'root' })
 export class EventsService {
@@ -41,8 +41,14 @@ export class EventsService {
     });
   }
 
-  getEvent(id: string): Observable<EventResponse> {
-    return this.http.get<EventResponse>(`${environment.apiBaseUrl}/events/${id}`);
+  getEvent(eventExternalId: string): Observable<EventResponse> {
+    return this.http.get<EventResponse>(`${environment.apiBaseUrl}/events/${eventExternalId}`);
+  }
+
+  publishEvent(eventExternalId: string): Observable<EventResponse> {
+    return this.http
+      .patch<EventResponse>(`${environment.apiBaseUrl}/events/${eventExternalId}/publish`, {})
+      .pipe(catchError(this.toDisplayError('Failed to publish event')));
   }
 
   getManagedEvents(
@@ -107,6 +113,13 @@ export class EventsService {
     return this.http.get<EventTicketReservationDetailResponse>(
       `${environment.apiBaseUrl}/events/${externalId}/reservations/${reservationId}`,
     );
+  }
+
+  private toDisplayError(fallback: string) {
+    return (err: HttpErrorResponse) => {
+      const detail = (err.error as ApiError | null)?.detail;
+      return throwError(() => new Error(typeof detail === 'string' ? detail : fallback));
+    };
   }
 
   private buildEventParams(
