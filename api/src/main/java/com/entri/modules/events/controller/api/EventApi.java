@@ -182,7 +182,6 @@ public interface EventApi {
             AuthenticatedUser user
     );
 
-
     @Operation(
             operationId = "cancelEvent",
             summary = "Cancel Event",
@@ -200,7 +199,7 @@ public interface EventApi {
             ),
             @ApiResponse(
                     responseCode = "403",
-                    description = "The authenticated user is not authorized to update events",
+                    description = "The authenticated user is not authorized to cancel this event",
                     content = @Content(
                             mediaType = "application/problem+json",
                             schema = @Schema(implementation = ProblemDetail.class)
@@ -216,7 +215,7 @@ public interface EventApi {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "The event cannot be cancelled because its status its status is not PUBLISHED, ",
+                    description = "The event cannot be cancelled because its status is not PUBLISHED",
                     content = @Content(
                             mediaType = "application/problem+json",
                             schema = @Schema(implementation = ProblemDetail.class)
@@ -224,7 +223,7 @@ public interface EventApi {
             ),
             @ApiResponse(
                     responseCode = "200",
-                    description = "Event published successfully"
+                    description = "Event cancelled successfully"
             )
     })
     @PatchMapping("/{eventExternalId}/cancel")

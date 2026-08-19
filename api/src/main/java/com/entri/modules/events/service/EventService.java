@@ -101,10 +101,7 @@ public class EventService {
 
     @Transactional
     public EventResponse publishEvent(final String eventExternalId, final AuthenticatedUser user) {
-        var event = eventRepository.findByExternalId(eventExternalId)
-                .orElseThrow(() -> new ResourceNotFoundException("Event with external ID: " + eventExternalId + " not found"));
-
-        assertCanManage(event, user);
+        var event = getAuthorizedEvent(eventExternalId, user);
 
         if (event.getTicketTypes().isEmpty()) {
             throw new BadRequestException(
@@ -132,10 +129,7 @@ public class EventService {
 
     @Transactional
     public EventResponse cancelEvent(final String eventExternalId, final AuthenticatedUser user) {
-        var event = eventRepository.findByExternalId(eventExternalId)
-                .orElseThrow(() -> new ResourceNotFoundException("Event with external ID: " + eventExternalId + " not found"));
-
-        assertCanManage(event, user);
+        var event = getAuthorizedEvent(eventExternalId, user);
 
         if (event.getStatus() != EventStatus.PUBLISHED) {
             throw new BadRequestException(
@@ -152,10 +146,7 @@ public class EventService {
             final EventRequest request,
             final AuthenticatedUser user
     ) {
-        var event = eventRepository.findByExternalId(externalId)
-                .orElseThrow(() -> new ResourceNotFoundException("Event with external ID: " + externalId + " not found"));
-
-        assertCanManage(event, user);
+        var event = getAuthorizedEvent(externalId, user);
 
         validateEventDates(request, false);
         var category = eventCategoryService.findById(request.categoryId());
@@ -173,6 +164,13 @@ public class EventService {
 
         eventRepository.save(event);
         return eventMapper.toEventResponse(event);
+    }
+
+    private Event getAuthorizedEvent(String externalId, AuthenticatedUser user) {
+        var event = eventRepository.findByExternalId(externalId)
+                .orElseThrow(() -> new ResourceNotFoundException("Event with external ID: " + externalId + " not found"));
+        assertCanManage(event, user);
+        return event;
     }
 
     private void assertCanManage(Event event, AuthenticatedUser user) {
