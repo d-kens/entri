@@ -30,6 +30,12 @@
             Publish Event
           </button>
         }
+        @if (ev.status === 'PUBLISHED') {
+          <button mat-flat-button class="hero-btn-cancel" (click)="cancelEvent(ev.externalId)">
+            <mat-icon>cancel</mat-icon>
+            Cancel Event
+          </button>
+        }
       </ng-container>
     </app-event-hero>
 
