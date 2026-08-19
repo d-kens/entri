@@ -24,7 +24,7 @@
           <mat-icon>edit</mat-icon>
           Edit
         </button>
-        @if (ev.status === 'DRAFT') {
+        @if (ev.status === 'DRAFT' || ev.status === 'CANCELLED') {
           <button mat-flat-button class="hero-btn-live" (click)="publishEvent(ev.externalId)">
             <mat-icon>rocket_launch</mat-icon>
             Publish Event

@@ -153,7 +153,7 @@
       <mat-icon>edit</mat-icon>
       <span>Edit</span>
     </a>
-    @if (event.status === 'DRAFT') {
+    @if (event.status === 'DRAFT' || event.status === 'CANCELLED') {
       <button mat-menu-item class="publish-menu-item" (click)="publishEvent(event.externalId)">
         <mat-icon>publish</mat-icon>
         <span>Publish Event</span>

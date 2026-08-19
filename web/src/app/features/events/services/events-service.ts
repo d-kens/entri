@@ -15,6 +15,11 @@ import {
 } from '@features/events/models/event.models';
 import { PageResponse } from '@shared/models/common.model';
 
+interface ProblemDetail {
+  detail?: string;
+  title?: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class EventsService {
   private http = inject(HttpClient);
@@ -41,18 +46,14 @@ export class EventsService {
     });
   }
 
-  getEvent(eventExternalID: string): Observable<EventResponse> {
-    return this.http.get<EventResponse>(`${environment.apiBaseUrl}/events/${eventExternalID}`);
+  getEvent(eventExternalId: string): Observable<EventResponse> {
+    return this.http.get<EventResponse>(`${environment.apiBaseUrl}/events/${eventExternalId}`);
   }
 
-  publishEvent(eventExternalID: string): Observable<EventResponse> {
+  publishEvent(eventExternalId: string): Observable<EventResponse> {
     return this.http
-      .patch<EventResponse>(`${environment.apiBaseUrl}/events/${eventExternalID}/publish`, {})
-      .pipe(
-        catchError((err: HttpErrorResponse) =>
-          throwError(() => new Error(err.error?.detail ?? 'Failed to publish event')),
-        ),
-      );
+      .patch<EventResponse>(`${environment.apiBaseUrl}/events/${eventExternalId}/publish`, {})
+      .pipe(catchError(this.toDisplayError('Failed to publish event')));
   }
 
   getManagedEvents(
@@ -117,6 +118,13 @@ export class EventsService {
     return this.http.get<EventTicketReservationDetailResponse>(
       `${environment.apiBaseUrl}/events/${externalId}/reservations/${reservationId}`,
     );
+  }
+
+  private toDisplayError(fallback: string) {
+    return (err: HttpErrorResponse) => {
+      const detail = (err.error as ProblemDetail | null)?.detail;
+      return throwError(() => new Error(typeof detail === 'string' ? detail : fallback));
+    };
   }
 
   private buildEventParams(

@@ -130,6 +130,7 @@ public interface EventApi {
             summary = "Publish Event",
             description = "Publishes the specified event, making it available to attendees."
     )
+    @SecurityRequirement(name = "bearerAuth")
     @ApiResponses({
             @ApiResponse(
                     responseCode = "401",
@@ -166,7 +167,7 @@ public interface EventApi {
             @ApiResponse(
                     responseCode = "200",
                     description = "Event published successfully"
-            ),
+            )
     })
     @PatchMapping("/{eventExternalId}/publish")
     EventResponse publishEvent(
@@ -209,7 +210,6 @@ public interface EventApi {
             @PathVariable
             final String eventExternalId
     );
-
 
     @Operation(
             operationId = "createEvent",
