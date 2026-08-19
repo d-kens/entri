@@ -153,9 +153,11 @@
       <mat-icon>edit</mat-icon>
       <span>Edit</span>
     </a>
-    <button mat-menu-item class="publish-menu-item">
-      <mat-icon>publish</mat-icon>
-      <span>Publish</span>
-    </button>
+    @if (event.status === 'DRAFT') {
+      <button mat-menu-item class="publish-menu-item" (click)="publishEvent(event.externalId)">
+        <mat-icon>publish</mat-icon>
+        <span>Publish Event</span>
+      </button>
+    }
   </ng-template>
 </mat-menu>

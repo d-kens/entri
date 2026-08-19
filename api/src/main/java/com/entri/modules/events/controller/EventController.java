@@ -35,8 +35,8 @@ public class EventController implements EventApi {
     }
 
     @Override
-    public EventResponse publishEvent(@PathVariable String eventExternalId) {
-        return eventService.publishEvent(eventExternalId);
+    public EventResponse publishEvent(@PathVariable String eventExternalId,  @AuthenticationPrincipal final AuthenticatedUser user) {
+        return eventService.publishEvent(eventExternalId, user);
     }
 
     @Override

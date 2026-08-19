@@ -11,6 +11,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { EventsService } from '@features/events/services/events-service';
 import { EventResponse } from '@features/events/models/event.models';
 import { PageResponse } from '@shared/models/common.model';
+import { SnackbarService } from '@shared/services/snackbar-service';
 
 @Component({
   selector: 'app-events-list',
@@ -33,6 +34,7 @@ import { PageResponse } from '@shared/models/common.model';
 export class EventsList implements OnInit {
   private eventsService = inject(EventsService);
   private router = inject(Router);
+  private snackbarService = inject(SnackbarService);
 
   loading = signal(true);
   error = signal(false);
@@ -63,6 +65,18 @@ export class EventsList implements OnInit {
 
   onPage(event: PageEvent): void {
     this.load(event.pageIndex, event.pageSize);
+  }
+
+  publishEvent(externalId: string): void {
+    this.eventsService.publishEvent(externalId).subscribe({
+      next: () => {
+        this.snackbarService.showSuccess('Event published');
+        this.load(this.page().pageNumber, this.page().pageSize);
+      },
+      error: (err: Error) => {
+        this.snackbarService.showError(err.message);
+      },
+    });
   }
 
   goToEvent(id: string): void {

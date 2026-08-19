@@ -102,6 +102,18 @@ export class EventDetails implements OnInit {
     });
   }
 
+  publishEvent(externalId: string): void {
+    this.eventsService.publishEvent(externalId).subscribe({
+      next: (event) => {
+        this.event.set(event);
+        this.snackbarService.showSuccess('Event published');
+      },
+      error: (err: Error) => {
+        this.snackbarService.showError(err.message);
+      },
+    });
+  }
+
   loadEvent(): void {
     this.isLoading.set(true);
     this.hasError.set(false);

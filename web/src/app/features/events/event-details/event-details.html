@@ -25,9 +25,9 @@
           Edit
         </button>
         @if (ev.status === 'DRAFT') {
-          <button mat-flat-button class="hero-btn-live">
+          <button mat-flat-button class="hero-btn-live" (click)="publishEvent(ev.externalId)">
             <mat-icon>rocket_launch</mat-icon>
-            Go Live
+            Publish Event
           </button>
         }
       </ng-container>
