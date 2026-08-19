@@ -35,6 +35,14 @@ public class EventController implements EventApi {
     }
 
     @Override
+    public EventResponse publishEvent(
+            @PathVariable final String eventExternalId,
+            @AuthenticationPrincipal final AuthenticatedUser user
+    ) {
+        return eventService.publishEvent(eventExternalId, user);
+    }
+
+    @Override
     public List<TicketTypeResponse> getEventTicketTypes(@PathVariable String eventExternalId) {
         return ticketTypeService.getTicketTypesByEventExternalId(eventExternalId);
     }

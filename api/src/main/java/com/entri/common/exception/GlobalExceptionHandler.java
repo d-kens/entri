@@ -137,13 +137,13 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(BadRequestException.class)
-    public ProblemDetail handleTicketTypeNotForEventException(
+    public ProblemDetail handleBadRequestException(
             final BadRequestException exception,
             final HttpServletRequest request
     ) {
         return createProblemDetail(
                 HttpStatus.BAD_REQUEST,
-                "Invalid Ticket Type",
+                "Invalid Request",
                 exception.getMessage(),
                 request
         );

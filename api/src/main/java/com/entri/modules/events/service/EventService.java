@@ -93,9 +93,40 @@ public class EventService {
         return eventMapper.toEventResponse(event);
     }
 
-    public EventResponse getEventByExternalId(final String externalId) {
-        var event = eventRepository.findByExternalId(externalId)
-                .orElseThrow(() -> new ResourceNotFoundException("Event with external ID: " + externalId + " not found"));
+    public EventResponse getEventByExternalId(final String eventExternalId) {
+        var event = eventRepository.findByExternalId(eventExternalId)
+                .orElseThrow(() -> new ResourceNotFoundException("Event with external ID: " + eventExternalId + " not found"));
+        return eventMapper.toEventResponse(event);
+    }
+
+    @Transactional
+    public EventResponse publishEvent(final String eventExternalId, final AuthenticatedUser user) {
+        var event = eventRepository.findByExternalId(eventExternalId)
+                .orElseThrow(() -> new ResourceNotFoundException("Event with external ID: " + eventExternalId + " not found"));
+
+        assertCanManage(event, user);
+
+        if (event.getTicketTypes().isEmpty()) {
+            throw new BadRequestException(
+                    "Event: " + eventExternalId + " cannot be published because it has no ticket types"
+            );
+        }
+
+        if (event.getStatus() != EventStatus.DRAFT &&
+                event.getStatus() != EventStatus.CANCELLED) {
+            throw new BadRequestException(
+                    "Event cannot be published because its status is not DRAFT or CANCELLED"
+            );
+        }
+
+        if (event.getStartTime().isBefore(Instant.now())) {
+            throw new BadRequestException(
+                    "Event cannot be published because its start time is in the past"
+            );
+        }
+
+        event.setStatus(EventStatus.PUBLISHED);
+        event.setPublishedAt(Instant.now());
         return eventMapper.toEventResponse(event);
     }
 
@@ -108,9 +139,7 @@ public class EventService {
         var event = eventRepository.findByExternalId(externalId)
                 .orElseThrow(() -> new ResourceNotFoundException("Event with external ID: " + externalId + " not found"));
 
-        if (!user.isPlatformAdmin() && !user.userExternalKey().equals(event.getOrganizer().getExternalKey())) {
-            throw new UnauthorizedException("You are not authorized to perform this action");
-        }
+        assertCanManage(event, user);
 
         validateEventDates(request, false);
         var category = eventCategoryService.findById(request.categoryId());
@@ -128,6 +157,12 @@ public class EventService {
 
         eventRepository.save(event);
         return eventMapper.toEventResponse(event);
+    }
+
+    private void assertCanManage(Event event, AuthenticatedUser user) {
+        if (!user.isPlatformAdmin() && !user.userExternalKey().equals(event.getOrganizer().getExternalKey())) {
+            throw new UnauthorizedException("You are not authorized to perform this action");
+        }
     }
 
     private void validateEventDates(EventRequest request, boolean isCreate) {
