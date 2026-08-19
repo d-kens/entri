@@ -51,6 +51,12 @@ export class EventsService {
       .pipe(catchError(this.toDisplayError('Failed to publish event')));
   }
 
+  cancelEvent(eventExternalId: string): Observable<EventResponse> {
+    return this.http
+      .patch<EventResponse>(`${environment.apiBaseUrl}/events/${eventExternalId}/cancel`, {})
+      .pipe(catchError(this.toDisplayError('Failed to cancel event')));
+  }
+
   getManagedEvents(
     filter: Omit<EventFilter, 'organizerExternalId'>,
   ): Observable<PageResponse<EventResponse>> {

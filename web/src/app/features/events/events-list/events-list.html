@@ -159,5 +159,11 @@
         <span>Publish Event</span>
       </button>
     }
+    @if (event.status === 'PUBLISHED') {
+      <button mat-menu-item class="cancel-menu-item" (click)="cancelEvent(event.externalId)">
+        <mat-icon>cancel</mat-icon>
+        <span>Cancel Event</span>
+      </button>
+    }
   </ng-template>
 </mat-menu>

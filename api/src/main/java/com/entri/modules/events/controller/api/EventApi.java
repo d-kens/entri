@@ -183,6 +183,63 @@ public interface EventApi {
     );
 
     @Operation(
+            operationId = "cancelEvent",
+            summary = "Cancel Event",
+            description = "Cancels the specified event."
+    )
+    @SecurityRequirement(name = "bearerAuth")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Authentication is required or the access token is invalid",
+                    content = @Content(
+                            mediaType = "application/problem+json",
+                            schema = @Schema(implementation = ProblemDetail.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "The authenticated user is not authorized to cancel this event",
+                    content = @Content(
+                            mediaType = "application/problem+json",
+                            schema = @Schema(implementation = ProblemDetail.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "The specified event was not found",
+                    content = @Content(
+                            mediaType = "application/problem+json",
+                            schema = @Schema(implementation = ProblemDetail.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "The event cannot be cancelled because its status is not PUBLISHED",
+                    content = @Content(
+                            mediaType = "application/problem+json",
+                            schema = @Schema(implementation = ProblemDetail.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Event cancelled successfully"
+            )
+    })
+    @PatchMapping("/{eventExternalId}/cancel")
+    EventResponse cancelEvent(
+            @Parameter(
+                    description = "The unique external identifier of the event",
+                    required = true
+            )
+            @PathVariable final String eventExternalId,
+
+            @Parameter(hidden = true)
+            @AuthenticationPrincipal
+            AuthenticatedUser user
+    );
+
+    @Operation(
             operationId = "getEventTicketTypes",
             summary = "Get Ticket Types for an Event",
             description = "Retrieves the ticket types of an event identified by its external identifier"
