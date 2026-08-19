@@ -35,6 +35,11 @@ public class EventController implements EventApi {
     }
 
     @Override
+    public EventResponse publishEvent(@PathVariable String eventExternalId) {
+        return eventService.publishEvent(eventExternalId);
+    }
+
+    @Override
     public List<TicketTypeResponse> getEventTicketTypes(@PathVariable String eventExternalId) {
         return ticketTypeService.getTicketTypesByEventExternalId(eventExternalId);
     }
@@ -112,5 +117,4 @@ public class EventController implements EventApi {
         var uri = uriComponentsBuilder.path("/ticket-types/{id}").buildAndExpand(response.id()).toUri();
         return ResponseEntity.created(uri).body(response);
     }
-
 }

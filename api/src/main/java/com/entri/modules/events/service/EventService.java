@@ -93,9 +93,24 @@ public class EventService {
         return eventMapper.toEventResponse(event);
     }
 
-    public EventResponse getEventByExternalId(final String externalId) {
-        var event = eventRepository.findByExternalId(externalId)
-                .orElseThrow(() -> new ResourceNotFoundException("Event with external ID: " + externalId + " not found"));
+    public EventResponse getEventByExternalId(final String eventExternalId) {
+        var event = eventRepository.findByExternalId(eventExternalId)
+                .orElseThrow(() -> new ResourceNotFoundException("Event with external ID: " + eventExternalId + " not found"));
+        return eventMapper.toEventResponse(event);
+    }
+
+    @Transactional
+    public EventResponse publishEvent(final String eventExternalId) {
+        var event = eventRepository.findByExternalId(eventExternalId)
+                .orElseThrow(() -> new ResourceNotFoundException("Event with external ID: " + eventExternalId + " not found"));
+
+        if (event.getTicketTypes().isEmpty()) {
+            throw new BadRequestException(
+                    "Event: " + eventExternalId + " cannot be published because it has no ticket types"
+            );
+        }
+
+        event.setStatus(EventStatus.PUBLISHED);
         return eventMapper.toEventResponse(event);
     }
 
