@@ -143,7 +143,7 @@ public class GlobalExceptionHandler {
     ) {
         return createProblemDetail(
                 HttpStatus.BAD_REQUEST,
-                "Bad Request",
+                "Invalid Request",
                 exception.getMessage(),
                 request
         );
