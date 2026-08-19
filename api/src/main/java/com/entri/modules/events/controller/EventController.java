@@ -43,6 +43,15 @@ public class EventController implements EventApi {
     }
 
     @Override
+    public EventResponse cancelEvent(
+            @PathVariable final String eventExternalId,
+            @AuthenticationPrincipal final AuthenticatedUser user)
+    {
+        return eventService.cancelEvent(eventExternalId, user);
+    }
+
+
+    @Override
     public List<TicketTypeResponse> getEventTicketTypes(@PathVariable String eventExternalId) {
         return ticketTypeService.getTicketTypesByEventExternalId(eventExternalId);
     }
