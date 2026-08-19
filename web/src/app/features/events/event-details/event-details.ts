@@ -114,6 +114,18 @@ export class EventDetails implements OnInit {
     });
   }
 
+  cancelEvent(externalId: string): void {
+    this.eventsService.cancelEvent(externalId).subscribe({
+      next: (event) => {
+        this.event.set(event);
+        this.snackbarService.showSuccess('Event cancelled');
+      },
+      error: (err: Error) => {
+        this.snackbarService.showError(err.message);
+      },
+    });
+  }
+
   loadEvent(): void {
     this.isLoading.set(true);
     this.hasError.set(false);
