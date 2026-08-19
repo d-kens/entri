@@ -79,6 +79,18 @@ export class EventsList implements OnInit {
     });
   }
 
+  cancelEvent(externalId: string): void {
+    this.eventsService.cancelEvent(externalId).subscribe({
+      next: () => {
+        this.snackbarService.showSuccess('Event cancelled');
+        this.load(this.page().pageNumber, this.page().pageSize);
+      },
+      error: (err: Error) => {
+        this.snackbarService.showError(err.message);
+      },
+    });
+  }
+
   goToEvent(id: string): void {
     this.router.navigate(['/dashboard/events', id]);
   }

@@ -25,6 +25,11 @@
   color: #fff !important;
 }
 
+.hero-btn-cancel {
+  background: var(--mat-sys-error) !important;
+  color: #fff !important;
+}
+
 /* ── Body layout ─────────────────────────── */
 
 .details-body {
