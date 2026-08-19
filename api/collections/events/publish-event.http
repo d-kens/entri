@@ -1,0 +1,3 @@
+PATCH {{baseUrl}}/events/939a884d-4c9c-4d0c-a34b-f7ed8ec19c5e/publish
+Content-Type: application/json
+Authorization: Bearer {{token}}

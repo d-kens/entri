@@ -126,6 +126,35 @@ public interface EventApi {
     );
 
     @Operation(
+            operationId = "publishEvent",
+            summary = "Publish Event",
+            description = "Publishes the specified event, making it available to attendees."
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "The specified event was not found",
+                    content = @Content(
+                            mediaType = "application/problem+json",
+                            schema = @Schema(implementation = ProblemDetail.class)
+                    )
+            ),
+
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Event published successfully"
+            ),
+    })
+    @PatchMapping("/{eventExternalId}/publish")
+    EventResponse publishEvent(
+            @Parameter(
+                    description = "The unique external identifier of the event",
+                    required = true
+            )
+            @PathVariable final String eventExternalId
+    );
+
+    @Operation(
             operationId = "getEventTicketTypes",
             summary = "Get Ticket Types for an Event",
             description = "Retrieves the ticket types of an event identified by its external identifier"
@@ -134,6 +163,14 @@ public interface EventApi {
             @ApiResponse(
                     responseCode = "404",
                     description = "The specified event was not found",
+                    content = @Content(
+                            mediaType = "application/problem+json",
+                            schema = @Schema(implementation = ProblemDetail.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "The event cannot be published because it has no ticket types",
                     content = @Content(
                             mediaType = "application/problem+json",
                             schema = @Schema(implementation = ProblemDetail.class)
@@ -153,6 +190,7 @@ public interface EventApi {
             @PathVariable
             final String eventExternalId
     );
+
 
     @Operation(
             operationId = "createEvent",
