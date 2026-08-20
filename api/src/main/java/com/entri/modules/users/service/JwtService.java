@@ -1,6 +1,6 @@
 package com.entri.modules.users.service;
 
-import com.entri.infrastructure.config.JwtConfig;
+import com.entri.config.JwtConfig;
 import com.entri.modules.users.entity.Jwt;
 import com.entri.modules.users.entity.User;
 import io.jsonwebtoken.Claims;

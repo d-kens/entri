@@ -1,4 +1,4 @@
-package com.entri.infrastructure.ratelimit;
+package com.entri.common.ratelimit;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

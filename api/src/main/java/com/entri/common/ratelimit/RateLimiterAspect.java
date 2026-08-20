@@ -1,4 +1,4 @@
-package com.entri.infrastructure.ratelimit;
+package com.entri.common.ratelimit;
 
 import com.entri.common.exception.TooManyRequestsException;
 import io.github.bucket4j.Bucket;
@@ -23,7 +23,7 @@ public class RateLimiterAspect {
     private final ProxyManager<String> proxyManager;
     private final Supplier<BucketConfiguration> bucketConfiguration;
 
-    @Around("@annotation(com.entri.infrastructure.ratelimit.RateLimited)")
+    @Around("@annotation(com.entri.common.ratelimit.RateLimited)")
     public Object rateLimit(ProceedingJoinPoint joinPoint) throws Throwable {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         String clientKey = resolveClientIp(request);

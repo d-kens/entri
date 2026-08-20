@@ -1,4 +1,4 @@
-package com.entri.infrastructure.config;
+package com.entri.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

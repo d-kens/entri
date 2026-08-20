@@ -1,4 +1,4 @@
-package com.entri.client.novu;
+package com.entri.modules.notification;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

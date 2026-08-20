@@ -1,4 +1,4 @@
-package com.entri.infrastructure.config;
+package com.entri.config;
 
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.storage.Bucket;

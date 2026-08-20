@@ -1,7 +1,7 @@
 package com.entri.modules.events.controller;
 
 import com.entri.common.security.AuthenticatedUser;
-import com.entri.infrastructure.ratelimit.RateLimited;
+import com.entri.common.ratelimit.RateLimited;
 import com.entri.common.dto.PaginationResponse;
 import com.entri.modules.events.controller.api.EventApi;
 import com.entri.modules.events.dto.*;
