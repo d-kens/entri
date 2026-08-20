@@ -6,10 +6,10 @@ import com.entri.shared.security.AuthenticatedUser;
 import com.entri.shared.utils.PhoneNumberUtils;
 import com.entri.users.dto.CreateUserRequest;
 import com.entri.users.dto.UserResponse;
-import com.entri.users.entity.Role;
+import com.entri.shared.security.Role;
 import com.entri.users.entity.User;
 import com.entri.users.event.UserCreatedEvent;
-import com.entri.shared.exception.EmailAlreadyExist;
+import com.entri.users.exception.EmailAlreadyExistsException;
 import com.entri.users.mapper.UserMapper;
 import com.entri.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +29,7 @@ public class UserService {
 
     public UserResponse create(CreateUserRequest userDto) {
         if (userRepository.existsByEmail(userDto.email())) {
-            throw new EmailAlreadyExist();
+            throw new EmailAlreadyExistsException();
         }
         User user = User.builder()
                 .email(userDto.email())

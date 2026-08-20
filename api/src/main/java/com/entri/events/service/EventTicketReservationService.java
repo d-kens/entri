@@ -45,6 +45,20 @@ public class EventTicketReservationService {
     private int batchSize;
 
 
+    @Transactional
+    public EventTicketReservation findPendingForPayment(final String reservationId) {
+        var reservation = eventTicketReservationRepository.findByExternalIdForUpdate(reservationId)
+                .orElseThrow(() -> new ResourceNotFoundException("Reservation with ID " + reservationId + " not found"));
+
+        if (reservation.getStatus() != EventTicketReservationStatus.PENDING) {
+            throw new InvalidReservationStatusException(
+                    "Reservation with ID " + reservationId + " is not available for payment"
+            );
+        }
+
+        return reservation;
+    }
+
     @Transactional(readOnly = true)
     public EventTicketReservationDetailDto getEventTicketReservation(final String eventExternalId, final String reservationExternalId) {
         var event = eventRepository.findByExternalId(eventExternalId)

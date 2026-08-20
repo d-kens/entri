@@ -1,6 +1,6 @@
 package com.entri.shared.security;
 
-import com.entri.users.entity.Role;
+import com.entri.shared.security.Role;
 
 public record AuthenticatedUser(
         String userExternalKey,

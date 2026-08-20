@@ -6,7 +6,6 @@ import co.novu.models.components.TriggerEventRequestDtoTo2;
 import co.novu.models.components.TriggerEventRequestDto;
 import co.novu.models.errors.ErrorDto;
 import co.novu.models.errors.ValidationErrorDto;
-import com.entri.users.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,8 +25,8 @@ public class NovuClient {
     @Value("${novu.subscriber.timezone}")
     private String subscriberTimezone;
 
-    void createSubscriber(User user) {
-        var subscriberRequest = toCreateSubscriberRequestDto(user);
+    public void createSubscriber(NovuSubscriber subscriber) {
+        var subscriberRequest = toCreateSubscriberRequestDto(subscriber);
 
         try {
             novu.subscribers().create()
@@ -60,13 +59,13 @@ public class NovuClient {
         }
     }
 
-    private CreateSubscriberRequestDto toCreateSubscriberRequestDto(User user) {
+    private CreateSubscriberRequestDto toCreateSubscriberRequestDto(NovuSubscriber subscriber) {
         return CreateSubscriberRequestDto.builder()
-                .subscriberId(user.getExternalKey().toString())
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .email(user.getEmail())
-                .phone(user.getPhoneNumber())
+                .subscriberId(subscriber.subscriberId())
+                .firstName(subscriber.firstName())
+                .lastName(subscriber.lastName())
+                .email(subscriber.email())
+                .phone(subscriber.phoneNumber())
                 .locale(subscriberLocale)
                 .timezone(subscriberTimezone)
                 .build();

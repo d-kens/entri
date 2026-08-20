@@ -1,11 +1,11 @@
 package com.entri.notification.event;
 
-import com.entri.integrations.novu.WorkflowType;
+import com.entri.notification.NotificationType;
 
 import java.util.Map;
 
 public record NotificationEvent(
-        WorkflowType workflow,
+        NotificationType type,
         String subscriberId,
         Map<String, Object> payload
 ) {}
