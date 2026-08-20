@@ -49,7 +49,9 @@ novu:
 intasend:
   base-url: https://api.intasend.com
   publishable-key: ${INTASEND_PUBLISHABLE_KEY}
-  redirect-url: ${INTASEND_REDIRECT_URL}
+
+payment:
+  redirect-url: ${PAYMENT_REDIRECT_URL}
 
 rate-limit:
   redis:

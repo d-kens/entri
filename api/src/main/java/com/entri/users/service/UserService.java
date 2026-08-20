@@ -10,7 +10,7 @@ import com.entri.users.entity.Role;
 import com.entri.users.entity.User;
 import com.entri.users.event.UserCreatedEvent;
 import com.entri.shared.exception.EmailAlreadyExist;
-import com.entri.users.service.mapper.UserMapper;
+import com.entri.users.mapper.UserMapper;
 import com.entri.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;

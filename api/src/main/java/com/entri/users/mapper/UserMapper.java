@@ -1,4 +1,4 @@
-package com.entri.users.service.mapper;
+package com.entri.users.mapper;
 
 import com.entri.users.dto.UserResponse;
 import com.entri.users.entity.User;
