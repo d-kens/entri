@@ -1,4 +1,4 @@
-package com.entri.events.service.mapper;
+package com.entri.events.mapper;
 
 import com.entri.events.dto.EventResponse;
 import com.entri.events.entity.Event;

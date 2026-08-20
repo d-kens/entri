@@ -11,7 +11,7 @@ import com.entri.events.dto.EventResponse;
 import com.entri.events.entity.Event;
 import com.entri.events.entity.EventStatus;
 import com.entri.events.repository.EventRepository;
-import com.entri.events.service.mapper.EventMapper;
+import com.entri.events.mapper.EventMapper;
 import com.entri.events.specification.EventSpecifications;
 import com.entri.users.service.UserService;
 import lombok.RequiredArgsConstructor;

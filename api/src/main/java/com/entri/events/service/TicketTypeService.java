@@ -10,7 +10,7 @@ import com.entri.events.entity.Event;
 import com.entri.events.entity.TicketType;
 import com.entri.events.repository.EventRepository;
 import com.entri.events.repository.TicketTypeRepository;
-import com.entri.events.service.mapper.TicketTypeMapper;
+import com.entri.events.mapper.TicketTypeMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

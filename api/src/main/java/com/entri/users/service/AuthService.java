@@ -9,7 +9,7 @@ import com.entri.users.dto.LoginRequest;
 import com.entri.users.dto.LoginResponse;
 import com.entri.users.dto.LoginResult;
 import com.entri.users.dto.UserResponse;
-import com.entri.users.service.mapper.UserMapper;
+import com.entri.users.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

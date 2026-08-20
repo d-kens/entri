@@ -12,7 +12,7 @@ import com.entri.payment.entity.PaymentStatus;
 import com.entri.payment.entity.PaymentProvider;
 import com.entri.integrations.intasend.IntaSendClient;
 import com.entri.integrations.intasend.IntaSendCheckoutRequest;
-import com.entri.integrations.intasend.IntaSendProperties;
+import com.entri.payment.PaymentProperties;
 import com.entri.payment.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,7 +25,7 @@ import java.math.BigDecimal;
 public class PaymentService {
 
     private final IntaSendClient intaSendClient;
-    private final IntaSendProperties intaSendProperties;
+    private final PaymentProperties paymentProperties;
 
     private final PaymentRepository paymentRepository;
     private final EventTicketReservationRepository eventTicketReservationRepository;
@@ -63,7 +63,7 @@ public class PaymentService {
                 checkoutRequest.email(),
                 payment.getExternalId(),
                 "WEBSITE",
-                intaSendProperties.redirectUrl(),
+                paymentProperties.redirectUrl(),
                 amount,
                 currency
         );
