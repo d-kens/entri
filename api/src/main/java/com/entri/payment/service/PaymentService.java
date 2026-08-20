@@ -1,10 +1,7 @@
 package com.entri.payment.service;
 
-import com.entri.events.exception.InvalidReservationStatusException;
 import com.entri.shared.exception.PaymentProviderException;
-import com.entri.shared.exception.ResourceNotFoundException;
-import com.entri.events.entity.EventTicketReservationStatus;
-import com.entri.events.repository.EventTicketReservationRepository;
+import com.entri.events.service.EventTicketReservationService;
 import com.entri.payment.dto.CheckoutRequest;
 import com.entri.payment.dto.CheckoutResponse;
 import com.entri.payment.entity.Payment;
@@ -26,21 +23,12 @@ public class PaymentService {
 
     private final IntaSendClient intaSendClient;
     private final PaymentProperties paymentProperties;
-
     private final PaymentRepository paymentRepository;
-    private final EventTicketReservationRepository eventTicketReservationRepository;
+    private final EventTicketReservationService eventTicketReservationService;
 
     @Transactional
     public CheckoutResponse checkout(final CheckoutRequest checkoutRequest) {
-        var eventTicketReservation = eventTicketReservationRepository.findByExternalIdForUpdate(checkoutRequest.reservationId())
-                .orElseThrow(() -> new ResourceNotFoundException("Reservation with ID " + checkoutRequest.reservationId() + " not found"));
-
-        if (eventTicketReservation.getStatus() != EventTicketReservationStatus.PENDING) {
-            throw new InvalidReservationStatusException(
-                    "Reservation with ID " + checkoutRequest.reservationId()
-                            + " is not available for payment"
-            );
-        }
+        var eventTicketReservation = eventTicketReservationService.findPendingForPayment(checkoutRequest.reservationId());
 
         var amount = new BigDecimal(1);
         var currency = eventTicketReservation.getEvent().getCurrency();

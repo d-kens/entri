@@ -1,6 +1,7 @@
 package com.entri.users.entity;
 
 import com.entri.shared.entity.AbstractAuditableEntity;
+import com.entri.shared.security.Role;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

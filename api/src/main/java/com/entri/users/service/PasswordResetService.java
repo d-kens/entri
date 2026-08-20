@@ -6,7 +6,7 @@ import com.entri.shared.exception.UnauthorizedException;
 import com.entri.users.dto.ResetPasswordRequest;
 import com.entri.users.entity.PasswordResetToken;
 import com.entri.users.entity.User;
-import com.entri.integrations.novu.WorkflowType;
+import com.entri.notification.NotificationType;
 import com.entri.notification.event.NotificationEvent;
 import com.entri.users.repository.PasswordResetTokenRepository;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,7 +57,7 @@ public class PasswordResetService {
 
         String resetUrl = appBaseUrl + "auth/reset-password?token=" + rawToken;
         eventPublisher.publishEvent(new NotificationEvent(
-                WorkflowType.PASSWORD_RESET,
+                NotificationType.PASSWORD_RESET,
                 user.getExternalKey().toString(),
                 Map.of(
                         "resetUrl", resetUrl,
@@ -80,7 +80,7 @@ public class PasswordResetService {
         token.setUsed(true);
         passwordResetTokenRepository.save(token);
         eventPublisher.publishEvent(new NotificationEvent(
-                WorkflowType.UPDATED_PASSWORD,
+                NotificationType.UPDATED_PASSWORD,
                 user.getExternalKey().toString(),
                 Map.of(
                         "firstName", user.getFirstName()

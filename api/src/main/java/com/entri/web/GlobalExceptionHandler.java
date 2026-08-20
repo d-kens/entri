@@ -1,5 +1,17 @@
-package com.entri.shared.exception;
+package com.entri.web;
 
+import com.entri.events.exception.EventNotOnSaleException;
+import com.entri.events.exception.InsufficientTicketsException;
+import com.entri.events.exception.InvalidReservationStatusException;
+import com.entri.events.exception.MaxTicketsPerOrderExceededException;
+import com.entri.media.exception.FileUploadException;
+import com.entri.media.exception.InvalidFileTypeException;
+import com.entri.shared.exception.BadRequestException;
+import com.entri.users.exception.EmailAlreadyExistsException;
+import com.entri.shared.exception.PaymentProviderException;
+import com.entri.shared.exception.ResourceNotFoundException;
+import com.entri.shared.exception.TooManyRequestsException;
+import com.entri.shared.exception.UnauthorizedException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -175,10 +187,9 @@ public class GlobalExceptionHandler {
         );
     }
 
-
-    @ExceptionHandler(EmailAlreadyExist.class)
-    public ProblemDetail handleEmailAlreadyExist(
-            final EmailAlreadyExist exception,
+    @ExceptionHandler(EmailAlreadyExistsException.class)
+    public ProblemDetail handleEmailAlreadyExistsException(
+            final EmailAlreadyExistsException exception,
             final HttpServletRequest request
     ) {
         return createProblemDetail(
