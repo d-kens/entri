@@ -1,5 +1,4 @@
-package com.entri.infrastructure.config;
-
+package com.entri.modules.notification.novu;
 
 import co.novu.Novu;
 import org.springframework.beans.factory.annotation.Value;

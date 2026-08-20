@@ -6,7 +6,7 @@ import com.entri.common.exception.UnauthorizedException;
 import com.entri.modules.users.dto.ResetPasswordRequest;
 import com.entri.modules.users.entity.PasswordResetToken;
 import com.entri.modules.users.entity.User;
-import com.entri.client.novu.WorkflowType;
+import com.entri.modules.notification.WorkflowType;
 import com.entri.modules.notification.event.NotificationEvent;
 import com.entri.modules.users.repository.PasswordResetTokenRepository;
 import org.springframework.transaction.annotation.Transactional;

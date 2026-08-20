@@ -1,4 +1,4 @@
-package com.entri.infrastructure.config;
+package com.entri.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;

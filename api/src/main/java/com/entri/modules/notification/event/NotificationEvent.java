@@ -1,6 +1,6 @@
 package com.entri.modules.notification.event;
 
-import com.entri.client.novu.WorkflowType;
+import com.entri.modules.notification.WorkflowType;
 
 import java.util.Map;
 

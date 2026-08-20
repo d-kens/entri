@@ -1,7 +1,7 @@
 package com.entri.modules.notification;
 
-import com.entri.client.novu.NovuClient;
 import com.entri.modules.notification.event.NotificationEvent;
+import com.entri.modules.notification.novu.NovuClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;

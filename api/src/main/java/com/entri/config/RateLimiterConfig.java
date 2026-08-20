@@ -1,4 +1,4 @@
-package com.entri.infrastructure.config;
+package com.entri.config;
 
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.BucketConfiguration;

@@ -1,6 +1,6 @@
 package com.entri.modules.users.controller;
 
-import com.entri.infrastructure.config.JwtConfig;
+import com.entri.config.JwtConfig;
 import com.entri.modules.users.controller.api.AuthApi;
 import com.entri.modules.users.dto.AccessToken;
 import com.entri.modules.users.dto.CreateUserRequest;

@@ -1,4 +1,4 @@
-package com.entri.client.novu;
+package com.entri.modules.notification.novu;
 
 import co.novu.Novu;
 import co.novu.models.components.CreateSubscriberRequestDto;
@@ -6,6 +6,7 @@ import co.novu.models.components.TriggerEventRequestDtoTo2;
 import co.novu.models.components.TriggerEventRequestDto;
 import co.novu.models.errors.ErrorDto;
 import co.novu.models.errors.ValidationErrorDto;
+import com.entri.modules.notification.WorkflowType;
 import com.entri.modules.users.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
