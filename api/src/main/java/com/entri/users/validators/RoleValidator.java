@@ -1,6 +1,6 @@
 package com.entri.users.validators;
 
-import com.entri.shared.security.Role;
+import com.entri.users.entity.Role;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 

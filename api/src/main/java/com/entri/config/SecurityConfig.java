@@ -1,5 +1,6 @@
 package com.entri.config;
 
+import com.entri.users.entity.Role;
 import com.entri.users.security.JwtAuthenticationFilter;
 import com.entri.users.service.UserDetailsService;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -67,6 +68,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/events/{eventExternalId}/reservations/{reservationId}").permitAll()
                         .requestMatchers(HttpMethod.POST, "/payments/checkout").permitAll()
                         .requestMatchers(HttpMethod.GET,"/categories").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/users/me/wallet").hasAuthority(Role.PLATFORM_USER.name())
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

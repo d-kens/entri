@@ -6,12 +6,12 @@
   white-space: nowrap;
 }
 
-/* ── User badge pill ───────────────────────────────────── */
+/* ── Combined user + wallet badge ──────────────────────── */
 .user-badge {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 4px 12px 4px 4px;
+  gap: 10px;
+  padding: 4px 14px 4px 4px;
   border-radius: 100px;
   border: 1px solid var(--mat-sys-outline-variant);
   background: var(--mat-sys-surface-container);
@@ -26,8 +26,8 @@
 }
 
 .user-avatar {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   background: var(--mat-sys-primary);
   color: #ffffff;
@@ -41,11 +41,26 @@
   user-select: none;
 }
 
-.user-badge-name {
+.user-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+  gap: 1px;
+}
+
+.user-name {
   font-size: 0.875rem;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--mat-sys-on-surface);
   white-space: nowrap;
+}
+
+.user-balance {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--mat-sys-primary);
+  white-space: nowrap;
+  letter-spacing: -0.1px;
 }
 
 /* ── Logout button ─────────────────────────────────────── */
@@ -68,7 +83,16 @@
   transition: color 0.2s ease;
 }
 
-/* ── Loading skeleton ──────────────────────────────────── */
+/* ── Skeleton balance line (inside badge) ──────────────── */
+.skeleton-balance {
+  width: 72px;
+  height: 10px;
+  border-radius: 4px;
+  background: var(--mat-sys-outline);
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+/* ── Full badge skeleton (user not yet loaded) ─────────── */
 @keyframes shimmer {
   0% {
     opacity: 0.4;
@@ -84,37 +108,43 @@
 .skeleton-badge {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 4px 12px 4px 4px;
+  gap: 10px;
+  padding: 4px 14px 4px 4px;
   border-radius: 100px;
   border: 1px solid var(--mat-sys-outline-variant);
   background: var(--mat-sys-surface-container);
 }
 
 .skeleton-avatar {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  background: var(--mat-sys-surface-variant);
+  background: var(--mat-sys-outline);
   animation: shimmer 1.4s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+.skeleton-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
 .skeleton-name {
-  width: 72px;
-  height: 14px;
+  width: 80px;
+  height: 12px;
   border-radius: 4px;
-  background: var(--mat-sys-surface-variant);
+  background: var(--mat-sys-outline);
   animation: shimmer 1.4s ease-in-out infinite;
 }
 
 /* ── Responsive ────────────────────────────────────────── */
 @media (max-width: 480px) {
-  .user-badge-name {
+  .user-name {
     display: none;
   }
 
-  .user-badge {
-    padding: 4px;
-    border-radius: 50%;
+  .skeleton-lines .skeleton-name {
+    display: none;
   }
 }

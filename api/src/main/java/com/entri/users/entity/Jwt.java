@@ -1,5 +1,6 @@
 package com.entri.users.entity;
 
+import com.entri.users.entity.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 
