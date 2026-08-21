@@ -11,16 +11,25 @@
     <span class="page-title">{{ pageTitle() }}</span>
   </div>
 
-  <!-- Right: user badge + logout -->
+  <!-- Right: combined badge + logout -->
   <div class="flex items-center gap-2">
     @if (user(); as u) {
-      <!-- Pill badge: avatar + full name -->
       <div class="user-badge">
         <div class="user-avatar">{{ initials() }}</div>
-        <span class="user-badge-name">{{ u.firstName }} {{ u.lastName }}</span>
+        <div class="user-info">
+          <span class="user-name">{{ u.firstName }} {{ u.lastName }}</span>
+          @if (isOrganizerUser()) {
+            @if (walletLoading()) {
+              <div class="skeleton-balance"></div>
+            } @else if (wallet(); as w) {
+              <span class="user-balance"
+                >{{ w.currency }} {{ w.availableBalance | number: '1.2-2' }}</span
+              >
+            }
+          }
+        </div>
       </div>
 
-      <!-- Logout button -->
       <button
         mat-icon-button
         class="logout-btn"
@@ -31,10 +40,12 @@
         <mat-icon class="logout-icon">logout</mat-icon>
       </button>
     } @else {
-      <!-- Loading skeleton -->
       <div class="skeleton-badge">
         <div class="skeleton-avatar"></div>
-        <div class="skeleton-name"></div>
+        <div class="skeleton-lines">
+          <div class="skeleton-name"></div>
+          <div class="skeleton-balance"></div>
+        </div>
       </div>
     }
   </div>

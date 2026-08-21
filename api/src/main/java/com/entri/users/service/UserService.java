@@ -6,7 +6,7 @@ import com.entri.shared.security.AuthenticatedUser;
 import com.entri.shared.utils.PhoneNumberUtils;
 import com.entri.users.dto.CreateUserRequest;
 import com.entri.users.dto.UserResponse;
-import com.entri.shared.security.Role;
+import com.entri.users.entity.Role;
 import com.entri.users.entity.User;
 import com.entri.users.event.UserCreatedEvent;
 import com.entri.users.exception.EmailAlreadyExistsException;

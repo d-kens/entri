@@ -1,6 +1,7 @@
 package com.entri.events.service;
 
 import com.entri.events.exception.EventNotOnSaleException;
+import com.entri.events.exception.InvalidReservationStatusException;
 import com.entri.events.exception.InsufficientTicketsException;
 import com.entri.events.exception.MaxTicketsPerOrderExceededException;
 import com.entri.shared.exception.ResourceNotFoundException;
