@@ -42,7 +42,7 @@ export class Toolbar implements OnInit {
   wallet = this.walletService.wallet;
   walletLoading = this.walletService.walletLoading;
 
-  isOrganizerUser = computed(() => this.user()?.role === 'PLATFORM_USER');
+  isOrganizerUser = computed(() => this.user()?.role === 'ORGANIZER');
 
   pageTitle = toSignal(
     this.router.events.pipe(
@@ -68,9 +68,7 @@ export class Toolbar implements OnInit {
       this.usersService
         .getUserByExternalKey(externalKey)
         .pipe(
-          switchMap((user) =>
-            user.role === 'PLATFORM_USER' ? this.walletService.getWallet() : EMPTY,
-          ),
+          switchMap((user) => (user.role === 'ORGANIZER' ? this.walletService.getWallet() : EMPTY)),
         )
         .subscribe();
     }

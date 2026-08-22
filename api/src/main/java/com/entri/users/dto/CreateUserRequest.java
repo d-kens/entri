@@ -1,6 +1,6 @@
 package com.entri.users.dto;
 
-import com.entri.shared.validators.ValidPhoneNumber;
+import com.entri.validators.ValidPhoneNumber;
 import com.entri.users.validators.ValidRole;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

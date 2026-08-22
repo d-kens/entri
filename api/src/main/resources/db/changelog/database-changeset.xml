@@ -429,4 +429,12 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="202608220001" author="d-kens">
+        <addColumn tableName="users">
+            <column name="enabled" type="TINYINT(1)" defaultValueNumeric="1">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

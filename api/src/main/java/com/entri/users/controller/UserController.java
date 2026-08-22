@@ -1,6 +1,6 @@
 package com.entri.users.controller;
 
-import com.entri.shared.security.AuthenticatedUser;
+import com.entri.security.UserPrincipal;
 import com.entri.users.controller.api.UserApi;
 import com.entri.users.dto.UserResponse;
 import com.entri.users.service.UserService;
@@ -17,7 +17,7 @@ public class UserController implements UserApi {
     @Override
     public UserResponse getUserByExternalKey(
             @PathVariable String externalKey,
-            @AuthenticationPrincipal final AuthenticatedUser user
+            @AuthenticationPrincipal final UserPrincipal user
     ) {
         return userService.getUserByExternalKey(externalKey, user);
     }

@@ -1,6 +1,6 @@
 package com.entri.events.controller.api;
 
-import com.entri.shared.security.AuthenticatedUser;
+import com.entri.security.UserPrincipal;
 import com.entri.events.dto.TicketTypeRequest;
 import com.entri.events.dto.TicketTypeResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -107,7 +107,7 @@ public interface TicketTypeApi {
             )
             @PathVariable final Long ticketTypeId,
             @Valid @RequestBody final TicketTypeRequest ticketTypeRequest,
-            @AuthenticationPrincipal final AuthenticatedUser user
+            @AuthenticationPrincipal final UserPrincipal user
     );
 
     @Operation(
@@ -153,7 +153,7 @@ public interface TicketTypeApi {
                     required = true
             )
             @PathVariable final long ticketTypeId,
-            @AuthenticationPrincipal final AuthenticatedUser user
+            @AuthenticationPrincipal final UserPrincipal user
     );
 }
 

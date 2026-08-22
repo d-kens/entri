@@ -1,8 +1,8 @@
 package com.entri.events.controller;
 
-import com.entri.shared.security.AuthenticatedUser;
-import com.entri.shared.ratelimit.RateLimited;
-import com.entri.shared.dto.PaginationResponse;
+import com.entri.security.UserPrincipal;
+import com.entri.ratelimit.RateLimited;
+import com.entri.common.dto.PaginationResponse;
 import com.entri.events.controller.api.EventApi;
 import com.entri.events.dto.*;
 import com.entri.events.service.EventService;
@@ -37,7 +37,7 @@ public class EventController implements EventApi {
     @Override
     public EventResponse publishEvent(
             @PathVariable final String eventExternalId,
-            @AuthenticationPrincipal final AuthenticatedUser user
+            @AuthenticationPrincipal final UserPrincipal user
     ) {
         return eventService.publishEvent(eventExternalId, user);
     }
@@ -45,7 +45,7 @@ public class EventController implements EventApi {
     @Override
     public EventResponse cancelEvent(
             @PathVariable final String eventExternalId,
-            @AuthenticationPrincipal final AuthenticatedUser user
+            @AuthenticationPrincipal final UserPrincipal user
     ) {
         return eventService.cancelEvent(eventExternalId, user);
     }
@@ -59,9 +59,9 @@ public class EventController implements EventApi {
     public ResponseEntity<EventResponse> createEvent(
             UriComponentsBuilder uriComponentsBuilder,
             @Valid @RequestBody final EventRequest request,
-            @AuthenticationPrincipal final AuthenticatedUser user
+            @AuthenticationPrincipal final UserPrincipal user
     ) {
-        var response = eventService.createEvent(request, user.userExternalKey());
+        var response = eventService.createEvent(request, user.getExternalKey());
         var uri = uriComponentsBuilder.path("/events/{external_id}").buildAndExpand(response.externalId()).toUri();
         return ResponseEntity.created(uri).body(response);
     }
@@ -70,7 +70,7 @@ public class EventController implements EventApi {
     public EventResponse updateEvent(
             @PathVariable final String externalId,
             @Valid @RequestBody final EventRequest request,
-            @AuthenticationPrincipal final AuthenticatedUser user
+            @AuthenticationPrincipal final UserPrincipal user
     ) {
         return eventService.updateEvent(externalId, request, user);
     }
@@ -85,9 +85,9 @@ public class EventController implements EventApi {
     @Override
     public PaginationResponse<EventResponse> listOrganizerEvents(
             @Valid final EventFilter filter,
-            @AuthenticationPrincipal final AuthenticatedUser user
+            @AuthenticationPrincipal final UserPrincipal user
     ) {
-        String userKey = user.isPlatformAdmin() ? null : user.userExternalKey();
+        String userKey = user.isAdmin() ? null : user.getExternalKey();
         return eventService.listOrganizerEvents(filter, userKey);
     }
 
@@ -122,7 +122,7 @@ public class EventController implements EventApi {
             UriComponentsBuilder uriComponentsBuilder,
             @PathVariable final String eventExternalId,
             @Valid @RequestBody final TicketTypeRequest ticketTypeRequest,
-            @AuthenticationPrincipal final AuthenticatedUser user
+            @AuthenticationPrincipal final UserPrincipal user
     ) {
         var response = ticketTypeService.createEventTicketType(eventExternalId, ticketTypeRequest, user);
         var uri = uriComponentsBuilder.path("/ticket-types/{id}").buildAndExpand(response.id()).toUri();

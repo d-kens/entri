@@ -1,5 +1,5 @@
 package com.entri.events.controller;
-import com.entri.shared.security.AuthenticatedUser;
+import com.entri.security.UserPrincipal;
 import com.entri.events.controller.api.TicketTypeApi;
 import com.entri.events.dto.TicketTypeRequest;
 import com.entri.events.dto.TicketTypeResponse;
@@ -25,7 +25,7 @@ public class TicketTypeController implements TicketTypeApi {
     public TicketTypeResponse updateTicketType(
             @PathVariable final Long ticketTypeId,
             @Valid @RequestBody final TicketTypeRequest ticketTypeRequest,
-            @AuthenticationPrincipal final AuthenticatedUser user
+            @AuthenticationPrincipal final UserPrincipal user
     ) {
         return ticketTypeService.updateTicketType(ticketTypeId, ticketTypeRequest, user);
     }
@@ -33,7 +33,7 @@ public class TicketTypeController implements TicketTypeApi {
     @Override
     public ResponseEntity<Void> deleteTicketType(
             @PathVariable final long ticketTypeId,
-            @AuthenticationPrincipal final AuthenticatedUser user
+            @AuthenticationPrincipal final UserPrincipal user
     ) {
         ticketTypeService.deleteTicketType(ticketTypeId, user);
         return ResponseEntity.noContent().build();

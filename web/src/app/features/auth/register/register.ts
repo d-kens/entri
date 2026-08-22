@@ -82,7 +82,7 @@ export class Register {
       email: this.registerForm.get('email')?.value ?? '',
       phoneNumber: this.registerForm.get('phoneNumber')?.value ?? '',
       password: this.registerForm.get('password')?.value ?? '',
-      role: 'PLATFORM_USER',
+      role: 'ORGANIZER',
     };
 
     this.authService.register(payload).subscribe({

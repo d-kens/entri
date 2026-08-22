@@ -1,8 +1,8 @@
 package com.entri.config;
 
 import com.entri.users.entity.Role;
-import com.entri.users.security.JwtAuthenticationFilter;
-import com.entri.users.service.UserDetailsService;
+import com.entri.security.JwtAuthenticationFilter;
+import com.entri.auth.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,7 +36,7 @@ public class SecurityConfig {
 
     @Bean
     AuthenticationManager authenticationManager(
-            UserDetailsService userDetailsService,
+            UserDetailsServiceImpl userDetailsService,
             PasswordEncoder passwordEncoder
     ) {
         DaoAuthenticationProvider authenticationProvider = new
@@ -68,7 +68,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/events/{eventExternalId}/reservations/{reservationId}").permitAll()
                         .requestMatchers(HttpMethod.POST, "/payments/checkout").permitAll()
                         .requestMatchers(HttpMethod.GET,"/categories").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/users/me/wallet").hasAuthority(Role.PLATFORM_USER.name())
+                        .requestMatchers(HttpMethod.GET, "/users/me/wallet").hasAuthority(Role.ORGANIZER.name())
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

@@ -1,6 +1,6 @@
 package com.entri.payment.entity;
 
-import com.entri.shared.entity.AbstractAuditableEntity;
+import com.entri.common.entity.AbstractAuditableEntity;
 import com.entri.events.entity.EventTicketReservation;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

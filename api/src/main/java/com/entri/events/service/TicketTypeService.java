@@ -1,9 +1,9 @@
 package com.entri.events.service;
 
-import com.entri.shared.exception.BadRequestException;
-import com.entri.shared.exception.ResourceNotFoundException;
-import com.entri.shared.exception.UnauthorizedException;
-import com.entri.shared.security.AuthenticatedUser;
+import com.entri.exception.BadRequestException;
+import com.entri.exception.ResourceNotFoundException;
+import com.entri.exception.UnauthorizedException;
+import com.entri.security.UserPrincipal;
 import com.entri.events.dto.TicketTypeRequest;
 import com.entri.events.dto.TicketTypeResponse;
 import com.entri.events.entity.Event;
@@ -49,12 +49,12 @@ public class TicketTypeService {
     }
 
     @Transactional
-    public TicketTypeResponse updateTicketType(final Long ticketTypeId, final TicketTypeRequest ticketTypeRequest, final AuthenticatedUser user) {
+    public TicketTypeResponse updateTicketType(final Long ticketTypeId, final TicketTypeRequest ticketTypeRequest, final UserPrincipal user) {
         TicketType ticketType = ticketTypeRepository.findById(ticketTypeId).orElseThrow(
                 () -> new ResourceNotFoundException("Ticket type with ID " + ticketTypeId + " not found")
         );
 
-        if (!user.isPlatformAdmin() && !user.userExternalKey().equals(ticketType.getEvent().getOrganizer().getExternalKey())) {
+        if (!user.isAdmin() && !user.getExternalKey().equals(ticketType.getEvent().getOrganizer().getExternalKey())) {
             throw new UnauthorizedException("You are not authorized to perform this action");
         }
 
@@ -73,12 +73,12 @@ public class TicketTypeService {
     }
 
     @Transactional
-    public void deleteTicketType(final Long ticketTypeId, final AuthenticatedUser user) {
+    public void deleteTicketType(final Long ticketTypeId, final UserPrincipal user) {
         TicketType ticketType = ticketTypeRepository.findById(ticketTypeId).orElseThrow(
                 () -> new ResourceNotFoundException("Ticket type with ID " + ticketTypeId + " not found")
         );
 
-        if (!user.isPlatformAdmin() && !user.userExternalKey().equals(ticketType.getEvent().getOrganizer().getExternalKey())) {
+        if (!user.isAdmin() && !user.getExternalKey().equals(ticketType.getEvent().getOrganizer().getExternalKey())) {
             throw new UnauthorizedException("You are not authorized to perform this action");
         }
 
@@ -93,12 +93,12 @@ public class TicketTypeService {
     public TicketTypeResponse createEventTicketType(
             final String eventExternalId,
             final TicketTypeRequest ticketTypeRequest,
-            final AuthenticatedUser user
+            final UserPrincipal user
     ) {
         Event event = eventRepository.findByExternalId(eventExternalId)
                 .orElseThrow(() -> new ResourceNotFoundException("Event with ID " + eventExternalId + " not found"));
 
-        if (!user.isPlatformAdmin() && !user.userExternalKey().equals(event.getOrganizer().getExternalKey())) {
+        if (!user.isAdmin() && !user.getExternalKey().equals(event.getOrganizer().getExternalKey())) {
             throw new UnauthorizedException("You are not authorized to perform this action");
         }
 

@@ -17,7 +17,7 @@ public class OrganizerWalletListener {
     @EventListener
     public void onUserCreated(final UserCreatedEvent event) {
         var user = event.user();
-        if (user.getRole() != Role.PLATFORM_USER) return;
+        if (user.getRole() != Role.ORGANIZER) return;
 
         var walletId = walletService.createWallet(
                 user.getFirstName() + " " + user.getLastName(),

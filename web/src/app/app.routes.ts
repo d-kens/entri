@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { Layout } from '@layout/dashboard/dashboard';
 import { Public } from '@layout/public/public';
 import { authGuard } from '@features/auth/guards/auth-guard';
+import { roleGuard } from '@features/auth/guards/role-guard';
 
 export const routes: Routes = [
   {
@@ -48,6 +49,46 @@ export const routes: Routes = [
       {
         path: 'events',
         loadChildren: () => import('./features/events/events.routes').then((m) => m.EVENTS_ROUTES),
+      },
+      {
+        path: 'users',
+        canActivate: [roleGuard],
+        data: { roles: ['ADMIN'] },
+        loadComponent: () =>
+          import('@features/users/users-list/users-list').then((m) => m.UsersList),
+      },
+      {
+        path: 'payments',
+        loadComponent: () => import('@features/payments/payments').then((m) => m.Payments),
+      },
+      {
+        path: 'reports',
+        canActivate: [roleGuard],
+        data: { roles: ['ADMIN'] },
+        loadComponent: () => import('@features/reports/reports').then((m) => m.Reports),
+      },
+      {
+        path: 'tickets',
+        canActivate: [roleGuard],
+        data: { roles: ['ORGANIZER'] },
+        loadComponent: () => import('@features/tickets/tickets').then((m) => m.Tickets),
+      },
+      {
+        path: 'attendees',
+        canActivate: [roleGuard],
+        data: { roles: ['ORGANIZER'] },
+        loadComponent: () => import('@features/attendees/attendees').then((m) => m.Attendees),
+      },
+      {
+        path: 'wallet',
+        canActivate: [roleGuard],
+        data: { roles: ['ORGANIZER'] },
+        loadComponent: () =>
+          import('@features/wallet/wallet-page/wallet-page').then((m) => m.WalletPage),
+      },
+      {
+        path: 'profile',
+        loadComponent: () => import('@features/profile/profile').then((m) => m.Profile),
       },
     ],
   },

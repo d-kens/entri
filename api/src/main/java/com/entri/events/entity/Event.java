@@ -1,6 +1,6 @@
 package com.entri.events.entity;
 
-import com.entri.shared.entity.AbstractAuditableEntity;
+import com.entri.common.entity.AbstractAuditableEntity;
 import com.entri.users.entity.User;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

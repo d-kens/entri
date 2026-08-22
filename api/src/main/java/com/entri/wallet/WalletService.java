@@ -2,9 +2,8 @@ package com.entri.wallet;
 
 import com.entri.integrations.intasend.IntaSendClient;
 import com.entri.integrations.intasend.IntaSendWalletRequest;
-import com.entri.shared.exception.ResourceNotFoundException;
-import com.entri.shared.security.AuthenticatedUser;
-import com.entri.users.service.UserService;
+import com.entri.exception.ResourceNotFoundException;
+import com.entri.security.UserPrincipal;
 import com.entri.wallet.dto.WalletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class WalletService {
 
     private final IntaSendClient intaSendClient;
-    private final UserService userService;
 
     public String createWallet(final String label, final String currency) {
         var sanitizedLabel = label.replaceAll("[^a-zA-Z0-9_\\- ]", "").strip();
@@ -25,8 +23,8 @@ public class WalletService {
     }
 
     @Transactional(readOnly = true)
-    public WalletResponse getWallet(final AuthenticatedUser requestingUser) {
-        var user = userService.findEntityByExternalKey(requestingUser.userExternalKey());
+    public WalletResponse getWallet(final UserPrincipal requestingUser) {
+        var user = requestingUser.getUser();
         if (user.getWalletId() == null) {
             throw new ResourceNotFoundException("Wallet not found");
         }
