@@ -1,4 +1,4 @@
-package com.entri.auth.model;
+package com.entri.security;
 
 import com.entri.users.entity.Role;
 import io.jsonwebtoken.Claims;

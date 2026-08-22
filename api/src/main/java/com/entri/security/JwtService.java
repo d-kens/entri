@@ -1,6 +1,5 @@
 package com.entri.security;
 
-import com.entri.auth.model.Jwt;
 import com.entri.config.JwtConfig;
 import com.entri.users.entity.User;
 import io.jsonwebtoken.Claims;
