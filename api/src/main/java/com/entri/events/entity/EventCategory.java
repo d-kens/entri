@@ -1,6 +1,6 @@
 package com.entri.events.entity;
 
-import com.entri.shared.entity.AbstractAuditableEntity;
+import com.entri.common.entity.AbstractAuditableEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

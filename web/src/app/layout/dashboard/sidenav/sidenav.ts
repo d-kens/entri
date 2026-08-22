@@ -29,10 +29,10 @@ export class Sidenav {
     effect(() => {
       const role = this.usersService.currentUser()?.role ?? null;
       switch (role) {
-        case 'PLATFORM_ADMIN':
+        case 'ADMIN':
           this.menuItem.set(this.getPlatformAdminMenu());
           break;
-        case 'PLATFORM_USER':
+        case 'ORGANIZER':
           this.menuItem.set(this.getPlatformUserMenu());
           break;
         default:
@@ -45,7 +45,9 @@ export class Sidenav {
     return [
       { icon: 'dashboard', label: 'Dashboard', route: '/dashboard/summary' },
       { icon: 'confirmation_number', label: 'Events', route: '/dashboard/events' },
-      { icon: 'payments', label: 'Payments', route: '/dashboard/payments' },
+      { icon: 'local_activity', label: 'Tickets', route: '/dashboard/tickets' },
+      { icon: 'groups', label: 'Attendees', route: '/dashboard/attendees' },
+      { icon: 'account_balance_wallet', label: 'Wallet', route: '/dashboard/wallet' },
       { icon: 'account_circle', label: 'Profile', route: '/dashboard/profile' },
     ];
   }
@@ -53,9 +55,10 @@ export class Sidenav {
   private getPlatformAdminMenu(): MenuItem[] {
     return [
       { icon: 'dashboard', label: 'Dashboard', route: '/dashboard/summary' },
+      { icon: 'people', label: 'Users', route: '/dashboard/users' },
       { icon: 'confirmation_number', label: 'Events', route: '/dashboard/events' },
-      { icon: 'people', label: 'Organisers', route: '/dashboard/organisers' },
       { icon: 'payments', label: 'Payments', route: '/dashboard/payments' },
+      { icon: 'bar_chart', label: 'Reports', route: '/dashboard/reports' },
       { icon: 'account_circle', label: 'Profile', route: '/dashboard/profile' },
     ];
   }

@@ -31,7 +31,7 @@ class JwtServiceTest {
 
         user = User.builder()
                 .email("john@example.com")
-                .role(Role.PLATFORM_USER)
+                .role(Role.ORGANIZER)
                 .build();
     }
 

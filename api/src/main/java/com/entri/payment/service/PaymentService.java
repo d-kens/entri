@@ -1,6 +1,6 @@
 package com.entri.payment.service;
 
-import com.entri.shared.exception.PaymentProviderException;
+import com.entri.exception.PaymentProviderException;
 import com.entri.events.service.EventTicketReservationService;
 import com.entri.payment.dto.CheckoutRequest;
 import com.entri.payment.dto.CheckoutResponse;

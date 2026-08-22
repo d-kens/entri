@@ -1,10 +1,10 @@
 package com.entri.events.service;
 
-import com.entri.shared.security.AuthenticatedUser;
-import com.entri.shared.exception.BadRequestException;
-import com.entri.shared.exception.UnauthorizedException;
-import com.entri.shared.dto.PaginationResponse;
-import com.entri.shared.exception.ResourceNotFoundException;
+import com.entri.security.UserPrincipal;
+import com.entri.exception.BadRequestException;
+import com.entri.exception.UnauthorizedException;
+import com.entri.common.dto.PaginationResponse;
+import com.entri.exception.ResourceNotFoundException;
 import com.entri.events.dto.EventFilter;
 import com.entri.events.dto.EventRequest;
 import com.entri.events.dto.EventResponse;
@@ -100,7 +100,7 @@ public class EventService {
     }
 
     @Transactional
-    public EventResponse publishEvent(final String eventExternalId, final AuthenticatedUser user) {
+    public EventResponse publishEvent(final String eventExternalId, final UserPrincipal user) {
         var event = getAuthorizedEvent(eventExternalId, user);
 
         if (event.getTicketTypes().isEmpty()) {
@@ -128,7 +128,7 @@ public class EventService {
     }
 
     @Transactional
-    public EventResponse cancelEvent(final String eventExternalId, final AuthenticatedUser user) {
+    public EventResponse cancelEvent(final String eventExternalId, final UserPrincipal user) {
         var event = getAuthorizedEvent(eventExternalId, user);
 
         if (event.getStatus() != EventStatus.PUBLISHED) {
@@ -144,7 +144,7 @@ public class EventService {
     public EventResponse updateEvent(
             final String externalId,
             final EventRequest request,
-            final AuthenticatedUser user
+            final UserPrincipal user
     ) {
         var event = getAuthorizedEvent(externalId, user);
 
@@ -166,15 +166,15 @@ public class EventService {
         return eventMapper.toEventResponse(event);
     }
 
-    private Event getAuthorizedEvent(String externalId, AuthenticatedUser user) {
+    private Event getAuthorizedEvent(String externalId, UserPrincipal user) {
         var event = eventRepository.findByExternalId(externalId)
                 .orElseThrow(() -> new ResourceNotFoundException("Event with external ID: " + externalId + " not found"));
         assertCanManage(event, user);
         return event;
     }
 
-    private void assertCanManage(Event event, AuthenticatedUser user) {
-        if (!user.isPlatformAdmin() && !user.userExternalKey().equals(event.getOrganizer().getExternalKey())) {
+    private void assertCanManage(Event event, UserPrincipal user) {
+        if (!user.isAdmin() && !user.getExternalKey().equals(event.getOrganizer().getExternalKey())) {
             throw new UnauthorizedException("You are not authorized to perform this action");
         }
     }

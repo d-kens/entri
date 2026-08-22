@@ -1,6 +1,6 @@
 package com.entri.events.service;
 
-import com.entri.shared.exception.ResourceNotFoundException;
+import com.entri.exception.ResourceNotFoundException;
 import com.entri.events.dto.CategoryResponse;
 import com.entri.events.entity.EventCategory;
 import com.entri.events.repository.EventCategoryRepository;

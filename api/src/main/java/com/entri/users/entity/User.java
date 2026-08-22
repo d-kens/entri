@@ -1,7 +1,6 @@
 package com.entri.users.entity;
 
-import com.entri.shared.entity.AbstractAuditableEntity;
-import com.entri.users.entity.Role;
+import com.entri.common.entity.AbstractAuditableEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -55,4 +54,8 @@ public class User extends AbstractAuditableEntity {
 
     @Column(name = "wallet_id")
     private String walletId;
+
+    @Column(name = "enabled", nullable = false)
+    @Builder.Default
+    private boolean enabled = true;
 }

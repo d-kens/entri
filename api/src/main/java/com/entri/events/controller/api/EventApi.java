@@ -1,7 +1,7 @@
 package com.entri.events.controller.api;
 
-import com.entri.shared.dto.PaginationResponse;
-import com.entri.shared.security.AuthenticatedUser;
+import com.entri.common.dto.PaginationResponse;
+import com.entri.security.UserPrincipal;
 import com.entri.events.dto.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -93,7 +93,7 @@ public interface EventApi {
     @GetMapping("/manage")
     PaginationResponse<EventResponse> listOrganizerEvents(
             @ParameterObject @Valid final EventFilter filter,
-            @Parameter(hidden = true) @AuthenticationPrincipal AuthenticatedUser user
+            @Parameter(hidden = true) @AuthenticationPrincipal UserPrincipal user
     );
 
     @Operation(
@@ -179,7 +179,7 @@ public interface EventApi {
 
             @Parameter(hidden = true)
             @AuthenticationPrincipal
-            AuthenticatedUser user
+            UserPrincipal user
     );
 
     @Operation(
@@ -236,7 +236,7 @@ public interface EventApi {
 
             @Parameter(hidden = true)
             @AuthenticationPrincipal
-            AuthenticatedUser user
+            UserPrincipal user
     );
 
     @Operation(
@@ -320,7 +320,7 @@ public interface EventApi {
 
             @Parameter(hidden = true)
             @AuthenticationPrincipal
-            AuthenticatedUser user
+            UserPrincipal user
     );
 
     @Operation(
@@ -387,7 +387,7 @@ public interface EventApi {
 
             @Parameter(hidden = true)
             @AuthenticationPrincipal
-            AuthenticatedUser user
+            UserPrincipal user
     );
 
     @Operation(
@@ -455,7 +455,7 @@ public interface EventApi {
             final TicketTypeRequest ticketTypeRequest,
 
             @Parameter(hidden = true)
-            @AuthenticationPrincipal final AuthenticatedUser user
+            @AuthenticationPrincipal final UserPrincipal user
     );
 
 

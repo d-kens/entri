@@ -1,6 +1,6 @@
 package com.entri.users.controller.api;
 
-import com.entri.shared.security.AuthenticatedUser;
+import com.entri.security.UserPrincipal;
 import com.entri.users.dto.UserResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -61,6 +61,6 @@ public interface UserApi {
                     required = true
             )
             @PathVariable String externalKey,
-            @Parameter(hidden = true) @AuthenticationPrincipal final AuthenticatedUser user
+            @Parameter(hidden = true) @AuthenticationPrincipal final UserPrincipal user
     );
 }

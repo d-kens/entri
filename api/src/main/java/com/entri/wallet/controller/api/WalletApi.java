@@ -1,6 +1,6 @@
 package com.entri.wallet.controller.api;
 
-import com.entri.shared.security.AuthenticatedUser;
+import com.entri.security.UserPrincipal;
 import com.entri.wallet.dto.WalletResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -55,6 +55,6 @@ public interface WalletApi {
     })
     @GetMapping("/me/wallet")
     WalletResponse getWallet(
-            @Parameter(hidden = true) @AuthenticationPrincipal AuthenticatedUser user
+            @Parameter(hidden = true) @AuthenticationPrincipal UserPrincipal user
     );
 }

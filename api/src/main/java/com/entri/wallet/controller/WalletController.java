@@ -1,6 +1,6 @@
 package com.entri.wallet.controller;
 
-import com.entri.shared.security.AuthenticatedUser;
+import com.entri.security.UserPrincipal;
 import com.entri.wallet.WalletService;
 import com.entri.wallet.controller.api.WalletApi;
 import com.entri.wallet.dto.WalletResponse;
@@ -16,7 +16,7 @@ public class WalletController implements WalletApi {
 
     @Override
     public WalletResponse getWallet(
-            @AuthenticationPrincipal AuthenticatedUser user
+            @AuthenticationPrincipal UserPrincipal user
     ) {
         return walletService.getWallet(user);
     }

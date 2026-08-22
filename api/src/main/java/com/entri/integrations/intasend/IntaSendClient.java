@@ -1,6 +1,6 @@
 package com.entri.integrations.intasend;
 
-import com.entri.shared.exception.PaymentProviderException;
+import com.entri.exception.PaymentProviderException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
