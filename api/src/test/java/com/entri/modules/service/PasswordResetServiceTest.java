@@ -1,14 +1,14 @@
 package com.entri.modules.service;
 
-import com.entri.common.exception.ResourceNotFoundException;
-import com.entri.common.exception.UnauthorizedException;
-import com.entri.modules.notification.event.NotificationEvent;
-import com.entri.modules.users.dto.ResetPasswordRequest;
-import com.entri.modules.users.entity.PasswordResetToken;
-import com.entri.modules.users.entity.User;
-import com.entri.modules.users.repository.PasswordResetTokenRepository;
-import com.entri.modules.users.service.PasswordResetService;
-import com.entri.modules.users.service.UserService;
+import com.entri.exception.ResourceNotFoundException;
+import com.entri.exception.UnauthorizedException;
+import com.entri.notification.event.NotificationEvent;
+import com.entri.auth.dto.ResetPasswordRequest;
+import com.entri.auth.entity.PasswordResetToken;
+import com.entri.users.entity.User;
+import com.entri.auth.repository.PasswordResetTokenRepository;
+import com.entri.auth.service.PasswordResetService;
+import com.entri.users.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;

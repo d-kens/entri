@@ -1,18 +1,19 @@
 package com.entri.modules.events.service;
 
-import com.entri.common.exception.EventNotOnSaleException;
-import com.entri.common.exception.InsufficientTicketsException;
-import com.entri.common.exception.MaxTicketsPerOrderExceededException;
-import com.entri.common.exception.ResourceNotFoundException;
-import com.entri.common.exception.BadRequestException;
-import com.entri.modules.events.dto.EventTicketReservationItemRequest;
-import com.entri.modules.events.dto.EventTicketReservationRequest;
-import com.entri.modules.events.entity.Event;
-import com.entri.modules.events.entity.EventStatus;
-import com.entri.modules.events.entity.TicketType;
-import com.entri.modules.events.repository.EventRepository;
-import com.entri.modules.events.repository.EventTicketReservationRepository;
-import com.entri.modules.events.repository.TicketTypeRepository;
+import com.entri.events.exception.EventNotOnSaleException;
+import com.entri.events.exception.InsufficientTicketsException;
+import com.entri.events.exception.MaxTicketsPerOrderExceededException;
+import com.entri.exception.ResourceNotFoundException;
+import com.entri.exception.BadRequestException;
+import com.entri.events.dto.EventTicketReservationItemRequest;
+import com.entri.events.dto.EventTicketReservationRequest;
+import com.entri.events.entity.Event;
+import com.entri.events.entity.EventStatus;
+import com.entri.events.entity.TicketType;
+import com.entri.events.repository.EventRepository;
+import com.entri.events.repository.EventTicketReservationRepository;
+import com.entri.events.repository.TicketTypeRepository;
+import com.entri.events.service.EventTicketReservationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -243,7 +244,7 @@ class EventTicketReservationServiceTest {
                 List.of(new EventTicketReservationItemRequest(1L, 4))
         ));
 
-        var captor = ArgumentCaptor.forClass(com.entri.modules.events.entity.EventTicketReservation.class);
+        var captor = ArgumentCaptor.forClass(com.entri.events.entity.EventTicketReservation.class);
         verify(eventTicketReservationRepository).save(captor.capture());
 
         var savedReservation = captor.getValue();
