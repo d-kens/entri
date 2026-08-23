@@ -491,12 +491,12 @@
   background:
     radial-gradient(
       ellipse 65% 80% at 85% 40%,
-      color-mix(in srgb, #a78bfa 22%, transparent),
+      color-mix(in srgb, var(--mat-sys-inverse-primary) 22%, transparent),
       transparent
     ),
     radial-gradient(
       ellipse 55% 60% at 10% 70%,
-      color-mix(in srgb, #4c1d95 38%, transparent),
+      color-mix(in srgb, var(--mat-sys-on-primary-container) 38%, transparent),
       transparent
     ),
     var(--mat-sys-primary);

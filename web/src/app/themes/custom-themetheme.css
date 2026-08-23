@@ -2,22 +2,22 @@ html {
   color-scheme: light;
 
   /* ═══════════════════════════════════════════════════════════
-     PRIMARY - Brand Purple
+     PRIMARY - Amber
      ═══════════════════════════════════════════════════════════ */
-  --mat-sys-primary: #7c3aed;
+  --mat-sys-primary: #d97706;
   --mat-sys-primary-dark: color-mix(in srgb, var(--mat-sys-primary) 80%, black);
   --mat-sys-on-primary: #ffffff;
-  --mat-sys-primary-container: #ede9fe;
-  --mat-sys-on-primary-container: #4c1d95;
-  --mat-sys-inverse-primary: #a78bfa;
+  --mat-sys-primary-container: #fef3c7;
+  --mat-sys-on-primary-container: #78350f;
+  --mat-sys-inverse-primary: #fbbf24;
 
   /* ═══════════════════════════════════════════════════════════
      SECONDARY - Mid gray
      ═══════════════════════════════════════════════════════════ */
-  --mat-sys-secondary: #6a6a6a;
+  --mat-sys-secondary: #78716c;
   --mat-sys-on-secondary: #ffffff;
-  --mat-sys-secondary-container: #f0f0f0;
-  --mat-sys-on-secondary-container: #000000;
+  --mat-sys-secondary-container: #f5f0ef;
+  --mat-sys-on-secondary-container: #292524;
 
   /* ═══════════════════════════════════════════════════════════
      SURFACES - Light
