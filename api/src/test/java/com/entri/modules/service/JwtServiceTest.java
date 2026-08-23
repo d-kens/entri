@@ -1,9 +1,9 @@
 package com.entri.modules.service;
 
-import com.entri.infrastructure.config.JwtConfig;
-import com.entri.modules.users.entity.Role;
-import com.entri.modules.users.entity.User;
-import com.entri.modules.users.service.JwtService;
+import com.entri.config.JwtConfig;
+import com.entri.users.entity.Role;
+import com.entri.users.entity.User;
+import com.entri.security.JwtService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
