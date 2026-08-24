@@ -4,7 +4,13 @@ import com.entri.security.UserPrincipal;
 import com.entri.ratelimit.RateLimited;
 import com.entri.common.dto.PaginationResponse;
 import com.entri.events.controller.api.EventApi;
-import com.entri.events.dto.*;
+import com.entri.events.dto.EventFilter;
+import com.entri.events.dto.EventRequest;
+import com.entri.events.dto.EventResponse;
+import com.entri.events.dto.EventTicketReservationDetailDto;
+import com.entri.events.dto.EventTicketReservationRequest;
+import com.entri.events.dto.EventTicketReservationResponse;
+import com.entri.events.dto.TicketTypeResponse;
 import com.entri.events.service.EventService;
 import com.entri.events.service.EventTicketReservationService;
 import com.entri.events.service.TicketTypeService;
@@ -98,7 +104,7 @@ public class EventController implements EventApi {
     @Override
     public EventTicketReservationDetailDto getEventTicketReservation(
             final String eventExternalId,
-            String reservationId
+            final String reservationId
     ) {
         return eventTicketReservationService.getEventTicketReservation(eventExternalId, reservationId);
     }

@@ -2,7 +2,14 @@ package com.entri.events.controller.api;
 
 import com.entri.common.dto.PaginationResponse;
 import com.entri.security.UserPrincipal;
-import com.entri.events.dto.*;
+import com.entri.events.dto.EventFilter;
+import com.entri.events.dto.EventRequest;
+import com.entri.events.dto.EventResponse;
+import com.entri.events.dto.EventTicketReservationDetailDto;
+import com.entri.events.dto.EventTicketReservationRequest;
+import com.entri.events.dto.EventTicketReservationResponse;
+import com.entri.events.dto.TicketTypeRequest;
+import com.entri.events.dto.TicketTypeResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -17,7 +24,12 @@ import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
@@ -314,7 +326,6 @@ public interface EventApi {
                     required = true
             )
             @Valid
-            // FQN required — collides with io.swagger.v3.oas.annotations.parameters.RequestBody
             @org.springframework.web.bind.annotation.RequestBody
             final EventRequest request,
 
@@ -381,7 +392,6 @@ public interface EventApi {
                     required = true
             )
             @Valid
-            // FQN required — collides with io.swagger.v3.oas.annotations.parameters.RequestBody
             @org.springframework.web.bind.annotation.RequestBody
             final EventRequest request,
 
@@ -450,7 +460,6 @@ public interface EventApi {
                     required = true
             )
             @Valid
-            // FQN required — collides with io.swagger.v3.oas.annotations.parameters.RequestBody
             @org.springframework.web.bind.annotation.RequestBody
             final TicketTypeRequest ticketTypeRequest,
 
@@ -515,7 +524,6 @@ public interface EventApi {
                     required = true
             )
             @Valid
-            // FQN required — collides with io.swagger.v3.oas.annotations.parameters.RequestBody
             @org.springframework.web.bind.annotation.RequestBody
             final EventTicketReservationRequest eventTicketReservationRequest
     );
