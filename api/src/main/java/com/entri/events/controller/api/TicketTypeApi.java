@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -106,7 +107,10 @@ public interface TicketTypeApi {
                     required = true
             )
             @PathVariable final Long ticketTypeId,
-            @Valid @RequestBody final TicketTypeRequest ticketTypeRequest,
+            @RequestBody(description = "The updated ticket type details", required = true)
+            @Valid
+            // FQN required — collides with io.swagger.v3.oas.annotations.parameters.RequestBody
+            @org.springframework.web.bind.annotation.RequestBody final TicketTypeRequest ticketTypeRequest,
             @AuthenticationPrincipal final UserPrincipal user
     );
 
