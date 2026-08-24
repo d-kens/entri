@@ -8,12 +8,8 @@ import com.entri.events.dto.*;
 import com.entri.events.service.EventService;
 import com.entri.events.service.EventTicketReservationService;
 import com.entri.events.service.TicketTypeService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -28,38 +24,30 @@ public class EventController implements EventApi {
     private final EventTicketReservationService eventTicketReservationService;
 
     @Override
-    public EventResponse getEventByExternalId(
-            @PathVariable final String eventExternalId
-    ) {
+    public EventResponse getEventByExternalId(final String eventExternalId) {
         return eventService.getEventByExternalId(eventExternalId);
     }
 
     @Override
-    public EventResponse publishEvent(
-            @PathVariable final String eventExternalId,
-            @AuthenticationPrincipal final UserPrincipal user
-    ) {
+    public EventResponse publishEvent(final String eventExternalId, final UserPrincipal user) {
         return eventService.publishEvent(eventExternalId, user);
     }
 
     @Override
-    public EventResponse cancelEvent(
-            @PathVariable final String eventExternalId,
-            @AuthenticationPrincipal final UserPrincipal user
-    ) {
+    public EventResponse cancelEvent(final String eventExternalId, final UserPrincipal user) {
         return eventService.cancelEvent(eventExternalId, user);
     }
 
     @Override
-    public List<TicketTypeResponse> getEventTicketTypes(@PathVariable String eventExternalId) {
+    public List<TicketTypeResponse> getEventTicketTypes(String eventExternalId) {
         return ticketTypeService.getTicketTypesByEventExternalId(eventExternalId);
     }
 
     @Override
     public ResponseEntity<EventResponse> createEvent(
             UriComponentsBuilder uriComponentsBuilder,
-            @Valid @RequestBody final EventRequest request,
-            @AuthenticationPrincipal final UserPrincipal user
+            final EventRequest request,
+            final UserPrincipal user
     ) {
         var response = eventService.createEvent(request, user.getExternalKey());
         var uri = uriComponentsBuilder.path("/events/{external_id}").buildAndExpand(response.externalId()).toUri();
@@ -68,24 +56,22 @@ public class EventController implements EventApi {
 
     @Override
     public EventResponse updateEvent(
-            @PathVariable final String externalId,
-            @Valid @RequestBody final EventRequest request,
-            @AuthenticationPrincipal final UserPrincipal user
+            final String externalId,
+            final EventRequest request,
+            final UserPrincipal user
     ) {
         return eventService.updateEvent(externalId, request, user);
     }
 
     @Override
-    public PaginationResponse<EventResponse> listEvents(
-            @Valid final EventFilter filter
-    ) {
+    public PaginationResponse<EventResponse> listEvents(final EventFilter filter) {
         return eventService.listEvents(filter);
     }
 
     @Override
     public PaginationResponse<EventResponse> listOrganizerEvents(
-            @Valid final EventFilter filter,
-            @AuthenticationPrincipal final UserPrincipal user
+            final EventFilter filter,
+            final UserPrincipal user
     ) {
         String userKey = user.isAdmin() ? null : user.getExternalKey();
         return eventService.listOrganizerEvents(filter, userKey);
@@ -95,8 +81,8 @@ public class EventController implements EventApi {
     @Override
     public ResponseEntity<EventTicketReservationResponse> reserveEventTickets(
             UriComponentsBuilder uriComponentsBuilder,
-            @PathVariable final String eventExternalId,
-            @Valid @RequestBody final EventTicketReservationRequest eventTicketReservationRequest
+            final String eventExternalId,
+            final EventTicketReservationRequest eventTicketReservationRequest
     ) {
         var response = eventTicketReservationService.reserveEventTickets(eventExternalId, eventTicketReservationRequest);
         var uri = uriComponentsBuilder
@@ -111,8 +97,8 @@ public class EventController implements EventApi {
 
     @Override
     public EventTicketReservationDetailDto getEventTicketReservation(
-            @PathVariable final String eventExternalId,
-            @PathVariable  String reservationId
+            final String eventExternalId,
+            String reservationId
     ) {
         return eventTicketReservationService.getEventTicketReservation(eventExternalId, reservationId);
     }
@@ -120,13 +106,12 @@ public class EventController implements EventApi {
     @Override
     public ResponseEntity<TicketTypeResponse> createEventTicketType(
             UriComponentsBuilder uriComponentsBuilder,
-            @PathVariable final String eventExternalId,
-            @Valid @RequestBody final TicketTypeRequest ticketTypeRequest,
-            @AuthenticationPrincipal final UserPrincipal user
+            final String eventExternalId,
+            final TicketTypeRequest ticketTypeRequest,
+            final UserPrincipal user
     ) {
         var response = ticketTypeService.createEventTicketType(eventExternalId, ticketTypeRequest, user);
         var uri = uriComponentsBuilder.path("/ticket-types/{id}").buildAndExpand(response.id()).toUri();
         return ResponseEntity.created(uri).body(response);
     }
-
 }

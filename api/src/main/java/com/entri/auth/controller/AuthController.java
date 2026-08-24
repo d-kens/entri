@@ -13,12 +13,9 @@ import com.entri.users.dto.UserResponse;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -38,7 +35,7 @@ public class AuthController implements AuthApi {
     @Override
     public ResponseEntity<UserResponse> register(
             UriComponentsBuilder uriComponentsBuilder,
-            @Valid @RequestBody CreateUserRequest userDto
+            CreateUserRequest userDto
     ) {
         var response = authService.register(userDto);
         var uri = uriComponentsBuilder.path("/users/{id}").buildAndExpand(response.externalKey()).toUri();
@@ -48,7 +45,7 @@ public class AuthController implements AuthApi {
     @Override
     public LoginResponse login(
             HttpServletResponse response,
-            @Valid @RequestBody LoginRequest loginRequest
+            LoginRequest loginRequest
     ) {
         var result = authService.login(loginRequest);
         setRefreshTokenCookie(response, result.refreshToken(), jwtConfig.getRefreshTokenExpiration());
@@ -56,13 +53,13 @@ public class AuthController implements AuthApi {
     }
 
     @Override
-    public ResponseEntity<?> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
+    public ResponseEntity<?> forgotPassword(ForgotPasswordRequest request) {
         passwordResetService.forgotPassword(request.email());
         return ResponseEntity.ok(Map.of("message", "A reset link has successfully been sent to your email if it was found in our system"));
     }
 
     @Override
-    public ResponseEntity<Void> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
+    public ResponseEntity<Void> resetPassword(ResetPasswordRequest request) {
         passwordResetService.resetPassword(request);
         return ResponseEntity.noContent().build();
     }
@@ -70,7 +67,7 @@ public class AuthController implements AuthApi {
     @Override
     public AccessToken refreshToken(
             HttpServletResponse response,
-            @CookieValue(value = "refresh_token") String refreshToken
+            String refreshToken
     ) {
         return authService.refreshToken(refreshToken);
     }
