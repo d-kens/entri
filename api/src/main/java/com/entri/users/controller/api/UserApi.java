@@ -61,8 +61,8 @@ public interface UserApi {
                     description = "The unique external key of the user",
                     required = true
             )
-            @PathVariable String externalKey,
-            @Parameter(hidden = true) @AuthenticationPrincipal final UserPrincipal user
+            @PathVariable final String externalKey,
+            @Parameter(hidden = true) @AuthenticationPrincipal final UserPrincipal requestingUser
     );
 
     @Operation(
@@ -108,7 +108,7 @@ public interface UserApi {
                     required = true,
                     example = "550e8400-e29b-41d4-a716-446655440000"
             )
-            @PathVariable String externalKey,
+            @PathVariable final String externalKey,
 
             @RequestBody(
                     description = "The updated user details.",
@@ -119,7 +119,7 @@ public interface UserApi {
             @org.springframework.web.bind.annotation.RequestBody final UpdateUserRequest updateUserRequest,
 
             @Parameter(hidden = true)
-            @AuthenticationPrincipal final UserPrincipal user
+            @AuthenticationPrincipal final UserPrincipal requestingUser
     );
 
 }

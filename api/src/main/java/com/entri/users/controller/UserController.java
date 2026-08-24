@@ -14,12 +14,12 @@ public class UserController implements UserApi {
     private final UserService userService;
 
     @Override
-    public UserResponse getUserByExternalKey(String externalKey, UserPrincipal user) {
-        return userService.getUserByExternalKey(externalKey, user);
+    public UserResponse getUserByExternalKey(final String externalKey, final UserPrincipal requestingUser) {
+        return userService.getUserByExternalKey(externalKey, requestingUser);
     }
 
     @Override
-    public UserResponse updateUser(final String externalKey, final UpdateUserRequest updateUserRequest, final UserPrincipal user) {
-        return null;
+    public UserResponse updateUser(final String externalKey, final UpdateUserRequest updateUserRequest, final UserPrincipal requestingUser) {
+        return userService.updateUser(externalKey, updateUserRequest, requestingUser);
     }
 }

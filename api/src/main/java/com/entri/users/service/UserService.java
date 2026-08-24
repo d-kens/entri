@@ -28,7 +28,7 @@ public class UserService {
     private final ApplicationEventPublisher eventPublisher;
     private final UserMapper userMapper;
 
-    public UserResponse create(CreateUserRequest userDto) {
+    public UserResponse create(final CreateUserRequest userDto) {
         if (userRepository.existsByEmail(userDto.email())) {
             throw new EmailAlreadyExistsException();
         }
@@ -46,7 +46,7 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public UserResponse getUserByExternalKey(String externalKey, UserPrincipal requestingUser) {
+    public UserResponse getUserByExternalKey(final String externalKey, final UserPrincipal requestingUser) {
         if (!requestingUser.isAdmin() && !requestingUser.getExternalKey().equals(externalKey)) {
             throw new UnauthorizedException("You are not authorized to perform this action");
         }
@@ -54,25 +54,25 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public User findEntityByExternalKey(String externalKey) {
+    public User findEntityByExternalKey(final String externalKey) {
         return userRepository.findByExternalKey(externalKey)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
     @Transactional(readOnly = true)
-    public User findByEmail(String email) {
+    public User findByEmail(final String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
 
-    public void changeUserPassword(User user, String newPassword) {
+    public void changeUserPassword(User user, final String newPassword) {
         String passwordHash = passwordEncoder.encode(newPassword);
         user.setPasswordHash(passwordHash);
         userRepository.save(user);
     }
 
-    public UserResponse updateUser(final String userExternalKey, final UpdateUserRequest updateUserRequest, UserPrincipal requestingUser) {
+    public UserResponse updateUser(final String userExternalKey, final UpdateUserRequest updateUserRequest, final UserPrincipal requestingUser) {
         return null;
     }
 

@@ -29,13 +29,13 @@ public class EventController implements EventApi {
     }
 
     @Override
-    public EventResponse publishEvent(final String eventExternalId, final UserPrincipal user) {
-        return eventService.publishEvent(eventExternalId, user);
+    public EventResponse publishEvent(final String eventExternalId, final UserPrincipal requestingUser) {
+        return eventService.publishEvent(eventExternalId, requestingUser);
     }
 
     @Override
-    public EventResponse cancelEvent(final String eventExternalId, final UserPrincipal user) {
-        return eventService.cancelEvent(eventExternalId, user);
+    public EventResponse cancelEvent(final String eventExternalId, final UserPrincipal requestingUser) {
+        return eventService.cancelEvent(eventExternalId, requestingUser);
     }
 
     @Override
@@ -47,9 +47,9 @@ public class EventController implements EventApi {
     public ResponseEntity<EventResponse> createEvent(
             UriComponentsBuilder uriComponentsBuilder,
             final EventRequest request,
-            final UserPrincipal user
+            final UserPrincipal requestingUser
     ) {
-        var response = eventService.createEvent(request, user.getExternalKey());
+        var response = eventService.createEvent(request, requestingUser.getExternalKey());
         var uri = uriComponentsBuilder.path("/events/{external_id}").buildAndExpand(response.externalId()).toUri();
         return ResponseEntity.created(uri).body(response);
     }
@@ -58,9 +58,9 @@ public class EventController implements EventApi {
     public EventResponse updateEvent(
             final String externalId,
             final EventRequest request,
-            final UserPrincipal user
+            final UserPrincipal requestingUser
     ) {
-        return eventService.updateEvent(externalId, request, user);
+        return eventService.updateEvent(externalId, request, requestingUser);
     }
 
     @Override
@@ -71,9 +71,9 @@ public class EventController implements EventApi {
     @Override
     public PaginationResponse<EventResponse> listOrganizerEvents(
             final EventFilter filter,
-            final UserPrincipal user
+            final UserPrincipal requestingUser
     ) {
-        String userKey = user.isAdmin() ? null : user.getExternalKey();
+        String userKey = requestingUser.isAdmin() ? null : requestingUser.getExternalKey();
         return eventService.listOrganizerEvents(filter, userKey);
     }
 
@@ -108,9 +108,9 @@ public class EventController implements EventApi {
             UriComponentsBuilder uriComponentsBuilder,
             final String eventExternalId,
             final TicketTypeRequest ticketTypeRequest,
-            final UserPrincipal user
+            final UserPrincipal requestingUser
     ) {
-        var response = ticketTypeService.createEventTicketType(eventExternalId, ticketTypeRequest, user);
+        var response = ticketTypeService.createEventTicketType(eventExternalId, ticketTypeRequest, requestingUser);
         var uri = uriComponentsBuilder.path("/ticket-types/{id}").buildAndExpand(response.id()).toUri();
         return ResponseEntity.created(uri).body(response);
     }
