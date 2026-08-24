@@ -49,12 +49,12 @@ public class TicketTypeService {
     }
 
     @Transactional
-    public TicketTypeResponse updateTicketType(final Long ticketTypeId, final TicketTypeRequest ticketTypeRequest, final UserPrincipal user) {
+    public TicketTypeResponse updateTicketType(final Long ticketTypeId, final TicketTypeRequest ticketTypeRequest, final UserPrincipal requestingUser) {
         TicketType ticketType = ticketTypeRepository.findById(ticketTypeId).orElseThrow(
                 () -> new ResourceNotFoundException("Ticket type with ID " + ticketTypeId + " not found")
         );
 
-        if (!user.isAdmin() && !user.getExternalKey().equals(ticketType.getEvent().getOrganizer().getExternalKey())) {
+        if (!requestingUser.isAdmin() && !requestingUser.getExternalKey().equals(ticketType.getEvent().getOrganizer().getExternalKey())) {
             throw new UnauthorizedException("You are not authorized to perform this action");
         }
 
@@ -73,12 +73,12 @@ public class TicketTypeService {
     }
 
     @Transactional
-    public void deleteTicketType(final Long ticketTypeId, final UserPrincipal user) {
+    public void deleteTicketType(final Long ticketTypeId, final UserPrincipal requestingUser) {
         TicketType ticketType = ticketTypeRepository.findById(ticketTypeId).orElseThrow(
                 () -> new ResourceNotFoundException("Ticket type with ID " + ticketTypeId + " not found")
         );
 
-        if (!user.isAdmin() && !user.getExternalKey().equals(ticketType.getEvent().getOrganizer().getExternalKey())) {
+        if (!requestingUser.isAdmin() && !requestingUser.getExternalKey().equals(ticketType.getEvent().getOrganizer().getExternalKey())) {
             throw new UnauthorizedException("You are not authorized to perform this action");
         }
 
@@ -93,12 +93,12 @@ public class TicketTypeService {
     public TicketTypeResponse createEventTicketType(
             final String eventExternalId,
             final TicketTypeRequest ticketTypeRequest,
-            final UserPrincipal user
+            final UserPrincipal requestingUser
     ) {
         Event event = eventRepository.findByExternalId(eventExternalId)
                 .orElseThrow(() -> new ResourceNotFoundException("Event with ID " + eventExternalId + " not found"));
 
-        if (!user.isAdmin() && !user.getExternalKey().equals(event.getOrganizer().getExternalKey())) {
+        if (!requestingUser.isAdmin() && !requestingUser.getExternalKey().equals(event.getOrganizer().getExternalKey())) {
             throw new UnauthorizedException("You are not authorized to perform this action");
         }
 

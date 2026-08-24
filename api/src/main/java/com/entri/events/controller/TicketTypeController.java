@@ -23,17 +23,17 @@ public class TicketTypeController implements TicketTypeApi {
     public TicketTypeResponse updateTicketType(
             final Long ticketTypeId,
             final TicketTypeRequest ticketTypeRequest,
-            final UserPrincipal user
+            final UserPrincipal requestingUser
     ) {
-        return ticketTypeService.updateTicketType(ticketTypeId, ticketTypeRequest, user);
+        return ticketTypeService.updateTicketType(ticketTypeId, ticketTypeRequest, requestingUser);
     }
 
     @Override
     public ResponseEntity<Void> deleteTicketType(
             final long ticketTypeId,
-            final UserPrincipal user
+            final UserPrincipal requestingUser
     ) {
-        ticketTypeService.deleteTicketType(ticketTypeId, user);
+        ticketTypeService.deleteTicketType(ticketTypeId, requestingUser);
         return ResponseEntity.noContent().build();
     }
 }

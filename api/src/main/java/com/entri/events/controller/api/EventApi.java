@@ -93,7 +93,7 @@ public interface EventApi {
     @GetMapping("/manage")
     PaginationResponse<EventResponse> listOrganizerEvents(
             @ParameterObject @Valid final EventFilter filter,
-            @Parameter(hidden = true) @AuthenticationPrincipal UserPrincipal user
+            @Parameter(hidden = true) @AuthenticationPrincipal final UserPrincipal requestingUser
     );
 
     @Operation(
@@ -179,7 +179,7 @@ public interface EventApi {
 
             @Parameter(hidden = true)
             @AuthenticationPrincipal
-            UserPrincipal user
+            final UserPrincipal requestingUser
     );
 
     @Operation(
@@ -236,7 +236,7 @@ public interface EventApi {
 
             @Parameter(hidden = true)
             @AuthenticationPrincipal
-            UserPrincipal user
+            final UserPrincipal requestingUser
     );
 
     @Operation(
@@ -320,7 +320,7 @@ public interface EventApi {
 
             @Parameter(hidden = true)
             @AuthenticationPrincipal
-            UserPrincipal user
+            final UserPrincipal requestingUser
     );
 
     @Operation(
@@ -387,7 +387,7 @@ public interface EventApi {
 
             @Parameter(hidden = true)
             @AuthenticationPrincipal
-            UserPrincipal user
+            final UserPrincipal requestingUser
     );
 
     @Operation(
@@ -455,7 +455,7 @@ public interface EventApi {
             final TicketTypeRequest ticketTypeRequest,
 
             @Parameter(hidden = true)
-            @AuthenticationPrincipal final UserPrincipal user
+            @AuthenticationPrincipal final UserPrincipal requestingUser
     );
 
 

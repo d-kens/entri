@@ -111,7 +111,7 @@ public interface TicketTypeApi {
             @Valid
             // FQN required — collides with io.swagger.v3.oas.annotations.parameters.RequestBody
             @org.springframework.web.bind.annotation.RequestBody final TicketTypeRequest ticketTypeRequest,
-            @AuthenticationPrincipal final UserPrincipal user
+            @AuthenticationPrincipal final UserPrincipal requestingUser
     );
 
     @Operation(
@@ -157,7 +157,7 @@ public interface TicketTypeApi {
                     required = true
             )
             @PathVariable final long ticketTypeId,
-            @AuthenticationPrincipal final UserPrincipal user
+            @AuthenticationPrincipal final UserPrincipal requestingUser
     );
 }
 
