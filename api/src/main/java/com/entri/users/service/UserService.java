@@ -10,6 +10,7 @@ import com.entri.users.dto.UserResponse;
 import com.entri.users.entity.Role;
 import com.entri.users.entity.User;
 import com.entri.users.event.UserCreatedEvent;
+import com.entri.users.event.UserUpdatedEvent;
 import com.entri.users.exception.EmailAlreadyExistsException;
 import com.entri.users.mapper.UserMapper;
 import com.entri.users.repository.UserRepository;
@@ -20,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
@@ -28,6 +28,7 @@ public class UserService {
     private final ApplicationEventPublisher eventPublisher;
     private final UserMapper userMapper;
 
+    @Transactional
     public UserResponse create(final CreateUserRequest userDto) {
         if (userRepository.existsByEmail(userDto.email())) {
             throw new EmailAlreadyExistsException();
@@ -47,9 +48,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public UserResponse getUserByExternalKey(final String externalKey, final UserPrincipal requestingUser) {
-        if (!requestingUser.isAdmin() && !requestingUser.getExternalKey().equals(externalKey)) {
-            throw new UnauthorizedException("You are not authorized to perform this action");
-        }
+        assertCanManage(externalKey, requestingUser);
         return userMapper.toResponse(findEntityByExternalKey(externalKey));
     }
 
@@ -65,15 +64,37 @@ public class UserService {
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
-
-    public void changeUserPassword(User user, final String newPassword) {
+    @Transactional
+    public void changeUserPassword(final User user, final String newPassword) {
         String passwordHash = passwordEncoder.encode(newPassword);
         user.setPasswordHash(passwordHash);
         userRepository.save(user);
     }
 
+    @Transactional
     public UserResponse updateUser(final String userExternalKey, final UpdateUserRequest updateUserRequest, final UserPrincipal requestingUser) {
-        return null;
+        assertCanManage(userExternalKey, requestingUser);
+
+        var user = findEntityByExternalKey(userExternalKey);
+
+        if (!user.getEmail().equalsIgnoreCase(updateUserRequest.email())
+                && userRepository.existsByEmail(updateUserRequest.email())) {
+            throw new EmailAlreadyExistsException();
+        }
+
+        user.setEmail(updateUserRequest.email());
+        user.setFirstName(updateUserRequest.firstName());
+        user.setLastName(updateUserRequest.lastName());
+        user.setPhoneNumber(PhoneNumberUtils.normalize(updateUserRequest.phoneNumber()));
+
+        eventPublisher.publishEvent(new UserUpdatedEvent(user));
+        return userMapper.toResponse(user);
+    }
+
+    private void assertCanManage(String externalKey, UserPrincipal requestingUser) {
+        if (!requestingUser.isAdmin() && !requestingUser.getExternalKey().equals(externalKey)) {
+            throw new UnauthorizedException("You are not authorized to perform this action");
+        }
     }
 
 }

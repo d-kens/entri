@@ -14,7 +14,10 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.http.ProblemDetail;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @RequestMapping("/users")
 public interface UserApi {
@@ -82,7 +85,7 @@ public interface UserApi {
             ),
             @ApiResponse(
                     responseCode = "403",
-                    description = "The authenticated user is not authorized to view this user",
+                    description = "The authenticated user is not authorized to update this user",
                     content = @Content(
                             mediaType = "application/problem+json",
                             schema = @Schema(implementation = ProblemDetail.class)
@@ -91,6 +94,14 @@ public interface UserApi {
             @ApiResponse(
                     responseCode = "404",
                     description = "The specified user was not found",
+                    content = @Content(
+                            mediaType = "application/problem+json",
+                            schema = @Schema(implementation = ProblemDetail.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "The provided email address is already in use by another account",
                     content = @Content(
                             mediaType = "application/problem+json",
                             schema = @Schema(implementation = ProblemDetail.class)
@@ -115,7 +126,6 @@ public interface UserApi {
                     required = true
             )
             @Valid
-            // FQN required — collides with io.swagger.v3.oas.annotations.parameters.RequestBody
             @org.springframework.web.bind.annotation.RequestBody final UpdateUserRequest updateUserRequest,
 
             @Parameter(hidden = true)
