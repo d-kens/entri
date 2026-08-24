@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -109,12 +110,13 @@ public interface UserApi {
             )
             @PathVariable String externalKey,
 
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            @RequestBody(
                     description = "The updated user details.",
                     required = true
             )
             @Valid
-            @RequestBody final UpdateUserRequest updateUserRequest,
+            // FQN required — collides with io.swagger.v3.oas.annotations.parameters.RequestBody
+            @org.springframework.web.bind.annotation.RequestBody final UpdateUserRequest updateUserRequest,
 
             @Parameter(hidden = true)
             @AuthenticationPrincipal final UserPrincipal user
