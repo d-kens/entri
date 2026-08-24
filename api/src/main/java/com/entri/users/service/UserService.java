@@ -48,8 +48,9 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public UserResponse getUserByExternalKey(final String externalKey, final UserPrincipal requestingUser) {
+        var user = findEntityByExternalKey(externalKey);
         assertCanManage(externalKey, requestingUser);
-        return userMapper.toResponse(findEntityByExternalKey(externalKey));
+        return userMapper.toResponse(user);
     }
 
     @Transactional(readOnly = true)
@@ -73,9 +74,9 @@ public class UserService {
 
     @Transactional
     public UserResponse updateUser(final String userExternalKey, final UpdateUserRequest updateUserRequest, final UserPrincipal requestingUser) {
-        assertCanManage(userExternalKey, requestingUser);
-
         var user = findEntityByExternalKey(userExternalKey);
+
+        assertCanManage(userExternalKey, requestingUser);
 
         if (!user.getEmail().equalsIgnoreCase(updateUserRequest.email())
                 && userRepository.existsByEmail(updateUserRequest.email())) {
