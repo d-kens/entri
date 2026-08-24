@@ -3,6 +3,7 @@ package com.entri.users.service;
 import com.entri.exception.ResourceNotFoundException;
 import com.entri.exception.UnauthorizedException;
 import com.entri.security.UserPrincipal;
+import com.entri.users.dto.UpdateUserRequest;
 import com.entri.utils.PhoneNumberUtils;
 import com.entri.users.dto.CreateUserRequest;
 import com.entri.users.dto.UserResponse;
@@ -64,9 +65,15 @@ public class UserService {
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
+
     public void changeUserPassword(User user, String newPassword) {
         String passwordHash = passwordEncoder.encode(newPassword);
         user.setPasswordHash(passwordHash);
         userRepository.save(user);
     }
+
+    public UserResponse updateUser(final String userExternalKey, final UpdateUserRequest updateUserRequest, UserPrincipal requestingUser) {
+        return null;
+    }
+
 }
