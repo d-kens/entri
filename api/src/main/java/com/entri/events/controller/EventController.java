@@ -1,7 +1,5 @@
 package com.entri.events.controller;
 
-import com.entri.security.UserPrincipal;
-import com.entri.ratelimit.RateLimited;
 import com.entri.common.dto.PaginationResponse;
 import com.entri.events.controller.api.EventApi;
 import com.entri.events.dto.EventFilter;
@@ -10,10 +8,13 @@ import com.entri.events.dto.EventResponse;
 import com.entri.events.dto.EventTicketReservationDetailDto;
 import com.entri.events.dto.EventTicketReservationRequest;
 import com.entri.events.dto.EventTicketReservationResponse;
+import com.entri.events.dto.TicketTypeRequest;
 import com.entri.events.dto.TicketTypeResponse;
 import com.entri.events.service.EventService;
 import com.entri.events.service.EventTicketReservationService;
 import com.entri.events.service.TicketTypeService;
+import com.entri.ratelimit.RateLimited;
+import com.entri.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -56,7 +57,9 @@ public class EventController implements EventApi {
             final UserPrincipal requestingUser
     ) {
         var response = eventService.createEvent(request, requestingUser.getExternalKey());
-        var uri = uriComponentsBuilder.path("/events/{external_id}").buildAndExpand(response.externalId()).toUri();
+        var uri = uriComponentsBuilder.path("/events/{external_id}")
+                .buildAndExpand(response.externalId())
+                .toUri();
         return ResponseEntity.created(uri).body(response);
     }
 
@@ -90,7 +93,10 @@ public class EventController implements EventApi {
             final String eventExternalId,
             final EventTicketReservationRequest eventTicketReservationRequest
     ) {
-        var response = eventTicketReservationService.reserveEventTickets(eventExternalId, eventTicketReservationRequest);
+        var response = eventTicketReservationService.reserveEventTickets(
+                eventExternalId,
+                eventTicketReservationRequest
+        );
         var uri = uriComponentsBuilder
                 .path("/events/{eventExternalId}/reservations/{reservationId}")
                 .buildAndExpand(
@@ -116,8 +122,15 @@ public class EventController implements EventApi {
             final TicketTypeRequest ticketTypeRequest,
             final UserPrincipal requestingUser
     ) {
-        var response = ticketTypeService.createEventTicketType(eventExternalId, ticketTypeRequest, requestingUser);
-        var uri = uriComponentsBuilder.path("/ticket-types/{id}").buildAndExpand(response.id()).toUri();
+        var response = ticketTypeService.createEventTicketType(
+                eventExternalId,
+                ticketTypeRequest,
+                requestingUser
+        );
+        var uri = uriComponentsBuilder
+                .path("/ticket-types/{id}")
+                .buildAndExpand(response.id())
+                .toUri();
         return ResponseEntity.created(uri).body(response);
     }
 }
