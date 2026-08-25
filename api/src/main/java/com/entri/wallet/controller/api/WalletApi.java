@@ -55,6 +55,6 @@ public interface WalletApi {
     })
     @GetMapping("/me/wallet")
     WalletResponse getWallet(
-            @Parameter(hidden = true) @AuthenticationPrincipal UserPrincipal user
+            @Parameter(hidden = true) @AuthenticationPrincipal final UserPrincipal requestingUser
     );
 }

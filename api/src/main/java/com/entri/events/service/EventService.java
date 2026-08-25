@@ -100,8 +100,8 @@ public class EventService {
     }
 
     @Transactional
-    public EventResponse publishEvent(final String eventExternalId, final UserPrincipal user) {
-        var event = getAuthorizedEvent(eventExternalId, user);
+    public EventResponse publishEvent(final String eventExternalId, final UserPrincipal requestingUser) {
+        var event = getAuthorizedEvent(eventExternalId, requestingUser);
 
         if (event.getTicketTypes().isEmpty()) {
             throw new BadRequestException(
@@ -128,8 +128,8 @@ public class EventService {
     }
 
     @Transactional
-    public EventResponse cancelEvent(final String eventExternalId, final UserPrincipal user) {
-        var event = getAuthorizedEvent(eventExternalId, user);
+    public EventResponse cancelEvent(final String eventExternalId, final UserPrincipal requestingUser) {
+        var event = getAuthorizedEvent(eventExternalId, requestingUser);
 
         if (event.getStatus() != EventStatus.PUBLISHED) {
             throw new BadRequestException(
@@ -144,9 +144,9 @@ public class EventService {
     public EventResponse updateEvent(
             final String externalId,
             final EventRequest request,
-            final UserPrincipal user
+            final UserPrincipal requestingUser
     ) {
-        var event = getAuthorizedEvent(externalId, user);
+        var event = getAuthorizedEvent(externalId, requestingUser);
 
         validateEventDates(request, false);
         var category = eventCategoryService.findById(request.categoryId());
@@ -166,15 +166,15 @@ public class EventService {
         return eventMapper.toEventResponse(event);
     }
 
-    private Event getAuthorizedEvent(String externalId, UserPrincipal user) {
+    private Event getAuthorizedEvent(final String externalId, final UserPrincipal requestingUser) {
         var event = eventRepository.findByExternalId(externalId)
                 .orElseThrow(() -> new ResourceNotFoundException("Event with external ID: " + externalId + " not found"));
-        assertCanManage(event, user);
+        assertCanManage(event, requestingUser);
         return event;
     }
 
-    private void assertCanManage(Event event, UserPrincipal user) {
-        if (!user.isAdmin() && !user.getExternalKey().equals(event.getOrganizer().getExternalKey())) {
+    private void assertCanManage(final Event event, final UserPrincipal requestingUser) {
+        if (!requestingUser.isAdmin() && !requestingUser.getExternalKey().equals(event.getOrganizer().getExternalKey())) {
             throw new UnauthorizedException("You are not authorized to perform this action");
         }
     }

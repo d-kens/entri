@@ -2,11 +2,10 @@ package com.entri.users.controller;
 
 import com.entri.security.UserPrincipal;
 import com.entri.users.controller.api.UserApi;
+import com.entri.users.dto.UpdateUserRequest;
 import com.entri.users.dto.UserResponse;
 import com.entri.users.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -15,10 +14,18 @@ public class UserController implements UserApi {
     private final UserService userService;
 
     @Override
-    public UserResponse getUserByExternalKey(
-            @PathVariable String externalKey,
-            @AuthenticationPrincipal final UserPrincipal user
-    ) {
-        return userService.getUserByExternalKey(externalKey, user);
+    public UserResponse getUserByExternalKey(final String externalKey, final UserPrincipal requestingUser) {
+        return userService.getUserByExternalKey(externalKey, requestingUser);
     }
+
+    @Override
+    public UserResponse updateUser(final String externalKey, final UpdateUserRequest updateUserRequest, final UserPrincipal requestingUser) {
+        return userService.updateUser(externalKey, updateUserRequest, requestingUser);
+    }
+
+    // TODO: POST /users/{externalKey}/change-password — allow authenticated users to change their own password (requires currentPassword + newPassword)
+    // TODO: DELETE /users/{externalKey} — delete a user (admin or self)
+    // TODO: POST /users/{externalKey}/enable — admin only, set user enabled = true
+    // TODO: POST /users/{externalKey}/disable — admin only, set user enabled = false
+    // TODO: GET /users — admin only, return a paginated list of all users
 }
