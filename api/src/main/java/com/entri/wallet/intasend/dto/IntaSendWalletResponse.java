@@ -1,6 +1,8 @@
-package com.entri.integrations.intasend;
+package com.entri.wallet.intasend.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.math.BigDecimal;
 
 public record IntaSendWalletResponse(
 
@@ -15,9 +17,9 @@ public record IntaSendWalletResponse(
         boolean canDisburse,
 
         @JsonProperty("current_balance")
-        java.math.BigDecimal currentBalance,
+        BigDecimal currentBalance,
 
         @JsonProperty("available_balance")
-        java.math.BigDecimal availableBalance
+        BigDecimal availableBalance
 ) {
 }

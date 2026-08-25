@@ -1,7 +1,7 @@
 package com.entri.notification;
 
-import com.entri.integrations.novu.NovuClient;
-import com.entri.integrations.novu.WorkflowType;
+import com.entri.notification.novu.NovuClient;
+import com.entri.notification.novu.WorkflowType;
 import com.entri.notification.event.NotificationEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;

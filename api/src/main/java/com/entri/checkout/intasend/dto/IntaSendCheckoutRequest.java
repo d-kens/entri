@@ -1,4 +1,4 @@
-package com.entri.integrations.intasend;
+package com.entri.checkout.intasend.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
