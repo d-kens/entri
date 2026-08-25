@@ -22,4 +22,10 @@ public class UserController implements UserApi {
     public UserResponse updateUser(final String externalKey, final UpdateUserRequest updateUserRequest, final UserPrincipal requestingUser) {
         return userService.updateUser(externalKey, updateUserRequest, requestingUser);
     }
+
+    // TODO: POST /users/{externalKey}/change-password — allow authenticated users to change their own password (requires currentPassword + newPassword)
+    // TODO: DELETE /users/{externalKey} — delete a user (admin or self)
+    // TODO: POST /users/{externalKey}/enable — admin only, set user enabled = true
+    // TODO: POST /users/{externalKey}/disable — admin only, set user enabled = false
+    // TODO: GET /users — admin only, return a paginated list of all users
 }
