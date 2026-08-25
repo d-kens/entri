@@ -1,4 +1,4 @@
-package com.entri.integrations.intasend;
+package com.entri.checkout.intasend;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

@@ -1,4 +1,4 @@
-package com.entri.integrations.novu;
+package com.entri.notification.novu;
 
 import co.novu.Novu;
 import co.novu.models.components.CreateSubscriberRequestDto;

@@ -1,4 +1,4 @@
-package com.entri.integrations.novu;
+package com.entri.notification.novu;
 
 public record NovuSubscriber(
         String subscriberId,

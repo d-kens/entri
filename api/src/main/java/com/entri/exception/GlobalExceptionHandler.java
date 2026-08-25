@@ -104,8 +104,8 @@ public class GlobalExceptionHandler {
         return createProblemDetail(HttpStatus.TOO_MANY_REQUESTS, "Too Many Requests", exception.getMessage(), request);
     }
 
-    @ExceptionHandler(PaymentProviderException.class)
-    public ProblemDetail handlePaymentProviderException(final PaymentProviderException exception, final HttpServletRequest request) {
+    @ExceptionHandler(PaymentGatewayException.class)
+    public ProblemDetail handlePaymentProviderException(final PaymentGatewayException exception, final HttpServletRequest request) {
         log.error("Payment provider error: {}", exception.getMessage());
         return createProblemDetail(HttpStatus.BAD_GATEWAY, "Payment Provider Error", "An error occurred while processing your payment. Please try again later.", request);
     }
