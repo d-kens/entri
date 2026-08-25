@@ -1,0 +1,11 @@
+PUT {{baseUrl}}/users/03528735-802f-4521-852a-fc12032cd2f8
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "firstName": "Omoke",
+  "lastName": "Onyango",
+  "email": "omondikens1@gmail.com",
+  "phoneNumber": "0707127309"
+}
+

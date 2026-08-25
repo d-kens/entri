@@ -5,7 +5,6 @@ import com.entri.wallet.WalletService;
 import com.entri.wallet.controller.api.WalletApi;
 import com.entri.wallet.dto.WalletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -15,9 +14,7 @@ public class WalletController implements WalletApi {
     private final WalletService walletService;
 
     @Override
-    public WalletResponse getWallet(
-            @AuthenticationPrincipal UserPrincipal user
-    ) {
-        return walletService.getWallet(user);
+    public WalletResponse getWallet(final UserPrincipal requestingUser) {
+        return walletService.getWallet(requestingUser);
     }
 }

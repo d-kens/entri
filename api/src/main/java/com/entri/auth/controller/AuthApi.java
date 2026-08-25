@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,7 +21,6 @@ import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -39,7 +39,10 @@ public interface AuthApi {
     @PostMapping("/register")
     ResponseEntity<UserResponse> register(
             @Parameter(hidden = true) UriComponentsBuilder uriComponentsBuilder,
-            @Valid @RequestBody CreateUserRequest userDto
+            @RequestBody(description = "The user registration details", required = true)
+            @Valid
+            // FQN required — collides with io.swagger.v3.oas.annotations.parameters.RequestBody
+            @org.springframework.web.bind.annotation.RequestBody CreateUserRequest userDto
     );
 
     @Operation(operationId = "login", summary = "Login",
@@ -54,7 +57,10 @@ public interface AuthApi {
     @PostMapping("/login")
     LoginResponse login(
             @Parameter(hidden = true) HttpServletResponse response,
-            @Valid @RequestBody LoginRequest loginRequest
+            @RequestBody(description = "The user credentials", required = true)
+            @Valid
+            // FQN required — collides with io.swagger.v3.oas.annotations.parameters.RequestBody
+            @org.springframework.web.bind.annotation.RequestBody LoginRequest loginRequest
     );
 
     @Operation(operationId = "forgotPassword", summary = "Forgot Password",
@@ -65,7 +71,12 @@ public interface AuthApi {
             @ApiResponse(responseCode = "200", description = "Reset link sent if the email was found")
     })
     @PostMapping("/forgot-password")
-    ResponseEntity<?> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request);
+    ResponseEntity<?> forgotPassword(
+            @RequestBody(description = "The email address to send the reset link to", required = true)
+            @Valid
+            // FQN required — collides with io.swagger.v3.oas.annotations.parameters.RequestBody
+            @org.springframework.web.bind.annotation.RequestBody ForgotPasswordRequest request
+    );
 
     @Operation(operationId = "resetPassword", summary = "Reset Password",
             description = "Resets the user's password using the token received in the password reset email")
@@ -75,7 +86,12 @@ public interface AuthApi {
             @ApiResponse(responseCode = "204", description = "Password reset successfully")
     })
     @PostMapping("/reset-password")
-    ResponseEntity<Void> resetPassword(@Valid @RequestBody ResetPasswordRequest request);
+    ResponseEntity<Void> resetPassword(
+            @RequestBody(description = "The reset token and new password", required = true)
+            @Valid
+            // FQN required — collides with io.swagger.v3.oas.annotations.parameters.RequestBody
+            @org.springframework.web.bind.annotation.RequestBody ResetPasswordRequest request
+    );
 
     @Operation(operationId = "refreshToken", summary = "Refresh Access Token",
             description = "Issues a new access token using the refresh token stored in the HTTP-only cookie")
