@@ -1,5 +1,6 @@
 package com.entri.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +15,11 @@ public class WebConfig {
 
     @Value("${app.cors.allowed-origin}")
     private String allowedOrigin;
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
+    }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {

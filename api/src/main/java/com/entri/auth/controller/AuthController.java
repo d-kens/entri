@@ -7,7 +7,7 @@ import com.entri.auth.dto.LoginResponse;
 import com.entri.auth.dto.ResetPasswordRequest;
 import com.entri.auth.service.AuthService;
 import com.entri.auth.service.PasswordResetService;
-import com.entri.config.JwtConfig;
+import com.entri.security.JwtConfig;
 import com.entri.users.dto.CreateUserRequest;
 import com.entri.users.dto.UserResponse;
 import jakarta.servlet.http.Cookie;

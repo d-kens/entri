@@ -1,10 +1,9 @@
 package com.entri.wallet;
 
-import com.entri.integrations.intasend.IntaSendClient;
-import com.entri.integrations.intasend.IntaSendWalletRequest;
 import com.entri.exception.ResourceNotFoundException;
 import com.entri.security.UserPrincipal;
 import com.entri.wallet.dto.WalletResponse;
+import com.entri.wallet.WalletProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,12 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class WalletService {
 
-    private final IntaSendClient intaSendClient;
+    private final WalletProvider walletProvider;
 
     public String createWallet(final String label, final String currency) {
         var sanitizedLabel = label.replaceAll("[^a-zA-Z0-9_\\- ]", "").strip();
-        var request = new IntaSendWalletRequest("SETTLEMENT", currency, sanitizedLabel, true);
-        return intaSendClient.createWallet(request).walletId();
+        return walletProvider.createWallet(sanitizedLabel, currency);
     }
 
     @Transactional(readOnly = true)
@@ -28,13 +26,6 @@ public class WalletService {
         if (user.getWalletId() == null) {
             throw new ResourceNotFoundException("Wallet not found");
         }
-        var intaSendWallet = intaSendClient.getWallet(user.getWalletId());
-        return new WalletResponse(
-                intaSendWallet.walletId(),
-                intaSendWallet.label(),
-                intaSendWallet.currency(),
-                intaSendWallet.currentBalance(),
-                intaSendWallet.availableBalance()
-        );
+        return walletProvider.getWallet(user.getWalletId());
     }
 }
