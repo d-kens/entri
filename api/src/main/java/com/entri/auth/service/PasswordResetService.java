@@ -3,15 +3,15 @@ package com.entri.auth.service;
 import com.entri.auth.dto.ResetPasswordRequest;
 import com.entri.auth.entity.PasswordResetToken;
 import com.entri.auth.repository.PasswordResetTokenRepository;
+import com.entri.notification.NotificationPublisher;
 import com.entri.notification.NotificationType;
-import com.entri.notification.event.NotificationEvent;
+import com.entri.notification.dto.NotificationMessage;
 import com.entri.exception.ResourceNotFoundException;
 import com.entri.exception.UnauthorizedException;
 import com.entri.users.entity.User;
 import com.entri.users.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,7 +28,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class PasswordResetService {
     private final UserService userService;
-    private final ApplicationEventPublisher eventPublisher;
+    private final NotificationPublisher notificationPublisher;
     private final PasswordResetTokenRepository passwordResetTokenRepository;
 
     @Value("${app.base-url}")
@@ -55,8 +55,8 @@ public class PasswordResetService {
                 .build();
         passwordResetTokenRepository.save(token);
 
-        String resetUrl = appBaseUrl + "auth/reset-password?token=" + rawToken;
-        eventPublisher.publishEvent(new NotificationEvent(
+        String resetUrl = appBaseUrl.stripTrailing() + "/auth/reset-password?token=" + rawToken;
+        notificationPublisher.publish(new NotificationMessage(
                 NotificationType.PASSWORD_RESET,
                 user.getExternalKey().toString(),
                 Map.of(
@@ -78,7 +78,7 @@ public class PasswordResetService {
         userService.changeUserPassword(user, request.password());
         token.setUsed(true);
         passwordResetTokenRepository.save(token);
-        eventPublisher.publishEvent(new NotificationEvent(
+        notificationPublisher.publish(new NotificationMessage(
                 NotificationType.UPDATED_PASSWORD,
                 user.getExternalKey().toString(),
                 Map.of("firstName", user.getFirstName())

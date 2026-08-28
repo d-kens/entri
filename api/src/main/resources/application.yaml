@@ -1,6 +1,11 @@
 spring:
   application:
     name: entri
+  rabbitmq:
+    host: ${RABBITMQ_HOST}
+    port: ${RABBITMQ_PORT}
+    username: ${RABBITMQ_USERNAME}
+    password: ${RABBITMQ_PASSWORD}
   servlet:
     multipart:
       max-file-size: 10MB

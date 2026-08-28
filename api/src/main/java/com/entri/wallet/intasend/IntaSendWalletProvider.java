@@ -14,8 +14,8 @@ public class IntaSendWalletProvider implements WalletProvider {
     private final IntaSendClient intaSendClient;
 
     @Override
-    public String createWallet(final String label, final String currency) {
-        var request = new IntaSendWalletRequest("SETTLEMENT", currency, label, true);
+    public String createWallet(final String label) {
+        var request = new IntaSendWalletRequest("WORKING", "KES", label, true);
         var response = intaSendClient.createWallet(request);
         return response.walletId();
     }

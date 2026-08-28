@@ -2,6 +2,7 @@ package com.entri.checkout;
 
 import com.entri.checkout.dto.CheckoutRequest;
 import com.entri.checkout.dto.CheckoutResponse;
+import com.entri.checkout.dto.PaymentResultMessage;
 import com.entri.checkout.dto.WebhookRequest;
 import com.entri.events.service.EventTicketReservationService;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ public class CheckoutService {
 
     private final EventTicketReservationService eventTicketReservationService;
     private final PaymentGateway paymentGateway;
+    private final PaymentEventPublisher paymentEventPublisher;
 
     @Transactional
     CheckoutResponse checkout(final String reservationId, final CheckoutRequest checkoutRequest) {
@@ -32,6 +34,7 @@ public class CheckoutService {
     void handleWebhook(final Map<String, String> headers, final String payload) {
         var webhookRequest = new WebhookRequest(headers, payload);
         paymentGateway.parseWebhookRequest(webhookRequest)
-                .ifPresent(eventTicketReservationService::applyPaymentResult);
+                .map(result -> new PaymentResultMessage(result.reservationExternalId(), result.status()))
+                .ifPresent(paymentEventPublisher::publishWebhookResult);
     }
 }
