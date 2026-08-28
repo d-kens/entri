@@ -50,6 +50,7 @@ intasend:
   base-url: https://api.intasend.com
   publishable-key: ${INTASEND_PUBLISHABLE_KEY}
   secret-key: ${INTASEND_SECRET_KEY}
+  webhook-challenge: ${INTASEND_WEBHOOK_CHALLENGE}
 
 payment:
   redirect-url: ${PAYMENT_REDIRECT_URL}

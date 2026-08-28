@@ -29,6 +29,9 @@
                 <constraints nullable="false"/>
             </column>
             <column name="phone_number" type="VARCHAR(50)"/>
+            <column name="enabled" type="TINYINT(1)" defaultValueNumeric="1">
+                <constraints nullable="false"/>
+            </column>
             <column name="date_created" type="datetime">
                 <constraints nullable="false"/>
             </column>
@@ -280,6 +283,10 @@
             <column name="total_amount" type="DECIMAL(10,2)">
                 <constraints nullable="false"/>
             </column>
+            <column name="first_name" type="VARCHAR(255)"/>
+            <column name="last_name" type="VARCHAR(255)"/>
+            <column name="email" type="VARCHAR(255)"/>
+            <column name="phone_number" type="VARCHAR(50)"/>
             <column name="expires_at" type="DATETIME(6)">
                 <constraints nullable="false"/>
             </column>
@@ -334,56 +341,6 @@
         </createIndex>
     </changeSet>
 
-    <changeSet id="202608110001" author="d-kens">
-        <createTable tableName="payments">
-            <column name="id" type="BIGINT" autoIncrement="true">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-
-            <column name="external_id" type="VARCHAR(36)">
-                <constraints nullable="false" unique="true"/>
-            </column>
-
-            <column name="total_amount" type="DECIMAL(10,2)">
-                <constraints nullable="false"/>
-            </column>
-
-            <column name="currency" type="VARCHAR(10)">
-                <constraints nullable="false"/>
-            </column>
-
-            <column name="status" type="VARCHAR(50)">
-                <constraints nullable="false"/>
-            </column>
-
-            <column name="reservation_id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-
-            <column name="provider" type="VARCHAR(50)">
-                <constraints nullable="false"/>
-            </column>
-
-            <column name="provider_reference" type="VARCHAR(255)"/>
-
-            <column name="date_created" type="DATETIME">
-                <constraints nullable="false"/>
-            </column>
-            <column name="created_by" type="VARCHAR(100)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="date_modified" type="DATETIME"/>
-            <column name="modified_by" type="VARCHAR(100)"/>
-        </createTable>
-
-        <addForeignKeyConstraint
-                baseTableName="payments"
-                baseColumnNames="reservation_id"
-                referencedTableName="event_ticket_reservations"
-                referencedColumnNames="id"
-                constraintName="fk_payments_event_ticket_reservation"/>
-    </changeSet>
-
     <changeSet id="202608110002" author="d-kens">
         <addColumn tableName="event_ticket_reservations">
             <column name="event_id" type="BIGINT"/>
@@ -421,20 +378,6 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-    </changeSet>
-
-    <changeSet id="202608210001" author="d-kens">
-        <addColumn tableName="users">
-            <column name="wallet_id" type="VARCHAR(255)"/>
-        </addColumn>
-    </changeSet>
-
-    <changeSet id="202608220001" author="d-kens">
-        <addColumn tableName="users">
-            <column name="enabled" type="TINYINT(1)" defaultValueNumeric="1">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
     </changeSet>
 
 </databaseChangeLog>
