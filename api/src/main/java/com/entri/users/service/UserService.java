@@ -105,6 +105,12 @@ public class UserService {
         return userMapper.toResponse(user);
     }
 
+    @Transactional
+    public void assignWalletId(final User user, final String walletId) {
+        user.setWalletId(walletId);
+        userRepository.save(user);
+    }
+
     private void assertCanManage(String externalKey, UserPrincipal requestingUser) {
         if (!requestingUser.isAdmin() && !requestingUser.getExternalKey().equals(externalKey)) {
             throw new UnauthorizedException("You are not authorized to perform this action");

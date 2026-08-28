@@ -7,6 +7,7 @@ import com.entri.events.exception.MaxTicketsPerOrderExceededException;
 import com.entri.media.exception.FileUploadException;
 import com.entri.media.exception.InvalidFileTypeException;
 import com.entri.users.exception.EmailAlreadyExistsException;
+import com.entri.wallet.exception.WalletAlreadyExistsException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,6 +93,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(EmailAlreadyExistsException.class)
     public ProblemDetail handleEmailAlreadyExistsException(final EmailAlreadyExistsException exception, final HttpServletRequest request) {
         return createProblemDetail(HttpStatus.CONFLICT, "Email Already Exist", exception.getMessage(), request);
+    }
+
+    @ExceptionHandler(WalletAlreadyExistsException.class)
+    public ProblemDetail handleWalletAlreadyExistsException(final WalletAlreadyExistsException exception, final HttpServletRequest request) {
+        return createProblemDetail(HttpStatus.CONFLICT, "Wallet Already Exists", exception.getMessage(), request);
     }
 
     @ExceptionHandler(UnauthorizedException.class)
