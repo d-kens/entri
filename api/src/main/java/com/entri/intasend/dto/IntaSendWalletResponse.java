@@ -1,4 +1,4 @@
-package com.entri.wallet.intasend.dto;
+package com.entri.intasend.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

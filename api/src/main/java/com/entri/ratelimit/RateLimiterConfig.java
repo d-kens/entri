@@ -1,4 +1,4 @@
-package com.entri.config;
+package com.entri.ratelimit;
 
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.BucketConfiguration;

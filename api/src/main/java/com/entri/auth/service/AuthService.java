@@ -5,7 +5,7 @@ import com.entri.auth.dto.LoginRequest;
 import com.entri.auth.dto.LoginResponse;
 import com.entri.auth.dto.LoginResult;
 import com.entri.security.JwtService;
-import com.entri.config.JwtConfig;
+import com.entri.security.JwtConfig;
 import com.entri.exception.UnauthorizedException;
 import com.entri.users.dto.CreateUserRequest;
 import com.entri.users.dto.UserResponse;
