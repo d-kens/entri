@@ -51,7 +51,7 @@ public class EventTicketReservationService {
 
 
     @Transactional
-    public EventTicketReservation findPendingForPayment(final String reservationId) {
+    public EventTicketReservation getPendingReservation(final String reservationId) {
         var reservation = eventTicketReservationRepository.findByExternalIdForUpdate(reservationId)
                 .orElseThrow(() -> new ResourceNotFoundException("Reservation with ID " + reservationId + " not found"));
 
