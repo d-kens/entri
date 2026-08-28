@@ -1,9 +1,12 @@
 package com.entri.wallet;
 
 import com.entri.exception.ResourceNotFoundException;
+import com.entri.exception.UnauthorizedException;
 import com.entri.security.UserPrincipal;
+import com.entri.users.entity.User;
+import com.entri.users.repository.UserRepository;
 import com.entri.wallet.dto.WalletResponse;
-import com.entri.wallet.WalletProvider;
+import com.entri.wallet.exception.WalletAlreadyExistsException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,15 +17,45 @@ import org.springframework.transaction.annotation.Transactional;
 public class WalletService {
 
     private final WalletProvider walletProvider;
+    private final UserRepository userRepository;
 
-    public String createWallet(final String label, final String currency) {
-        var sanitizedLabel = label.replaceAll("[^a-zA-Z0-9_\\- ]", "").strip();
-        return walletProvider.createWallet(sanitizedLabel, currency);
+    @Transactional
+    public WalletResponse createWalletForUser(final String externalKey) {
+        var user = userRepository.findByExternalKey(externalKey)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        if (user.getWalletId() != null) {
+            throw new WalletAlreadyExistsException();
+        }
+        provisionWallet(user);
+        return walletProvider.getWallet(user.getWalletId());
+    }
+
+    @Transactional
+    public void provisionWalletForOrganizer(final String externalKey) {
+        var user = userRepository.findByExternalKey(externalKey)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        if (user.getWalletId() != null) {
+            return;
+        }
+        provisionWallet(user);
+    }
+
+    @Transactional
+    public void provisionWallet(final User user) {
+        String sanitizedLabel = (user.getFirstName() + " " + user.getLastName())
+                .replaceAll("[^a-zA-Z0-9_\\- ]", "").strip();
+        String walletId = walletProvider.createWallet(sanitizedLabel);
+        user.setWalletId(walletId);
+        userRepository.save(user);
     }
 
     @Transactional(readOnly = true)
-    public WalletResponse getWallet(final UserPrincipal requestingUser) {
-        var user = requestingUser.getUser();
+    public WalletResponse getWallet(final String externalKey, final UserPrincipal requestingUser) {
+        if (!requestingUser.isAdmin() && !requestingUser.getExternalKey().equals(externalKey)) {
+            throw new UnauthorizedException("You are not authorized to perform this action");
+        }
+        var user = userRepository.findByExternalKey(externalKey)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         if (user.getWalletId() == null) {
             throw new ResourceNotFoundException("Wallet not found");
         }
