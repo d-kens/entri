@@ -1,5 +1,7 @@
 package com.entri.events.service;
 
+import com.entri.checkout.dto.PaymentResult;
+import com.entri.checkout.enums.PaymentStatus;
 import com.entri.events.exception.EventNotOnSaleException;
 import com.entri.events.exception.InvalidReservationStatusException;
 import com.entri.events.exception.InsufficientTicketsException;
@@ -62,6 +64,40 @@ public class EventTicketReservationService {
         }
 
         return reservation;
+    }
+
+    @Transactional
+    public void applyPaymentResult(final PaymentResult result) {
+        var reservation = eventTicketReservationRepository
+                .findByExternalIdForUpdate(result.reservationExternalId())
+                .orElse(null);
+
+        if (reservation == null || reservation.getStatus() != EventTicketReservationStatus.PENDING) {
+            return;
+        }
+
+        var ticketTypeIds = reservation.getItems().stream()
+                .map(item -> item.getTicketType().getId())
+                .sorted()
+                .toList();
+
+        var ticketTypesById = ticketTypeRepository.findAllForUpdate(ticketTypeIds)
+                .stream()
+                .collect(Collectors.toMap(TicketType::getId, Function.identity()));
+
+        for (var item : reservation.getItems()) {
+            var ticketType = ticketTypesById.get(item.getTicketType().getId());
+            ticketType.setReservedQuantity(ticketType.getReservedQuantity() - item.getQuantity());
+            if (result.status() == PaymentStatus.PAID) {
+                ticketType.setSoldQuantity(ticketType.getSoldQuantity() + item.getQuantity());
+            }
+        }
+
+        reservation.setStatus(
+                result.status() == PaymentStatus.PAID
+                        ? EventTicketReservationStatus.CONFIRMED
+                        : EventTicketReservationStatus.FAILED
+        );
     }
 
     @Transactional(readOnly = true)
