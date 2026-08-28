@@ -1,12 +1,14 @@
 package com.entri.checkout;
 
-
 import com.entri.checkout.dto.CheckoutRequest;
 import com.entri.checkout.dto.CheckoutResponse;
+import com.entri.checkout.dto.WebhookRequest;
 import com.entri.events.service.EventTicketReservationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -25,5 +27,11 @@ public class CheckoutService {
         eventTicketReservation.setPhoneNumber(checkoutRequest.phoneNumber());
 
         return paymentGateway.checkout(eventTicketReservation);
+    }
+
+    void handleWebhook(final Map<String, String> headers, final String payload) {
+        var webhookRequest = new WebhookRequest(headers, payload);
+        paymentGateway.parseWebhookRequest(webhookRequest)
+                .ifPresent(eventTicketReservationService::applyPaymentResult);
     }
 }
