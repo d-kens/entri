@@ -1,6 +1,5 @@
-package com.entri.checkout.intasend;
+package com.entri.checkout;
 
-import com.entri.checkout.PaymentGateway;
 import com.entri.checkout.dto.CheckoutResponse;
 import com.entri.checkout.dto.PaymentResult;
 import com.entri.checkout.dto.WebhookRequest;
