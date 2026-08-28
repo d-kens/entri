@@ -363,6 +363,12 @@
         </createIndex>
     </changeSet>
 
+    <changeSet id="202608280001" author="d-kens">
+        <addColumn tableName="users">
+            <column name="wallet_id" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+
     <changeSet id="202608120002" author="d-kens">
         <createTable tableName="shedlock">
             <column name="name" type="VARCHAR(64)">

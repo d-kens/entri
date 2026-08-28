@@ -15,9 +15,9 @@ public class WalletService {
 
     private final WalletProvider walletProvider;
 
-    public String createWallet(final String label, final String currency) {
+    public String createWallet(final String label) {
         var sanitizedLabel = label.replaceAll("[^a-zA-Z0-9_\\- ]", "").strip();
-        return walletProvider.createWallet(sanitizedLabel, currency);
+        return walletProvider.createWallet(sanitizedLabel);
     }
 
     @Transactional(readOnly = true)
