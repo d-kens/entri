@@ -15,6 +15,7 @@ import com.entri.users.exception.EmailAlreadyExistsException;
 import com.entri.users.mapper.UserMapper;
 import com.entri.users.repository.UserRepository;
 import com.entri.users.UserEventPublisher;
+import com.entri.wallet.WalletService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserEventPublisher userEventPublisher;
     private final UserMapper userMapper;
+    private final WalletService walletService;
 
     @Transactional
     public UserResponse create(final CreateUserRequest userDto) {
@@ -42,6 +44,9 @@ public class UserService {
                 .role(Role.valueOf(userDto.role().toUpperCase()))
                 .build();
         userRepository.save(user);
+        if (user.getRole() == Role.ORGANIZER) {
+            walletService.provisionWallet(user);
+        }
         userEventPublisher.publishUserCreated(new UserCreatedMessage(
                 user.getExternalKey().toString(),
                 user.getFirstName(),
@@ -103,12 +108,6 @@ public class UserService {
                 user.getPhoneNumber()
         ));
         return userMapper.toResponse(user);
-    }
-
-    @Transactional
-    public void assignWalletId(final User user, final String walletId) {
-        user.setWalletId(walletId);
-        userRepository.save(user);
     }
 
     private void assertCanManage(String externalKey, UserPrincipal requestingUser) {
