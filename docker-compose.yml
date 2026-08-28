@@ -30,6 +30,20 @@ services:
       retries: 5
     restart: unless-stopped
 
+  entri_rabbitmq:
+    image: 'rabbitmq:3-management-alpine'
+    ports:
+      - '127.0.0.1:5672:5672'
+      - '127.0.0.1:15672:15672'
+    mem_limit: 256m
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+
   entri_api:
     image: ghcr.io/d-kens/entri-api:latest
     environment:
@@ -44,6 +58,10 @@ services:
       FIREBASE_SERVICE_ACCOUNT_PATH: /secrets/firebase.json
       FIREBASE_STORAGE_BUCKET: ${FIREBASE_STORAGE_BUCKET}
       NOVU_SECRET: ${NOVU_SECRET}
+      RABBITMQ_HOST: entri_rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USERNAME: ${RABBITMQ_USERNAME}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
     volumes:
       - /etc/entri/firebase.json:/secrets/firebase.json:ro
     mem_limit: 768m
@@ -53,6 +71,8 @@ services:
       entri_db:
         condition: service_healthy
       entri_redis:
+        condition: service_healthy
+      entri_rabbitmq:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:8080/actuator/health"]

@@ -9,13 +9,13 @@ import com.entri.users.dto.CreateUserRequest;
 import com.entri.users.dto.UserResponse;
 import com.entri.users.entity.Role;
 import com.entri.users.entity.User;
-import com.entri.users.event.UserCreatedEvent;
-import com.entri.users.event.UserUpdatedEvent;
+import com.entri.users.dto.UserCreatedMessage;
+import com.entri.users.dto.UserUpdatedMessage;
 import com.entri.users.exception.EmailAlreadyExistsException;
 import com.entri.users.mapper.UserMapper;
 import com.entri.users.repository.UserRepository;
+import com.entri.users.UserEventPublisher;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final ApplicationEventPublisher eventPublisher;
+    private final UserEventPublisher userEventPublisher;
     private final UserMapper userMapper;
 
     @Transactional
@@ -42,7 +42,14 @@ public class UserService {
                 .role(Role.valueOf(userDto.role().toUpperCase()))
                 .build();
         userRepository.save(user);
-        eventPublisher.publishEvent(new UserCreatedEvent(user));
+        userEventPublisher.publishUserCreated(new UserCreatedMessage(
+                user.getExternalKey().toString(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getPhoneNumber(),
+                user.getRole().name()
+        ));
         return userMapper.toResponse(user);
     }
 
@@ -88,7 +95,13 @@ public class UserService {
         user.setLastName(updateUserRequest.lastName());
         user.setPhoneNumber(PhoneNumberUtils.normalize(updateUserRequest.phoneNumber()));
 
-        eventPublisher.publishEvent(new UserUpdatedEvent(user));
+        userEventPublisher.publishUserUpdated(new UserUpdatedMessage(
+                user.getExternalKey().toString(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getPhoneNumber()
+        ));
         return userMapper.toResponse(user);
     }
 
@@ -99,3 +112,4 @@ public class UserService {
     }
 
 }
+
