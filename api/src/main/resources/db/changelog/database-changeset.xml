@@ -369,6 +369,10 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="202608280002" author="d-kens">
+        <addUniqueConstraint tableName="users" columnNames="wallet_id" constraintName="uq_users_wallet_id"/>
+    </changeSet>
+
     <changeSet id="202608120002" author="d-kens">
         <createTable tableName="shedlock">
             <column name="name" type="VARCHAR(64)">
