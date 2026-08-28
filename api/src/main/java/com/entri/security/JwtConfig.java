@@ -1,4 +1,4 @@
-package com.entri.config;
+package com.entri.security;
 
 import io.jsonwebtoken.security.Keys;
 import lombok.Data;

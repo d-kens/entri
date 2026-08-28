@@ -1,4 +1,4 @@
-package com.entri.checkout.intasend.dto;
+package com.entri.intasend.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -27,6 +27,9 @@ public record IntaSendCheckoutRequest(
 
         BigDecimal amount,
 
-        String currency
+        String currency,
+
+        @JsonProperty("wallet_id")
+        String walletId
 ) {
 }

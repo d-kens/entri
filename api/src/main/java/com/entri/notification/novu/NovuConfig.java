@@ -1,4 +1,4 @@
-package com.entri.config;
+package com.entri.notification.novu;
 
 import co.novu.Novu;
 import org.springframework.beans.factory.annotation.Value;

@@ -1,6 +1,6 @@
 package com.entri.security;
 
-import com.entri.config.JwtConfig;
+import com.entri.security.JwtConfig;
 import com.entri.users.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
