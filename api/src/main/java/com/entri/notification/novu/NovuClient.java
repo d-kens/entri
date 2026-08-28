@@ -36,8 +36,10 @@ public class NovuClient {
             log.error("Validation error creating subscriber for subscriberId={}: {}", subscriberRequest.subscriberId(), e.getMessage());
         } catch (ErrorDto e) {
             log.error("API error creating subscriber for subscriberId={}: {}", subscriberRequest.subscriberId(), e.getMessage());
+            throw new RuntimeException("Novu API error creating subscriber: " + e.getMessage(), e);
         } catch (Exception e) {
             log.error("Unexpected error creating subscriber for subscriberId={}", subscriberRequest.subscriberId(), e);
+            throw e;
         }
     }
 
@@ -54,8 +56,10 @@ public class NovuClient {
             log.error("Validation error triggering workflow={} for subscriberId={}: {}", workflow, subscriberId, e.getMessage());
         } catch (ErrorDto e) {
             log.error("API error triggering workflow={} for subscriberId={}: {}", workflow, subscriberId, e.getMessage());
+            throw new RuntimeException("Novu API error triggering workflow: " + e.getMessage(), e);
         } catch (Exception e) {
             log.error("Unexpected error triggering workflow={} for subscriberId={}", workflow, subscriberId, e);
+            throw e;
         }
     }
 

@@ -31,6 +31,16 @@ public class WalletService {
     }
 
     @Transactional
+    public void provisionWalletForOrganizer(final String externalKey) {
+        var user = userRepository.findByExternalKey(externalKey)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        if (user.getWalletId() != null) {
+            return;
+        }
+        provisionWallet(user);
+    }
+
+    @Transactional
     public void provisionWallet(final User user) {
         String sanitizedLabel = (user.getFirstName() + " " + user.getLastName())
                 .replaceAll("[^a-zA-Z0-9_\\- ]", "").strip();
