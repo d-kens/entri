@@ -1,17 +1,18 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { DatePipe, TitleCasePipe } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatMenuModule } from '@angular/material/menu';
 import { EventsService } from '@features/events/services/events-service';
 import { EventResponse } from '@features/events/models/event.models';
 import { PageResponse } from '@shared/models/common.model';
 import { SnackbarService } from '@shared/services/snackbar-service';
+import { UsersService } from '@features/users/users-service';
+import { DataTable } from '@shared/components/data-table/data-table';
 
 @Component({
   selector: 'app-events-list',
@@ -24,9 +25,9 @@ import { SnackbarService } from '@shared/services/snackbar-service';
     MatIconModule,
     MatTableModule,
     MatPaginatorModule,
-    MatProgressSpinnerModule,
     MatTooltipModule,
     MatMenuModule,
+    DataTable,
   ],
   templateUrl: './events-list.html',
   styleUrl: './events-list.css',
@@ -35,6 +36,9 @@ export class EventsList implements OnInit {
   private eventsService = inject(EventsService);
   private router = inject(Router);
   private snackbarService = inject(SnackbarService);
+  private usersService = inject(UsersService);
+
+  isAdmin = computed(() => this.usersService.currentUser()?.role === 'ADMIN');
 
   loading = signal(true);
   error = signal(false);

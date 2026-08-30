@@ -58,6 +58,15 @@ export const routes: Routes = [
           import('@features/users/users-list/users-list').then((m) => m.UsersList),
       },
       {
+        path: 'categories',
+        canActivate: [roleGuard],
+        data: { roles: ['ADMIN'] },
+        loadComponent: () =>
+          import('@features/categories/categories-list/categories-list').then(
+            (m) => m.CategoriesList,
+          ),
+      },
+      {
         path: 'payments',
         loadComponent: () => import('@features/payments/payments').then((m) => m.Payments),
       },

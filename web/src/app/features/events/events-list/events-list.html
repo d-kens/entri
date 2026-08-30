@@ -6,141 +6,135 @@
         Manage your events
       </p>
     </div>
-    <a mat-flat-button [routerLink]="['/dashboard/events/create']">
-      <mat-icon>add</mat-icon>
-      Create Event
-    </a>
-  </div>
-
-  @if (loading()) {
-    <div class="loading-state">
-      <mat-spinner diameter="36" />
-    </div>
-  } @else if (error()) {
-    <div class="empty-state">
-      <mat-icon class="empty-icon">error_outline</mat-icon>
-      <p class="empty-title">Failed to load events</p>
-      <p class="empty-sub">Something went wrong. Please try again.</p>
-      <button mat-stroked-button class="mt-4" (click)="retry()">
-        <mat-icon>refresh</mat-icon>
-        Retry
-      </button>
-    </div>
-  } @else if (page().content.length === 0) {
-    <div class="empty-state">
-      <mat-icon class="empty-icon">confirmation_number</mat-icon>
-      <p class="empty-title">No events yet</p>
-      <p class="empty-sub">Create your first event to get started</p>
-      <a mat-stroked-button [routerLink]="['/dashboard/events/create']" class="mt-4">
+    <div class="flex items-center gap-2">
+      @if (isAdmin()) {
+        <a mat-stroked-button [routerLink]="['/dashboard/categories']">
+          <mat-icon>category</mat-icon>
+          Categories
+        </a>
+      }
+      <a mat-flat-button [routerLink]="['/dashboard/events/create']">
         <mat-icon>add</mat-icon>
         Create Event
       </a>
     </div>
-  } @else {
-    <div class="table-card">
-      <mat-paginator
-        class="table-paginator"
-        [length]="page().totalElements"
-        [pageSize]="page().pageSize"
-        [pageIndex]="page().pageNumber"
-        [pageSizeOptions]="[10, 25, 50]"
-        (page)="onPage($event)"
-      />
+  </div>
 
-      <div class="table-scroll events-table">
-        <table mat-table [dataSource]="page().content">
-          <ng-container matColumnDef="title">
-            <th mat-header-cell *matHeaderCellDef>Event</th>
-            <td mat-cell *matCellDef="let event" data-label="Event">
-              <div class="event-cell">
-                <div class="event-banner">
-                  @if (event.bannerUrl) {
-                    <img [src]="event.bannerUrl" [alt]="event.title" />
-                  } @else {
-                    <mat-icon>confirmation_number</mat-icon>
-                  }
-                </div>
-                <div class="event-info">
-                  <a [routerLink]="['/dashboard/events', event.externalId]" class="event-title">
-                    {{ event.title }}
-                  </a>
-                  <span class="event-category">{{ event.categoryName }}</span>
-                </div>
-              </div>
-            </td>
-          </ng-container>
+  <app-data-table
+    [loading]="loading()"
+    [error]="error()"
+    [empty]="page().content.length === 0"
+    emptyIcon="confirmation_number"
+    emptyTitle="No events yet"
+    emptyMessage="Create your first event to get started"
+    (retry)="retry()"
+  >
+    <a emptyAction mat-stroked-button [routerLink]="['/dashboard/events/create']" class="mt-4">
+      <mat-icon>add</mat-icon>
+      Create Event
+    </a>
 
-          <ng-container matColumnDef="venue">
-            <th mat-header-cell *matHeaderCellDef>Venue</th>
-            <td mat-cell *matCellDef="let event" data-label="Venue">
-              <span class="venue-name">{{ event.venueName }}</span>
-              <span class="venue-loc">{{ event.venueCity }}, {{ event.venueCountry }}</span>
-            </td>
-          </ng-container>
+    <mat-paginator
+      tablePaginator
+      class="table-paginator"
+      [length]="page().totalElements"
+      [pageSize]="page().pageSize"
+      [pageIndex]="page().pageNumber"
+      [pageSizeOptions]="[10, 25, 50]"
+      (page)="onPage($event)"
+    />
 
-          <ng-container matColumnDef="startTime">
-            <th mat-header-cell *matHeaderCellDef>Date</th>
-            <td mat-cell *matCellDef="let event" data-label="Date">
-              <span class="date-day">{{ event.startTime | date: 'dd MMM yyyy' }}</span>
-              <span class="date-time">{{ event.startTime | date: 'HH:mm' }}</span>
-            </td>
-          </ng-container>
+    <table mat-table [dataSource]="page().content" class="data-table">
+      <ng-container matColumnDef="title">
+        <th mat-header-cell *matHeaderCellDef>Event</th>
+        <td mat-cell *matCellDef="let event" data-label="Event">
+          <div class="event-cell">
+            <div class="event-banner">
+              @if (event.bannerUrl) {
+                <img [src]="event.bannerUrl" [alt]="event.title" />
+              } @else {
+                <mat-icon>confirmation_number</mat-icon>
+              }
+            </div>
+            <div class="event-info">
+              <a [routerLink]="['/dashboard/events', event.externalId]" class="event-title">
+                {{ event.title }}
+              </a>
+              <span class="event-category">{{ event.categoryName }}</span>
+            </div>
+          </div>
+        </td>
+      </ng-container>
 
-          <ng-container matColumnDef="endTime">
-            <th mat-header-cell *matHeaderCellDef>End Date</th>
-            <td mat-cell *matCellDef="let event" data-label="End Date">
-              <span class="date-day">{{ event.endTime | date: 'dd MMM yyyy' }}</span>
-              <span class="date-time">{{ event.endTime | date: 'HH:mm' }}</span>
-            </td>
-          </ng-container>
+      <ng-container matColumnDef="venue">
+        <th mat-header-cell *matHeaderCellDef>Venue</th>
+        <td mat-cell *matCellDef="let event" data-label="Venue">
+          <span class="venue-name">{{ event.venueName }}</span>
+          <span class="venue-loc">{{ event.venueCity }}, {{ event.venueCountry }}</span>
+        </td>
+      </ng-container>
 
-          <ng-container matColumnDef="currency">
-            <th mat-header-cell *matHeaderCellDef>Currency</th>
-            <td mat-cell *matCellDef="let event" data-label="Currency">
-              <span class="currency-badge">{{ event.currency }}</span>
-            </td>
-          </ng-container>
+      <ng-container matColumnDef="startTime">
+        <th mat-header-cell *matHeaderCellDef>Date</th>
+        <td mat-cell *matCellDef="let event" data-label="Date">
+          <span class="date-day">{{ event.startTime | date: 'dd MMM yyyy' }}</span>
+          <span class="date-time">{{ event.startTime | date: 'HH:mm' }}</span>
+        </td>
+      </ng-container>
 
-          <ng-container matColumnDef="dateCreated">
-            <th mat-header-cell *matHeaderCellDef>Created</th>
-            <td mat-cell *matCellDef="let event" data-label="Created">
-              {{ event.dateCreated | date: 'dd MMM yyyy' }}
-            </td>
-          </ng-container>
+      <ng-container matColumnDef="endTime">
+        <th mat-header-cell *matHeaderCellDef>End Date</th>
+        <td mat-cell *matCellDef="let event" data-label="End Date">
+          <span class="date-day">{{ event.endTime | date: 'dd MMM yyyy' }}</span>
+          <span class="date-time">{{ event.endTime | date: 'HH:mm' }}</span>
+        </td>
+      </ng-container>
 
-          <ng-container matColumnDef="status">
-            <th mat-header-cell *matHeaderCellDef>Status</th>
-            <td mat-cell *matCellDef="let event" data-label="Status">
-              <span [class]="'status-badge status-badge--' + event.status.toLowerCase()">
-                {{ event.status | titlecase }}
-              </span>
-            </td>
-          </ng-container>
+      <ng-container matColumnDef="currency">
+        <th mat-header-cell *matHeaderCellDef>Currency</th>
+        <td mat-cell *matCellDef="let event" data-label="Currency">
+          <span class="currency-badge">{{ event.currency }}</span>
+        </td>
+      </ng-container>
 
-          <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef></th>
-            <td mat-cell *matCellDef="let event" (click)="$event.stopPropagation()">
-              <button
-                mat-icon-button
-                [matMenuTriggerFor]="actionMenu"
-                [matMenuTriggerData]="{ event: event }"
-              >
-                <mat-icon>more_vert</mat-icon>
-              </button>
-            </td>
-          </ng-container>
+      <ng-container matColumnDef="dateCreated">
+        <th mat-header-cell *matHeaderCellDef>Created</th>
+        <td mat-cell *matCellDef="let event" data-label="Created">
+          {{ event.dateCreated | date: 'dd MMM yyyy' }}
+        </td>
+      </ng-container>
 
-          <tr mat-header-row *matHeaderRowDef="columns"></tr>
-          <tr
-            mat-row
-            *matRowDef="let row; columns: columns"
-            class="clickable-row"
-            (click)="goToEvent(row.externalId)"
-          ></tr>
-        </table>
-      </div>
-    </div>
-  }
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let event" data-label="Status">
+          <span [class]="'status-badge status-badge--' + event.status.toLowerCase()">
+            {{ event.status | titlecase }}
+          </span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let event" (click)="$event.stopPropagation()">
+          <button
+            mat-icon-button
+            [matMenuTriggerFor]="actionMenu"
+            [matMenuTriggerData]="{ event: event }"
+          >
+            <mat-icon>more_vert</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="columns"></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: columns"
+        class="clickable-row"
+        (click)="goToEvent(row.externalId)"
+      ></tr>
+    </table>
+  </app-data-table>
 </div>
 
 <mat-menu #actionMenu="matMenu" class="row-action-menu">
