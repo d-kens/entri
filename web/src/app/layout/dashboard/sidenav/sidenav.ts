@@ -57,6 +57,7 @@ export class Sidenav {
       { icon: 'dashboard', label: 'Dashboard', route: '/dashboard/summary' },
       { icon: 'people', label: 'Users', route: '/dashboard/users' },
       { icon: 'confirmation_number', label: 'Events', route: '/dashboard/events' },
+      { icon: 'category', label: 'Categories', route: '/dashboard/categories' },
       { icon: 'payments', label: 'Payments', route: '/dashboard/payments' },
       { icon: 'bar_chart', label: 'Reports', route: '/dashboard/reports' },
       { icon: 'account_circle', label: 'Profile', route: '/dashboard/profile' },

@@ -1,0 +1,37 @@
+@if (loading()) {
+  <div class="shimmer-rows">
+    @for (row of skeletonRows; track row) {
+      <div class="shimmer-row">
+        <app-shimmer height="18px" [width]="row[0]" />
+        <app-shimmer height="18px" [width]="row[1]" />
+        <app-shimmer height="18px" [width]="row[2]" />
+      </div>
+    }
+  </div>
+} @else if (error()) {
+  <div class="empty-state">
+    <mat-icon class="empty-icon">error_outline</mat-icon>
+    <p class="empty-title">Failed to load data</p>
+    <p class="empty-sub">Something went wrong. Please try again.</p>
+    <button mat-stroked-button class="mt-4" (click)="retry.emit()">
+      <mat-icon>refresh</mat-icon>
+      Retry
+    </button>
+  </div>
+} @else if (empty()) {
+  <div class="empty-state">
+    <mat-icon class="empty-icon">{{ emptyIcon() }}</mat-icon>
+    <p class="empty-title">{{ emptyTitle() }}</p>
+    @if (emptyMessage()) {
+      <p class="empty-sub">{{ emptyMessage() }}</p>
+    }
+    <ng-content select="[emptyAction]" />
+  </div>
+} @else {
+  <div class="table-card">
+    <ng-content select="[tablePaginator]" />
+    <div class="table-scroll">
+      <ng-content />
+    </div>
+  </div>
+}

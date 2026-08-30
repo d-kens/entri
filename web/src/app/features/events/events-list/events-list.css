@@ -1,77 +1,11 @@
-/* ── Loading / empty states ───────────────────────────── */
+/* ── Events table overrides ───────────────────────────── */
 
-.loading-state {
-  display: flex;
-  justify-content: center;
-  padding: 5rem 1rem;
-}
-
-.empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 5rem 1rem;
-  border: 1px dashed var(--mat-sys-outline-variant);
-  border-radius: var(--mat-sys-corner-large);
-  gap: 0.5rem;
-}
-
-.empty-icon {
-  font-size: 48px;
-  width: 48px;
-  height: 48px;
-  color: var(--mat-sys-outline);
-}
-
-.empty-title {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--mat-sys-on-surface);
-  margin: 0.5rem 0 0;
-}
-
-.empty-sub {
-  font-size: 0.875rem;
-  color: var(--mat-sys-on-surface-variant);
-  margin: 0;
-}
-
-/* ── Card wrapper ─────────────────────────────────────── */
-
-.table-card {
-  overflow: hidden;
-}
-
-.table-scroll {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-@media (max-width: 1100px) {
-  .table-scroll {
-    overflow-x: scroll;
-    scrollbar-width: thin;
-    scrollbar-color: var(--mat-sys-primary) var(--mat-sys-surface-container);
-  }
-
-  .table-scroll::-webkit-scrollbar {
-    height: 4px;
-  }
-
-  .table-scroll::-webkit-scrollbar-track {
-    background: var(--mat-sys-surface-container);
-  }
-
-  .table-scroll::-webkit-scrollbar-thumb {
-    background: var(--mat-sys-primary);
-    border-radius: 999px;
-  }
-}
-
-.table-scroll table {
-  width: 100%;
+.data-table {
   min-width: 1200px;
+}
+
+:host ::ng-deep .data-table .mat-column-title {
+  min-width: 220px;
 }
 
 /* ── Event cell ───────────────────────────────────────── */
@@ -154,26 +88,6 @@
   color: var(--mat-sys-on-surface-variant);
 }
 
-/* ── Visibility badge ─────────────────────────────────── */
-
-.visibility-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 0.8125rem;
-  color: var(--mat-sys-on-surface-variant);
-}
-
-.visibility-badge mat-icon {
-  font-size: 14px;
-  width: 14px;
-  height: 14px;
-}
-
-.visibility-badge--public {
-  color: var(--mat-sys-on-surface);
-}
-
 /* ── Status badge ─────────────────────────────────────── */
 
 .status-badge {
@@ -215,9 +129,4 @@
   letter-spacing: 0.04em;
   background: var(--mat-sys-secondary-container);
   color: var(--mat-sys-on-secondary-container);
-}
-
-/* ── Paginator ────────────────────────────────────────── */
-
-.table-paginator {
 }

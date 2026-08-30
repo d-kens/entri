@@ -3,6 +3,7 @@ import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http'
 import { Observable, catchError, throwError } from 'rxjs';
 import { environment } from 'environments/environment';
 import {
+  CategoryRequest,
   CategoryResponse,
   EventRequest,
   EventFilter,
@@ -21,6 +22,24 @@ export class EventsService {
 
   getCategories(): Observable<CategoryResponse[]> {
     return this.http.get<CategoryResponse[]>(`${environment.apiBaseUrl}/categories`);
+  }
+
+  createCategory(request: CategoryRequest): Observable<CategoryResponse> {
+    return this.http
+      .post<CategoryResponse>(`${environment.apiBaseUrl}/categories`, request)
+      .pipe(catchError(this.toDisplayError('Failed to create category')));
+  }
+
+  updateCategory(id: number, request: CategoryRequest): Observable<CategoryResponse> {
+    return this.http
+      .put<CategoryResponse>(`${environment.apiBaseUrl}/categories/${id}`, request)
+      .pipe(catchError(this.toDisplayError('Failed to update category')));
+  }
+
+  deleteCategory(id: number): Observable<void> {
+    return this.http
+      .delete<void>(`${environment.apiBaseUrl}/categories/${id}`)
+      .pipe(catchError(this.toDisplayError('Failed to delete category')));
   }
 
   createEvent(payload: EventRequest): Observable<EventResponse> {

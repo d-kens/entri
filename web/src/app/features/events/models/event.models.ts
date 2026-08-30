@@ -12,6 +12,12 @@ export type EventFilter = {
 export type CategoryResponse = {
   id: number;
   name: string;
+  description: string;
+};
+
+export type CategoryRequest = {
+  name: string;
+  description: string;
 };
 
 export type TicketTypeRequest = {
