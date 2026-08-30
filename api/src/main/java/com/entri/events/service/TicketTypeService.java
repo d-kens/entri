@@ -2,7 +2,6 @@ package com.entri.events.service;
 
 import com.entri.exception.BadRequestException;
 import com.entri.exception.ResourceNotFoundException;
-import com.entri.exception.UnauthorizedException;
 import com.entri.security.UserPrincipal;
 import com.entri.events.dto.TicketTypeRequest;
 import com.entri.events.dto.TicketTypeResponse;
@@ -54,7 +53,7 @@ public class TicketTypeService {
                 () -> new ResourceNotFoundException("Ticket type with ID " + ticketTypeId + " not found")
         );
 
-        assertCanManage(ticketType.getEvent(), requestingUser);
+        requestingUser.assertCanManage(ticketType.getEvent().getOrganizer().getExternalKey());
 
         validateSaleDateBounds(ticketTypeRequest, ticketType.getEvent());
 
@@ -76,7 +75,7 @@ public class TicketTypeService {
                 () -> new ResourceNotFoundException("Ticket type with ID " + ticketTypeId + " not found")
         );
 
-        assertCanManage(ticketType.getEvent(), requestingUser);
+        requestingUser.assertCanManage(ticketType.getEvent().getOrganizer().getExternalKey());
 
         if (ticketType.getDeletedAt() != null) {
             return;
@@ -94,7 +93,7 @@ public class TicketTypeService {
         Event event = eventRepository.findByExternalId(eventExternalId)
                 .orElseThrow(() -> new ResourceNotFoundException("Event with ID " + eventExternalId + " not found"));
 
-        assertCanManage(event, requestingUser);
+        requestingUser.assertCanManage(event.getOrganizer().getExternalKey());
 
         validateSaleDateBounds(ticketTypeRequest, event);
 
@@ -114,11 +113,6 @@ public class TicketTypeService {
         return ticketTypeMapper.toTicketTypeResponse(ticketType);
     }
 
-    private void assertCanManage(final Event event, final UserPrincipal requestingUser) {
-        if (!requestingUser.isAdmin() && !requestingUser.getExternalKey().equals(event.getOrganizer().getExternalKey())) {
-            throw new UnauthorizedException("You are not authorized to perform this action");
-        }
-    }
 
     private void validateSaleDateBounds(TicketTypeRequest request, Event event) {
         Instant start = request.saleStartDate();

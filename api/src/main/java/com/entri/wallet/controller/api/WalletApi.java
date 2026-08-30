@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import com.entri.security.UserPrincipal;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -57,6 +58,7 @@ public interface WalletApi {
                     )
             )
     })
+    @PreAuthorize("hasAnyAuthority('ORGANIZER', 'ADMIN')")
     @GetMapping("/{externalKey}/wallet")
     WalletResponse getWallet(
             @Parameter(description = "The unique external key of the user", required = true)
@@ -108,6 +110,7 @@ public interface WalletApi {
                     )
             )
     })
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/{externalKey}/wallet")
     @ResponseStatus(HttpStatus.CREATED)
     WalletResponse createWallet(

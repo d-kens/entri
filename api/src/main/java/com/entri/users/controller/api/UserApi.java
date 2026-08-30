@@ -13,9 +13,14 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -62,6 +67,7 @@ public interface UserApi {
                     description = "User retrieved successfully"
             )
     })
+    @PreAuthorize("hasAnyAuthority('ORGANIZER', 'ADMIN')")
     @GetMapping("/{externalKey}")
     UserResponse getUserByExternalKey(
             @Parameter(
@@ -116,6 +122,7 @@ public interface UserApi {
                     description = "User details updated successfully"
             )
     })
+    @PreAuthorize("hasAnyAuthority('ORGANIZER', 'ADMIN')")
     @PutMapping("/{externalKey}")
     UserResponse updateUser(
             @Parameter(
@@ -155,6 +162,7 @@ public interface UserApi {
                     content = @Content(mediaType = "application/problem+json", schema = @Schema(implementation = ProblemDetail.class))
             )
     })
+    @PreAuthorize("hasAnyAuthority('ORGANIZER', 'ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping("/{externalKey}/change-password")
     void changePassword(
@@ -165,6 +173,131 @@ public interface UserApi {
 
             @Parameter(hidden = true)
             @AuthenticationPrincipal final UserPrincipal requestingUser
+    );
+
+    @Operation(
+            operationId = "listUsers",
+            summary = "List all users",
+            description = "Returns a paginated list of all users. Admin access required."
+    )
+    @SecurityRequirement(name = "bearerAuth")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Users retrieved successfully"),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Authentication is required or the access token is invalid",
+                    content = @Content(mediaType = "application/problem+json", schema = @Schema(implementation = ProblemDetail.class))
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Admin access required",
+                    content = @Content(mediaType = "application/problem+json", schema = @Schema(implementation = ProblemDetail.class))
+            )
+    })
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping
+    Page<UserResponse> listUsers(
+            @PageableDefault(size = 20, sort = "id") Pageable pageable,
+            @Parameter(hidden = true) @AuthenticationPrincipal final UserPrincipal requestingUser
+    );
+
+    @Operation(
+            operationId = "deleteUser",
+            summary = "Delete a user",
+            description = "Permanently deletes a user. Admins can delete any user; a user may delete their own account."
+    )
+    @SecurityRequirement(name = "bearerAuth")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "User deleted successfully"),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Authentication is required or the access token is invalid",
+                    content = @Content(mediaType = "application/problem+json", schema = @Schema(implementation = ProblemDetail.class))
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Not authorized to delete this user",
+                    content = @Content(mediaType = "application/problem+json", schema = @Schema(implementation = ProblemDetail.class))
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "The specified user was not found",
+                    content = @Content(mediaType = "application/problem+json", schema = @Schema(implementation = ProblemDetail.class))
+            )
+    })
+    @PreAuthorize("hasAnyAuthority('ORGANIZER', 'ADMIN')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{externalKey}")
+    void deleteUser(
+            @Parameter(description = "The unique external key of the user", required = true)
+            @PathVariable final String externalKey,
+            @Parameter(hidden = true) @AuthenticationPrincipal final UserPrincipal requestingUser
+    );
+
+    @Operation(
+            operationId = "enableUser",
+            summary = "Enable a user",
+            description = "Re-enables a previously disabled user account. Admin access required."
+    )
+    @SecurityRequirement(name = "bearerAuth")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "User enabled successfully"),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Authentication is required or the access token is invalid",
+                    content = @Content(mediaType = "application/problem+json", schema = @Schema(implementation = ProblemDetail.class))
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Admin access required",
+                    content = @Content(mediaType = "application/problem+json", schema = @Schema(implementation = ProblemDetail.class))
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "The specified user was not found",
+                    content = @Content(mediaType = "application/problem+json", schema = @Schema(implementation = ProblemDetail.class))
+            )
+    })
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PostMapping("/{externalKey}/enable")
+    void enableUser(
+            @Parameter(description = "The unique external key of the user", required = true)
+            @PathVariable final String externalKey,
+            @Parameter(hidden = true) @AuthenticationPrincipal final UserPrincipal requestingUser
+    );
+
+    @Operation(
+            operationId = "disableUser",
+            summary = "Disable a user",
+            description = "Disables a user account, preventing login. Admin access required."
+    )
+    @SecurityRequirement(name = "bearerAuth")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "User disabled successfully"),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Authentication is required or the access token is invalid",
+                    content = @Content(mediaType = "application/problem+json", schema = @Schema(implementation = ProblemDetail.class))
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Admin access required",
+                    content = @Content(mediaType = "application/problem+json", schema = @Schema(implementation = ProblemDetail.class))
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "The specified user was not found",
+                    content = @Content(mediaType = "application/problem+json", schema = @Schema(implementation = ProblemDetail.class))
+            )
+    })
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PostMapping("/{externalKey}/disable")
+    void disableUser(
+            @Parameter(description = "The unique external key of the user", required = true)
+            @PathVariable final String externalKey,
+            @Parameter(hidden = true) @AuthenticationPrincipal final UserPrincipal requestingUser
     );
 
 }

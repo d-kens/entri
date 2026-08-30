@@ -23,6 +23,7 @@ import jakarta.validation.Valid;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -102,6 +103,7 @@ public interface EventApi {
                     description = "Organizer events retrieved successfully"
             )
     })
+    @PreAuthorize("hasAnyAuthority('ORGANIZER', 'ADMIN')")
     @GetMapping("/manage")
     PaginationResponse<EventResponse> listOrganizerEvents(
             @ParameterObject @Valid final EventFilter filter,
@@ -181,6 +183,7 @@ public interface EventApi {
                     description = "Event published successfully"
             )
     })
+    @PreAuthorize("hasAnyAuthority('ORGANIZER', 'ADMIN')")
     @PatchMapping("/{eventExternalId}/publish")
     EventResponse publishEvent(
             @Parameter(
@@ -238,6 +241,7 @@ public interface EventApi {
                     description = "Event cancelled successfully"
             )
     })
+    @PreAuthorize("hasAnyAuthority('ORGANIZER', 'ADMIN')")
     @PatchMapping("/{eventExternalId}/cancel")
     EventResponse cancelEvent(
             @Parameter(
@@ -316,6 +320,7 @@ public interface EventApi {
                     description = "Event created successfully"
             )
     })
+    @PreAuthorize("hasAnyAuthority('ORGANIZER', 'ADMIN')")
     @PostMapping
     ResponseEntity<EventResponse> createEvent(
             @Parameter(hidden = true)
@@ -378,6 +383,7 @@ public interface EventApi {
                     description = "Event updated successfully"
             ),
     })
+    @PreAuthorize("hasAnyAuthority('ORGANIZER', 'ADMIN')")
     @PutMapping("/{externalId}")
     EventResponse updateEvent(
             @Parameter(
@@ -444,6 +450,7 @@ public interface EventApi {
                     description = "Ticket type created successfully"
             ),
     })
+    @PreAuthorize("hasAnyAuthority('ORGANIZER', 'ADMIN')")
     @PostMapping("/{eventExternalId}/ticket-types")
     ResponseEntity<TicketTypeResponse> createEventTicketType(
             @Parameter(hidden = true)

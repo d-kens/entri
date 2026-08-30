@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -59,6 +60,7 @@ public interface TicketTypeApi {
                     description = "Organizer events retrieved successfully"
             )
     })
+    @PreAuthorize("hasAnyAuthority('ORGANIZER', 'ADMIN')")
     @GetMapping("/{ticketTypeId}")
     TicketTypeResponse getTicketType(
             @Parameter(
@@ -104,6 +106,7 @@ public interface TicketTypeApi {
                     description = "Organizer events retrieved successfully"
             )
     })
+    @PreAuthorize("hasAnyAuthority('ORGANIZER', 'ADMIN')")
     @PutMapping("/{ticketTypeId}")
     TicketTypeResponse updateTicketType(
             @Parameter(
@@ -153,6 +156,7 @@ public interface TicketTypeApi {
                     description = "Ticket type deleted successfully"
             )
     })
+    @PreAuthorize("hasAnyAuthority('ORGANIZER', 'ADMIN')")
     @DeleteMapping("/{ticketTypeId}")
     ResponseEntity<Void> deleteTicketType(
             @Parameter(
