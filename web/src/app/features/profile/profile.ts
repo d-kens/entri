@@ -4,6 +4,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { RouterLink } from '@angular/router';
 import { AuthService } from '@features/auth/auth-service';
 import { UsersService } from '@features/users/users-service';
 import { SnackbarService } from '@shared/services/snackbar-service';
@@ -18,6 +19,7 @@ import { EntriButton } from '@shared/components/button/entri-button.component';
     MatInputModule,
     MatIconModule,
     MatButtonModule,
+    RouterLink,
     EntriButton,
   ],
   templateUrl: './profile.html',

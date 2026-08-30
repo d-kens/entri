@@ -90,6 +90,11 @@ export const routes: Routes = [
         path: 'profile',
         loadComponent: () => import('@features/profile/profile').then((m) => m.Profile),
       },
+      {
+        path: 'change-password',
+        loadComponent: () =>
+          import('@features/profile/change-password/change-password').then((m) => m.ChangePassword),
+      },
     ],
   },
 ];

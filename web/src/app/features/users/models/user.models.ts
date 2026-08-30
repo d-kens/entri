@@ -13,3 +13,8 @@ export type UpdateUserRequest = {
   email: string;
   phoneNumber: string;
 };
+
+export type ChangePasswordRequest = {
+  currentPassword: string;
+  newPassword: string;
+};

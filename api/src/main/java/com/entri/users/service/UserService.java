@@ -3,6 +3,7 @@ package com.entri.users.service;
 import com.entri.exception.ResourceNotFoundException;
 import com.entri.exception.UnauthorizedException;
 import com.entri.security.UserPrincipal;
+import com.entri.users.dto.ChangePasswordRequest;
 import com.entri.users.dto.UpdateUserRequest;
 import com.entri.utils.PhoneNumberUtils;
 import com.entri.users.dto.CreateUserRequest;
@@ -70,6 +71,16 @@ public class UserService {
     public User findByEmail(final String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+    }
+
+    @Transactional
+    public void changePassword(final String externalKey, final ChangePasswordRequest request, final UserPrincipal requestingUser) {
+        assertCanManage(externalKey, requestingUser);
+        var user = findEntityByExternalKey(externalKey);
+        if (!passwordEncoder.matches(request.currentPassword(), user.getPasswordHash())) {
+            throw new UnauthorizedException("Current password is incorrect");
+        }
+        changeUserPassword(user, request.newPassword());
     }
 
     @Transactional

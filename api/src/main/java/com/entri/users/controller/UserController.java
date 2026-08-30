@@ -2,6 +2,7 @@ package com.entri.users.controller;
 
 import com.entri.security.UserPrincipal;
 import com.entri.users.controller.api.UserApi;
+import com.entri.users.dto.ChangePasswordRequest;
 import com.entri.users.dto.UpdateUserRequest;
 import com.entri.users.dto.UserResponse;
 import com.entri.users.service.UserService;
@@ -23,7 +24,10 @@ public class UserController implements UserApi {
         return userService.updateUser(externalKey, updateUserRequest, requestingUser);
     }
 
-    // TODO: POST /users/{externalKey}/change-password — allow authenticated users to change their own password (requires currentPassword + newPassword)
+    @Override
+    public void changePassword(final String externalKey, final ChangePasswordRequest changePasswordRequest, final UserPrincipal requestingUser) {
+        userService.changePassword(externalKey, changePasswordRequest, requestingUser);
+    }
     // TODO: DELETE /users/{externalKey} — delete a user (admin or self)
     // TODO: POST /users/{externalKey}/enable — admin only, set user enabled = true
     // TODO: POST /users/{externalKey}/disable — admin only, set user enabled = false
