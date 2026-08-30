@@ -1,5 +1,6 @@
 package com.entri.users.service;
 
+import com.entri.common.dto.PaginationResponse;
 import com.entri.exception.ResourceNotFoundException;
 import com.entri.exception.UnauthorizedException;
 import com.entri.security.UserPrincipal;
@@ -119,8 +120,17 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Page<UserResponse> listUsers(final Pageable pageable) {
-        return userRepository.findAll(pageable).map(userMapper::toResponse);
+    public PaginationResponse<UserResponse> listUsers(final Pageable pageable) {
+        Page<User> result = userRepository.findAll(pageable);
+        return new PaginationResponse<>(
+                result.getContent().stream().map(userMapper::toResponse).toList(),
+                result.getNumber(),
+                result.getSize(),
+                result.getTotalElements(),
+                result.getTotalPages(),
+                result.isFirst(),
+                result.isLast()
+        );
     }
 
     @Transactional

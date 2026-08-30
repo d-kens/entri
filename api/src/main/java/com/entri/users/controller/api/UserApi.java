@@ -1,5 +1,6 @@
 package com.entri.users.controller.api;
 
+import com.entri.common.dto.PaginationResponse;
 import com.entri.security.UserPrincipal;
 import com.entri.users.dto.ChangePasswordRequest;
 import com.entri.users.dto.UpdateUserRequest;
@@ -13,7 +14,6 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -196,7 +196,7 @@ public interface UserApi {
     })
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping
-    Page<UserResponse> listUsers(
+    PaginationResponse<UserResponse> listUsers(
             @PageableDefault(size = 20, sort = "id") Pageable pageable,
             @Parameter(hidden = true) @AuthenticationPrincipal final UserPrincipal requestingUser
     );
