@@ -2,7 +2,8 @@ package com.entri.modules.service;
 
 import com.entri.exception.ResourceNotFoundException;
 import com.entri.exception.UnauthorizedException;
-import com.entri.notification.event.NotificationEvent;
+import com.entri.notification.NotificationPublisher;
+import com.entri.notification.dto.NotificationMessage;
 import com.entri.auth.dto.ResetPasswordRequest;
 import com.entri.auth.entity.PasswordResetToken;
 import com.entri.users.entity.User;
@@ -15,7 +16,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.Instant;
@@ -32,7 +32,7 @@ import static org.mockito.Mockito.when;
 class PasswordResetServiceTest {
 
     @Mock UserService userService;
-    @Mock ApplicationEventPublisher eventPublisher;
+    @Mock NotificationPublisher notificationPublisher;
     @Mock PasswordResetTokenRepository passwordResetTokenRepository;
 
     @InjectMocks PasswordResetService passwordResetService;
@@ -58,7 +58,7 @@ class PasswordResetServiceTest {
         passwordResetService.forgotPassword("john@example.com");
 
         verify(passwordResetTokenRepository).save(any(PasswordResetToken.class));
-        verify(eventPublisher).publishEvent(any(NotificationEvent.class));
+        verify(notificationPublisher).publish(any(NotificationMessage.class));
     }
 
     @Test
@@ -103,7 +103,7 @@ class PasswordResetServiceTest {
         verify(userService).changeUserPassword(user, "NewPassword123!");
         assertThat(token.isUsed()).isTrue();
         verify(passwordResetTokenRepository).save(token);
-        verify(eventPublisher).publishEvent(any(NotificationEvent.class));
+        verify(notificationPublisher).publish(any(NotificationMessage.class));
     }
 
     @Test

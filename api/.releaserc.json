@@ -1,0 +1,4 @@
+{
+  "branches": ["master"],
+  "tagFormat": "api-v${version}"
+}
