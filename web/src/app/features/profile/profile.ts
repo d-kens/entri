@@ -47,10 +47,18 @@ export class Profile implements OnInit {
   });
 
   ngOnInit() {
-    const user = this.usersService.currentUser();
-    if (user) {
-      this.profileForm.patchValue(user);
+    const cached = this.usersService.currentUser();
+    if (cached) {
+      this.profileForm.patchValue(cached);
+      return;
     }
+
+    const externalKey = this.authService.getExternalId();
+    if (!externalKey) return;
+
+    this.usersService.getUserByExternalKey(externalKey).subscribe({
+      next: (user) => this.profileForm.patchValue(user),
+    });
   }
 
   save() {
