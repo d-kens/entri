@@ -69,7 +69,7 @@ class PasswordResetServiceTest {
         passwordResetService.forgotPassword("unknown@example.com");
 
         verify(passwordResetTokenRepository, never()).save(any());
-        verify(eventPublisher, never()).publishEvent(any());
+        verify(notificationPublisher, never()).publish(any());
     }
 
     @Test
