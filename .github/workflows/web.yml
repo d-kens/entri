@@ -56,6 +56,10 @@ jobs:
           cache: npm
           cache-dependency-path: web/package-lock.json
 
+      - name: Install semantic-release plugins
+        working-directory: ./web
+        run: npm install --no-save @semantic-release/npm @semantic-release/git
+
       - name: Release
         working-directory: ./web
         run: npx semantic-release
