@@ -6,3 +6,10 @@ export type UserResponse = {
   lastName: string;
   phoneNumber: string;
 };
+
+export type UpdateUserRequest = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+};

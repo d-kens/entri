@@ -2,7 +2,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { UserResponse } from '@features/users/models/user.models';
+import { UpdateUserRequest, UserResponse } from '@features/users/models/user.models';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -16,6 +16,12 @@ export class UsersService {
   getUserByExternalKey(externalKey: string): Observable<UserResponse> {
     return this.http
       .get<UserResponse>(`${environment.apiBaseUrl}/users/${externalKey}`)
+      .pipe(tap((user) => this.currentUser.set(user)));
+  }
+
+  updateUser(externalKey: string, request: UpdateUserRequest): Observable<UserResponse> {
+    return this.http
+      .put<UserResponse>(`${environment.apiBaseUrl}/users/${externalKey}`, request)
       .pipe(tap((user) => this.currentUser.set(user)));
   }
 }
