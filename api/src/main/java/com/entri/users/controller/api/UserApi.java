@@ -1,6 +1,7 @@
 package com.entri.users.controller.api;
 
 import com.entri.security.UserPrincipal;
+import com.entri.users.dto.ChangePasswordRequest;
 import com.entri.users.dto.UpdateUserRequest;
 import com.entri.users.dto.UserResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,12 +13,15 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 @RequestMapping("/users")
 public interface UserApi {
@@ -127,6 +131,37 @@ public interface UserApi {
             )
             @Valid
             @org.springframework.web.bind.annotation.RequestBody final UpdateUserRequest updateUserRequest,
+
+            @Parameter(hidden = true)
+            @AuthenticationPrincipal final UserPrincipal requestingUser
+    );
+
+    @Operation(
+            operationId = "changePassword",
+            summary = "Change password",
+            description = "Changes the authenticated user's password. Requires the current password for verification."
+    )
+    @SecurityRequirement(name = "bearerAuth")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Password changed successfully"),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Current password is incorrect or token is invalid",
+                    content = @Content(mediaType = "application/problem+json", schema = @Schema(implementation = ProblemDetail.class))
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Not authorized to change this user's password",
+                    content = @Content(mediaType = "application/problem+json", schema = @Schema(implementation = ProblemDetail.class))
+            )
+    })
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PostMapping("/{externalKey}/change-password")
+    void changePassword(
+            @PathVariable final String externalKey,
+
+            @Valid
+            @org.springframework.web.bind.annotation.RequestBody final ChangePasswordRequest changePasswordRequest,
 
             @Parameter(hidden = true)
             @AuthenticationPrincipal final UserPrincipal requestingUser

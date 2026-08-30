@@ -2,7 +2,11 @@ import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { UpdateUserRequest, UserResponse } from '@features/users/models/user.models';
+import {
+  ChangePasswordRequest,
+  UpdateUserRequest,
+  UserResponse,
+} from '@features/users/models/user.models';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -23,5 +27,12 @@ export class UsersService {
     return this.http
       .put<UserResponse>(`${environment.apiBaseUrl}/users/${externalKey}`, request)
       .pipe(tap((user) => this.currentUser.set(user)));
+  }
+
+  changePassword(externalKey: string, request: ChangePasswordRequest): Observable<void> {
+    return this.http.post<void>(
+      `${environment.apiBaseUrl}/users/${externalKey}/change-password`,
+      request,
+    );
   }
 }
