@@ -1,6 +1,5 @@
 package com.entri.security;
 
-import com.entri.users.entity.Role;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +20,7 @@ import com.entri.auth.service.UserDetailsServiceImpl;
 
 @Configuration
 @EnableWebSecurity
+@org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final HandlerExceptionResolver resolver;
@@ -68,8 +68,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/payments/checkout").permitAll()
                         .requestMatchers(HttpMethod.POST, "/checkout/webhook").permitAll()
                         .requestMatchers(HttpMethod.GET,"/categories").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/users/{externalKey}/wallet").hasAnyAuthority(Role.ORGANIZER.name(), Role.ADMIN.name())
-                        .requestMatchers(HttpMethod.POST, "/users/{externalKey}/wallet").hasAuthority(Role.ADMIN.name())
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

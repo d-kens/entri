@@ -2,7 +2,6 @@ package com.entri.events.service;
 
 import com.entri.security.UserPrincipal;
 import com.entri.exception.BadRequestException;
-import com.entri.exception.UnauthorizedException;
 import com.entri.common.dto.PaginationResponse;
 import com.entri.exception.ResourceNotFoundException;
 import com.entri.events.dto.EventFilter;
@@ -169,14 +168,8 @@ public class EventService {
     private Event getAuthorizedEvent(final String externalId, final UserPrincipal requestingUser) {
         var event = eventRepository.findByExternalId(externalId)
                 .orElseThrow(() -> new ResourceNotFoundException("Event with external ID: " + externalId + " not found"));
-        assertCanManage(event, requestingUser);
+        requestingUser.assertCanManage(event.getOrganizer().getExternalKey());
         return event;
-    }
-
-    private void assertCanManage(final Event event, final UserPrincipal requestingUser) {
-        if (!requestingUser.isAdmin() && !requestingUser.getExternalKey().equals(event.getOrganizer().getExternalKey())) {
-            throw new UnauthorizedException("You are not authorized to perform this action");
-        }
     }
 
     private void validateEventDates(EventRequest request, boolean isCreate) {

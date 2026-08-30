@@ -17,6 +17,8 @@ import com.entri.users.mapper.UserMapper;
 import com.entri.users.repository.UserRepository;
 import com.entri.users.UserEventPublisher;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,7 +59,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserResponse getUserByExternalKey(final String externalKey, final UserPrincipal requestingUser) {
         var user = findEntityByExternalKey(externalKey);
-        assertCanManage(externalKey, requestingUser);
+        requestingUser.assertCanManage(externalKey);
         return userMapper.toResponse(user);
     }
 
@@ -75,7 +77,7 @@ public class UserService {
 
     @Transactional
     public void changePassword(final String externalKey, final ChangePasswordRequest request, final UserPrincipal requestingUser) {
-        assertCanManage(externalKey, requestingUser);
+        requestingUser.assertCanManage(externalKey);
         var user = findEntityByExternalKey(externalKey);
         if (!passwordEncoder.matches(request.currentPassword(), user.getPasswordHash())) {
             throw new UnauthorizedException("Current password is incorrect");
@@ -94,7 +96,7 @@ public class UserService {
     public UserResponse updateUser(final String userExternalKey, final UpdateUserRequest updateUserRequest, final UserPrincipal requestingUser) {
         var user = findEntityByExternalKey(userExternalKey);
 
-        assertCanManage(userExternalKey, requestingUser);
+        requestingUser.assertCanManage(userExternalKey);
 
         if (!user.getEmail().equalsIgnoreCase(updateUserRequest.email())
                 && userRepository.existsByEmail(updateUserRequest.email())) {
@@ -116,11 +118,25 @@ public class UserService {
         return userMapper.toResponse(user);
     }
 
-    private void assertCanManage(String externalKey, UserPrincipal requestingUser) {
-        if (!requestingUser.isAdmin() && !requestingUser.getExternalKey().equals(externalKey)) {
-            throw new UnauthorizedException("You are not authorized to perform this action");
-        }
+    @Transactional(readOnly = true)
+    public Page<UserResponse> listUsers(final Pageable pageable) {
+        return userRepository.findAll(pageable).map(userMapper::toResponse);
     }
+
+    @Transactional
+    public void deleteUser(final String externalKey, final UserPrincipal requestingUser) {
+        requestingUser.assertCanManage(externalKey);
+        var user = findEntityByExternalKey(externalKey);
+        userRepository.delete(user);
+    }
+
+    @Transactional
+    public void setUserEnabled(final String externalKey, final boolean enabled) {
+        var user = findEntityByExternalKey(externalKey);
+        user.setEnabled(enabled);
+        userRepository.save(user);
+    }
+
 
 }
 

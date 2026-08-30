@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,6 +49,7 @@ public interface MediaApi {
                     description = "File uploaded successfully"
             )
     })
+    @PreAuthorize("hasAnyAuthority('ORGANIZER', 'ADMIN')")
     @PostMapping(value = "/upload", consumes = "multipart/form-data")
     ResponseEntity<MediaUploadResponse> upload(
             @Parameter(description = "The file to upload", required = true)
@@ -82,6 +84,7 @@ public interface MediaApi {
                     description = "File deleted successfully"
             )
     })
+    @PreAuthorize("hasAnyAuthority('ORGANIZER', 'ADMIN')")
     @DeleteMapping
     ResponseEntity<Void> delete(
             @Parameter(description = "The URL of the file to delete", required = true)
