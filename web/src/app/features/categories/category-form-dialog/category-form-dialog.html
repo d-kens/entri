@@ -1,7 +1,7 @@
 <h2 mat-dialog-title>{{ isEdit ? 'Edit Category' : 'New Category' }}</h2>
 
 <mat-dialog-content>
-  <form [formGroup]="form" class="flex flex-col gap-4 pt-2">
+  <form [formGroup]="form" class="flex flex-col gap-4 pt-4">
     <mat-form-field appearance="outline">
       <mat-label>Name</mat-label>
       <input matInput formControlName="name" maxlength="100" />

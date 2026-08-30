@@ -1,5 +1,6 @@
 package com.entri.users.controller;
 
+import com.entri.common.dto.PaginationResponse;
 import com.entri.security.UserPrincipal;
 import com.entri.users.controller.api.UserApi;
 import com.entri.users.dto.ChangePasswordRequest;
@@ -7,7 +8,6 @@ import com.entri.users.dto.UpdateUserRequest;
 import com.entri.users.dto.UserResponse;
 import com.entri.users.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,7 +32,7 @@ public class UserController implements UserApi {
     }
 
     @Override
-    public Page<UserResponse> listUsers(final Pageable pageable, final UserPrincipal requestingUser) {
+    public PaginationResponse<UserResponse> listUsers(final Pageable pageable, final UserPrincipal requestingUser) {
         return userService.listUsers(pageable);
     }
 
