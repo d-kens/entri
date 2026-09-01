@@ -54,7 +54,6 @@ export class Sidenav {
 
   private getPlatformAdminMenu(): MenuItem[] {
     return [
-      { icon: 'dashboard', label: 'Dashboard', route: '/dashboard/summary' },
       { icon: 'people', label: 'Users', route: '/dashboard/users' },
       { icon: 'confirmation_number', label: 'Events', route: '/dashboard/events' },
       { icon: 'category', label: 'Categories', route: '/dashboard/categories' },
