@@ -35,5 +35,5 @@ Add `ticketsSold`, `totalCapacity`, `totalRevenue` so the events list is self-co
 ## Implementation order
 1. Extend `EventResponse` with sales fields
 2. Implement `GET /events/stats`
-3. Implement `GET /reservations?scope=managed`
+3. Implement `GET /reservations?scope=managed` - ## TODO: Check this should be changed scope-manged does doe make sense, how about senind organizerId in the filters
 4. Build frontend dashboard

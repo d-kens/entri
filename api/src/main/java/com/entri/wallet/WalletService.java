@@ -21,7 +21,7 @@ public class WalletService {
 
     @Transactional
     public WalletResponse createWalletForUser(final String externalKey) {
-        var user = userRepository.findByExternalKey(externalKey)
+        var user = userRepository.findByExternalKeyAndDeletedFalse(externalKey)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         if (user.getWalletId() != null) {
             throw new WalletAlreadyExistsException();
@@ -32,7 +32,7 @@ public class WalletService {
 
     @Transactional
     public void provisionWalletForOrganizer(final String externalKey) {
-        var user = userRepository.findByExternalKey(externalKey)
+        var user = userRepository.findByExternalKeyAndDeletedFalse(externalKey)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         if (user.getWalletId() != null) {
             return;
@@ -54,7 +54,7 @@ public class WalletService {
         if (!requestingUser.isAdmin() && !requestingUser.getExternalKey().equals(externalKey)) {
             throw new UnauthorizedException("You are not authorized to perform this action");
         }
-        var user = userRepository.findByExternalKey(externalKey)
+        var user = userRepository.findByExternalKeyAndDeletedFalse(externalKey)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         if (user.getWalletId() == null) {
             throw new ResourceNotFoundException("Wallet not found");
