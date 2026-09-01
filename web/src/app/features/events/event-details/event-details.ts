@@ -81,7 +81,6 @@ export class EventDetails implements OnInit {
 
   openDeleteTicketTypeDialog(ticketId: number, ticketName: string): void {
     const dialogRef = this.dialog.open(ConfirmDialog, {
-      panelClass: 'entri-confirm-dialog',
       data: {
         message: `"${ticketName}" will be permanently deleted. This action cannot be undone.`,
       },
