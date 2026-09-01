@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
-import { Observable, catchError, throwError } from 'rxjs';
+import { Observable, catchError, shareReplay, throwError } from 'rxjs';
 import { environment } from 'environments/environment';
 import {
   CategoryRequest,
@@ -20,8 +20,12 @@ import { ApiError, PageResponse } from '@shared/models/common.model';
 export class EventsService {
   private http = inject(HttpClient);
 
+  private categories$ = this.http
+    .get<CategoryResponse[]>(`${environment.apiBaseUrl}/categories`)
+    .pipe(shareReplay(1));
+
   getCategories(): Observable<CategoryResponse[]> {
-    return this.http.get<CategoryResponse[]>(`${environment.apiBaseUrl}/categories`);
+    return this.categories$;
   }
 
   createCategory(request: CategoryRequest): Observable<CategoryResponse> {
@@ -43,14 +47,15 @@ export class EventsService {
   }
 
   createEvent(payload: EventRequest): Observable<EventResponse> {
-    return this.http.post<EventResponse>(`${environment.apiBaseUrl}/events`, payload);
+    return this.http
+      .post<EventResponse>(`${environment.apiBaseUrl}/events`, payload)
+      .pipe(catchError(this.toDisplayError('Failed to create event.')));
   }
 
   updateEvent(eventExternalId: string, payload: EventRequest): Observable<EventResponse> {
-    return this.http.put<EventResponse>(
-      `${environment.apiBaseUrl}/events/${eventExternalId}`,
-      payload,
-    );
+    return this.http
+      .put<EventResponse>(`${environment.apiBaseUrl}/events/${eventExternalId}`, payload)
+      .pipe(catchError(this.toDisplayError('Failed to update event.')));
   }
 
   getEvents(filter: EventFilter): Observable<PageResponse<EventResponse>> {

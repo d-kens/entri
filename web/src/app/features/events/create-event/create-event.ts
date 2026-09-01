@@ -56,8 +56,8 @@ export class CreateEvent implements OnInit {
 
       this.snackbarService.showSuccess('Event created successfully!');
       this.router.navigate(['/dashboard/events', event.externalId]);
-    } catch (err: any) {
-      const msg = err?.error?.message || 'Failed to create event.';
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Failed to create event.';
       this.snackbarService.showError(msg);
     } finally {
       this.loading.set(false);
