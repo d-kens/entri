@@ -5,6 +5,7 @@ export type UserResponse = {
   firstName: string;
   lastName: string;
   phoneNumber: string;
+  enabled: boolean;
 };
 
 export type UpdateUserRequest = {

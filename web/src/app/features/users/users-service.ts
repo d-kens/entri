@@ -1,5 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import {
@@ -7,6 +7,7 @@ import {
   UpdateUserRequest,
   UserResponse,
 } from '@features/users/models/user.models';
+import { PageResponse } from '@shared/models/common.model';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -33,6 +34,29 @@ export class UsersService {
     return this.http.post<void>(
       `${environment.apiBaseUrl}/users/${externalKey}/change-password`,
       request,
+    );
+  }
+
+  getUsers(page = 0, size = 20): Observable<PageResponse<UserResponse>> {
+    const params = new HttpParams().set('page', page).set('size', size);
+    return this.http.get<PageResponse<UserResponse>>(`${environment.apiBaseUrl}/users`, { params });
+  }
+
+  deleteUser(externalKey: string): Observable<void> {
+    return this.http.delete<void>(`${environment.apiBaseUrl}/users/${externalKey}`);
+  }
+
+  enableUser(externalKey: string): Observable<UserResponse> {
+    return this.http.post<UserResponse>(
+      `${environment.apiBaseUrl}/users/${externalKey}/enable`,
+      {},
+    );
+  }
+
+  disableUser(externalKey: string): Observable<UserResponse> {
+    return this.http.post<UserResponse>(
+      `${environment.apiBaseUrl}/users/${externalKey}/disable`,
+      {},
     );
   }
 }

@@ -5,8 +5,8 @@ export interface ApiError {
 
 export interface PageResponse<T> {
   content: T[];
-  pageNumber: number;
-  pageSize: number;
+  number: number;
+  size: number;
   totalElements: number;
   totalPages: number;
   last: boolean;

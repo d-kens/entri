@@ -6,5 +6,6 @@ public record UserResponse(
         String lastName,
         String firstName,
         String phoneNumber,
-        String externalKey
+        String externalKey,
+        boolean enabled
 ) {}
