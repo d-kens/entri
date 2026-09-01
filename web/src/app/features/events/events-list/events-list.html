@@ -38,8 +38,8 @@
       tablePaginator
       class="table-paginator"
       [length]="page().totalElements"
-      [pageSize]="page().pageSize"
-      [pageIndex]="page().pageNumber"
+      [pageSize]="page().size"
+      [pageIndex]="page().number"
       [pageSizeOptions]="[10, 25, 50]"
       (page)="onPage($event)"
     />
