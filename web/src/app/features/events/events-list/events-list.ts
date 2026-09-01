@@ -44,8 +44,8 @@ export class EventsList implements OnInit {
   error = signal(false);
   page = signal<PageResponse<EventResponse>>({
     content: [],
-    pageNumber: 0,
-    pageSize: 10,
+    number: 0,
+    size: 10,
     totalElements: 0,
     totalPages: 0,
     first: true,
@@ -75,7 +75,7 @@ export class EventsList implements OnInit {
     this.eventsService.publishEvent(externalId).subscribe({
       next: () => {
         this.snackbarService.showSuccess('Event published');
-        this.load(this.page().pageNumber, this.page().pageSize);
+        this.load(this.page().number, this.page().size);
       },
       error: (err: Error) => {
         this.snackbarService.showError(err.message);
@@ -87,7 +87,7 @@ export class EventsList implements OnInit {
     this.eventsService.cancelEvent(externalId).subscribe({
       next: () => {
         this.snackbarService.showSuccess('Event cancelled');
-        this.load(this.page().pageNumber, this.page().pageSize);
+        this.load(this.page().number, this.page().size);
       },
       error: (err: Error) => {
         this.snackbarService.showError(err.message);
@@ -100,7 +100,7 @@ export class EventsList implements OnInit {
   }
 
   retry(): void {
-    this.load(this.page().pageNumber, this.page().pageSize);
+    this.load(this.page().number, this.page().size);
   }
 
   private load(pageNumber: number, pageSize: number): void {
