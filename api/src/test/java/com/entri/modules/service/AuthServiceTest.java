@@ -41,7 +41,7 @@ class AuthServiceTest {
     @Test
     void register_delegatesToUserServiceAndReturnsResult() {
         var request = new CreateUserRequest("john@example.com", "Password123!", "John", "Doe", "0712345678", "ORGANIZER");
-        var expected = new UserResponse("ORGANIZER", "john@example.com", "Doe", "John", "0712345678", "ext-key");
+        var expected = new UserResponse("ORGANIZER", "john@example.com", "Doe", "John", "0712345678", "ext-key", true);
         when(userService.create(request)).thenReturn(expected);
 
         var result = authService.register(request);
@@ -54,7 +54,7 @@ class AuthServiceTest {
     void login_authenticatesAndReturnsTokens() {
         var request = new LoginRequest("john@example.com", "Password123!");
         var user = User.builder().email("john@example.com").build();
-        var userResponse = new UserResponse("ORGANIZER", "john@example.com", "Doe", "John", "0712345678", "ext-key");
+        var userResponse = new UserResponse("ORGANIZER", "john@example.com", "Doe", "John", "0712345678", "ext-key", true);
         var accessJwt = mock(Jwt.class);
         var refreshJwt = mock(Jwt.class);
 
