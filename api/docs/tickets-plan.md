@@ -14,11 +14,8 @@ One row per individual ticket — a reservation for 2×VIP = 2 rows.
 | reservation_id | FK | |
 | event_id | FK | |
 | ticket_type_id | FK | |
-| holder_name | VARCHAR | |
-| holder_email | VARCHAR | |
-| status | ENUM | VALID, USED, CANCELLED |
+| status | ENUM | VALID, USED
 | checked_in_at | DATETIME | |
-| checked_in_by | VARCHAR | staff external key or code used |
 
 ### `event_check_in_codes` table
 Organiser generates a short-lived code per event for staff to authenticate on mobile.

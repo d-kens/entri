@@ -1,0 +1,104 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>entri</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()">
+        <ion-icon slot="icon-only" name="log-out-outline" />
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="scanner-container">
+
+    <!-- Scanner instruction -->
+    @if (!showManual) {
+      <p class="scan-hint">Point at the QR code on the ticket — it scans automatically</p>
+    }
+
+    <!-- Web: inline camera -->
+    @if (!isNative && !showManual) {
+      <div class="viewfinder" [class.has-result]="resultState() !== 'none'">
+        @if (!cameraError) {
+          <video #videoEl autoplay playsinline muted></video>
+          <canvas #canvasEl style="display:none"></canvas>
+          <div class="corner tl"></div>
+          <div class="corner tr"></div>
+          <div class="corner bl"></div>
+          <div class="corner br"></div>
+          @if (resultState() === 'loading') {
+            <div class="scan-overlay">
+              <div class="spinner"></div>
+            </div>
+          }
+        } @else {
+          <div class="camera-error">
+            <ion-icon name="alert-circle-outline" />
+            <p>Camera access denied</p>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- Native: scan button -->
+    @if (isNative && !showManual) {
+      <button
+        class="native-scan-btn"
+        (click)="scanNative()"
+        [disabled]="resultState() === 'loading'"
+      >
+        <ion-icon name="qr-code-outline" />
+        <span>Tap to scan QR code</span>
+      </button>
+    }
+
+    <!-- Result card -->
+    @if (resultState() !== 'none' && resultState() !== 'loading') {
+      <div class="result-card" [class]="resultState()">
+        <div class="result-header">
+          <ion-icon [name]="resultState() === 'valid' ? 'checkmark-circle' : 'close-circle'" />
+          <span class="result-title">
+            @if (resultState() === 'valid') { Valid Ticket }
+            @if (resultState() === 'used') { Already Used }
+            @if (resultState() === 'invalid') { Invalid Ticket }
+            @if (resultState() === 'error') { Error }
+          </span>
+        </div>
+        @if (checkInResponse(); as r) {
+          @if (r.holderName) { <p class="holder">{{ r.holderName }}</p> }
+          @if (r.ticketType) { <p class="type">{{ r.ticketType }}</p> }
+          @if (r.checkedInAt) { <p class="time">Checked in at {{ r.checkedInAt | date:'shortTime' }}</p> }
+        }
+        @if (errorMsg(); as e) { <p class="err-msg">{{ e }}</p> }
+        <button class="scan-next-btn" (click)="reset()">Scan next ticket →</button>
+      </div>
+    }
+
+    <!-- Camera toggle -->
+    <button class="manual-toggle" (click)="showManual = !showManual">
+      {{ showManual ? 'Use camera instead' : "Can't scan? Enter ticket code manually" }}
+    </button>
+
+    <!-- Manual input (shown only when camera is hidden) -->
+    @if (showManual) {
+    <div class="manual-section">
+      <input
+        [(ngModel)]="manualCode"
+        type="text"
+        placeholder="Ticket code"
+        (keyup.enter)="submitManual()"
+        [disabled]="resultState() === 'loading'"
+      />
+      <ion-button
+        expand="block"
+        (click)="submitManual()"
+        [disabled]="!manualCode.trim() || resultState() === 'loading'"
+      >
+        Verify
+      </ion-button>
+    </div>
+    }
+
+  </div>
+</ion-content>
