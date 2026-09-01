@@ -47,7 +47,6 @@ export class EditEvent implements OnInit {
     this.hasError.set(false);
     this.eventService.getEvent(this.eventExternalId()).subscribe({
       next: (event) => {
-        console.log(event);
         const startDate = new Date(event.startTime);
         const endDate = new Date(event.endTime);
         this.eventDetailsFormData.set({
@@ -83,7 +82,7 @@ export class EditEvent implements OnInit {
         bannerUrl = await firstValueFrom(this.fileService.upload(data.bannerFile));
       }
 
-      const event = await firstValueFrom(
+      await firstValueFrom(
         this.eventService.updateEvent(this.eventExternalId(), {
           title: data.title,
           description: data.description,
@@ -98,10 +97,10 @@ export class EditEvent implements OnInit {
         }),
       );
 
-      this.snackbarService.showSuccess('Event created successfully!');
+      this.snackbarService.showSuccess('Event updated successfully!');
       this.router.navigate(['/dashboard/events', this.eventExternalId()]);
-    } catch (err: any) {
-      const msg = err?.error?.message || 'Failed to create event.';
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Failed to update event.';
       this.snackbarService.showError(msg);
     } finally {
       this.loading.set(false);
