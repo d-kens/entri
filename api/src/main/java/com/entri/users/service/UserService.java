@@ -34,7 +34,7 @@ public class UserService {
 
     @Transactional
     public UserResponse create(final CreateUserRequest userDto) {
-        if (userRepository.existsByEmail(userDto.email())) {
+        if (userRepository.existsByEmailAndDeletedFalse(userDto.email())) {
             throw new EmailAlreadyExistsException();
         }
         User user = User.builder()
@@ -66,13 +66,13 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public User findEntityByExternalKey(final String externalKey) {
-        return userRepository.findByExternalKey(externalKey)
+        return userRepository.findByExternalKeyAndDeletedFalse(externalKey)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
     @Transactional(readOnly = true)
     public User findByEmail(final String email) {
-        return userRepository.findByEmail(email)
+        return userRepository.findByEmailAndDeletedFalse(email)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
@@ -100,7 +100,7 @@ public class UserService {
         requestingUser.assertCanManage(userExternalKey);
 
         if (!user.getEmail().equalsIgnoreCase(updateUserRequest.email())
-                && userRepository.existsByEmail(updateUserRequest.email())) {
+                && userRepository.existsByEmailAndDeletedFalse(updateUserRequest.email())) {
             throw new EmailAlreadyExistsException();
         }
 
@@ -121,7 +121,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public PaginationResponse<UserResponse> listUsers(final Pageable pageable) {
-        Page<User> result = userRepository.findAll(pageable);
+        Page<User> result = userRepository.findAllByDeletedFalse(pageable);
         return new PaginationResponse<>(
                 result.getContent().stream().map(userMapper::toResponse).toList(),
                 result.getNumber(),
@@ -137,7 +137,8 @@ public class UserService {
     public void deleteUser(final String externalKey, final UserPrincipal requestingUser) {
         requestingUser.assertCanManage(externalKey);
         var user = findEntityByExternalKey(externalKey);
-        userRepository.delete(user);
+        user.setDeleted(true);
+        userRepository.save(user);
     }
 
     @Transactional
