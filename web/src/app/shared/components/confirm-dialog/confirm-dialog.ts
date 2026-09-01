@@ -1,16 +1,19 @@
 import { Component, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
 import { EntriButton } from '@shared/components/button/entri-button.component';
 
 export interface ConfirmDialogData {
+  title?: string;
   message: string;
   confirmLabel?: string;
+  icon?: string;
 }
 
 @Component({
   selector: 'app-confirm-dialog',
   standalone: true,
-  imports: [MatDialogModule, EntriButton],
+  imports: [MatDialogModule, MatIconModule, EntriButton],
   templateUrl: './confirm-dialog.html',
   styleUrl: './confirm-dialog.css',
 })

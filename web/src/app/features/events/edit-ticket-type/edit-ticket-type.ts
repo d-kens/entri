@@ -71,7 +71,6 @@ export class EditTicketType implements OnInit {
 
   openDeleteDialog(): void {
     const dialogRef = this.dialog.open(ConfirmDialog, {
-      panelClass: 'entri-confirm-dialog',
       data: {
         message: 'This ticket type will be permanently deleted. This action cannot be undone.',
       },
