@@ -1,5 +1,5 @@
 import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { first, interval, Subscription, switchMap } from 'rxjs';
@@ -9,7 +9,7 @@ import { TicketResponse } from '@features/events/models/event.models';
 @Component({
   selector: 'app-reservation-tickets',
   standalone: true,
-  imports: [DatePipe, MatIconModule],
+  imports: [DatePipe, MatIconModule, RouterLink],
   templateUrl: './reservation-tickets.html',
   styleUrl: './reservation-tickets.css',
 })
@@ -49,6 +49,10 @@ export class ReservationTickets implements OnInit, OnDestroy {
 
   qrUrl(ticketCode: string): string {
     return `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${ticketCode}&qzone=1`;
+  }
+
+  formatCode(code: string): string {
+    return `${code.slice(0, 4)}-${code.slice(4, 8)}-${code.slice(8)}`;
   }
 
   holderName(ticket: TicketResponse): string {

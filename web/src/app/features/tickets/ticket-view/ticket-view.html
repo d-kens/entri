@@ -1,0 +1,65 @@
+<!-- ── Loading skeleton ───────────────────────────────────────── -->
+@if (loading()) {
+  <div class="page-wrap">
+    <div class="shimmer sk-title"></div>
+    <div class="shimmer sk-subtitle"></div>
+    <div class="shimmer sk-qr"></div>
+    <div class="shimmer sk-code"></div>
+    <div class="shimmer sk-row"></div>
+    <div class="shimmer sk-row"></div>
+  </div>
+}
+
+<!-- ── Error state ────────────────────────────────────────────── -->
+@if (error()) {
+  <div class="page-wrap">
+    <div class="empty-state">
+      <mat-icon class="empty-icon">error_outline</mat-icon>
+      <p class="empty-title">Ticket not found</p>
+      <p class="empty-hint">This ticket code is invalid or does not exist.</p>
+    </div>
+  </div>
+}
+
+<!-- ── Ticket ─────────────────────────────────────────────────── -->
+@if (!loading() && !error() && ticket(); as t) {
+  <div class="page-wrap">
+    @if (backLink(); as link) {
+      <a [routerLink]="link" class="back-link">
+        <mat-icon>arrow_back</mat-icon>
+        All tickets
+      </a>
+    }
+    <div class="event-label">{{ t.eventTitle }}</div>
+    <h1 class="ticket-type">{{ t.ticketTypeName }}</h1>
+
+    <span class="status-badge" [class.badge--used]="t.status === 'USED'">
+      @if (t.status === 'VALID') {
+        <mat-icon>check_circle</mat-icon>
+        Valid
+      } @else {
+        <mat-icon>block</mat-icon>
+        Used
+      }
+    </span>
+
+    <div class="qr-wrap">
+      <img [src]="qrUrl(t.ticketCode)" alt="Ticket QR code" class="qr-img" loading="lazy" />
+    </div>
+
+    <p class="ticket-code">{{ formatCode(t.ticketCode) }}</p>
+
+    <div class="detail-list">
+      <div class="detail-row">
+        <mat-icon>person</mat-icon>
+        <span>{{ holderName(t) }}</span>
+      </div>
+      @if (t.status === 'USED' && t.checkedInAt) {
+        <div class="detail-row detail-row--used">
+          <mat-icon>event_available</mat-icon>
+          <span>Checked in {{ t.checkedInAt | date: 'EEE, d MMM yyyy · HH:mm' }}</span>
+        </div>
+      }
+    </div>
+  </div>
+}

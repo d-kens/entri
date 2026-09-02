@@ -160,6 +160,12 @@ export class EventsService {
     );
   }
 
+  getTicket(externalId: string): Observable<TicketResponse> {
+    return this.http
+      .get<TicketResponse>(`${environment.apiBaseUrl}/tickets/${externalId}`)
+      .pipe(catchError(this.toDisplayError('Ticket not found')));
+  }
+
   private toDisplayError(fallback: string) {
     return (err: HttpErrorResponse) => {
       const detail = (err.error as ApiError | null)?.detail;

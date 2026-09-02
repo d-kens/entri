@@ -42,7 +42,11 @@
     </div>
 
     @for (ticket of tickets(); track ticket.ticketCode) {
-      <div class="ticket-card" [class.ticket-card--used]="ticket.status === 'USED'">
+      <a
+        [routerLink]="['/ticket', ticket.ticketExternalId]"
+        class="ticket-card"
+        [class.ticket-card--used]="ticket.status === 'USED'"
+      >
         <div class="ticket-body">
           <div class="ticket-info">
             <p class="ticket-type">{{ ticket.ticketTypeName }}</p>
@@ -60,7 +64,7 @@
           <img [src]="qrUrl(ticket.ticketCode)" alt="Ticket QR code" class="ticket-qr" />
         </div>
         <div class="ticket-code-row">
-          <span class="ticket-code">{{ ticket.ticketCode }}</span>
+          <span class="ticket-code">{{ formatCode(ticket.ticketCode) }}</span>
         </div>
         @if (ticket.status === 'USED' && ticket.checkedInAt) {
           <p class="checked-in-at">
@@ -68,7 +72,7 @@
             Checked in {{ ticket.checkedInAt | date: 'EEE, d MMM · HH:mm' }}
           </p>
         }
-      </div>
+      </a>
     }
   </div>
 }

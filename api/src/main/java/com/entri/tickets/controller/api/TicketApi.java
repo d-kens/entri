@@ -56,10 +56,10 @@ public interface TicketApi {
                     content = @Content(mediaType = "application/problem+json", schema = @Schema(implementation = ProblemDetail.class))
             )
     })
-    @GetMapping("/tickets/{ticketCode}")
+    @GetMapping("/tickets/{externalId}")
     TicketResponse getTicket(
-            @Parameter(description = "Unique ticket code (UUID)", required = true)
-            @PathVariable String ticketCode
+            @Parameter(description = "Ticket external ID (UUID)", required = true)
+            @PathVariable String externalId
     );
 
     @Operation(

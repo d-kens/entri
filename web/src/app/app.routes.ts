@@ -31,6 +31,11 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'ticket/:externalId',
+        loadComponent: () =>
+          import('@features/tickets/ticket-view/ticket-view').then((m) => m.TicketView),
+      },
+      {
         path: 'about',
         loadComponent: () => import('@features/about/about').then((m) => m.About),
       },
