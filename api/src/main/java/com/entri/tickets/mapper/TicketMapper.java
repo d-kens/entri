@@ -8,6 +8,7 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface TicketMapper {
 
+    @Mapping(target = "reservationExternalId", source = "reservation.externalId")
     @Mapping(target = "eventExternalId", source = "event.externalId")
     @Mapping(target = "eventTitle", source = "event.title")
     @Mapping(target = "ticketTypeName", source = "ticketType.name")
