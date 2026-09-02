@@ -51,7 +51,7 @@ jobs:
 
       - name: Install semantic-release plugins
         working-directory: ./api
-        run: npm install --no-save @semantic-release/exec @semantic-release/git semantic-release-monorepo
+        run: npm install --no-save semantic-release @semantic-release/exec @semantic-release/git semantic-release-monorepo
 
       - name: Release
         working-directory: ./api
