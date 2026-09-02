@@ -8,5 +8,6 @@ public record PlatformSummaryMetricsResponse(
         long publishedEvents,
         long liveEventsCount,
         long totalTicketsSold,
-        BigDecimal totalGmv
+        BigDecimal totalGmv,
+        BigDecimal platformRevenue
 ) {}

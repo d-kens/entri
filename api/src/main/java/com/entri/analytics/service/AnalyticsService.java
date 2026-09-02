@@ -10,10 +10,7 @@ import com.entri.users.entity.Role;
 import com.entri.events.repository.EventRepository;
 import com.entri.events.repository.EventTicketReservationRepository;
 import com.entri.events.repository.TicketTypeRepository;
-import com.entri.exception.ResourceNotFoundException;
 import com.entri.users.repository.UserRepository;
-import com.entri.wallet.WalletProvider;
-import com.entri.wallet.dto.WalletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,38 +35,16 @@ public class AnalyticsService {
     private final EventRepository eventRepository;
     private final EventTicketReservationRepository reservationRepository;
     private final TicketTypeRepository ticketTypeRepository;
-    private final WalletProvider walletProvider;
     private final UserRepository userRepository;
 
-    // No @Transactional here — each repository call uses Spring Data's own short tx,
-    // so the JDBC connection is released before the wallet HTTP call.
+    @Transactional(readOnly = true)
     public OrganizerSummaryMetricsResponse getOrganizerSummaryMetrics(String organizerKey) {
         Instant now = Instant.now();
-
-        BigDecimal totalRevenue = Objects.requireNonNullElse(
-                reservationRepository.sumRevenueByOrganizer(organizerKey), BigDecimal.ZERO);
-        long totalTicketsSold = ticketTypeRepository.sumSoldQuantityByOrganizer(organizerKey);
-        long upcomingEventsCount = eventRepository.countUpcomingEvents(organizerKey, now);
-        long liveEventsCount = eventRepository.countLiveEvents(organizerKey, now);
-
-        var user = userRepository.findByExternalKeyAndDeletedFalse(organizerKey)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-
-        BigDecimal walletBalance = null;
-        String walletCurrency = null;
-        if (user.getWalletId() != null) {
-            WalletResponse wallet = walletProvider.getWallet(user.getWalletId());
-            walletBalance = wallet.availableBalance();
-            walletCurrency = wallet.currency();
-        }
-
         return new OrganizerSummaryMetricsResponse(
-                totalRevenue,
-                walletBalance,
-                walletCurrency,
-                totalTicketsSold,
-                upcomingEventsCount,
-                liveEventsCount
+                Objects.requireNonNullElse(reservationRepository.sumRevenueByOrganizer(organizerKey), BigDecimal.ZERO),
+                ticketTypeRepository.sumSoldQuantityByOrganizer(organizerKey),
+                eventRepository.countUpcomingEvents(organizerKey, now),
+                eventRepository.countLiveEvents(organizerKey, now)
         );
     }
 
@@ -91,7 +66,8 @@ public class AnalyticsService {
                 eventRepository.countByStatus(EventStatus.PUBLISHED),
                 eventRepository.countLiveEventsPlatform(now),
                 ticketTypeRepository.sumSoldQuantityPlatform(),
-                Objects.requireNonNullElse(reservationRepository.sumRevenuePlatform(), BigDecimal.ZERO)
+                Objects.requireNonNullElse(reservationRepository.sumRevenuePlatform(), BigDecimal.ZERO),
+                Objects.requireNonNullElse(reservationRepository.sumPlatformFeePlatform(), BigDecimal.ZERO)
         );
     }
 

@@ -1,7 +1,5 @@
 export type OrganizerSummaryMetrics = {
   totalRevenue: number;
-  walletBalance: number | null;
-  walletCurrency: string | null;
   totalTicketsSold: number;
   upcomingEventsCount: number;
   liveEventsCount: number;
@@ -14,6 +12,7 @@ export type PlatformSummaryMetrics = {
   liveEventsCount: number;
   totalTicketsSold: number;
   totalGmv: number;
+  platformRevenue: number;
 };
 
 export type SalesTrendDataPoint = {
