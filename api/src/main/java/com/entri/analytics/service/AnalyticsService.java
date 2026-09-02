@@ -1,5 +1,6 @@
 package com.entri.analytics.service;
 
+import com.entri.analytics.TrendPeriod;
 import com.entri.analytics.dto.OrganizerSummaryMetricsResponse;
 import com.entri.analytics.dto.PlatformSummaryMetricsResponse;
 import com.entri.analytics.dto.SalesTrendDataPoint;
@@ -9,7 +10,6 @@ import com.entri.users.entity.Role;
 import com.entri.events.repository.EventRepository;
 import com.entri.events.repository.EventTicketReservationRepository;
 import com.entri.events.repository.TicketTypeRepository;
-import com.entri.exception.BadRequestException;
 import com.entri.exception.ResourceNotFoundException;
 import com.entri.users.repository.UserRepository;
 import com.entri.wallet.WalletProvider;
@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,7 +41,8 @@ public class AnalyticsService {
     private final WalletProvider walletProvider;
     private final UserRepository userRepository;
 
-    @Transactional(readOnly = true)
+    // No @Transactional here — each repository call uses Spring Data's own short tx,
+    // so the JDBC connection is released before the wallet HTTP call.
     public OrganizerSummaryMetricsResponse getOrganizerSummaryMetrics(String organizerKey) {
         Instant now = Instant.now();
 
@@ -50,10 +52,11 @@ public class AnalyticsService {
         long upcomingEventsCount = eventRepository.countUpcomingEvents(organizerKey, now);
         long liveEventsCount = eventRepository.countLiveEvents(organizerKey, now);
 
-        BigDecimal walletBalance = null;
-        String walletCurrency = null;
         var user = userRepository.findByExternalKeyAndDeletedFalse(organizerKey)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        BigDecimal walletBalance = null;
+        String walletCurrency = null;
         if (user.getWalletId() != null) {
             WalletResponse wallet = walletProvider.getWallet(user.getWalletId());
             walletBalance = wallet.availableBalance();
@@ -71,13 +74,12 @@ public class AnalyticsService {
     }
 
     @Transactional(readOnly = true)
-    public SalesTrendResponse getOrganizerSalesTrend(String organizerKey, String period) {
-        return switch (period) {
-            case "7d" -> buildDailyTrend(organizerKey, period, 7);
-            case "30d" -> buildDailyTrend(organizerKey, period, 30);
-            case "12m" -> buildMonthlyTrend(organizerKey, period, 12);
-            default -> throw new BadRequestException("Invalid period. Allowed values: 7d, 30d, 12m");
-        };
+    public SalesTrendResponse getOrganizerSalesTrend(String organizerKey, String periodStr) {
+        TrendPeriod period = TrendPeriod.fromString(periodStr);
+        Function<Instant, List<Object[]>> fetch = period.monthly
+                ? from -> reservationRepository.findMonthlySalesTrend(organizerKey, from)
+                : from -> reservationRepository.findDailySalesTrend(organizerKey, from);
+        return buildTrend(period, fetch);
     }
 
     @Transactional(readOnly = true)
@@ -94,96 +96,49 @@ public class AnalyticsService {
     }
 
     @Transactional(readOnly = true)
-    public SalesTrendResponse getPlatformSalesTrend(String period) {
-        return switch (period) {
-            case "7d" -> buildDailyTrendPlatform(period, 7);
-            case "30d" -> buildDailyTrendPlatform(period, 30);
-            case "12m" -> buildMonthlyTrendPlatform(period, 12);
-            default -> throw new BadRequestException("Invalid period. Allowed values: 7d, 30d, 12m");
-        };
+    public SalesTrendResponse getPlatformSalesTrend(String periodStr) {
+        TrendPeriod period = TrendPeriod.fromString(periodStr);
+        Function<Instant, List<Object[]>> fetch = period.monthly
+                ? from -> reservationRepository.findMonthlySalesTrendPlatform(from)
+                : from -> reservationRepository.findDailySalesTrendPlatform(from);
+        return buildTrend(period, fetch);
     }
 
-    private SalesTrendResponse buildDailyTrend(String organizerKey, String period, int days) {
-        Instant from = LocalDate.now(ZoneOffset.UTC).minusDays(days - 1L).atStartOfDay().toInstant(ZoneOffset.UTC);
-        List<Object[]> rows = reservationRepository.findDailySalesTrend(organizerKey, from);
-
-        Map<String, SalesTrendDataPoint> byDate = rows.stream()
-                .collect(Collectors.toMap(
-                        r -> r[0].toString(),
-                        r -> new SalesTrendDataPoint(r[0].toString(), ((Number) r[1]).longValue(), new BigDecimal(r[2].toString()))
-                ));
-
+    private SalesTrendResponse buildTrend(TrendPeriod period, Function<Instant, List<Object[]>> fetch) {
         List<SalesTrendDataPoint> data = new ArrayList<>();
-        LocalDate cursor = LocalDate.now(ZoneOffset.UTC).minusDays(days - 1L);
-        LocalDate today = LocalDate.now(ZoneOffset.UTC);
-        while (!cursor.isAfter(today)) {
-            String key = cursor.format(DateTimeFormatter.ISO_LOCAL_DATE);
-            data.add(byDate.getOrDefault(key, new SalesTrendDataPoint(key, 0, BigDecimal.ZERO)));
-            cursor = cursor.plusDays(1);
+
+        if (period.monthly) {
+            Instant from = YearMonth.now(ZoneOffset.UTC).minusMonths(period.count - 1L)
+                    .atDay(1).atStartOfDay().toInstant(ZoneOffset.UTC);
+            Map<String, SalesTrendDataPoint> byBucket = fetch.apply(from).stream()
+                    .collect(Collectors.toMap(r -> r[0].toString(), this::toDataPoint));
+
+            YearMonth cursor = YearMonth.now(ZoneOffset.UTC).minusMonths(period.count - 1L);
+            YearMonth end = YearMonth.now(ZoneOffset.UTC);
+            while (!cursor.isAfter(end)) {
+                String key = cursor.toString();
+                data.add(byBucket.getOrDefault(key, new SalesTrendDataPoint(key, 0, BigDecimal.ZERO)));
+                cursor = cursor.plusMonths(1);
+            }
+        } else {
+            Instant from = LocalDate.now(ZoneOffset.UTC).minusDays(period.count - 1L)
+                    .atStartOfDay().toInstant(ZoneOffset.UTC);
+            Map<String, SalesTrendDataPoint> byBucket = fetch.apply(from).stream()
+                    .collect(Collectors.toMap(r -> r[0].toString(), this::toDataPoint));
+
+            LocalDate cursor = LocalDate.now(ZoneOffset.UTC).minusDays(period.count - 1L);
+            LocalDate today = LocalDate.now(ZoneOffset.UTC);
+            while (!cursor.isAfter(today)) {
+                String key = cursor.format(DateTimeFormatter.ISO_LOCAL_DATE);
+                data.add(byBucket.getOrDefault(key, new SalesTrendDataPoint(key, 0, BigDecimal.ZERO)));
+                cursor = cursor.plusDays(1);
+            }
         }
-        return new SalesTrendResponse(period, data);
+
+        return new SalesTrendResponse(period.getValue(), data);
     }
 
-    private SalesTrendResponse buildMonthlyTrend(String organizerKey, String period, int months) {
-        Instant from = YearMonth.now(ZoneOffset.UTC).minusMonths(months - 1L).atDay(1).atStartOfDay().toInstant(ZoneOffset.UTC);
-        List<Object[]> rows = reservationRepository.findMonthlySalesTrend(organizerKey, from);
-
-        Map<String, SalesTrendDataPoint> byMonth = rows.stream()
-                .collect(Collectors.toMap(
-                        r -> r[0].toString(),
-                        r -> new SalesTrendDataPoint(r[0].toString(), ((Number) r[1]).longValue(), new BigDecimal(r[2].toString()))
-                ));
-
-        List<SalesTrendDataPoint> data = new ArrayList<>();
-        YearMonth cursor = YearMonth.now(ZoneOffset.UTC).minusMonths(months - 1L);
-        YearMonth current = YearMonth.now(ZoneOffset.UTC);
-        while (!cursor.isAfter(current)) {
-            String key = cursor.toString();
-            data.add(byMonth.getOrDefault(key, new SalesTrendDataPoint(key, 0, BigDecimal.ZERO)));
-            cursor = cursor.plusMonths(1);
-        }
-        return new SalesTrendResponse(period, data);
-    }
-
-    private SalesTrendResponse buildDailyTrendPlatform(String period, int days) {
-        Instant from = LocalDate.now(ZoneOffset.UTC).minusDays(days - 1L).atStartOfDay().toInstant(ZoneOffset.UTC);
-        List<Object[]> rows = reservationRepository.findDailySalesTrendPlatform(from);
-
-        Map<String, SalesTrendDataPoint> byDate = rows.stream()
-                .collect(Collectors.toMap(
-                        r -> r[0].toString(),
-                        r -> new SalesTrendDataPoint(r[0].toString(), ((Number) r[1]).longValue(), new BigDecimal(r[2].toString()))
-                ));
-
-        List<SalesTrendDataPoint> data = new ArrayList<>();
-        LocalDate cursor = LocalDate.now(ZoneOffset.UTC).minusDays(days - 1L);
-        LocalDate today = LocalDate.now(ZoneOffset.UTC);
-        while (!cursor.isAfter(today)) {
-            String key = cursor.format(DateTimeFormatter.ISO_LOCAL_DATE);
-            data.add(byDate.getOrDefault(key, new SalesTrendDataPoint(key, 0, BigDecimal.ZERO)));
-            cursor = cursor.plusDays(1);
-        }
-        return new SalesTrendResponse(period, data);
-    }
-
-    private SalesTrendResponse buildMonthlyTrendPlatform(String period, int months) {
-        Instant from = YearMonth.now(ZoneOffset.UTC).minusMonths(months - 1L).atDay(1).atStartOfDay().toInstant(ZoneOffset.UTC);
-        List<Object[]> rows = reservationRepository.findMonthlySalesTrendPlatform(from);
-
-        Map<String, SalesTrendDataPoint> byMonth = rows.stream()
-                .collect(Collectors.toMap(
-                        r -> r[0].toString(),
-                        r -> new SalesTrendDataPoint(r[0].toString(), ((Number) r[1]).longValue(), new BigDecimal(r[2].toString()))
-                ));
-
-        List<SalesTrendDataPoint> data = new ArrayList<>();
-        YearMonth cursor = YearMonth.now(ZoneOffset.UTC).minusMonths(months - 1L);
-        YearMonth current = YearMonth.now(ZoneOffset.UTC);
-        while (!cursor.isAfter(current)) {
-            String key = cursor.toString();
-            data.add(byMonth.getOrDefault(key, new SalesTrendDataPoint(key, 0, BigDecimal.ZERO)));
-            cursor = cursor.plusMonths(1);
-        }
-        return new SalesTrendResponse(period, data);
+    private SalesTrendDataPoint toDataPoint(Object[] r) {
+        return new SalesTrendDataPoint(r[0].toString(), ((Number) r[1]).longValue(), new BigDecimal(r[2].toString()));
     }
 }

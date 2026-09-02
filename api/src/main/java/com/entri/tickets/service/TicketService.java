@@ -56,7 +56,7 @@ public class TicketService {
 
         long total = ticketRepository.countByEventExternalId(eventExternalId);
         long checkedIn = ticketRepository.countCheckedInByEventExternalId(eventExternalId);
-        double checkInRate = total == 0 ? 0.0 : (double) checkedIn / total * 100;
+        double checkInPercentage = total == 0 ? 0.0 : (double) checkedIn / total * 100;
 
         List<RecentCheckInDto> recentCheckIns = ticketRepository
                 .findRecentCheckIns(eventExternalId, PageRequest.of(0, 10))
@@ -64,7 +64,7 @@ public class TicketService {
                 .map(t -> new RecentCheckInDto(t.getTicketCode(), t.getTicketType().getName(), t.getCheckedInAt()))
                 .toList();
 
-        return new EventCheckInStatsResponse(eventExternalId, total, checkedIn, checkInRate, recentCheckIns);
+        return new EventCheckInStatsResponse(eventExternalId, total, checkedIn, checkInPercentage, recentCheckIns);
     }
 
     @Transactional
