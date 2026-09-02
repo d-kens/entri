@@ -1,0 +1,225 @@
+/* ── Shimmer ─────────────────────────────────────────────────── */
+
+.shimmer {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e4e4e4 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+  border-radius: 8px;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.sk-title {
+  width: 55%;
+  height: 2rem;
+  margin-bottom: 0.5rem;
+}
+.sk-subtitle {
+  width: 40%;
+  height: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+.sk-qr {
+  width: 200px;
+  height: 200px;
+  margin: 0 auto 1.25rem;
+  border-radius: 12px;
+}
+.sk-code {
+  width: 80%;
+  height: 1rem;
+  margin: 0 auto 1.75rem;
+}
+.sk-row {
+  width: 60%;
+  height: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+/* ── Page wrap ───────────────────────────────────────────────── */
+
+.page-wrap {
+  max-width: 420px;
+  margin-inline: auto;
+  padding: 2.5rem 1.5rem 5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* ── Empty / error state ─────────────────────────────────────── */
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 4rem 1rem;
+}
+
+.empty-icon {
+  font-size: 3rem !important;
+  width: 3rem !important;
+  height: 3rem !important;
+  color: var(--mat-sys-error);
+}
+
+.empty-title {
+  font-family:
+    'Poppins',
+    -apple-system,
+    sans-serif;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #111111;
+  margin: 0;
+}
+
+.empty-hint {
+  font-size: 0.875rem;
+  color: #6b6b6b;
+  margin: 0;
+}
+
+/* ── Back link ───────────────────────────────────────────────── */
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #5a5a5a;
+  text-decoration: none;
+  margin-bottom: 1.75rem;
+  align-self: flex-start;
+  transition: color 0.15s ease;
+}
+
+.back-link:hover {
+  color: var(--mat-sys-primary);
+}
+
+.back-link mat-icon {
+  font-size: 1rem !important;
+  width: 1rem !important;
+  height: 1rem !important;
+}
+
+/* ── Ticket header ───────────────────────────────────────────── */
+
+.event-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--mat-sys-primary);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 0.375rem;
+}
+
+.ticket-type {
+  font-family:
+    'Poppins',
+    -apple-system,
+    sans-serif;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 800;
+  color: #000000;
+  letter-spacing: -0.03em;
+  margin: 0 0 0.875rem;
+}
+
+/* ── Status badge ────────────────────────────────────────────── */
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  padding: 0.3125rem 0.875rem;
+  border-radius: 999px;
+  background: #f0fdf4;
+  color: #16a34a;
+  margin-bottom: 1.75rem;
+}
+
+.status-badge mat-icon {
+  font-size: 0.9375rem !important;
+  width: 0.9375rem !important;
+  height: 0.9375rem !important;
+}
+
+.badge--used {
+  background: #f4f4f5;
+  color: #71717a;
+}
+
+/* ── QR code ─────────────────────────────────────────────────── */
+
+.qr-wrap {
+  border: 1.5px solid #e4e4e4;
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1.25rem;
+  background: #ffffff;
+}
+
+.qr-img {
+  display: block;
+  width: 200px;
+  height: 200px;
+  background: #f4f4f5;
+  border-radius: 4px;
+}
+
+/* ── Ticket code ─────────────────────────────────────────────── */
+
+.ticket-code {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.8125rem;
+  color: #5a5a5a;
+  letter-spacing: 0.05em;
+  word-break: break-all;
+  margin: 0 0 1.75rem;
+}
+
+/* ── Detail list ─────────────────────────────────────────────── */
+
+.detail-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  border-top: 1px solid #f0f0f0;
+  padding-top: 1.25rem;
+}
+
+.detail-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  font-size: 0.875rem;
+  color: #444444;
+}
+
+.detail-row mat-icon {
+  font-size: 1rem !important;
+  width: 1rem !important;
+  height: 1rem !important;
+  color: #9a9a9a;
+  flex-shrink: 0;
+}
+
+.detail-row--used {
+  color: #71717a;
+}

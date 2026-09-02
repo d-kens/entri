@@ -116,6 +116,9 @@
 /* ── Ticket card ─────────────────────────────────────────────── */
 
 .ticket-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
   border: 1.5px solid #e4e4e4;
   border-radius: 12px;
   overflow: hidden;
