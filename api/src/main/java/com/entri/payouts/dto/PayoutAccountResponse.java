@@ -1,6 +1,6 @@
 package com.entri.payouts.dto;
 
-import com.entri.payouts.entity.PayoutMethod;
+import com.entri.payment.PayoutMethod;
 
 public record PayoutAccountResponse(
         String externalId,

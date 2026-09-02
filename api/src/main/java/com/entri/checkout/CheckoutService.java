@@ -21,7 +21,7 @@ public class CheckoutService {
 
     private final EventTicketReservationService eventTicketReservationService;
     private final PaymentGateway paymentGateway;
-    private final PaymentEventPublisher paymentEventPublisher;
+    private final CheckoutEventPublisher paymentEventPublisher;
 
     @Transactional
     CheckoutResponse checkout(final String reservationId, final CheckoutDetails details) {
@@ -48,8 +48,8 @@ public class CheckoutService {
 
     void handleWebhook(final Map<String, String> headers, final String payload) {
         var webhookRequest = new WebhookRequest(headers, payload);
-        paymentGateway.parseWebhookRequest(webhookRequest)
-                .map(result -> new PaymentResultMessage(result.referenceId(), result.status()))
+        paymentGateway.parseCheckoutWebhook(webhookRequest)
+                .map(result -> new CheckoutResultMessage(result.referenceId(), result.status()))
                 .ifPresent(paymentEventPublisher::publishWebhookResult);
     }
 }

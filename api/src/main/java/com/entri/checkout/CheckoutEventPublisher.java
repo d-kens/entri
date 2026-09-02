@@ -7,11 +7,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class PaymentEventPublisher {
+public class CheckoutEventPublisher {
 
     private final RabbitTemplate rabbitTemplate;
 
-    public void publishWebhookResult(PaymentResultMessage message) {
+    public void publishWebhookResult(CheckoutResultMessage message) {
         rabbitTemplate.convertAndSend(
                 PaymentQueueConfig.WEBHOOK_EXCHANGE,
                 PaymentQueueConfig.WEBHOOK_ROUTING_KEY,

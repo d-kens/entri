@@ -1,20 +1,17 @@
 package com.entri.payouts.service;
 
 import com.entri.exception.BadRequestException;
-import com.entri.exception.PaymentGatewayException;
 import com.entri.exception.ResourceNotFoundException;
 import com.entri.intasend.IntaSendClient;
-import com.entri.intasend.IntaSendProperties;
 import com.entri.intasend.dto.BankCodeResponse;
-import com.entri.intasend.dto.IntaSendSendMoneyRequest;
-import com.entri.intasend.dto.IntaSendSendMoneyResponse;
-import com.entri.intasend.dto.IntaSendSendMoneyWebhookPayload;
-import com.entri.intasend.dto.IntaSendTransactionItem;
+import com.entri.payment.PaymentGateway;
+import com.entri.payment.PayoutMethod;
+import com.entri.payment.PayoutRequest;
+import com.entri.payment.dto.WebhookRequest;
 import com.entri.payouts.dto.PayoutAccountRequest;
 import com.entri.payouts.dto.PayoutAccountResponse;
 import com.entri.payouts.entity.OrganizerPayoutAccount;
 import com.entri.payouts.entity.Payout;
-import com.entri.payouts.entity.PayoutMethod;
 import com.entri.payouts.entity.PayoutStatus;
 import com.entri.payouts.repository.OrganizerPayoutAccountRepository;
 import com.entri.payouts.repository.PayoutRepository;
@@ -39,8 +36,9 @@ public class PayoutService {
     private final OrganizerPayoutAccountRepository payoutAccountRepository;
     private final UserService userService;
     private final PayoutRepository payoutRepository;
+    private final PaymentGateway paymentGateway;
     private final IntaSendClient intaSendClient;
-    private final IntaSendProperties intaSendProperties;
+
     @Value("${platform.payout.max-attempts:3}")
     private int maxAttempts;
 
@@ -150,72 +148,54 @@ public class PayoutService {
     private void dispatch(Payout payout) {
         String idempotencyKey = payout.getIdempotencyKey();
 
-        // Save IN_FLIGHT before the HTTP call so the batch scheduler does not
-        // retry this payout while the request is in transit to IntaSend.
         payout.setStatus(PayoutStatus.IN_FLIGHT);
         payout.setAttempts(payout.getAttempts() + 1);
         payout.setLastAttemptedAt(Instant.now());
         payoutRepository.save(payout);
 
         try {
-            var item = new IntaSendTransactionItem(
+            var request = new PayoutRequest(
                     payout.getPayoutRecipientName(),
                     payout.getPayoutAccount(),
                     payout.getPayoutAccountReference(),
                     payout.getPayoutBankCode(),
                     payout.getAmount(),
-                    "Organizer payout " + idempotencyKey
+                    payout.getCurrency(),
+                    payout.getPayoutMethod(),
+                    idempotencyKey
             );
 
-            String uri = switch (payout.getPayoutMethod()) {
-                case MPESA_PAYBILL, MPESA_TILL -> "/api/v1/send-money/mpesa/";
-                case BANK -> "/api/v1/send-money/bank/";
-            };
-
-            IntaSendSendMoneyResponse response = intaSendClient.sendMoney(uri,
-                    new IntaSendSendMoneyRequest(payout.getCurrency(), List.of(item), null, "NO"));
-
-            // Store IntaSend's tracking_id so the webhook handler can correlate
-            // the final outcome back to this payout. Status stays IN_FLIGHT.
-            payout.setTrackingId(response.trackingId());
+            String trackingId = paymentGateway.sendPayout(request);
+            payout.setTrackingId(trackingId);
             payoutRepository.save(payout);
-
-            log.info("Payout {} submitted — IntaSend tracking_id {}", idempotencyKey, response.trackingId());
+            log.info("Payout {} submitted — tracking_id {}", idempotencyKey, trackingId);
 
         } catch (Exception e) {
-            // Do NOT reset to PENDING — the request may have reached IntaSend.
-            // Payout stays IN_FLIGHT and advances via webhook or manual reconciliation.
-            log.error("Payout {} failed to dispatch on attempt {} — staying IN_FLIGHT pending webhook or manual review",
+            log.error("Payout {} failed to dispatch on attempt {} — staying IN_FLIGHT",
                     idempotencyKey, payout.getAttempts(), e);
         }
     }
 
     @Transactional
-    public void handleSendMoneyWebhook(IntaSendSendMoneyWebhookPayload payload) {
-        String challenge = payload.challenge();
-        if (challenge != null && !intaSendProperties.webhookChallenge().equals(challenge)) {
-            throw new PaymentGatewayException("Invalid IntaSend webhook challenge", null);
-        }
+    public void handlePayoutWebhook(WebhookRequest webhookRequest) {
+        var result = paymentGateway.parsePayoutWebhook(webhookRequest).orElse(null);
+        if (result == null) return;
 
-        String trackingId = payload.trackingId();
-        var payout = payoutRepository.findByTrackingId(trackingId).orElse(null);
+        var payout = payoutRepository.findByTrackingId(result.trackingId()).orElse(null);
         if (payout == null) {
-            log.warn("Received send-money webhook for unknown tracking_id {}", trackingId);
+            log.warn("Received payout webhook for unknown tracking_id {}", result.trackingId());
             return;
         }
 
         if (payout.getStatus() != PayoutStatus.IN_FLIGHT) {
-            log.warn("Received send-money webhook for payout {} already in status {} — ignoring",
+            log.warn("Received payout webhook for payout {} already in status {} — ignoring",
                     payout.getIdempotencyKey(), payout.getStatus());
             return;
         }
 
-        boolean allSuccessful = payload.transactions() != null
-                && payload.transactions().stream().allMatch(t -> "Successful".equals(t.status()));
-
-        if ("Completed".equals(payload.status()) && allSuccessful) {
+        if (result.completed()) {
             payout.setStatus(PayoutStatus.COMPLETED);
-            log.info("Payout {} COMPLETED via IntaSend webhook", payout.getIdempotencyKey());
+            log.info("Payout {} COMPLETED", payout.getIdempotencyKey());
         } else {
             int attempts = payout.getAttempts();
             if (attempts >= maxAttempts) {

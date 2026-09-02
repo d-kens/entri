@@ -1,6 +1,6 @@
 package com.entri.payouts.dto;
 
-import com.entri.payouts.entity.PayoutMethod;
+import com.entri.payment.PayoutMethod;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 

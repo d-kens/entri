@@ -1,7 +1,6 @@
 package com.entri.payouts.controller.api;
 
 import com.entri.intasend.dto.BankCodeResponse;
-import com.entri.intasend.dto.IntaSendSendMoneyWebhookPayload;
 import com.entri.payouts.dto.PayoutAccountRequest;
 import com.entri.payouts.dto.PayoutAccountResponse;
 import com.entri.security.UserPrincipal;
@@ -80,5 +79,8 @@ public interface PayoutApi {
             description = "Receives disbursement status notifications from IntaSend.")
     @PostMapping("/payouts/webhook")
     @ResponseStatus(HttpStatus.OK)
-    void handleSendMoneyWebhook(@RequestBody IntaSendSendMoneyWebhookPayload payload);
+    void handlePayoutWebhook(
+            @org.springframework.web.bind.annotation.RequestHeader java.util.Map<String, String> headers,
+            @RequestBody String payload
+    );
 }
