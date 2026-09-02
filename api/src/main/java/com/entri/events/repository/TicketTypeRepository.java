@@ -11,6 +11,15 @@ import java.util.Collection;
 import java.util.List;
 
 public interface TicketTypeRepository extends JpaRepository<TicketType, Long> {
+
+    @Query("""
+        SELECT COALESCE(SUM(tt.soldQuantity), 0) FROM TicketType tt
+        WHERE tt.event.organizer.externalKey = :organizerKey
+    """)
+    long sumSoldQuantityByOrganizer(@Param("organizerKey") String organizerKey);
+
+    @Query("SELECT COALESCE(SUM(tt.soldQuantity), 0) FROM TicketType tt")
+    long sumSoldQuantityPlatform();
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("""
         SELECT t
