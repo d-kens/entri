@@ -56,6 +56,8 @@ export const routes: Routes = [
     children: [
       {
         path: 'summary',
+        canActivate: [roleGuard],
+        data: { roles: ['ORGANIZER'] },
         loadComponent: () => import('@features/summary/summary').then((m) => m.Summary),
       },
       {
@@ -101,11 +103,11 @@ export const routes: Routes = [
         loadComponent: () => import('@features/attendees/attendees').then((m) => m.Attendees),
       },
       {
-        path: 'wallet',
+        path: 'payout-settings',
         canActivate: [roleGuard],
         data: { roles: ['ORGANIZER'] },
         loadComponent: () =>
-          import('@features/wallet/wallet-page/wallet-page').then((m) => m.WalletPage),
+          import('@features/payouts/payout-settings/payout-settings').then((m) => m.PayoutSettings),
       },
       {
         path: 'profile',

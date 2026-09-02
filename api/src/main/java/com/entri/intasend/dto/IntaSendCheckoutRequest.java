@@ -30,6 +30,13 @@ public record IntaSendCheckoutRequest(
         String currency,
 
         @JsonProperty("wallet_id")
-        String walletId
+        String walletId,
+
+        // TODO: verify these field names against IntaSend API docs — "tarrif" may be a vendor-side misspelling
+        @JsonProperty("card_tarrif")
+        String cardTariff,
+
+        @JsonProperty("mobile_tarrif")
+        String mobileTariff
 ) {
 }

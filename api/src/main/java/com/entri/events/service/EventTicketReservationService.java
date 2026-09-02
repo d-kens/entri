@@ -1,7 +1,13 @@
 package com.entri.events.service;
 
+import com.entri.checkout.PlatformProperties;
 import com.entri.checkout.dto.PaymentResult;
 import com.entri.checkout.enums.PaymentStatus;
+import com.entri.payouts.entity.Payout;
+import com.entri.payouts.repository.OrganizerPayoutAccountRepository;
+import com.entri.payouts.repository.PayoutRepository;
+import com.entri.common.dto.PaginationResponse;
+import com.entri.events.dto.EventReservationSummaryResponse;
 import com.entri.events.exception.EventNotOnSaleException;
 import com.entri.events.exception.InvalidReservationStatusException;
 import com.entri.events.exception.InsufficientTicketsException;
@@ -23,14 +29,18 @@ import com.entri.events.entity.TicketTypeSaleStatus;
 import com.entri.events.repository.EventRepository;
 import com.entri.events.repository.EventTicketReservationRepository;
 import com.entri.events.repository.TicketTypeRepository;
+import com.entri.security.UserPrincipal;
 import com.entri.tickets.ReservationConfirmedEventPublisher;
 import com.entri.tickets.dto.ReservationConfirmedMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Instant;
 import java.time.Duration;
 import java.util.HashSet;
@@ -47,6 +57,9 @@ public class EventTicketReservationService {
     private final TicketTypeRepository ticketTypeRepository;
     private final EventTicketReservationRepository eventTicketReservationRepository;
     private final ReservationConfirmedEventPublisher reservationConfirmedPublisher;
+    private final PayoutRepository payoutRepository;
+    private final OrganizerPayoutAccountRepository payoutAccountRepository;
+    private final PlatformProperties platformProperties;
 
     @Value("${events.reservation.hold-duration:PT10M}")
     private Duration holdDuration;
@@ -105,6 +118,23 @@ public class EventTicketReservationService {
             reservationConfirmedPublisher.publishReservationConfirmed(
                     new ReservationConfirmedMessage(reservation.getExternalId())
             );
+
+            var organizer = reservation.getEvent().getOrganizer();
+            payoutAccountRepository.findByOrganizerExternalKeyAndIsDefaultTrue(organizer.getExternalKey())
+                    .ifPresent(account -> {
+                        if (reservation.getOrganizerAmount() != null) {
+                            payoutRepository.save(Payout.builder()
+                                    .reservation(reservation)
+                                    .payoutMethod(account.getMethod())
+                                    .payoutRecipientName(account.getRecipientName())
+                                    .payoutAccount(account.getAccount())
+                                    .payoutAccountReference(account.getAccountReference())
+                                    .payoutBankCode(account.getBankCode())
+                                    .amount(reservation.getOrganizerAmount())
+                                    .currency(reservation.getEvent().getCurrency())
+                                    .build());
+                        }
+                    });
         }
     }
 
@@ -168,6 +198,52 @@ public class EventTicketReservationService {
         }
 
         return reservations.size();
+    }
+
+    @Transactional(readOnly = true)
+    public PaginationResponse<EventReservationSummaryResponse> listEventReservations(
+            final String eventExternalId,
+            final int page,
+            final int size,
+            final UserPrincipal requestingUser
+    ) {
+        var event = eventRepository.findByExternalId(eventExternalId)
+                .orElseThrow(() -> new ResourceNotFoundException("Event with ID " + eventExternalId + " not found"));
+        requestingUser.assertCanManage(event.getOrganizer().getExternalKey());
+
+        Page<EventTicketReservation> result = eventTicketReservationRepository
+                .findByEventExternalId(eventExternalId, PageRequest.of(page, size));
+
+        Map<Long, Integer> countByReservationId = result.getContent().isEmpty()
+                ? Map.of()
+                : eventTicketReservationRepository
+                        .sumQuantitiesByReservationIds(result.getContent().stream().map(EventTicketReservation::getId).toList())
+                        .stream()
+                        .collect(Collectors.toMap(r -> (Long) r[0], r -> ((Number) r[1]).intValue()));
+
+        List<EventReservationSummaryResponse> content = result.getContent().stream()
+                .map(r -> new EventReservationSummaryResponse(
+                        r.getExternalId(),
+                        r.getFirstName(),
+                        r.getLastName(),
+                        r.getEmail(),
+                        r.getPhoneNumber(),
+                        r.getTotalAmount(),
+                        r.getStatus(),
+                        countByReservationId.getOrDefault(r.getId(), 0),
+                        r.getDateCreated()
+                ))
+                .toList();
+
+        return new PaginationResponse<>(
+                content,
+                result.getNumber(),
+                result.getSize(),
+                result.getTotalElements(),
+                result.getTotalPages(),
+                result.isFirst(),
+                result.isLast()
+        );
     }
 
     @Transactional
@@ -303,6 +379,13 @@ public class EventTicketReservationService {
         }
 
         reservation.setTotalAmount(totalAmount);
+
+        BigDecimal platformFee = totalAmount
+                .multiply(platformProperties.serviceFeeRate())
+                .setScale(2, RoundingMode.HALF_UP);
+        reservation.setPlatformFee(platformFee);
+        reservation.setOrganizerAmount(totalAmount.subtract(platformFee));
+
         return reservation;
     }
 }

@@ -1,0 +1,49 @@
+<div class="p-6 space-y-6">
+  <h1 class="text-2xl font-semibold text-gray-800">Platform Overview</h1>
+
+  <!-- KPI Cards -->
+  @if (metricsLoading()) {
+    <div class="grid grid-cols-2 lg:grid-cols-3 gap-4">
+      @for (i of [1, 2, 3, 4, 5, 6, 7]; track i) {
+        <div class="bg-white rounded-xl p-5 shadow-sm animate-pulse h-24"></div>
+      }
+    </div>
+  } @else if (metricsError()) {
+    <p class="text-red-500 text-sm">Failed to load platform metrics. Please refresh.</p>
+  } @else if (metrics(); as m) {
+    <div class="grid grid-cols-2 lg:grid-cols-3 gap-4">
+      <div class="bg-white rounded-xl p-5 shadow-sm">
+        <p class="text-xs text-gray-500 uppercase tracking-wide">Total GMV</p>
+        <p class="text-2xl font-bold text-gray-800 mt-1">{{ m.totalGmv | number: '1.2-2' }}</p>
+      </div>
+      <div class="bg-white rounded-xl p-5 shadow-sm border-l-4 border-indigo-400">
+        <p class="text-xs text-gray-500 uppercase tracking-wide">Platform Revenue</p>
+        <p class="text-2xl font-bold text-indigo-600 mt-1">
+          {{ m.platformRevenue | number: '1.2-2' }}
+        </p>
+      </div>
+      <div class="bg-white rounded-xl p-5 shadow-sm">
+        <p class="text-xs text-gray-500 uppercase tracking-wide">Tickets Sold</p>
+        <p class="text-2xl font-bold text-gray-800 mt-1">{{ m.totalTicketsSold | number }}</p>
+      </div>
+      <div class="bg-white rounded-xl p-5 shadow-sm">
+        <p class="text-xs text-gray-500 uppercase tracking-wide">Organizers</p>
+        <p class="text-2xl font-bold text-gray-800 mt-1">{{ m.totalOrganizers | number }}</p>
+      </div>
+      <div class="bg-white rounded-xl p-5 shadow-sm">
+        <p class="text-xs text-gray-500 uppercase tracking-wide">Total Events</p>
+        <p class="text-2xl font-bold text-gray-800 mt-1">{{ m.totalEvents | number }}</p>
+      </div>
+      <div class="bg-white rounded-xl p-5 shadow-sm">
+        <p class="text-xs text-gray-500 uppercase tracking-wide">Published Events</p>
+        <p class="text-2xl font-bold text-gray-800 mt-1">{{ m.publishedEvents | number }}</p>
+      </div>
+      <div class="bg-white rounded-xl p-5 shadow-sm border-l-4 border-green-400">
+        <p class="text-xs text-gray-500 uppercase tracking-wide">Live Now</p>
+        <p class="text-2xl font-bold text-green-600 mt-1">{{ m.liveEventsCount | number }}</p>
+      </div>
+    </div>
+  }
+
+  <app-sales-trend-chart [trendLoader]="trendLoader" title="Platform Revenue Trend" />
+</div>

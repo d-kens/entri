@@ -1,0 +1,188 @@
+<div class="payout-page">
+  <!-- Header -->
+  <header class="payout-header">
+    <div>
+      <h1 class="payout-title">Payout Accounts</h1>
+      <p class="payout-subtitle">Configure where your event revenue is sent</p>
+    </div>
+    <button mat-flat-button color="primary" (click)="toggleForm()">
+      <mat-icon>{{ showForm() ? 'close' : 'add' }}</mat-icon>
+      {{ showForm() ? 'Cancel' : 'Add Account' }}
+    </button>
+  </header>
+
+  <!-- Add Account Form -->
+  @if (showForm()) {
+    <div class="payout-card">
+      <div class="form-section">
+        <h2 class="section-title">New Payout Account</h2>
+
+        <form [formGroup]="addForm" class="add-form">
+          <!-- Method -->
+          <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
+            <mat-label>Payment Method</mat-label>
+            <mat-select formControlName="method">
+              @for (opt of methodOptions; track opt.value) {
+                <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+              }
+            </mat-select>
+            @if (addForm.get('method')?.hasError('required')) {
+              <mat-error>Method is required</mat-error>
+            }
+          </mat-form-field>
+
+          <!-- Recipient Name -->
+          <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
+            <mat-label>{{ isBank ? 'Account Holder Name' : 'Business Name' }}</mat-label>
+            <input matInput type="text" formControlName="recipientName" />
+            @if (addForm.get('recipientName')?.hasError('required')) {
+              <mat-error>Name is required</mat-error>
+            }
+          </mat-form-field>
+
+          <!-- Account Number -->
+          <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
+            <mat-label>{{ accountLabel }}</mat-label>
+            <input matInput type="text" formControlName="account" />
+            @if (addForm.get('account')?.hasError('required')) {
+              <mat-error>Account number is required</mat-error>
+            }
+          </mat-form-field>
+
+          <!-- Account Reference (Paybill only) -->
+          @if (isPaybill) {
+            <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
+              <mat-label>Account Reference</mat-label>
+              <input matInput type="text" formControlName="accountReference" />
+              <mat-hint>The reference/account number your payers will enter</mat-hint>
+              @if (addForm.get('accountReference')?.hasError('required')) {
+                <mat-error>Account reference is required</mat-error>
+              }
+            </mat-form-field>
+          }
+
+          <!-- Bank Code (Bank only) -->
+          @if (isBank) {
+            <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
+              <mat-label>Bank Code</mat-label>
+              <input matInput type="text" formControlName="bankCode" />
+              @if (addForm.get('bankCode')?.hasError('required')) {
+                <mat-error>Bank code is required</mat-error>
+              }
+            </mat-form-field>
+          }
+
+          <!-- Default Checkbox -->
+          <div class="checkbox-row">
+            <mat-checkbox formControlName="isDefault" color="primary">
+              Set as default payout account
+            </mat-checkbox>
+          </div>
+        </form>
+      </div>
+
+      <div class="form-actions">
+        <button mat-stroked-button type="button" (click)="toggleForm()">Cancel</button>
+        <button
+          mat-flat-button
+          color="primary"
+          type="button"
+          (click)="submit()"
+          [disabled]="saving()"
+        >
+          @if (saving()) {
+            Saving...
+          } @else {
+            Add Account
+          }
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- Error State -->
+  @if (error()) {
+    <div class="error-banner">
+      <mat-icon>error_outline</mat-icon>
+      <span>{{ error() }}</span>
+    </div>
+  }
+
+  <!-- Loading Skeleton -->
+  @if (loading()) {
+    <div class="accounts-list">
+      @for (item of [1, 2]; track item) {
+        <div class="skeleton-card">
+          <div class="skeleton-line skeleton-badge"></div>
+          <div class="skeleton-line skeleton-title"></div>
+          <div class="skeleton-line skeleton-sub"></div>
+        </div>
+      }
+    </div>
+  } @else if (!loading()) {
+    <!-- Empty State -->
+    @if (accounts().length === 0 && !showForm()) {
+      <div class="empty-state">
+        <mat-icon class="empty-icon">account_balance_wallet</mat-icon>
+        <p class="empty-text">No payout accounts yet. Add one to start receiving payouts.</p>
+        <button mat-flat-button color="primary" (click)="toggleForm()">
+          <mat-icon>add</mat-icon>
+          Add Payout Account
+        </button>
+      </div>
+    }
+
+    <!-- Accounts List -->
+    @if (accounts().length > 0) {
+      <div class="accounts-list">
+        @for (account of accounts(); track account.externalId) {
+          <div class="account-card" [class.account-card--default]="account.isDefault">
+            <div class="account-card-body">
+              <div class="account-meta">
+                <mat-chip-set>
+                  <mat-chip class="method-chip">{{ methodLabel(account.method) }}</mat-chip>
+                  @if (account.isDefault) {
+                    <mat-chip class="default-chip" color="primary" highlighted>DEFAULT</mat-chip>
+                  }
+                </mat-chip-set>
+              </div>
+
+              <p class="account-name">{{ account.recipientName }}</p>
+              <p class="account-number">{{ account.account }}</p>
+
+              @if (account.accountReference) {
+                <p class="account-ref">Ref: {{ account.accountReference }}</p>
+              }
+              @if (account.bankCode) {
+                <p class="account-ref">Bank Code: {{ account.bankCode }}</p>
+              }
+            </div>
+
+            <div class="account-actions">
+              @if (!account.isDefault) {
+                <button
+                  mat-stroked-button
+                  color="primary"
+                  type="button"
+                  (click)="setDefault(account)"
+                >
+                  <mat-icon>star_outline</mat-icon>
+                  Set as Default
+                </button>
+              }
+              <button
+                mat-icon-button
+                color="warn"
+                type="button"
+                (click)="deleteAccount(account)"
+                [attr.aria-label]="'Delete ' + account.recipientName"
+              >
+                <mat-icon>delete_outline</mat-icon>
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  }
+</div>

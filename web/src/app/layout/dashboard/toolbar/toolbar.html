@@ -18,15 +18,6 @@
         <div class="user-avatar">{{ initials() }}</div>
         <div class="user-info">
           <span class="user-name">{{ u.firstName }} {{ u.lastName }}</span>
-          @if (isOrganizerUser()) {
-            @if (walletLoading()) {
-              <div class="skeleton-balance"></div>
-            } @else if (wallet(); as w) {
-              <span class="user-balance"
-                >{{ w.currency }} {{ w.availableBalance | number: '1.2-2' }}</span
-              >
-            }
-          }
         </div>
       </div>
 

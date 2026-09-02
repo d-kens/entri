@@ -1,6 +1,8 @@
 package com.entri.events.controller.api;
 
 import com.entri.common.dto.PaginationResponse;
+import com.entri.events.dto.EventCheckInStatsResponse;
+import com.entri.events.dto.EventReservationSummaryResponse;
 import com.entri.security.UserPrincipal;
 import com.entri.events.dto.EventFilter;
 import com.entri.events.dto.EventRequest;
@@ -32,6 +34,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
@@ -606,5 +609,74 @@ public interface EventApi {
                     required = true
             )
             @PathVariable final String reservationId
+    );
+
+    @Operation(
+            operationId = "listEventReservations",
+            summary = "List Event Reservations",
+            description = "Returns a paginated list of ticket reservations for the specified event. Only accessible by the event organizer or an admin."
+    )
+    @SecurityRequirement(name = "bearerAuth")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Reservations retrieved successfully"),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Authentication is required or the access token is invalid",
+                    content = @Content(mediaType = "application/problem+json", schema = @Schema(implementation = ProblemDetail.class))
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "The authenticated user does not own this event",
+                    content = @Content(mediaType = "application/problem+json", schema = @Schema(implementation = ProblemDetail.class))
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "The specified event was not found",
+                    content = @Content(mediaType = "application/problem+json", schema = @Schema(implementation = ProblemDetail.class))
+            )
+    })
+    @PreAuthorize("hasAnyAuthority('ORGANIZER', 'ADMIN')")
+    @GetMapping("/{eventExternalId}/reservations")
+    PaginationResponse<EventReservationSummaryResponse> listEventReservations(
+            @Parameter(description = "The unique external identifier of the event", required = true)
+            @PathVariable String eventExternalId,
+
+            @Parameter(description = "Page number (0-based)") @RequestParam(defaultValue = "0") int page,
+            @Parameter(description = "Number of results per page") @RequestParam(defaultValue = "20") int size,
+
+            @Parameter(hidden = true) @AuthenticationPrincipal UserPrincipal requestingUser
+    );
+
+    @Operation(
+            operationId = "getEventCheckInStats",
+            summary = "Get Check-in Statistics",
+            description = "Returns real-time check-in statistics for the specified event, including total tickets, checked-in count, check-in rate, and the 10 most recent check-ins. Only accessible by the event organizer or an admin."
+    )
+    @SecurityRequirement(name = "bearerAuth")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Check-in stats retrieved successfully"),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Authentication is required or the access token is invalid",
+                    content = @Content(mediaType = "application/problem+json", schema = @Schema(implementation = ProblemDetail.class))
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "The authenticated user does not own this event",
+                    content = @Content(mediaType = "application/problem+json", schema = @Schema(implementation = ProblemDetail.class))
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "The specified event was not found",
+                    content = @Content(mediaType = "application/problem+json", schema = @Schema(implementation = ProblemDetail.class))
+            )
+    })
+    @PreAuthorize("hasAnyAuthority('ORGANIZER', 'ADMIN')")
+    @GetMapping("/{eventExternalId}/check-in-stats")
+    EventCheckInStatsResponse getCheckInStats(
+            @Parameter(description = "The unique external identifier of the event", required = true)
+            @PathVariable String eventExternalId,
+
+            @Parameter(hidden = true) @AuthenticationPrincipal UserPrincipal requestingUser
     );
 }
