@@ -1,4 +1,4 @@
-package com.entri.payouts.entity;
+package com.entri.payment;
 
 public enum PayoutMethod {
     MPESA_PAYBILL,

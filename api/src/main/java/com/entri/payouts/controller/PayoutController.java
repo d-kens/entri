@@ -1,7 +1,7 @@
 package com.entri.payouts.controller;
 
 import com.entri.intasend.dto.BankCodeResponse;
-import com.entri.intasend.dto.IntaSendSendMoneyWebhookPayload;
+import com.entri.payment.dto.WebhookRequest;
 import com.entri.payouts.controller.api.PayoutApi;
 import com.entri.payouts.dto.PayoutAccountRequest;
 import com.entri.payouts.dto.PayoutAccountResponse;
@@ -46,7 +46,7 @@ public class PayoutController implements PayoutApi {
     }
 
     @Override
-    public void handleSendMoneyWebhook(IntaSendSendMoneyWebhookPayload payload) {
-        payoutService.handleSendMoneyWebhook(payload);
+    public void handlePayoutWebhook(java.util.Map<String, String> headers, String payload) {
+        payoutService.handlePayoutWebhook(new WebhookRequest(headers, payload));
     }
 }

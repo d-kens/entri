@@ -14,7 +14,7 @@ public class CheckoutResultConsumer {
     private final EventTicketReservationService eventTicketReservationService;
 
     @RabbitListener(queues = PaymentQueueConfig.WEBHOOK_PROCESS_QUEUE)
-    public void handle(PaymentResultMessage message) {
+    public void handle(CheckoutResultMessage message) {
         eventTicketReservationService.applyPaymentResult(
                 new PaymentResult(message.referenceId(), message.status()));
     }
