@@ -40,8 +40,9 @@ export class EnterCodePage {
     this.error.set(null);
 
     try {
-      await this.checkIn.verifyCode(trimmed);
+      const { eventTitle } = await this.checkIn.verifyCode(trimmed);
       this.session.setCode(trimmed);
+      this.session.setEventTitle(eventTitle);
       this.router.navigate(['/scanner']);
     } catch (err: any) {
       this.error.set(err?.message ?? 'Something went wrong. Try again.');
