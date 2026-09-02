@@ -1,0 +1,35 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>entri</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="page-content">
+    <div class="icon-wrapper">
+      <ion-icon name="qr-code-outline" />
+    </div>
+
+    <h2>Staff Check-In</h2>
+    <p class="subtitle">Enter the check-in code provided by your event organiser</p>
+
+    <div class="form-section">
+      @if (error(); as e) {
+        <p class="error-msg">{{ e }}</p>
+      }
+      <input
+        [(ngModel)]="code"
+        type="text"
+        placeholder="Event code"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="characters"
+        [disabled]="loading()"
+        (keyup.enter)="submit()"
+      />
+      <ion-button expand="block" (click)="submit()" [disabled]="!code.trim() || loading()">
+        {{ loading() ? 'Verifying...' : 'Continue' }}
+      </ion-button>
+    </div>
+  </div>
+</ion-content>
