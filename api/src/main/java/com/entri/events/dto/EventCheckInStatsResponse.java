@@ -6,6 +6,6 @@ public record EventCheckInStatsResponse(
         String eventExternalId,
         long totalTickets,
         long checkedIn,
-        double checkInRate,
+        double checkInPercentage,
         List<RecentCheckInDto> recentCheckIns
 ) {}
