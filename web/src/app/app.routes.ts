@@ -56,6 +56,8 @@ export const routes: Routes = [
     children: [
       {
         path: 'summary',
+        canActivate: [roleGuard],
+        data: { roles: ['ORGANIZER'] },
         loadComponent: () => import('@features/summary/summary').then((m) => m.Summary),
       },
       {

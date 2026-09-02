@@ -1,36 +1,38 @@
 <div class="p-6 space-y-6">
-  <h1 class="text-2xl font-semibold text-gray-800">Dashboard</h1>
+  <h1 class="text-2xl font-semibold text-gray-800">Platform Overview</h1>
 
   <!-- KPI Cards -->
   @if (metricsLoading()) {
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-      @for (i of [1, 2, 3, 4]; track i) {
+    <div class="grid grid-cols-2 lg:grid-cols-3 gap-4">
+      @for (i of [1, 2, 3, 4, 5, 6]; track i) {
         <div class="bg-white rounded-xl p-5 shadow-sm animate-pulse h-24"></div>
       }
     </div>
   } @else if (metricsError()) {
-    <p class="text-red-500 text-sm">Failed to load summary. Please refresh.</p>
+    <p class="text-red-500 text-sm">Failed to load platform metrics. Please refresh.</p>
   } @else if (metrics(); as m) {
-    <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+    <div class="grid grid-cols-2 lg:grid-cols-3 gap-4">
       <div class="bg-white rounded-xl p-5 shadow-sm">
-        <p class="text-xs text-gray-500 uppercase tracking-wide">Total Revenue</p>
-        <p class="text-2xl font-bold text-gray-800 mt-1">{{ m.totalRevenue | number: '1.2-2' }}</p>
-        <p class="text-xs text-gray-400 mt-0.5">{{ m.walletCurrency ?? 'KES' }}</p>
-      </div>
-      <div class="bg-white rounded-xl p-5 shadow-sm">
-        <p class="text-xs text-gray-500 uppercase tracking-wide">Wallet Balance</p>
+        <p class="text-xs text-gray-500 uppercase tracking-wide">Platform Revenue</p>
         <p class="text-2xl font-bold text-gray-800 mt-1">
-          {{ m.walletBalance ?? 0 | number: '1.2-2' }}
+          {{ m.platformRevenue | number: '1.2-2' }}
         </p>
-        <p class="text-xs text-gray-400 mt-0.5">{{ m.walletCurrency ?? 'KES' }}</p>
       </div>
       <div class="bg-white rounded-xl p-5 shadow-sm">
         <p class="text-xs text-gray-500 uppercase tracking-wide">Tickets Sold</p>
         <p class="text-2xl font-bold text-gray-800 mt-1">{{ m.totalTicketsSold | number }}</p>
       </div>
       <div class="bg-white rounded-xl p-5 shadow-sm">
-        <p class="text-xs text-gray-500 uppercase tracking-wide">Upcoming Events</p>
-        <p class="text-2xl font-bold text-gray-800 mt-1">{{ m.upcomingEventsCount | number }}</p>
+        <p class="text-xs text-gray-500 uppercase tracking-wide">Organizers</p>
+        <p class="text-2xl font-bold text-gray-800 mt-1">{{ m.totalOrganizers | number }}</p>
+      </div>
+      <div class="bg-white rounded-xl p-5 shadow-sm">
+        <p class="text-xs text-gray-500 uppercase tracking-wide">Total Events</p>
+        <p class="text-2xl font-bold text-gray-800 mt-1">{{ m.totalEvents | number }}</p>
+      </div>
+      <div class="bg-white rounded-xl p-5 shadow-sm">
+        <p class="text-xs text-gray-500 uppercase tracking-wide">Published Events</p>
+        <p class="text-2xl font-bold text-gray-800 mt-1">{{ m.publishedEvents | number }}</p>
       </div>
       <div class="bg-white rounded-xl p-5 shadow-sm border-l-4 border-green-400">
         <p class="text-xs text-gray-500 uppercase tracking-wide">Live Now</p>
@@ -39,10 +41,10 @@
     </div>
   }
 
-  <!-- Sales Trend Chart -->
+  <!-- Platform Sales Trend Chart -->
   <div class="bg-white rounded-xl shadow-sm p-6">
     <div class="flex items-center justify-between mb-4">
-      <h2 class="text-base font-semibold text-gray-700">Revenue Trend</h2>
+      <h2 class="text-base font-semibold text-gray-700">Platform Revenue Trend</h2>
       <mat-button-toggle-group
         [(ngModel)]="selectedPeriod"
         (change)="onPeriodChange()"
