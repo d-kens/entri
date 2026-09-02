@@ -1,7 +1,7 @@
-package com.entri.notification;
+package com.entri.tickets;
 
-import com.entri.notification.dto.NotificationMessage;
-import com.entri.rabbitmq.NotificationQueueConfig;
+import com.entri.rabbitmq.ReservationConfirmedQueueConfig;
+import com.entri.tickets.dto.ReservationConfirmedMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.ApplicationEventPublisher;
@@ -11,21 +11,22 @@ import org.springframework.transaction.event.TransactionalEventListener;
 
 @Component
 @RequiredArgsConstructor
-public class NotificationPublisher {
+public class ReservationConfirmedEventPublisher {
 
     private final RabbitTemplate rabbitTemplate;
     private final ApplicationEventPublisher applicationEventPublisher;
 
-    public void publish(NotificationMessage message) {
+    public void publishReservationConfirmed(ReservationConfirmedMessage message) {
         applicationEventPublisher.publishEvent(message);
     }
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT, fallbackExecution = true)
-    public void onNotification(NotificationMessage message) {
+    public void onReservationConfirmed(ReservationConfirmedMessage message) {
         rabbitTemplate.convertAndSend(
-                NotificationQueueConfig.NOTIFICATION_EXCHANGE,
-                NotificationQueueConfig.NOTIFICATION_ROUTING_KEY,
+                ReservationConfirmedQueueConfig.RESERVATION_CONFIRMED_EXCHANGE,
+                ReservationConfirmedQueueConfig.RESERVATION_CONFIRMED_ROUTING_KEY,
                 message
         );
     }
+
 }
