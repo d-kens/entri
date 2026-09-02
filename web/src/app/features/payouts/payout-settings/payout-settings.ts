@@ -10,7 +10,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { AuthService } from '@features/auth/auth-service';
 import { SnackbarService } from '@shared/services/snackbar-service';
 import { PayoutAccountsService } from '../payout-accounts-service';
-import { PayoutAccountResponse, PayoutMethod } from '../models/payout.models';
+import { BankCode, PayoutAccountResponse, PayoutMethod } from '../models/payout.models';
 
 @Component({
   selector: 'app-payout-settings',
@@ -35,7 +35,9 @@ export class PayoutSettings implements OnInit {
   private snackbar = inject(SnackbarService);
 
   accounts = signal<PayoutAccountResponse[]>([]);
+  bankCodes = signal<BankCode[]>([]);
   loading = signal(false);
+  bankCodesLoading = signal(false);
   saving = signal(false);
   showForm = signal(false);
   error = signal<string | null>(null);
@@ -81,6 +83,7 @@ export class PayoutSettings implements OnInit {
 
     this.addForm.get('method')?.valueChanges.subscribe(() => {
       this.updateConditionalValidators();
+      if (this.isBank) this.loadBankCodes();
     });
   }
 
@@ -101,6 +104,24 @@ export class PayoutSettings implements OnInit {
 
     accountReferenceCtrl?.updateValueAndValidity();
     bankCodeCtrl?.updateValueAndValidity();
+  }
+
+  private loadBankCodes(): void {
+    if (this.bankCodes().length > 0) return;
+    const organizerKey = this.authService.getExternalId();
+    if (!organizerKey) return;
+
+    this.bankCodesLoading.set(true);
+    this.payoutService.getBankCodes(organizerKey).subscribe({
+      next: (codes) => {
+        this.bankCodes.set(codes);
+        this.bankCodesLoading.set(false);
+      },
+      error: () => {
+        this.snackbar.showError('Failed to load bank codes');
+        this.bankCodesLoading.set(false);
+      },
+    });
   }
 
   private loadAccounts(): void {
@@ -231,5 +252,9 @@ export class PayoutSettings implements OnInit {
   methodLabel(method: PayoutMethod): string {
     const found = this.methodOptions.find((o) => o.value === method);
     return found ? found.label : method;
+  }
+
+  bankNameFor(bankCode: string): string {
+    return this.bankCodes().find((b) => b.bankCode === bankCode)?.bankName ?? bankCode;
   }
 }

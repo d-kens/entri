@@ -1,5 +1,10 @@
 export type PayoutMethod = 'MPESA_PAYBILL' | 'MPESA_TILL' | 'BANK';
 
+export type BankCode = {
+  bankName: string;
+  bankCode: string;
+};
+
 export type PayoutAccountResponse = {
   externalId: string;
   method: PayoutMethod;
