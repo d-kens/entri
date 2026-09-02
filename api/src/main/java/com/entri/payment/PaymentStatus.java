@@ -1,4 +1,4 @@
-package com.entri.checkout.enums;
+package com.entri.payment;
 
 public enum PaymentStatus {
     PENDING,

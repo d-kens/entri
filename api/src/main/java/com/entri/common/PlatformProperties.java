@@ -1,4 +1,4 @@
-package com.entri.checkout;
+package com.entri.common;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

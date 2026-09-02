@@ -1,8 +1,8 @@
 package com.entri.events.service;
 
-import com.entri.checkout.PlatformProperties;
-import com.entri.checkout.dto.PaymentResult;
-import com.entri.checkout.enums.PaymentStatus;
+import com.entri.common.PlatformProperties;
+import com.entri.payment.dto.PaymentResult;
+import com.entri.payment.PaymentStatus;
 import com.entri.payouts.entity.Payout;
 import com.entri.payouts.repository.OrganizerPayoutAccountRepository;
 import com.entri.payouts.repository.PayoutRepository;
@@ -85,7 +85,7 @@ public class EventTicketReservationService {
     @Transactional
     public void applyPaymentResult(final PaymentResult result) {
         var reservation = eventTicketReservationRepository
-                .findByExternalIdForUpdate(result.reservationExternalId())
+                .findByExternalIdForUpdate(result.referenceId())
                 .orElse(null);
 
         if (reservation == null || reservation.getStatus() != EventTicketReservationStatus.PENDING) {

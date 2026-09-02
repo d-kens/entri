@@ -598,4 +598,13 @@
         </createIndex>
     </changeSet>
 
+    <changeSet id="202609020008" author="d-kens">
+        <addColumn tableName="payouts">
+            <column name="tracking_id" type="VARCHAR(36)"/>
+        </addColumn>
+        <createIndex tableName="payouts" indexName="idx__payouts__tracking_id">
+            <column name="tracking_id"/>
+        </createIndex>
+    </changeSet>
+
 </databaseChangeLog>

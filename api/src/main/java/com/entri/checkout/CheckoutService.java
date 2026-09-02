@@ -1,11 +1,12 @@
 package com.entri.checkout;
 
-import com.entri.checkout.dto.CheckoutRequest;
-import com.entri.checkout.dto.CheckoutResponse;
-import com.entri.checkout.dto.PaymentResultMessage;
-import com.entri.checkout.dto.WebhookRequest;
+import com.entri.checkout.dto.CheckoutDetails;
 import com.entri.events.service.EventTicketReservationService;
+import com.entri.payment.dto.CheckoutRequest;
+import com.entri.payment.PaymentGateway;
+import com.entri.payment.dto.WebhookRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,26 +16,40 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class CheckoutService {
 
+    @Value("${app.base-url}")
+    private String appBaseUrl;
+
     private final EventTicketReservationService eventTicketReservationService;
     private final PaymentGateway paymentGateway;
     private final PaymentEventPublisher paymentEventPublisher;
 
     @Transactional
-    CheckoutResponse checkout(final String reservationId, final CheckoutRequest checkoutRequest) {
-        var eventTicketReservation = eventTicketReservationService.getPendingReservation(reservationId);
+    CheckoutResponse checkout(final String reservationId, final CheckoutDetails details) {
+        var reservation = eventTicketReservationService.getPendingReservation(reservationId);
 
-        eventTicketReservation.setFirstName(checkoutRequest.firstName());
-        eventTicketReservation.setLastName(checkoutRequest.lastName());
-        eventTicketReservation.setEmail(checkoutRequest.email());
-        eventTicketReservation.setPhoneNumber(checkoutRequest.phoneNumber());
+        reservation.setFirstName(details.firstName());
+        reservation.setLastName(details.lastName());
+        reservation.setEmail(details.email());
+        reservation.setPhoneNumber(details.phoneNumber());
 
-        return paymentGateway.checkout(eventTicketReservation);
+        var paymentRequest = new CheckoutRequest(
+                reservation.getFirstName(),
+                reservation.getLastName(),
+                reservation.getPhoneNumber(),
+                reservation.getEmail(),
+                reservation.getExternalId(),
+                appBaseUrl.stripTrailing() + "/tickets/" + reservation.getExternalId(),
+                reservation.getTotalAmount(),
+                reservation.getEvent().getCurrency()
+        );
+
+        return new CheckoutResponse(paymentGateway.checkout(paymentRequest));
     }
 
     void handleWebhook(final Map<String, String> headers, final String payload) {
         var webhookRequest = new WebhookRequest(headers, payload);
         paymentGateway.parseWebhookRequest(webhookRequest)
-                .map(result -> new PaymentResultMessage(result.reservationExternalId(), result.status()))
+                .map(result -> new PaymentResultMessage(result.referenceId(), result.status()))
                 .ifPresent(paymentEventPublisher::publishWebhookResult);
     }
 }
