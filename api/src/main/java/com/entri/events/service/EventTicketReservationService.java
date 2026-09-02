@@ -189,6 +189,13 @@ public class EventTicketReservationService {
         Page<EventTicketReservation> result = eventTicketReservationRepository
                 .findByEventExternalId(eventExternalId, PageRequest.of(page, size));
 
+        Map<Long, Integer> countByReservationId = result.getContent().isEmpty()
+                ? Map.of()
+                : eventTicketReservationRepository
+                        .sumQuantitiesByReservationIds(result.getContent().stream().map(EventTicketReservation::getId).toList())
+                        .stream()
+                        .collect(Collectors.toMap(r -> (Long) r[0], r -> ((Number) r[1]).intValue()));
+
         List<EventReservationSummaryResponse> content = result.getContent().stream()
                 .map(r -> new EventReservationSummaryResponse(
                         r.getExternalId(),
@@ -198,7 +205,7 @@ public class EventTicketReservationService {
                         r.getPhoneNumber(),
                         r.getTotalAmount(),
                         r.getStatus(),
-                        r.getItems().stream().mapToInt(EventTicketReservationItem::getQuantity).sum(),
+                        countByReservationId.getOrDefault(r.getId(), 0),
                         r.getDateCreated()
                 ))
                 .toList();
