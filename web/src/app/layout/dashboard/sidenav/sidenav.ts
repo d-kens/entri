@@ -47,7 +47,7 @@ export class Sidenav {
       { icon: 'confirmation_number', label: 'Events', route: '/dashboard/events' },
       { icon: 'local_activity', label: 'Tickets', route: '/dashboard/tickets' },
       { icon: 'groups', label: 'Attendees', route: '/dashboard/attendees' },
-      { icon: 'account_balance_wallet', label: 'Wallet', route: '/dashboard/wallet' },
+      { icon: 'payments', label: 'Payout Settings', route: '/dashboard/payout-settings' },
       { icon: 'account_circle', label: 'Profile', route: '/dashboard/profile' },
     ];
   }

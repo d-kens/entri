@@ -1,16 +1,13 @@
 import { Component, computed, inject, input, OnInit, output } from '@angular/core';
-import { DecimalPipe } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Router, NavigationEnd } from '@angular/router';
-import { EMPTY } from 'rxjs';
-import { filter, map, startWith, switchMap } from 'rxjs/operators';
+import { filter, map, startWith } from 'rxjs/operators';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { AuthService } from '@features/auth/auth-service';
 import { UsersService } from '@features/users/users-service';
-import { WalletService } from '@features/wallet/wallet-service';
 import { SnackbarService } from '@shared/services/snackbar-service';
 
 const ROUTE_TITLES: Record<string, string> = {
@@ -24,7 +21,7 @@ const ROUTE_TITLES: Record<string, string> = {
 @Component({
   selector: 'app-toolbar',
   standalone: true,
-  imports: [MatToolbarModule, MatButtonModule, MatIconModule, MatTooltipModule, DecimalPipe],
+  imports: [MatToolbarModule, MatButtonModule, MatIconModule, MatTooltipModule],
   templateUrl: './toolbar.html',
   styleUrl: './toolbar.css',
 })
@@ -32,17 +29,12 @@ export class Toolbar implements OnInit {
   private router = inject(Router);
   private authService = inject(AuthService);
   private usersService = inject(UsersService);
-  private walletService = inject(WalletService);
   private snackbarService = inject(SnackbarService);
 
   isMobile = input<boolean>(false);
   toggleSidenav = output<void>();
 
   user = this.usersService.currentUser;
-  wallet = this.walletService.wallet;
-  walletLoading = this.walletService.walletLoading;
-
-  isOrganizerUser = computed(() => this.user()?.role === 'ORGANIZER');
 
   pageTitle = toSignal(
     this.router.events.pipe(
@@ -65,12 +57,7 @@ export class Toolbar implements OnInit {
   ngOnInit() {
     const externalKey = this.authService.getExternalId();
     if (externalKey) {
-      this.usersService
-        .getUserByExternalKey(externalKey)
-        .pipe(
-          switchMap((user) => (user.role === 'ORGANIZER' ? this.walletService.getWallet() : EMPTY)),
-        )
-        .subscribe();
+      this.usersService.getUserByExternalKey(externalKey).subscribe();
     }
   }
 

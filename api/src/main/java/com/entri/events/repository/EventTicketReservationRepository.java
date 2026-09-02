@@ -29,6 +29,12 @@ public interface EventTicketReservationRepository extends JpaRepository<EventTic
     """)
     BigDecimal sumRevenuePlatform();
 
+    @Query("""
+        SELECT COALESCE(SUM(r.platformFee), 0) FROM EventTicketReservation r
+        WHERE r.status = com.entri.events.entity.EventTicketReservationStatus.CONFIRMED
+    """)
+    BigDecimal sumPlatformFeePlatform();
+
     @Query(value = """
         SELECT DATE(CONVERT_TZ(r.date_created, @@session.time_zone, '+00:00')) AS sale_date,
                COALESCE(SUM(item_counts.total_qty), 0) AS tickets_sold,

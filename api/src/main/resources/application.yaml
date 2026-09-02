@@ -57,6 +57,9 @@ intasend:
   secret-key: ${INTASEND_SECRET_KEY}
   webhook-challenge: ${INTASEND_WEBHOOK_CHALLENGE}
 
+platform:
+  service-fee-rate: ${PLATFORM_SERVICE_FEE_RATE:0.05}
+
 rate-limit:
   redis:
     host: ${REDIS_HOST:localhost}
