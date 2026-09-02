@@ -24,6 +24,13 @@ export const routes: Routes = [
         loadComponent: () => import('@features/events/checkout/checkout').then((m) => m.Checkout),
       },
       {
+        path: 'tickets/:reservationId',
+        loadComponent: () =>
+          import('@features/tickets/reservation-tickets/reservation-tickets').then(
+            (m) => m.ReservationTickets,
+          ),
+      },
+      {
         path: 'about',
         loadComponent: () => import('@features/about/about').then((m) => m.About),
       },

@@ -23,8 +23,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class IntaSendPaymentGateway implements PaymentGateway {
 
-    @Value("${payment.redirect-url}")
-    private String paymentRedirectUrl;
+    @Value("${app.base-url}")
+    private String appBaseUrl;
 
     private final IntaSendClient intaSendClient;
     private final IntaSendProperties intaSendProperties;
@@ -39,7 +39,7 @@ public class IntaSendPaymentGateway implements PaymentGateway {
                 eventTicketReservation.getEmail(),
                 eventTicketReservation.getExternalId(),
                 "WEBSITE",
-                paymentRedirectUrl,
+                appBaseUrl.stripTrailing() + "/tickets/" + eventTicketReservation.getExternalId(),
                 eventTicketReservation.getTotalAmount(),
                 eventTicketReservation.getEvent().getCurrency(),
                 eventTicketReservation.getEvent().getOrganizer().getWalletId()

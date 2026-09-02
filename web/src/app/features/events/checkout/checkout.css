@@ -508,6 +508,77 @@
   background: color-mix(in srgb, var(--mat-sys-primary) 6%, transparent);
 }
 
+/* ── Contact section ─────────────────────────────────────────── */
+
+.contact-section {
+  margin-bottom: 1.5rem;
+}
+
+.contact-title {
+  font-family:
+    'Poppins',
+    -apple-system,
+    sans-serif;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #000000;
+  margin: 0 0 1rem;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.contact-field {
+  width: 100%;
+}
+
+.contact-field--full {
+  grid-column: 1 / -1;
+}
+
+/* ── View tickets button ─────────────────────────────────────── */
+
+.view-tickets-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.9375rem 1.5rem;
+  border-radius: 8px;
+  background: var(--mat-sys-primary);
+  color: #ffffff;
+  font-family:
+    'Poppins',
+    -apple-system,
+    sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  text-decoration: none;
+  text-align: center;
+  transition: background 0.15s ease;
+  margin-bottom: 1rem;
+}
+
+.view-tickets-btn:hover {
+  background: var(--mat-sys-primary-dark);
+}
+
+.view-tickets-btn mat-icon {
+  font-size: 1.125rem !important;
+  width: 1.125rem !important;
+  height: 1.125rem !important;
+}
+
 /* ── Responsive ──────────────────────────────────────────────── */
 
 @media (max-width: 480px) {
@@ -518,5 +589,9 @@
   .meta-chip {
     font-size: 0.75rem;
     padding: 0.25rem 0.5rem;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
   }
 }
