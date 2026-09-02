@@ -2,6 +2,8 @@ package com.entri.events.service;
 
 import com.entri.checkout.dto.PaymentResult;
 import com.entri.checkout.enums.PaymentStatus;
+import com.entri.common.dto.PaginationResponse;
+import com.entri.events.dto.EventReservationSummaryResponse;
 import com.entri.events.exception.EventNotOnSaleException;
 import com.entri.events.exception.InvalidReservationStatusException;
 import com.entri.events.exception.InsufficientTicketsException;
@@ -23,10 +25,13 @@ import com.entri.events.entity.TicketTypeSaleStatus;
 import com.entri.events.repository.EventRepository;
 import com.entri.events.repository.EventTicketReservationRepository;
 import com.entri.events.repository.TicketTypeRepository;
+import com.entri.security.UserPrincipal;
 import com.entri.tickets.ReservationConfirmedEventPublisher;
 import com.entri.tickets.dto.ReservationConfirmedMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -168,6 +173,45 @@ public class EventTicketReservationService {
         }
 
         return reservations.size();
+    }
+
+    @Transactional(readOnly = true)
+    public PaginationResponse<EventReservationSummaryResponse> listEventReservations(
+            final String eventExternalId,
+            final int page,
+            final int size,
+            final UserPrincipal requestingUser
+    ) {
+        var event = eventRepository.findByExternalId(eventExternalId)
+                .orElseThrow(() -> new ResourceNotFoundException("Event with ID " + eventExternalId + " not found"));
+        requestingUser.assertCanManage(event.getOrganizer().getExternalKey());
+
+        Page<EventTicketReservation> result = eventTicketReservationRepository
+                .findByEventExternalId(eventExternalId, PageRequest.of(page, size));
+
+        List<EventReservationSummaryResponse> content = result.getContent().stream()
+                .map(r -> new EventReservationSummaryResponse(
+                        r.getExternalId(),
+                        r.getFirstName(),
+                        r.getLastName(),
+                        r.getEmail(),
+                        r.getPhoneNumber(),
+                        r.getTotalAmount(),
+                        r.getStatus(),
+                        r.getItems().stream().mapToInt(EventTicketReservationItem::getQuantity).sum(),
+                        r.getDateCreated()
+                ))
+                .toList();
+
+        return new PaginationResponse<>(
+                content,
+                result.getNumber(),
+                result.getSize(),
+                result.getTotalElements(),
+                result.getTotalPages(),
+                result.isFirst(),
+                result.isLast()
+        );
     }
 
     @Transactional

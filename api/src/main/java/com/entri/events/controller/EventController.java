@@ -2,8 +2,10 @@ package com.entri.events.controller;
 
 import com.entri.common.dto.PaginationResponse;
 import com.entri.events.controller.api.EventApi;
+import com.entri.events.dto.EventCheckInStatsResponse;
 import com.entri.events.dto.EventFilter;
 import com.entri.events.dto.EventRequest;
+import com.entri.events.dto.EventReservationSummaryResponse;
 import com.entri.events.dto.EventResponse;
 import com.entri.events.dto.EventTicketReservationDetailDto;
 import com.entri.events.dto.EventTicketReservationRequest;
@@ -15,6 +17,7 @@ import com.entri.events.service.EventTicketReservationService;
 import com.entri.events.service.TicketTypeService;
 import com.entri.tickets.dto.CheckInCodeResponse;
 import com.entri.tickets.service.CheckInCodeService;
+import com.entri.tickets.service.TicketService;
 import com.entri.ratelimit.RateLimited;
 import com.entri.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +35,7 @@ public class EventController implements EventApi {
     private final TicketTypeService ticketTypeService;
     private final EventTicketReservationService eventTicketReservationService;
     private final CheckInCodeService checkInCodeService;
+    private final TicketService ticketService;
 
     @Override
     public EventResponse getEventByExternalId(final String eventExternalId) {
@@ -121,6 +125,24 @@ public class EventController implements EventApi {
             final String reservationId
     ) {
         return eventTicketReservationService.getEventTicketReservation(eventExternalId, reservationId);
+    }
+
+    @Override
+    public PaginationResponse<EventReservationSummaryResponse> listEventReservations(
+            final String eventExternalId,
+            final int page,
+            final int size,
+            final UserPrincipal requestingUser
+    ) {
+        return eventTicketReservationService.listEventReservations(eventExternalId, page, size, requestingUser);
+    }
+
+    @Override
+    public EventCheckInStatsResponse getCheckInStats(
+            final String eventExternalId,
+            final UserPrincipal requestingUser
+    ) {
+        return ticketService.getCheckInStats(eventExternalId, requestingUser);
     }
 
     @Override

@@ -1,12 +1,16 @@
 package com.entri.tickets.service;
 
+import com.entri.events.dto.EventCheckInStatsResponse;
+import com.entri.events.dto.RecentCheckInDto;
 import com.entri.events.entity.EventTicketReservation;
+import com.entri.events.repository.EventRepository;
 import com.entri.events.repository.EventTicketReservationRepository;
 import com.entri.exception.BadRequestException;
 import com.entri.exception.ResourceNotFoundException;
 import com.entri.notification.NotificationEventPublisher;
 import com.entri.notification.NotificationType;
 import com.entri.notification.dto.NotificationMessage;
+import com.entri.security.UserPrincipal;
 import com.entri.tickets.dto.CheckInRequest;
 import com.entri.tickets.dto.CheckInResponse;
 import com.entri.tickets.dto.CheckInResult;
@@ -18,6 +22,7 @@ import com.entri.tickets.repository.EventCheckInCodeRepository;
 import com.entri.tickets.repository.TicketRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,11 +41,31 @@ public class TicketService {
     private final TicketRepository ticketRepository;
     private final EventTicketReservationRepository reservationRepository;
     private final EventCheckInCodeRepository checkInCodeRepository;
+    private final EventRepository eventRepository;
     private final TicketMapper ticketMapper;
     private final NotificationEventPublisher notificationEventPublisher;
 
     @Value("${app.base-url}")
     private String appBaseUrl;
+
+    @Transactional(readOnly = true)
+    public EventCheckInStatsResponse getCheckInStats(String eventExternalId, UserPrincipal requestingUser) {
+        var event = eventRepository.findByExternalId(eventExternalId)
+                .orElseThrow(() -> new ResourceNotFoundException("Event with ID " + eventExternalId + " not found"));
+        requestingUser.assertCanManage(event.getOrganizer().getExternalKey());
+
+        long total = ticketRepository.countByEventExternalId(eventExternalId);
+        long checkedIn = ticketRepository.countCheckedInByEventExternalId(eventExternalId);
+        double checkInRate = total == 0 ? 0.0 : (double) checkedIn / total * 100;
+
+        List<RecentCheckInDto> recentCheckIns = ticketRepository
+                .findRecentCheckIns(eventExternalId, PageRequest.of(0, 10))
+                .stream()
+                .map(t -> new RecentCheckInDto(t.getTicketCode(), t.getTicketType().getName(), t.getCheckedInAt()))
+                .toList();
+
+        return new EventCheckInStatsResponse(eventExternalId, total, checkedIn, checkInRate, recentCheckIns);
+    }
 
     @Transactional
     public void generateTickets(String reservationExternalId) {
