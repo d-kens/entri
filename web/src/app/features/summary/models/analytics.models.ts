@@ -13,7 +13,7 @@ export type PlatformSummaryMetrics = {
   publishedEvents: number;
   liveEventsCount: number;
   totalTicketsSold: number;
-  platformRevenue: number;
+  totalGmv: number;
 };
 
 export type SalesTrendDataPoint = {
