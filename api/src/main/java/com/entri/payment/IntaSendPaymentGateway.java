@@ -4,15 +4,11 @@ import com.entri.exception.PaymentGatewayException;
 import com.entri.intasend.IntaSendClient;
 import com.entri.intasend.IntaSendProperties;
 import com.entri.intasend.dto.IntaSendCheckoutRequest;
-import com.entri.intasend.dto.IntaSendSendMoneyRequest;
-import com.entri.intasend.dto.IntaSendSendMoneyWebhookPayload;
-import com.entri.intasend.dto.IntaSendTransactionItem;
 import com.entri.intasend.dto.IntaSendWebhookPayload;
 import com.entri.payment.dto.CheckoutRequest;
 import com.entri.payment.dto.PaymentResult;
 import com.entri.payment.dto.WebhookRequest;
 
-import java.util.List;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -47,54 +43,6 @@ public class IntaSendPaymentGateway implements PaymentGateway {
         );
 
         return intaSendClient.createCheckout(intaSendRequest).url();
-    }
-
-    @Override
-    public String sendPayout(PayoutRequest request) {
-        var item = new IntaSendTransactionItem(
-                request.recipientName(),
-                request.account(),
-                request.accountReference(),
-                request.bankCode(),
-                request.amount(),
-                "Organizer payout " + request.idempotencyKey()
-        );
-
-        String uri = switch (request.method()) {
-            case MPESA_PAYBILL, MPESA_TILL -> "/api/v1/send-money/mpesa/";
-            case BANK -> "/api/v1/send-money/bank/";
-        };
-
-        return intaSendClient.sendMoney(uri,
-                new IntaSendSendMoneyRequest(request.currency(), List.of(item), null, "NO"))
-                .trackingId();
-    }
-
-    @Override
-    public Optional<PayoutResult> parsePayoutWebhook(WebhookRequest webhookRequest) {
-        IntaSendSendMoneyWebhookPayload payload;
-        try {
-            payload = objectMapper.readValue(webhookRequest.payload(), IntaSendSendMoneyWebhookPayload.class);
-        } catch (JsonProcessingException e) {
-            throw new PaymentGatewayException("Failed to parse IntaSend send-money webhook payload", e);
-        }
-
-        String challenge = payload.challenge();
-        if (challenge != null && !intaSendProperties.webhookChallenge().equals(challenge)) {
-            throw new PaymentGatewayException("Invalid IntaSend webhook challenge", null);
-        }
-
-        if (payload.trackingId() == null) {
-            return Optional.empty();
-        }
-
-        boolean allSuccessful = payload.transactions() != null
-                && payload.transactions().stream().allMatch(t -> "Successful".equals(t.status()));
-
-        return Optional.of(new PayoutResult(
-                payload.trackingId(),
-                "Completed".equals(payload.status()) && allSuccessful
-        ));
     }
 
     @Override

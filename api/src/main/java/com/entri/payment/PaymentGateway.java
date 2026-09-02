@@ -9,6 +9,4 @@ import java.util.Optional;
 public interface PaymentGateway {
     String checkout(CheckoutRequest request);
     Optional<PaymentResult> parseCheckoutWebhook(WebhookRequest webhookRequest);
-    String sendPayout(PayoutRequest request);
-    Optional<PayoutResult> parsePayoutWebhook(WebhookRequest webhookRequest);
 }
