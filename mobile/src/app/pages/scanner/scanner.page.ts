@@ -40,6 +40,7 @@ export class ScannerPage implements OnDestroy, ViewWillEnter, ViewWillLeave {
   private readonly router = inject(Router);
 
   readonly isNative = Capacitor.isNativePlatform();
+  readonly eventTitle = this.session.eventTitle;
 
   resultState = signal<ResultState>('none');
   checkInResponse = signal<CheckInResponse | null>(null);
