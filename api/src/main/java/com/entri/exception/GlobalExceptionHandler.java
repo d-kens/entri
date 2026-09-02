@@ -7,6 +7,7 @@ import com.entri.events.exception.MaxTicketsPerOrderExceededException;
 import com.entri.media.exception.FileUploadException;
 import com.entri.media.exception.InvalidFileTypeException;
 import com.entri.users.exception.EmailAlreadyExistsException;
+import com.entri.wallet.exception.InsufficientBalanceException;
 import com.entri.wallet.exception.WalletAlreadyExistsException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -98,6 +99,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(WalletAlreadyExistsException.class)
     public ProblemDetail handleWalletAlreadyExistsException(final WalletAlreadyExistsException exception, final HttpServletRequest request) {
         return createProblemDetail(HttpStatus.CONFLICT, "Wallet Already Exists", exception.getMessage(), request);
+    }
+
+    @ExceptionHandler(InsufficientBalanceException.class)
+    public ProblemDetail handleInsufficientBalanceException(final InsufficientBalanceException exception, final HttpServletRequest request) {
+        return createProblemDetail(HttpStatus.UNPROCESSABLE_ENTITY, "Insufficient Balance", exception.getMessage(), request);
     }
 
     @ExceptionHandler(UnauthorizedException.class)
