@@ -1,73 +1,63 @@
 # Versioning
 
-Versions are managed automatically by [semantic-release](https://semantic-release.gitbook.io). You never set a version number manually — it is derived from your commit messages.
+Each service is versioned independently — a change in one never bumps the version of the others.
 
-`api` and `web` are versioned **independently**. A change in one never bumps the version of the other.
+Versions are explicit: the current version lives in a file (`gradle.properties` for api, `package.json` for web and mobile). CI tags it and bumps it automatically on every merge to master. You never need to set a version number manually unless you want to force a specific one.
 
 ---
 
 ## How a release works
 
-1. You squash-merge a PR into `master`
-2. CI analyses the commit message and determines the version bump
-3. The version is updated in `build.gradle.kts` (api) or `package.json` (web)
-4. A git tag is created — `api-v1.2.0` or `web-v1.2.0`
-5. A GitHub release is created with a generated changelog
-6. A Docker image is built and pushed to GHCR
+1. Squash-merge a PR into `master`
+2. CI builds and tests the changed service
+3. The release job runs and creates a git tag from the current version in the version file
+4. The version file is bumped to the next patch and committed (e.g. `1.2.0 → 1.2.1`)
+5. The tag push triggers a second CI run which builds and pushes the Docker image to GHCR
 
-Steps 3–6 only happen for the service whose files actually changed.
-
----
-
-## Commit message format
-
-```
-<type>: <short description>
-```
-
-The **PR title** is what matters — individual commits during development can be anything. When you squash merge, the PR title becomes the commit message that CI reads.
+Steps 2–5 only happen for the service whose files actually changed (path filters on the workflow).
 
 ---
 
-## Types and version bumps
+## Version files
 
-| Type | When to use | Triggers release | Bump |
-|---|---|---|---|
-| `feat` | New feature | Yes | Minor `1.1.0 → 1.2.0` |
-| `fix` | Bug fix | Yes | Patch `1.2.0 → 1.2.1` |
-| `feat!` | Breaking change | Yes | Major `1.0.0 → 2.0.0` |
-| `chore` | Dependencies, config, tooling | No | — |
-| `refactor` | Code restructuring, no behaviour change | No | — |
-| `ci` | CI/CD pipeline changes | No | — |
-| `docs` | Documentation only | No | — |
-| `style` | Formatting, whitespace | No | — |
+| Service | File | Example |
+|---|---|---|
+| `api` | `api/gradle.properties` | `version=1.2.0` |
+| `web` | `web/package.json` | `"version": "1.5.0"` |
+| `mobile` | `mobile/package.json` | `"version": "1.1.0"` |
 
 ---
 
-## Breaking changes
+## Re-trigger prevention
 
-Append `!` to the type:
+The version bump commit that CI pushes back to master would ordinarily re-trigger the release — to prevent a loop, both are guarded:
 
-```
-feat!: remove legacy auth endpoints
-```
+- **api**: commit message contains `[Gradle Release Plugin]` — the `release` job skips it
+- **web / mobile**: commit message contains `[skip release]` — the `release` job skips it
 
 ---
 
-## Workflow
+## Forcing a specific version
 
-```bash
-# 1. Branch off master
-git checkout -b feat/my-feature
+Dispatch the workflow manually from **Actions → pick the workflow → Run workflow**.
 
-# 2. Commit freely during development
-git commit -m "wip"
+| Service | Input | Effect |
+|---|---|---|
+| api | `release_version` blank | auto-increments patch |
+| api | `release_version = 1.3.0` | releases exactly `1.3.0` |
+| api | `new_version = 2.0.0` | sets next version to `2.0.0` after tagging |
+| web / mobile | `release_version` blank | auto-increments patch |
+| web / mobile | `release_version = 1.6.0` | releases exactly `1.6.0` |
+| web / mobile | `release_version = minor` | bumps minor instead of patch |
+| web / mobile | `release_version = major` | bumps major |
 
-# 3. Open a PR — set the title correctly
-#    e.g. "feat: add organiser dashboard stats endpoint"
+---
 
-# 4. Squash merge → CI handles versioning automatically
-```
+## Skipping a release
+
+Put `[skip release]` in the PR title so it lands in the squash commit message — CI will build and test but not cut a new version.
+
+For api you can also use `[skip ci]` to skip everything.
 
 ---
 
@@ -76,9 +66,9 @@ git commit -m "wip"
 Each release produces three tags:
 
 ```
-ghcr.io/d-kens/entri-api:latest          # always the latest release
-ghcr.io/d-kens/entri-api:api-v1.2.0     # pinned to a specific version
-ghcr.io/d-kens/entri-api:<git-sha>       # pinned to a specific commit
+ghcr.io/d-kens/entri-api:latest        # always the latest release
+ghcr.io/d-kens/entri-api:api-v1.2.0   # pinned to this version
+ghcr.io/d-kens/entri-api:<git-sha>     # pinned to this commit
 ```
 
 Same pattern for `entri-web` with `web-v*` tags.
