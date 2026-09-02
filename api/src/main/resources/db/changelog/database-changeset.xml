@@ -475,4 +475,13 @@
                 constraintName="fk__check_in_codes__event"/>
     </changeSet>
 
+    <changeSet id="202609020003" author="d-kens">
+        <addColumn tableName="tickets">
+            <column name="ticket_external_id" type="VARCHAR(36)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </addColumn>
+        <modifyDataType tableName="tickets" columnName="ticket_code" newDataType="VARCHAR(12)"/>
+    </changeSet>
+
 </databaseChangeLog>

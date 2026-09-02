@@ -75,9 +75,9 @@ public class TicketService {
     }
 
     @Transactional(readOnly = true)
-    public TicketResponse getTicket(String ticketCode) {
-        var ticket = ticketRepository.findByTicketCodeWithDetails(ticketCode)
-                .orElseThrow(() -> new ResourceNotFoundException("Ticket not found: " + ticketCode));
+    public TicketResponse getTicket(String externalId) {
+        var ticket = ticketRepository.findByExternalIdWithDetails(externalId)
+                .orElseThrow(() -> new ResourceNotFoundException("Ticket not found: " + externalId));
         return ticketMapper.toResponse(ticket);
     }
 

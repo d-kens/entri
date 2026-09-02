@@ -126,7 +126,9 @@ export interface CheckoutResponse {
 export type TicketStatus = 'VALID' | 'USED';
 
 export interface TicketResponse {
+  ticketExternalId: string;
   ticketCode: string;
+  reservationExternalId: string;
   eventExternalId: string;
   eventTitle: string;
   ticketTypeName: string;

@@ -36,9 +36,13 @@ public class Ticket {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "ticket_code", nullable = false, unique = true, length = 36)
+    @Column(name = "ticket_external_id", nullable = false, unique = true, length = 36)
     @Builder.Default
-    private String ticketCode = UUID.randomUUID().toString();
+    private String ticketExternalId = UUID.randomUUID().toString();
+
+    @Column(name = "ticket_code", nullable = false, unique = true, length = 12)
+    @Builder.Default
+    private String ticketCode = UUID.randomUUID().toString().replace("-", "").substring(0, 12).toUpperCase();
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "reservation_id", nullable = false)

@@ -26,8 +26,8 @@ public class TicketController implements TicketApi {
     }
 
     @Override
-    public TicketResponse getTicket(String ticketCode) {
-        return ticketService.getTicket(ticketCode);
+    public TicketResponse getTicket(String externalId) {
+        return ticketService.getTicket(externalId);
     }
 
     @Override
@@ -40,3 +40,4 @@ public class TicketController implements TicketApi {
         return ticketService.checkIn(ticketCode, request);
     }
 }
+
