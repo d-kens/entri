@@ -111,3 +111,27 @@ export interface EventTicketReservationDetailResponse {
   status: ReservationStatus;
   reservationItems: EventTicketReservationItemResponse[];
 }
+
+export interface CheckoutRequest {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+}
+
+export interface CheckoutResponse {
+  checkoutUrl: string;
+}
+
+export type TicketStatus = 'VALID' | 'USED';
+
+export interface TicketResponse {
+  ticketCode: string;
+  eventExternalId: string;
+  eventTitle: string;
+  ticketTypeName: string;
+  status: TicketStatus;
+  holderFirstName: string;
+  holderLastName: string;
+  checkedInAt?: string;
+}

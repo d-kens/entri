@@ -1,7 +1,10 @@
 import { Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { DatePipe, DecimalPipe } from '@angular/common';
+import { DatePipe, DecimalPipe, DOCUMENT } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { forkJoin, interval, Subscription } from 'rxjs';
 import { EventsService } from '../services/events-service';
 import { PageError } from '@shared/components/page-error/page-error';
@@ -14,7 +17,16 @@ import { SnackbarService } from '@shared/services/snackbar-service';
 @Component({
   selector: 'app-checkout',
   standalone: true,
-  imports: [RouterLink, DatePipe, DecimalPipe, MatIconModule, PageError],
+  imports: [
+    RouterLink,
+    DatePipe,
+    DecimalPipe,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    PageError,
+  ],
   templateUrl: './checkout.html',
   styleUrl: './checkout.css',
 })
@@ -22,6 +34,8 @@ export class Checkout implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private eventsService = inject(EventsService);
   private snackbar = inject(SnackbarService);
+  private fb = inject(FormBuilder);
+  private document = inject(DOCUMENT);
 
   readonly externalId = this.route.snapshot.paramMap.get('externalId')!;
   readonly reservationId = this.route.snapshot.paramMap.get('reservationId')!;
@@ -30,6 +44,14 @@ export class Checkout implements OnInit, OnDestroy {
   reservation = signal<EventTicketReservationDetailResponse | null>(null);
   loading = signal(true);
   error = signal(false);
+  paying = signal(false);
+
+  contactForm = this.fb.nonNullable.group({
+    firstName: ['', Validators.required],
+    lastName: ['', Validators.required],
+    email: ['', [Validators.required, Validators.email]],
+    phoneNumber: ['', Validators.required],
+  });
 
   private timerExpired = signal(false);
   private remainingMs = signal(0);
@@ -84,7 +106,23 @@ export class Checkout implements OnInit, OnDestroy {
   }
 
   pay(): void {
-    this.snackbar.showInfo('Payment processing coming soon.');
+    if (this.contactForm.invalid) {
+      this.contactForm.markAllAsTouched();
+      return;
+    }
+    this.paying.set(true);
+    const { firstName, lastName, email, phoneNumber } = this.contactForm.getRawValue();
+    this.eventsService
+      .checkout(this.reservationId, { firstName, lastName, email, phoneNumber })
+      .subscribe({
+        next: (res) => {
+          this.document.location.href = res.checkoutUrl;
+        },
+        error: (err: Error) => {
+          this.paying.set(false);
+          this.snackbar.showError(err.message);
+        },
+      });
   }
 
   private startTimer(expiresAt: string): void {
