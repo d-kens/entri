@@ -27,6 +27,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,7 +44,8 @@ public class AnalyticsService {
     public OrganizerSummaryMetricsResponse getOrganizerSummaryMetrics(String organizerKey) {
         Instant now = Instant.now();
 
-        BigDecimal totalRevenue = reservationRepository.sumRevenueByOrganizer(organizerKey);
+        BigDecimal totalRevenue = Objects.requireNonNullElse(
+                reservationRepository.sumRevenueByOrganizer(organizerKey), BigDecimal.ZERO);
         long totalTicketsSold = ticketTypeRepository.sumSoldQuantityByOrganizer(organizerKey);
         long upcomingEventsCount = eventRepository.countUpcomingEvents(organizerKey, now);
         long liveEventsCount = eventRepository.countLiveEvents(organizerKey, now);
@@ -87,7 +89,7 @@ public class AnalyticsService {
                 eventRepository.countByStatus(EventStatus.PUBLISHED),
                 eventRepository.countLiveEventsPlatform(now),
                 ticketTypeRepository.sumSoldQuantityPlatform(),
-                reservationRepository.sumRevenuePlatform()
+                Objects.requireNonNullElse(reservationRepository.sumRevenuePlatform(), BigDecimal.ZERO)
         );
     }
 

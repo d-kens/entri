@@ -30,7 +30,7 @@ public interface EventTicketReservationRepository extends JpaRepository<EventTic
     BigDecimal sumRevenuePlatform();
 
     @Query(value = """
-        SELECT DATE(r.date_created) AS sale_date,
+        SELECT DATE(CONVERT_TZ(r.date_created, @@session.time_zone, '+00:00')) AS sale_date,
                COALESCE(SUM(item_counts.total_qty), 0) AS tickets_sold,
                SUM(r.total_amount) AS revenue
         FROM event_ticket_reservations r
@@ -43,13 +43,13 @@ public interface EventTicketReservationRepository extends JpaRepository<EventTic
         WHERE e.organizer_id = (SELECT u.id FROM users u WHERE u.external_key = :organizerKey)
           AND r.status = 'CONFIRMED'
           AND r.date_created >= :from
-        GROUP BY DATE(r.date_created)
-        ORDER BY DATE(r.date_created)
+        GROUP BY DATE(CONVERT_TZ(r.date_created, @@session.time_zone, '+00:00'))
+        ORDER BY DATE(CONVERT_TZ(r.date_created, @@session.time_zone, '+00:00'))
     """, nativeQuery = true)
     List<Object[]> findDailySalesTrend(@Param("organizerKey") String organizerKey, @Param("from") Instant from);
 
     @Query(value = """
-        SELECT DATE_FORMAT(r.date_created, '%Y-%m') AS sale_date,
+        SELECT DATE_FORMAT(CONVERT_TZ(r.date_created, @@session.time_zone, '+00:00'), '%Y-%m') AS sale_date,
                COALESCE(SUM(item_counts.total_qty), 0) AS tickets_sold,
                SUM(r.total_amount) AS revenue
         FROM event_ticket_reservations r
@@ -62,13 +62,13 @@ public interface EventTicketReservationRepository extends JpaRepository<EventTic
         WHERE e.organizer_id = (SELECT u.id FROM users u WHERE u.external_key = :organizerKey)
           AND r.status = 'CONFIRMED'
           AND r.date_created >= :from
-        GROUP BY DATE_FORMAT(r.date_created, '%Y-%m')
-        ORDER BY DATE_FORMAT(r.date_created, '%Y-%m')
+        GROUP BY DATE_FORMAT(CONVERT_TZ(r.date_created, @@session.time_zone, '+00:00'), '%Y-%m')
+        ORDER BY DATE_FORMAT(CONVERT_TZ(r.date_created, @@session.time_zone, '+00:00'), '%Y-%m')
     """, nativeQuery = true)
     List<Object[]> findMonthlySalesTrend(@Param("organizerKey") String organizerKey, @Param("from") Instant from);
 
     @Query(value = """
-        SELECT DATE(r.date_created) AS sale_date,
+        SELECT DATE(CONVERT_TZ(r.date_created, @@session.time_zone, '+00:00')) AS sale_date,
                COALESCE(SUM(item_counts.total_qty), 0) AS tickets_sold,
                SUM(r.total_amount) AS revenue
         FROM event_ticket_reservations r
@@ -79,13 +79,13 @@ public interface EventTicketReservationRepository extends JpaRepository<EventTic
         ) item_counts ON item_counts.reservation_id = r.id
         WHERE r.status = 'CONFIRMED'
           AND r.date_created >= :from
-        GROUP BY DATE(r.date_created)
-        ORDER BY DATE(r.date_created)
+        GROUP BY DATE(CONVERT_TZ(r.date_created, @@session.time_zone, '+00:00'))
+        ORDER BY DATE(CONVERT_TZ(r.date_created, @@session.time_zone, '+00:00'))
     """, nativeQuery = true)
     List<Object[]> findDailySalesTrendPlatform(@Param("from") Instant from);
 
     @Query(value = """
-        SELECT DATE_FORMAT(r.date_created, '%Y-%m') AS sale_date,
+        SELECT DATE_FORMAT(CONVERT_TZ(r.date_created, @@session.time_zone, '+00:00'), '%Y-%m') AS sale_date,
                COALESCE(SUM(item_counts.total_qty), 0) AS tickets_sold,
                SUM(r.total_amount) AS revenue
         FROM event_ticket_reservations r
@@ -96,8 +96,8 @@ public interface EventTicketReservationRepository extends JpaRepository<EventTic
         ) item_counts ON item_counts.reservation_id = r.id
         WHERE r.status = 'CONFIRMED'
           AND r.date_created >= :from
-        GROUP BY DATE_FORMAT(r.date_created, '%Y-%m')
-        ORDER BY DATE_FORMAT(r.date_created, '%Y-%m')
+        GROUP BY DATE_FORMAT(CONVERT_TZ(r.date_created, @@session.time_zone, '+00:00'), '%Y-%m')
+        ORDER BY DATE_FORMAT(CONVERT_TZ(r.date_created, @@session.time_zone, '+00:00'), '%Y-%m')
     """, nativeQuery = true)
     List<Object[]> findMonthlySalesTrendPlatform(@Param("from") Instant from);
 
@@ -110,6 +110,14 @@ public interface EventTicketReservationRepository extends JpaRepository<EventTic
             @Param("eventExternalId") String eventExternalId,
             Pageable pageable
     );
+
+    @Query("""
+        SELECT i.reservation.id, SUM(i.quantity)
+        FROM EventTicketReservationItem i
+        WHERE i.reservation.id IN :reservationIds
+        GROUP BY i.reservation.id
+    """)
+    List<Object[]> sumQuantitiesByReservationIds(@Param("reservationIds") List<Long> reservationIds);
 
     @Query("""                                                                                                                                                                    
           SELECT r FROM EventTicketReservation r                                                                                                                                    
