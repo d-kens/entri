@@ -1,0 +1,74 @@
+<!-- ── Loading / polling state ────────────────────────────────── -->
+@if (loading()) {
+  <div class="page-wrap">
+    <div class="processing-state">
+      <span class="spinner-lg"></span>
+      <p class="processing-title">Preparing your tickets</p>
+      <p class="processing-hint">This usually takes a few seconds.</p>
+    </div>
+  </div>
+}
+
+<!-- ── Error state ────────────────────────────────────────────── -->
+@if (error()) {
+  <div class="page-wrap">
+    <div class="empty-state">
+      <mat-icon class="empty-icon empty-icon--error">error_outline</mat-icon>
+      <p class="empty-title">Something went wrong</p>
+      <p class="empty-hint">We couldn't load your tickets. Check your connection and try again.</p>
+    </div>
+  </div>
+}
+
+<!-- ── Processing timeout ─────────────────────────────────────── -->
+@if (!loading() && !error() && processingTimeout()) {
+  <div class="page-wrap">
+    <div class="empty-state">
+      <mat-icon class="empty-icon">hourglass_empty</mat-icon>
+      <p class="empty-title">Still processing</p>
+      <p class="empty-hint">
+        Your tickets are being generated. Check your email — we'll send them there shortly.
+      </p>
+    </div>
+  </div>
+}
+
+<!-- ── Tickets ────────────────────────────────────────────────── -->
+@if (!loading() && !error() && tickets().length > 0) {
+  <div class="page-wrap">
+    <div class="tickets-header">
+      <h1 class="page-title">Your Tickets</h1>
+      <p class="page-subtitle">{{ tickets()[0].eventTitle }}</p>
+    </div>
+
+    @for (ticket of tickets(); track ticket.ticketCode) {
+      <div class="ticket-card" [class.ticket-card--used]="ticket.status === 'USED'">
+        <div class="ticket-body">
+          <div class="ticket-info">
+            <p class="ticket-type">{{ ticket.ticketTypeName }}</p>
+            <p class="ticket-holder">{{ holderName(ticket) }}</p>
+            <span class="ticket-status-badge" [class.badge--used]="ticket.status === 'USED'">
+              @if (ticket.status === 'VALID') {
+                <mat-icon>check_circle</mat-icon>
+                Valid
+              } @else {
+                <mat-icon>block</mat-icon>
+                Used
+              }
+            </span>
+          </div>
+          <img [src]="qrUrl(ticket.ticketCode)" alt="Ticket QR code" class="ticket-qr" />
+        </div>
+        <div class="ticket-code-row">
+          <span class="ticket-code">{{ ticket.ticketCode }}</span>
+        </div>
+        @if (ticket.status === 'USED' && ticket.checkedInAt) {
+          <p class="checked-in-at">
+            <mat-icon>event_available</mat-icon>
+            Checked in {{ ticket.checkedInAt | date: 'EEE, d MMM · HH:mm' }}
+          </p>
+        }
+      </div>
+    }
+  </div>
+}

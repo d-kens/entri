@@ -5,11 +5,14 @@ import { environment } from 'environments/environment';
 import {
   CategoryRequest,
   CategoryResponse,
+  CheckoutRequest,
+  CheckoutResponse,
   EventRequest,
   EventFilter,
   EventResponse,
   TicketTypeRequest,
   TicketTypeResponse,
+  TicketResponse,
   EventTicketReservationRequest,
   EventTicketReservationResponse,
   EventTicketReservationDetailResponse,
@@ -142,6 +145,18 @@ export class EventsService {
   ): Observable<EventTicketReservationDetailResponse> {
     return this.http.get<EventTicketReservationDetailResponse>(
       `${environment.apiBaseUrl}/events/${externalId}/reservations/${reservationId}`,
+    );
+  }
+
+  checkout(reservationId: string, request: CheckoutRequest): Observable<CheckoutResponse> {
+    return this.http
+      .post<CheckoutResponse>(`${environment.apiBaseUrl}/checkout/${reservationId}`, request)
+      .pipe(catchError(this.toDisplayError('Checkout failed. Please try again.')));
+  }
+
+  getTicketsByReservation(reservationId: string): Observable<TicketResponse[]> {
+    return this.http.get<TicketResponse[]>(
+      `${environment.apiBaseUrl}/reservations/${reservationId}/tickets`,
     );
   }
 
