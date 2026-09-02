@@ -1,17 +1,12 @@
 import { CanActivateFn, Router } from '@angular/router';
 import { inject } from '@angular/core';
-import { UsersService } from '@features/users/users-service';
+import { AuthService } from '@features/auth/auth-service';
 
 export const roleGuard: CanActivateFn = (route) => {
   const router = inject(Router);
-  const usersService = inject(UsersService);
+  const authService = inject(AuthService);
 
   const allowedRoles: string[] = route.data['roles'] ?? [];
-  const userRole = usersService.currentUser()?.role ?? '';
-
-  if (allowedRoles.includes(userRole)) {
-    return true;
-  }
-
-  return router.createUrlTree(['/dashboard/summary']);
+  if (allowedRoles.includes(authService.getRole() ?? '')) return true;
+  return router.createUrlTree(['/dashboard/events']);
 };

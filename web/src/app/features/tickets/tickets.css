@@ -1,0 +1,51 @@
+.data-table {
+  min-width: 700px;
+}
+
+.holder-name {
+  display: block;
+  font-weight: 500;
+}
+
+.ticket-code {
+  display: block;
+  font-size: 0.75rem;
+  font-family: monospace;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.date-day {
+  display: block;
+}
+
+.date-time {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.text-muted {
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.625rem;
+  border-radius: var(--mat-sys-corner-full);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.status-badge--valid {
+  background: color-mix(in srgb, #2e7d32 15%, transparent);
+  color: color-mix(in srgb, #2e7d32 90%, #000);
+}
+
+.status-badge--used {
+  background: var(--mat-sys-surface-container-high);
+  color: var(--mat-sys-on-surface-variant);
+  border: 1px solid var(--mat-sys-outline);
+}
