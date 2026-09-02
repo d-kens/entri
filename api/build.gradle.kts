@@ -10,6 +10,9 @@ description = "Backend API that powers the entri platform"
 
 release {
     tagTemplate = "api-v\${version}"
+    git {
+        requireBranch.set("master")
+    }
 }
 
 java {
