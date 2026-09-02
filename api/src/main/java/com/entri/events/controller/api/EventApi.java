@@ -10,6 +10,7 @@ import com.entri.events.dto.EventTicketReservationRequest;
 import com.entri.events.dto.EventTicketReservationResponse;
 import com.entri.events.dto.TicketTypeRequest;
 import com.entri.events.dto.TicketTypeResponse;
+import com.entri.tickets.dto.CheckInCodeResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -535,6 +536,35 @@ public interface EventApi {
             final EventTicketReservationRequest eventTicketReservationRequest
     );
 
+
+    @Operation(
+            operationId = "generateCheckInCode",
+            summary = "Generate Check-in Code",
+            description = "Generates a short-lived code for staff to authenticate on the mobile scanner. The code expires when the event ends."
+    )
+    @SecurityRequirement(name = "bearerAuth")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Check-in code generated successfully"),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Event has already ended",
+                    content = @Content(mediaType = "application/problem+json", schema = @Schema(implementation = ProblemDetail.class))
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Event not found",
+                    content = @Content(mediaType = "application/problem+json", schema = @Schema(implementation = ProblemDetail.class))
+            )
+    })
+    @PreAuthorize("hasAnyAuthority('ORGANIZER', 'ADMIN')")
+    @PostMapping("/{eventExternalId}/check-in-code")
+    CheckInCodeResponse generateCheckInCode(
+            @Parameter(description = "The unique external identifier of the event", required = true)
+            @PathVariable String eventExternalId,
+
+            @Parameter(hidden = true)
+            @AuthenticationPrincipal UserPrincipal requestingUser
+    );
 
     @Operation(
             operationId = "getEventTicketsReservation",

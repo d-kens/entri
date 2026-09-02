@@ -23,6 +23,8 @@ import com.entri.events.entity.TicketTypeSaleStatus;
 import com.entri.events.repository.EventRepository;
 import com.entri.events.repository.EventTicketReservationRepository;
 import com.entri.events.repository.TicketTypeRepository;
+import com.entri.tickets.ReservationEventPublisher;
+import com.entri.tickets.dto.ReservationConfirmedMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -44,6 +46,7 @@ public class EventTicketReservationService {
     private final EventRepository eventRepository;
     private final TicketTypeRepository ticketTypeRepository;
     private final EventTicketReservationRepository eventTicketReservationRepository;
+    private final ReservationEventPublisher reservationEventPublisher;
 
     @Value("${events.reservation.hold-duration:PT10M}")
     private Duration holdDuration;
@@ -93,11 +96,16 @@ public class EventTicketReservationService {
             }
         }
 
-        reservation.setStatus(
-                result.status() == PaymentStatus.PAID
-                        ? EventTicketReservationStatus.CONFIRMED
-                        : EventTicketReservationStatus.FAILED
-        );
+        var newStatus = result.status() == PaymentStatus.PAID
+                ? EventTicketReservationStatus.CONFIRMED
+                : EventTicketReservationStatus.FAILED;
+        reservation.setStatus(newStatus);
+
+        if (newStatus == EventTicketReservationStatus.CONFIRMED) {
+            reservationEventPublisher.publishReservationConfirmed(
+                    new ReservationConfirmedMessage(reservation.getExternalId())
+            );
+        }
     }
 
     @Transactional(readOnly = true)
