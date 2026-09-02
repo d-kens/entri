@@ -97,12 +97,6 @@ export const routes: Routes = [
         loadComponent: () => import('@features/tickets/tickets').then((m) => m.Tickets),
       },
       {
-        path: 'attendees',
-        canActivate: [roleGuard],
-        data: { roles: ['ORGANIZER'] },
-        loadComponent: () => import('@features/attendees/attendees').then((m) => m.Attendees),
-      },
-      {
         path: 'payout-settings',
         canActivate: [roleGuard],
         data: { roles: ['ORGANIZER'] },

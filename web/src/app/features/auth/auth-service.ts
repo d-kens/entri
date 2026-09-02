@@ -19,7 +19,6 @@ export class AuthService {
   private http: HttpClient = inject(HttpClient);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly ACCESS_TOKEN_KEY = 'access_token';
-  private readonly EXTERNAL_ID_KEY = 'external_id';
 
   private authStatusSignal = signal(!!this.getToken());
 
@@ -34,6 +33,24 @@ export class AuthService {
   getToken(): string | null {
     if (!isPlatformBrowser(this.platformId)) return null;
     return localStorage.getItem(this.ACCESS_TOKEN_KEY);
+  }
+
+  private decodeToken(): Record<string, string> | null {
+    const token = this.getToken();
+    if (!token) return null;
+    try {
+      return JSON.parse(atob(token.split('.')[1]));
+    } catch {
+      return null;
+    }
+  }
+
+  getRole(): string | null {
+    return this.decodeToken()?.['role'] ?? null;
+  }
+
+  getExternalId(): string | null {
+    return this.decodeToken()?.['sub'] ?? null;
   }
 
   register(registerUserRequest: RegisterUserRequest): Observable<UserResponse> {
@@ -51,7 +68,6 @@ export class AuthService {
       .pipe(
         tap((response) => {
           localStorage.setItem(this.ACCESS_TOKEN_KEY, response.accessToken.token);
-          localStorage.setItem(this.EXTERNAL_ID_KEY, response.user.externalKey);
           this.authStatusSignal.set(true);
         }),
         catchError((error) => {
@@ -76,15 +92,9 @@ export class AuthService {
       );
   }
 
-  getExternalId(): string | null {
-    if (!isPlatformBrowser(this.platformId)) return null;
-    return localStorage.getItem(this.EXTERNAL_ID_KEY);
-  }
-
   clearSession(): void {
     if (isPlatformBrowser(this.platformId)) {
       localStorage.removeItem(this.ACCESS_TOKEN_KEY);
-      localStorage.removeItem(this.EXTERNAL_ID_KEY);
     }
     this.authStatusSignal.set(false);
   }
@@ -101,7 +111,6 @@ export class AuthService {
       .pipe(
         finalize(() => {
           localStorage.removeItem(this.ACCESS_TOKEN_KEY);
-          localStorage.removeItem(this.EXTERNAL_ID_KEY);
           this.authStatusSignal.set(false);
         }),
       );
