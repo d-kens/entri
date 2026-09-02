@@ -9,10 +9,6 @@ on:
     tags:
       - "mobile-v*"
   workflow_dispatch:
-    inputs:
-      release_version:
-        description: Version to release — semver (e.g. 1.2.0) or increment (patch, minor, major). Defaults to patch.
-        type: string
 
 jobs:
   build:
@@ -42,9 +38,11 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     needs: build
-    if: github.ref == 'refs/heads/master' && !contains(github.event.head_commit.message, '[skip release]')
+    if: github.ref == 'refs/heads/master'
     permissions:
       contents: write
+      issues: write
+      pull-requests: write
 
     steps:
       - name: Checkout
@@ -59,15 +57,12 @@ jobs:
           cache: npm
           cache-dependency-path: mobile/package-lock.json
 
-      - name: Configure git
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+      - name: Install dependencies
+        working-directory: ./mobile
+        run: npm ci
 
       - name: Release
         working-directory: ./mobile
-        run: |
-          npm version "${VERSION_INPUT:-patch}" --tag-version-prefix=mobile-v -m "chore(release): %s [skip release]"
-          git push --follow-tags
+        run: npx semantic-release
         env:
-          VERSION_INPUT: ${{ inputs.release_version }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
