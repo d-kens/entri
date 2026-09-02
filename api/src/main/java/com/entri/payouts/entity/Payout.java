@@ -77,4 +77,7 @@ public class Payout extends AbstractAuditableEntity {
 
     @Column(name = "last_attempted_at")
     private Instant lastAttemptedAt;
+
+    @Column(name = "tracking_id", length = 36)
+    private String trackingId;
 }

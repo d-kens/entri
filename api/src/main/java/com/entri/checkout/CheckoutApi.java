@@ -1,7 +1,6 @@
 package com.entri.checkout;
 
-import com.entri.checkout.dto.CheckoutRequest;
-import com.entri.checkout.dto.CheckoutResponse;
+import com.entri.checkout.dto.CheckoutDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -79,7 +78,7 @@ public interface CheckoutApi {
             )
             @Valid
             @org.springframework.web.bind.annotation.RequestBody
-            final CheckoutRequest checkoutRequest
+            final CheckoutDetails checkoutDetails
     );
 
     @Operation(

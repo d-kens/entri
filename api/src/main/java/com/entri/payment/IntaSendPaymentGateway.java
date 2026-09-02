@@ -1,19 +1,16 @@
-package com.entri.checkout;
+package com.entri.payment;
 
-import com.entri.checkout.dto.CheckoutResponse;
-import com.entri.checkout.dto.PaymentResult;
-import com.entri.checkout.dto.WebhookRequest;
-import com.entri.checkout.enums.PaymentStatus;
-import com.entri.events.entity.EventTicketReservation;
 import com.entri.exception.PaymentGatewayException;
 import com.entri.intasend.IntaSendClient;
 import com.entri.intasend.IntaSendProperties;
 import com.entri.intasend.dto.IntaSendCheckoutRequest;
 import com.entri.intasend.dto.IntaSendWebhookPayload;
+import com.entri.payment.dto.CheckoutRequest;
+import com.entri.payment.dto.PaymentResult;
+import com.entri.payment.dto.WebhookRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -23,32 +20,28 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class IntaSendPaymentGateway implements PaymentGateway {
 
-    @Value("${app.base-url}")
-    private String appBaseUrl;
-
     private final IntaSendClient intaSendClient;
     private final IntaSendProperties intaSendProperties;
     private final ObjectMapper objectMapper;
 
     @Override
-    public CheckoutResponse checkout(EventTicketReservation eventTicketReservation) {
-        var request = new IntaSendCheckoutRequest(
-                eventTicketReservation.getFirstName(),
-                eventTicketReservation.getLastName(),
-                eventTicketReservation.getPhoneNumber(),
-                eventTicketReservation.getEmail(),
-                eventTicketReservation.getExternalId(),
+    public String checkout(CheckoutRequest request) {
+        var intaSendRequest = new IntaSendCheckoutRequest(
+                request.firstName(),
+                request.lastName(),
+                request.phoneNumber(),
+                request.email(),
+                request.reference(),
                 "WEBSITE",
-                appBaseUrl.stripTrailing() + "/tickets/" + eventTicketReservation.getExternalId(),
-                eventTicketReservation.getTotalAmount(),
-                eventTicketReservation.getEvent().getCurrency(),
+                request.redirectUrl(),
+                request.amount(),
+                request.currency(),
                 null,
                 "CUSTOMER-PAYS",
                 "CUSTOMER-PAYS"
         );
 
-        var response = intaSendClient.createCheckout(request);
-        return new CheckoutResponse(response.url());
+        return intaSendClient.createCheckout(intaSendRequest).url();
     }
 
     @Override
