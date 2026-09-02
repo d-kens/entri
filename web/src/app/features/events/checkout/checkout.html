@@ -64,6 +64,10 @@
           <p class="status-hint">Your tickets have been secured.</p>
         </div>
       </div>
+      <a [routerLink]="['/tickets', reservationId]" class="view-tickets-btn">
+        <mat-icon>confirmation_number</mat-icon>
+        View your tickets
+      </a>
     } @else if (expired()) {
       <div class="status-strip status-strip--expired">
         <mat-icon>timer_off</mat-icon>
@@ -117,11 +121,64 @@
       </div>
     </section>
 
-    <!-- ── Pay ────────────────────────────────────────────────── -->
+    <!-- ── Contact details + Pay ─────────────────────────────── -->
     @if (!confirmed()) {
+      @if (!expired()) {
+        <section class="contact-section">
+          <p class="contact-title">Your details</p>
+          <form [formGroup]="contactForm" class="contact-form">
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="contact-field">
+                <mat-label>First name</mat-label>
+                <input matInput formControlName="firstName" autocomplete="given-name" />
+                @if (
+                  contactForm.get('firstName')?.hasError('required') &&
+                  contactForm.get('firstName')?.touched
+                ) {
+                  <mat-error>First name is required</mat-error>
+                }
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="contact-field">
+                <mat-label>Last name</mat-label>
+                <input matInput formControlName="lastName" autocomplete="family-name" />
+                @if (
+                  contactForm.get('lastName')?.hasError('required') &&
+                  contactForm.get('lastName')?.touched
+                ) {
+                  <mat-error>Last name is required</mat-error>
+                }
+              </mat-form-field>
+            </div>
+            <mat-form-field appearance="outline" class="contact-field contact-field--full">
+              <mat-label>Email</mat-label>
+              <input matInput formControlName="email" type="email" autocomplete="email" />
+              @if (
+                contactForm.get('email')?.hasError('required') && contactForm.get('email')?.touched
+              ) {
+                <mat-error>Email is required</mat-error>
+              } @else if (
+                contactForm.get('email')?.hasError('email') && contactForm.get('email')?.touched
+              ) {
+                <mat-error>Enter a valid email</mat-error>
+              }
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="contact-field contact-field--full">
+              <mat-label>Phone number</mat-label>
+              <input matInput formControlName="phoneNumber" type="tel" autocomplete="tel" />
+              @if (
+                contactForm.get('phoneNumber')?.hasError('required') &&
+                contactForm.get('phoneNumber')?.touched
+              ) {
+                <mat-error>Phone number is required</mat-error>
+              }
+            </mat-form-field>
+          </form>
+        </section>
+      }
+
       <div class="pay-block">
-        <button class="pay-btn" [disabled]="loading() || expired()" (click)="pay()">
-          @if (loading()) {
+        <button class="pay-btn" [disabled]="loading() || expired() || paying()" (click)="pay()">
+          @if (loading() || paying()) {
             <span class="spinner"></span>
             Processing…
           } @else if (expired()) {

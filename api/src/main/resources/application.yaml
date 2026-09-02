@@ -57,9 +57,6 @@ intasend:
   secret-key: ${INTASEND_SECRET_KEY}
   webhook-challenge: ${INTASEND_WEBHOOK_CHALLENGE}
 
-payment:
-  redirect-url: ${PAYMENT_REDIRECT_URL}
-
 rate-limit:
   redis:
     host: ${REDIS_HOST:localhost}
