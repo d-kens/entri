@@ -45,7 +45,7 @@ public class CheckInCodeService {
 
     @Transactional(readOnly = true)
     public VerifyCodeResponse verifyCode(VerifyCodeRequest request) {
-        var checkInCode = checkInCodeRepository.findValidCode(request.code(), Instant.now())
+        var checkInCode = checkInCodeRepository.findValidCode(request.code().trim().toUpperCase(), Instant.now())
                 .orElseThrow(() -> new BadRequestException("Invalid or expired check-in code"));
 
         var event = checkInCode.getEvent();

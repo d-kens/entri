@@ -17,6 +17,7 @@ import com.entri.tickets.mapper.TicketMapper;
 import com.entri.tickets.repository.EventCheckInCodeRepository;
 import com.entri.tickets.repository.TicketRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +25,9 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +37,10 @@ public class TicketService {
     private final EventTicketReservationRepository reservationRepository;
     private final EventCheckInCodeRepository checkInCodeRepository;
     private final TicketMapper ticketMapper;
-    private final NotificationEventPublisher notificationPublisher;
+    private final NotificationEventPublisher notificationEventPublisher;
+
+    @Value("${app.base-url}")
+    private String appBaseUrl;
 
     @Transactional
     public void generateTickets(String reservationExternalId) {
@@ -76,7 +83,7 @@ public class TicketService {
 
     @Transactional
     public CheckInResponse checkIn(String ticketCode, CheckInRequest request) {
-        var code = checkInCodeRepository.findValidCode(request.checkInCode(), Instant.now())
+        var code = checkInCodeRepository.findValidCode(request.checkInCode().trim().toUpperCase(), Instant.now())
                 .orElseThrow(() -> new BadRequestException("Invalid or expired check-in code"));
 
         var ticket = ticketRepository.findByTicketCodeWithDetails(ticketCode).orElse(null);
@@ -94,14 +101,14 @@ public class TicketService {
             );
         }
 
-        Instant now = Instant.now();
-        int updated = ticketRepository.markAsUsed(ticketCode, now);
+        int updated = ticketRepository.markAsUsed(ticketCode, Instant.now());
         if (updated == 0) {
+            var refreshed = ticketRepository.findByTicketCodeWithDetails(ticketCode).orElseThrow();
             return new CheckInResponse(
                     CheckInResult.ALREADY_USED,
-                    holderName(ticket),
-                    ticket.getTicketType().getName(),
-                    null
+                    holderName(refreshed),
+                    refreshed.getTicketType().getName(),
+                    refreshed.getCheckedInAt()
             );
         }
 
@@ -109,22 +116,25 @@ public class TicketService {
                 CheckInResult.VALID,
                 holderName(ticket),
                 ticket.getTicketType().getName(),
-                now
+                Instant.now()
         );
     }
 
     private String holderName(Ticket ticket) {
         var r = ticket.getReservation();
-        return r.getFirstName() + " " + r.getLastName();
+        return Stream.of(r.getFirstName(), r.getLastName())
+                .filter(Objects::nonNull)
+                .collect(Collectors.joining(" "));
     }
 
     private void sendConfirmationEmail(EventTicketReservation reservation) {
-        notificationPublisher.publish(new NotificationMessage(
+        String ticketsUrl = appBaseUrl.stripTrailing() + "/tickets/" + reservation.getExternalId();
+        notificationEventPublisher.publish(new NotificationMessage(
                 NotificationType.TICKET_CONFIRMATION,
-                reservation.getEmail(),
+                reservation.getExternalId(),
                 Map.of(
-                        "firstName", reservation.getFirstName(),
-                        "ticketsUrl", "/tickets/" + reservation.getExternalId()
+                        "firstName", Objects.requireNonNullElse(reservation.getFirstName(), ""),
+                        "ticketsUrl", ticketsUrl
                 )
         ));
     }

@@ -2,7 +2,7 @@ package com.entri.modules.service;
 
 import com.entri.exception.ResourceNotFoundException;
 import com.entri.exception.UnauthorizedException;
-import com.entri.notification.NotificationPublisher;
+import com.entri.notification.NotificationEventPublisher;
 import com.entri.notification.dto.NotificationMessage;
 import com.entri.auth.dto.ResetPasswordRequest;
 import com.entri.auth.entity.PasswordResetToken;
@@ -32,7 +32,7 @@ import static org.mockito.Mockito.when;
 class PasswordResetServiceTest {
 
     @Mock UserService userService;
-    @Mock NotificationPublisher notificationPublisher;
+    @Mock NotificationEventPublisher notificationPublisher;
     @Mock PasswordResetTokenRepository passwordResetTokenRepository;
 
     @InjectMocks PasswordResetService passwordResetService;

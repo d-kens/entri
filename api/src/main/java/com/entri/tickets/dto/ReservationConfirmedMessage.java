@@ -1,4 +1,3 @@
 package com.entri.tickets.dto;
 
-public record
-ReservationConfirmedMessage(String reservationExternalId) {}
+public record ReservationConfirmedMessage(String reservationExternalId) {}

@@ -13,6 +13,5 @@ public interface TicketMapper {
     @Mapping(target = "ticketTypeName", source = "ticketType.name")
     @Mapping(target = "holderFirstName", source = "reservation.firstName")
     @Mapping(target = "holderLastName", source = "reservation.lastName")
-    @Mapping(target = "status", source = "status")
     TicketResponse toResponse(Ticket ticket);
 }

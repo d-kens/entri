@@ -14,12 +14,12 @@ public class ReservationConfirmedQueueConfig {
     public static final String RESERVATION_CONFIRMED_EXCHANGE = "reservation.confirmed";
     public static final String RESERVATION_CONFIRMED_ROUTING_KEY = "reservation.confirmed";
     public static final String TICKET_GENERATION_QUEUE = "reservation.confirmed.ticket-generation";
-    public static final String RESERVATION_EVENTS_DLX = "reservation.events.dlx";
+    public static final String RESERVATION_CONFIRMED_DLX = "reservation.confirmed.dlx";
     public static final String TICKET_GENERATION_FAILED_QUEUE = "reservation.confirmed.ticket-generation.failed";
 
     @Bean
-    public DirectExchange reservationEventsDeadLetterExchange() {
-        return new DirectExchange(RESERVATION_EVENTS_DLX);
+    public DirectExchange reservationConfirmedDeadLetterExchange() {
+        return new DirectExchange(RESERVATION_CONFIRMED_DLX);
     }
 
     @Bean
@@ -30,7 +30,7 @@ public class ReservationConfirmedQueueConfig {
     @Bean
     public Binding ticketGenerationFailedBinding() {
         return BindingBuilder.bind(ticketGenerationFailedQueue())
-                .to(reservationEventsDeadLetterExchange())
+                .to(reservationConfirmedDeadLetterExchange())
                 .with(TICKET_GENERATION_FAILED_QUEUE);
     }
 
@@ -42,7 +42,7 @@ public class ReservationConfirmedQueueConfig {
     @Bean
     public Queue ticketGenerationQueue() {
         return QueueBuilder.durable(TICKET_GENERATION_QUEUE)
-                .withArgument("x-dead-letter-exchange", RESERVATION_EVENTS_DLX)
+                .withArgument("x-dead-letter-exchange", RESERVATION_CONFIRMED_DLX)
                 .withArgument("x-dead-letter-routing-key", TICKET_GENERATION_FAILED_QUEUE)
                 .build();
     }
