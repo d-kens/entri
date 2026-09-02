@@ -13,6 +13,8 @@ import com.entri.events.dto.TicketTypeResponse;
 import com.entri.events.service.EventService;
 import com.entri.events.service.EventTicketReservationService;
 import com.entri.events.service.TicketTypeService;
+import com.entri.tickets.dto.CheckInCodeResponse;
+import com.entri.tickets.service.CheckInCodeService;
 import com.entri.ratelimit.RateLimited;
 import com.entri.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +31,7 @@ public class EventController implements EventApi {
     private final EventService eventService;
     private final TicketTypeService ticketTypeService;
     private final EventTicketReservationService eventTicketReservationService;
+    private final CheckInCodeService checkInCodeService;
 
     @Override
     public EventResponse getEventByExternalId(final String eventExternalId) {
@@ -105,6 +108,11 @@ public class EventController implements EventApi {
                 )
                 .toUri();
         return ResponseEntity.created(uri).body(response);
+    }
+
+    @Override
+    public CheckInCodeResponse generateCheckInCode(String eventExternalId, UserPrincipal requestingUser) {
+        return checkInCodeService.generateCode(eventExternalId, requestingUser.getExternalKey());
     }
 
     @Override

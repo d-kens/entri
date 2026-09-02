@@ -23,6 +23,7 @@ public class NotificationConsumer {
         return switch (type) {
             case PASSWORD_RESET -> WorkflowType.PASSWORD_RESET;
             case UPDATED_PASSWORD -> WorkflowType.UPDATED_PASSWORD;
+            case TICKET_CONFIRMATION -> WorkflowType.TICKET_CONFIRMATION;
         };
     }
 }
