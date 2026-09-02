@@ -51,11 +51,14 @@ jobs:
           node-version: lts/*
 
       - name: Install semantic-release plugins
-        run: npm install -g semantic-release @semantic-release/commit-analyzer @semantic-release/release-notes-generator @semantic-release/exec @semantic-release/git @semantic-release/github semantic-release-monorepo
+        working-directory: ./api
+        run: |
+          npm init -y
+          npm install --no-save semantic-release @semantic-release/commit-analyzer @semantic-release/release-notes-generator @semantic-release/exec @semantic-release/git @semantic-release/github semantic-release-monorepo
 
       - name: Release
         working-directory: ./api
-        run: semantic-release
+        run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
