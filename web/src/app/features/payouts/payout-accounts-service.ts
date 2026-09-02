@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { PayoutAccountRequest, PayoutAccountResponse } from './models/payout.models';
+import { BankCode, PayoutAccountRequest, PayoutAccountResponse } from './models/payout.models';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -9,6 +9,12 @@ import { environment } from '../../../environments/environment';
 })
 export class PayoutAccountsService {
   private http = inject(HttpClient);
+
+  getBankCodes(organizerKey: string): Observable<BankCode[]> {
+    return this.http.get<BankCode[]>(
+      `${environment.apiBaseUrl}/users/${organizerKey}/payout-accounts/bank-codes`,
+    );
+  }
 
   getAccounts(organizerKey: string): Observable<PayoutAccountResponse[]> {
     return this.http.get<PayoutAccountResponse[]>(

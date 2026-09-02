@@ -61,13 +61,21 @@
             </mat-form-field>
           }
 
-          <!-- Bank Code (Bank only) -->
+          <!-- Bank (Bank only) -->
           @if (isBank) {
             <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
-              <mat-label>Bank Code</mat-label>
-              <input matInput type="text" formControlName="bankCode" />
+              <mat-label>Bank</mat-label>
+              <mat-select formControlName="bankCode">
+                @if (bankCodesLoading()) {
+                  <mat-option disabled>Loading banks...</mat-option>
+                } @else {
+                  @for (bank of bankCodes(); track bank.bankCode) {
+                    <mat-option [value]="bank.bankCode">{{ bank.bankName }}</mat-option>
+                  }
+                }
+              </mat-select>
               @if (addForm.get('bankCode')?.hasError('required')) {
-                <mat-error>Bank code is required</mat-error>
+                <mat-error>Bank is required</mat-error>
               }
             </mat-form-field>
           }
@@ -154,7 +162,7 @@
                 <p class="account-ref">Ref: {{ account.accountReference }}</p>
               }
               @if (account.bankCode) {
-                <p class="account-ref">Bank Code: {{ account.bankCode }}</p>
+                <p class="account-ref">Bank: {{ bankNameFor(account.bankCode) }}</p>
               }
             </div>
 
