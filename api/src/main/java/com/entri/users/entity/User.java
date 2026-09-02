@@ -52,9 +52,6 @@ public class User extends AbstractAuditableEntity {
     @Column(name = "phone_number")
     private String phoneNumber;
 
-    @Column(name = "wallet_id")
-    private String walletId;
-
     @Column(name = "enabled", nullable = false)
     @Builder.Default
     private boolean enabled = true;

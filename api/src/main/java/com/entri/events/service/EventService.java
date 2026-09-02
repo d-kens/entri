@@ -12,6 +12,7 @@ import com.entri.events.entity.EventStatus;
 import com.entri.events.repository.EventRepository;
 import com.entri.events.mapper.EventMapper;
 import com.entri.events.specification.EventSpecifications;
+import com.entri.payouts.repository.OrganizerPayoutAccountRepository;
 import com.entri.users.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -32,6 +33,7 @@ public class EventService {
     private final UserService userService;
     private final EventRepository eventRepository;
     private final EventCategoryService eventCategoryService;
+    private final OrganizerPayoutAccountRepository payoutAccountRepository;
 
     public PaginationResponse<EventResponse> listEvents(EventFilter filter) {
         Specification<Event> statusSpec = EventSpecifications.hasStatus(EventStatus.PUBLISHED)
@@ -101,6 +103,13 @@ public class EventService {
     @Transactional
     public EventResponse publishEvent(final String eventExternalId, final UserPrincipal requestingUser) {
         var event = getAuthorizedEvent(eventExternalId, requestingUser);
+
+        var organizerKey = event.getOrganizer().getExternalKey();
+        if (!payoutAccountRepository.existsByOrganizerExternalKeyAndIsDefaultTrue(organizerKey)) {
+            throw new BadRequestException(
+                    "You must set up a payout account before publishing an event"
+            );
+        }
 
         if (event.getTicketTypes().isEmpty()) {
             throw new BadRequestException(

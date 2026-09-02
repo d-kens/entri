@@ -1,0 +1,55 @@
+<div class="p-6 space-y-6">
+  <h1 class="text-2xl font-semibold text-gray-800">Dashboard</h1>
+
+  @if (!hasPayoutAccount()) {
+    <div class="flex items-start gap-3 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3">
+      <mat-icon class="text-amber-500 mt-0.5 flex-shrink-0">warning_amber</mat-icon>
+      <div class="flex-1 min-w-0">
+        <p class="text-sm font-medium text-amber-900">Payout account required</p>
+        <p class="text-sm text-amber-700 mt-0.5">
+          You need to set up a payout account before you can publish events and receive payments.
+        </p>
+      </div>
+      <a
+        mat-stroked-button
+        [routerLink]="['/dashboard/payout-settings']"
+        class="flex-shrink-0 !text-amber-700 !border-amber-400"
+      >
+        Set up now
+      </a>
+    </div>
+  }
+
+  <!-- KPI Cards -->
+  @if (metricsLoading()) {
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      @for (i of [1, 2, 3, 4]; track i) {
+        <div class="bg-white rounded-xl p-5 shadow-sm animate-pulse h-24"></div>
+      }
+    </div>
+  } @else if (metricsError()) {
+    <p class="text-red-500 text-sm">Failed to load summary. Please refresh.</p>
+  } @else if (metrics(); as m) {
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="bg-white rounded-xl p-5 shadow-sm">
+        <p class="text-xs text-gray-500 uppercase tracking-wide">Total Revenue</p>
+        <p class="text-2xl font-bold text-gray-800 mt-1">{{ m.totalRevenue | number: '1.2-2' }}</p>
+        <p class="text-xs text-gray-400 mt-0.5">KES</p>
+      </div>
+      <div class="bg-white rounded-xl p-5 shadow-sm">
+        <p class="text-xs text-gray-500 uppercase tracking-wide">Tickets Sold</p>
+        <p class="text-2xl font-bold text-gray-800 mt-1">{{ m.totalTicketsSold | number }}</p>
+      </div>
+      <div class="bg-white rounded-xl p-5 shadow-sm">
+        <p class="text-xs text-gray-500 uppercase tracking-wide">Upcoming Events</p>
+        <p class="text-2xl font-bold text-gray-800 mt-1">{{ m.upcomingEventsCount | number }}</p>
+      </div>
+      <div class="bg-white rounded-xl p-5 shadow-sm border-l-4 border-green-400">
+        <p class="text-xs text-gray-500 uppercase tracking-wide">Live Now</p>
+        <p class="text-2xl font-bold text-green-600 mt-1">{{ m.liveEventsCount | number }}</p>
+      </div>
+    </div>
+  }
+
+  <app-sales-trend-chart [trendLoader]="trendLoader" title="Revenue Trend" />
+</div>
