@@ -1,9 +1,14 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { firstValueFrom } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { catchError, firstValueFrom, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 export type CheckInResult = 'VALID' | 'ALREADY_USED' | 'INVALID';
+
+export interface VerifyCodeResponse {
+  eventExternalId: string;
+  eventTitle: string;
+}
 
 export interface CheckInResponse {
   result: CheckInResult;
@@ -16,19 +21,26 @@ export interface CheckInResponse {
 export class CheckInService {
   private readonly http = inject(HttpClient);
 
-  // TODO: replace with real API call when backend is ready
-  verifyCode(code: string): Promise<void> {
-    return new Promise((resolve, reject) =>
-      setTimeout(() => code === '1234' ? resolve() : reject(new Error('Invalid or expired code')), 800)
+  verifyCode(code: string): Promise<VerifyCodeResponse> {
+    return firstValueFrom(
+      this.http
+        .post<VerifyCodeResponse>(`${environment.apiUrl}/check-in/verify-code`, { code })
+        .pipe(catchError(this.extractError('Invalid or expired code')))
     );
   }
 
   checkIn(ticketCode: string, checkInCode: string): Promise<CheckInResponse> {
     return firstValueFrom(
-      this.http.post<CheckInResponse>(
-        `${environment.apiUrl}/tickets/${ticketCode}/check-in`,
-        { checkInCode }
-      )
+      this.http
+        .post<CheckInResponse>(`${environment.apiUrl}/tickets/${ticketCode}/check-in`, { checkInCode })
+        .pipe(catchError(this.extractError('Something went wrong. Try again.')))
     );
+  }
+
+  private extractError(fallback: string) {
+    return (err: HttpErrorResponse) => {
+      const message = err.error?.detail ?? fallback;
+      return throwError(() => new Error(message));
+    };
   }
 }
