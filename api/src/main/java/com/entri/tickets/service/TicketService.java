@@ -24,8 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -123,19 +123,20 @@ public class TicketService {
     private String holderName(Ticket ticket) {
         var r = ticket.getReservation();
         return Stream.of(r.getFirstName(), r.getLastName())
-                .filter(Objects::nonNull)
+                .filter(s -> s != null)
                 .collect(Collectors.joining(" "));
     }
 
     private void sendConfirmationEmail(EventTicketReservation reservation) {
         String ticketsUrl = appBaseUrl.stripTrailing() + "/tickets/" + reservation.getExternalId();
+        var payload = new HashMap<String, Object>();
+        payload.put("firstName", reservation.getFirstName());
+        payload.put("ticketsUrl", ticketsUrl);
+
         notificationEventPublisher.publish(new NotificationMessage(
                 NotificationType.TICKET_CONFIRMATION,
                 reservation.getExternalId(),
-                Map.of(
-                        "firstName", Objects.requireNonNullElse(reservation.getFirstName(), ""),
-                        "ticketsUrl", ticketsUrl
-                )
+                payload
         ));
     }
 }
