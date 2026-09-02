@@ -42,7 +42,9 @@ public class IntaSendPaymentGateway implements PaymentGateway {
                 appBaseUrl.stripTrailing() + "/tickets/" + eventTicketReservation.getExternalId(),
                 eventTicketReservation.getTotalAmount(),
                 eventTicketReservation.getEvent().getCurrency(),
-                eventTicketReservation.getEvent().getOrganizer().getWalletId()
+                eventTicketReservation.getEvent().getOrganizer().getWalletId(),
+                "CUSTOMER-PAYS",
+                "CUSTOMER-PAYS"
         );
 
         var response = intaSendClient.createCheckout(request);
