@@ -3,7 +3,7 @@ package com.entri.auth.service;
 import com.entri.auth.dto.ResetPasswordRequest;
 import com.entri.auth.entity.PasswordResetToken;
 import com.entri.auth.repository.PasswordResetTokenRepository;
-import com.entri.notification.NotificationPublisher;
+import com.entri.notification.NotificationEventPublisher;
 import com.entri.notification.NotificationType;
 import com.entri.notification.dto.NotificationMessage;
 import com.entri.exception.ResourceNotFoundException;
@@ -28,7 +28,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class PasswordResetService {
     private final UserService userService;
-    private final NotificationPublisher notificationPublisher;
+    private final NotificationEventPublisher notificationPublisher;
     private final PasswordResetTokenRepository passwordResetTokenRepository;
 
     @Value("${app.base-url}")
