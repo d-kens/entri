@@ -114,6 +114,7 @@
     "@angular/platform-server": "^21.2.22",
     "@angular/router": "^21.2.22",
     "@angular/ssr": "^21.2.0",
+    "chart.js": "^4.5.1",
     "event-source-polyfill": "^1.0.31",
     "express": "^5.1.0",
     "jwt-decode": "^4.0.0",
@@ -126,6 +127,8 @@
     "@angular/cli": "^21.1.4",
     "@angular/compiler-cli": "^21.2.22",
     "@angular/platform-browser-dynamic": "^21.2.22",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
     "@tailwindcss/postcss": "^4.1.12",
     "@types/event-source-polyfill": "^1.0.5",
     "@types/eventsource": "^1.1.15",
@@ -137,11 +140,9 @@
     "lint-staged": "^16.4.0",
     "postcss": "^8.5.3",
     "prettier": "^3.8.4",
+    "semantic-release": "^24.0.0",
     "tailwindcss": "^4.1.12",
     "typescript": "~5.9.2",
-    "vitest": "^4.0.8",
-    "semantic-release": "^24.0.0",
-    "@semantic-release/changelog": "^6.0.3",
-    "@semantic-release/git": "^10.0.1"
+    "vitest": "^4.0.8"
   }
 }
