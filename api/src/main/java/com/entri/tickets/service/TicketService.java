@@ -4,7 +4,7 @@ import com.entri.events.entity.EventTicketReservation;
 import com.entri.events.repository.EventTicketReservationRepository;
 import com.entri.exception.BadRequestException;
 import com.entri.exception.ResourceNotFoundException;
-import com.entri.notification.NotificationPublisher;
+import com.entri.notification.NotificationEventPublisher;
 import com.entri.notification.NotificationType;
 import com.entri.notification.dto.NotificationMessage;
 import com.entri.tickets.dto.CheckInRequest;
@@ -33,7 +33,7 @@ public class TicketService {
     private final EventTicketReservationRepository reservationRepository;
     private final EventCheckInCodeRepository checkInCodeRepository;
     private final TicketMapper ticketMapper;
-    private final NotificationPublisher notificationPublisher;
+    private final NotificationEventPublisher notificationPublisher;
 
     @Transactional
     public void generateTickets(String reservationExternalId) {

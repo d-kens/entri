@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class ReservationEventConfig {
+public class ReservationConfirmedQueueConfig {
 
     public static final String RESERVATION_CONFIRMED_EXCHANGE = "reservation.confirmed";
     public static final String RESERVATION_CONFIRMED_ROUTING_KEY = "reservation.confirmed";
