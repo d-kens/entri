@@ -136,7 +136,7 @@
           <p class="contact-title">Your details</p>
           <form [formGroup]="contactForm" class="contact-form">
             <div class="form-row">
-              <mat-form-field appearance="outline" class="contact-field">
+              <mat-form-field appearance="outline" subscriptSizing="dynamic" class="contact-field">
                 <mat-label>First name</mat-label>
                 <input matInput formControlName="firstName" autocomplete="given-name" />
                 @if (
@@ -146,7 +146,7 @@
                   <mat-error>First name is required</mat-error>
                 }
               </mat-form-field>
-              <mat-form-field appearance="outline" class="contact-field">
+              <mat-form-field appearance="outline" subscriptSizing="dynamic" class="contact-field">
                 <mat-label>Last name</mat-label>
                 <input matInput formControlName="lastName" autocomplete="family-name" />
                 @if (
@@ -157,7 +157,11 @@
                 }
               </mat-form-field>
             </div>
-            <mat-form-field appearance="outline" class="contact-field contact-field--full">
+            <mat-form-field
+              appearance="outline"
+              subscriptSizing="dynamic"
+              class="contact-field contact-field--full"
+            >
               <mat-label>Email</mat-label>
               <input matInput formControlName="email" type="email" autocomplete="email" />
               @if (
@@ -170,7 +174,11 @@
                 <mat-error>Enter a valid email</mat-error>
               }
             </mat-form-field>
-            <mat-form-field appearance="outline" class="contact-field contact-field--full">
+            <mat-form-field
+              appearance="outline"
+              subscriptSizing="dynamic"
+              class="contact-field contact-field--full"
+            >
               <mat-label>Phone number</mat-label>
               <input matInput formControlName="phoneNumber" type="tel" autocomplete="tel" />
               @if (
