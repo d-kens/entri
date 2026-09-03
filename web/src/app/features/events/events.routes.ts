@@ -32,4 +32,8 @@ export const EVENTS_ROUTES: Routes = [
     loadComponent: () =>
       import('@features/events/edit-ticket-type/edit-ticket-type').then((m) => m.EditTicketType),
   },
+  {
+    path: ':eventExternalId/tickets',
+    loadComponent: () => import('@features/tickets/tickets').then((m) => m.Tickets),
+  },
 ];

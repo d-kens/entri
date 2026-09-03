@@ -16,6 +16,14 @@
   @if (!isLoading() && !hasError() && event(); as ev) {
     <app-event-hero [event]="ev" [backLink]="['/dashboard/events']">
       <ng-container heroActions>
+        <a
+          mat-stroked-button
+          class="hero-btn-outline"
+          [routerLink]="['/dashboard/events', ev.externalId, 'tickets']"
+        >
+          <mat-icon>local_activity</mat-icon>
+          Tickets
+        </a>
         <button
           mat-stroked-button
           class="hero-btn-outline"

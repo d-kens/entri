@@ -650,6 +650,19 @@ public interface EventApi {
             @Parameter(hidden = true) @AuthenticationPrincipal UserPrincipal requestingUser
     );
 
+    @Operation(summary = "Get tickets for an event", description = "Returns a paginated list of tickets for the given event. Organizers can only access their own events.")
+    @ApiResponse(responseCode = "200", description = "Tickets retrieved successfully")
+    @PreAuthorize("hasAnyAuthority('ORGANIZER', 'ADMIN')")
+    @GetMapping("/{eventExternalId}/tickets")
+    PaginationResponse<TicketResponse> getEventTickets(
+            @Parameter(description = "The unique external identifier of the event", required = true)
+            @PathVariable String eventExternalId,
+
+            @Valid @ModelAttribute TicketFilter filter,
+
+            @Parameter(hidden = true) @AuthenticationPrincipal UserPrincipal requestingUser
+    );
+
     @Operation(
             operationId = "getEventCheckInStats",
             summary = "Get Check-in Statistics",
@@ -674,19 +687,6 @@ public interface EventApi {
                     content = @Content(mediaType = "application/problem+json", schema = @Schema(implementation = ProblemDetail.class))
             )
     })
-    @Operation(summary = "Get tickets for an event", description = "Returns a paginated list of tickets for the given event. Organizers can only access their own events.")
-    @ApiResponse(responseCode = "200", description = "Tickets retrieved successfully")
-    @PreAuthorize("hasAnyAuthority('ORGANIZER', 'ADMIN')")
-    @GetMapping("/{eventExternalId}/tickets")
-    PaginationResponse<TicketResponse> getEventTickets(
-            @Parameter(description = "The unique external identifier of the event", required = true)
-            @PathVariable String eventExternalId,
-
-            @Valid @ModelAttribute TicketFilter filter,
-
-            @Parameter(hidden = true) @AuthenticationPrincipal UserPrincipal requestingUser
-    );
-
     @PreAuthorize("hasAnyAuthority('ORGANIZER', 'ADMIN')")
     @GetMapping("/{eventExternalId}/check-in-stats")
     EventCheckInStatsResponse getCheckInStats(

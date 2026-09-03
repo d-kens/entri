@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -27,6 +27,7 @@ import {
   standalone: true,
   imports: [
     CommonModule,
+    RouterLink,
     MatButtonModule,
     MatIconModule,
     MatChipsModule,

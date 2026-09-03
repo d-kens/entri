@@ -147,6 +147,10 @@
       <mat-icon>edit</mat-icon>
       <span>Edit</span>
     </a>
+    <a mat-menu-item [routerLink]="['/dashboard/events', event.externalId, 'tickets']">
+      <mat-icon>local_activity</mat-icon>
+      <span>View Tickets</span>
+    </a>
     @if (event.status === 'DRAFT' || event.status === 'CANCELLED') {
       <button mat-menu-item class="publish-menu-item" (click)="publishEvent(event.externalId)">
         <mat-icon>publish</mat-icon>
