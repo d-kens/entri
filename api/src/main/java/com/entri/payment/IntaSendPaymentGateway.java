@@ -40,6 +40,9 @@ public class IntaSendPaymentGateway implements PaymentGateway {
     @Value("${app.base-url}")
     private String appBaseUrl;
 
+    @Value("${app.api-url}")
+    private String appApiUrl;
+
     @Override
     public String checkout(CheckoutRequest request) {
         var intaSendRequest = new IntaSendCheckoutRequest(
@@ -72,7 +75,7 @@ public class IntaSendPaymentGateway implements PaymentGateway {
                 request.narrative()
         );
 
-        var callbackUrl = appBaseUrl.stripTrailing() + "/payment/webhook";
+        var callbackUrl = appApiUrl.stripTrailing() + "/api/payment/webhook";
 
         var sendMoneyRequest = new IntaSendSendMoneyRequest(
                 request.currency(),
