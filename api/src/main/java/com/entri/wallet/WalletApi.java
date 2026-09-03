@@ -31,6 +31,42 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public interface WalletApi {
 
     @Operation(
+            operationId = "GetPlatformWallet",
+            summary = "Get platform wallet",
+            description = "Retrieves the platform wallet and its current balance."
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Platform wallet retrieved successfully",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = WalletResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Access denied",
+                    content = @Content(
+                            mediaType = "application/problem+json",
+                            schema = @Schema(implementation = ProblemDetail.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Platform wallet not found",
+                    content = @Content(
+                            mediaType = "application/problem+json",
+                            schema = @Schema(implementation = ProblemDetail.class)
+                    )
+            )
+    })
+    @SecurityRequirement(name = "bearerAuth")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping("/platform")
+    WalletResponse getPlatformWallet();
+
+    @Operation(
             operationId = "GetWallet",
             summary = "Get organizer wallet",
             description = "Retrieves the wallet and current balance for a given organizer."

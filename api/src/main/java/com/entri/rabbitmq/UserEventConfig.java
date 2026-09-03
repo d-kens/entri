@@ -19,11 +19,8 @@ public class UserEventConfig {
     public static final String USER_UPDATED_ROUTING_KEY = "user.updated";
     public static final String USER_UPDATED_SUBSCRIBER_QUEUE = "user.updated.subscriber";
 
-    public static final String USER_CREATED_WALLET_QUEUE = "user.created.wallet";
-
     public static final String USER_EVENTS_DLX = "user.events.dlx";
     public static final String USER_CREATED_SUBSCRIBER_FAILED_QUEUE = "user.created.subscriber.failed";
-    public static final String USER_CREATED_WALLET_FAILED_QUEUE = "user.created.wallet.failed";
     public static final String USER_UPDATED_SUBSCRIBER_FAILED_QUEUE = "user.updated.subscriber.failed";
 
     @Bean
@@ -34,16 +31,6 @@ public class UserEventConfig {
     @Bean
     public Queue userCreatedSubscriberFailedQueue() {
         return QueueBuilder.durable(USER_CREATED_SUBSCRIBER_FAILED_QUEUE).build();
-    }
-
-    @Bean
-    public Queue userCreatedWalletFailedQueue() {
-        return QueueBuilder.durable(USER_CREATED_WALLET_FAILED_QUEUE).build();
-    }
-
-    @Bean
-    public Binding userCreatedWalletFailedBinding() {
-        return BindingBuilder.bind(userCreatedWalletFailedQueue()).to(userEventsDeadLetterExchange()).with(USER_CREATED_WALLET_FAILED_QUEUE);
     }
 
     @Bean
@@ -77,19 +64,6 @@ public class UserEventConfig {
     @Bean
     public Binding userCreatedSubscriberBinding() {
         return BindingBuilder.bind(userCreatedSubscriberQueue()).to(userCreatedExchange());
-    }
-
-    @Bean
-    public Queue userCreatedWalletQueue() {
-        return QueueBuilder.durable(USER_CREATED_WALLET_QUEUE)
-                .withArgument("x-dead-letter-exchange", USER_EVENTS_DLX)
-                .withArgument("x-dead-letter-routing-key", USER_CREATED_WALLET_FAILED_QUEUE)
-                .build();
-    }
-
-    @Bean
-    public Binding userCreatedWalletBinding() {
-        return BindingBuilder.bind(userCreatedWalletQueue()).to(userCreatedExchange());
     }
 
     @Bean
