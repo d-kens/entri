@@ -31,4 +31,23 @@
       </div>
     </div>
   }
+
+  <!-- Wallet balance -->
+  <a
+    [routerLink]="['/dashboard/wallet']"
+    class="flex items-center justify-between bg-white rounded-xl p-5 shadow-sm border-l-4 border-blue-400 hover:shadow-md transition-shadow no-underline"
+  >
+    <div>
+      <p class="text-xs text-gray-500 uppercase tracking-wide">Wallet Balance</p>
+      @if (walletLoading()) {
+        <div class="h-7 w-28 bg-gray-100 rounded animate-pulse mt-1"></div>
+      } @else {
+        <p class="text-2xl font-bold text-gray-800 mt-1">
+          {{ walletBalance() | number: '1.2-2' }}
+          <span class="text-sm font-normal text-gray-400">KES</span>
+        </p>
+      }
+    </div>
+    <mat-icon class="text-blue-400">arrow_forward</mat-icon>
+  </a>
 </div>
