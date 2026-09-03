@@ -24,7 +24,7 @@ public class IntaSendConfig {
     ) {
         return RestClient.builder()
                 .baseUrl(properties.baseUrl())
-                .defaultHeader("Authorization", "Token " + properties.secretKey())
+                .defaultHeader("Authorization", "Bearer " + properties.secretKey())
                 .defaultHeader("Content-Type", "application/json")
                 .build();
     }

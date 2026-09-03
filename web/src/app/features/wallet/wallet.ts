@@ -98,7 +98,7 @@ export class Wallet implements OnInit {
     validate(fields.amount, (ctx) => {
       const v = ctx.value();
       if (v === null || v === undefined) return { kind: 'required', message: 'Required' };
-      if (Number(v) < 1) return { kind: 'min', message: 'Must be greater than 0' };
+      if (Number(v) < 100) return { kind: 'min', message: 'Minimum withdrawal is KES 100' };
       return null;
     });
     required(fields.accountType, { message: 'Required' });
