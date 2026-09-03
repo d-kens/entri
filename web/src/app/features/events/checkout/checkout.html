@@ -68,6 +68,14 @@
         <mat-icon>confirmation_number</mat-icon>
         View your tickets
       </a>
+    } @else if (failed()) {
+      <div class="status-strip status-strip--failed">
+        <mat-icon>cancel</mat-icon>
+        <div>
+          <p class="status-title">Payment failed</p>
+          <p class="status-hint">Your payment could not be processed. Please try again.</p>
+        </div>
+      </div>
     } @else if (expired()) {
       <div class="status-strip status-strip--expired">
         <mat-icon>timer_off</mat-icon>
@@ -123,7 +131,7 @@
 
     <!-- ── Contact details + Pay ─────────────────────────────── -->
     @if (!confirmed()) {
-      @if (!expired()) {
+      @if (!expired() && !failed()) {
         <section class="contact-section">
           <p class="contact-title">Your details</p>
           <form [formGroup]="contactForm" class="contact-form">
@@ -177,18 +185,24 @@
       }
 
       <div class="pay-block">
-        <button class="pay-btn" [disabled]="loading() || expired() || paying()" (click)="pay()">
+        <button
+          class="pay-btn"
+          [disabled]="loading() || expired() || failed() || paying()"
+          (click)="pay()"
+        >
           @if (loading() || paying()) {
             <span class="spinner"></span>
             Processing…
           } @else if (expired()) {
             Reservation expired
+          } @else if (failed()) {
+            Payment failed
           } @else {
             Pay {{ event()?.currency }} {{ res.totalAmount | number: '1.2-2' }}
           }
         </button>
 
-        @if (expired()) {
+        @if (expired() || failed()) {
           <a [routerLink]="['/events', externalId]" class="reselect-btn"> Select tickets again </a>
         } @else {
           <p class="secure-note">
