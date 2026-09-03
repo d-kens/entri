@@ -13,6 +13,8 @@ import com.entri.events.dto.EventTicketReservationResponse;
 import com.entri.events.dto.TicketTypeRequest;
 import com.entri.events.dto.TicketTypeResponse;
 import com.entri.tickets.dto.CheckInCodeResponse;
+import com.entri.tickets.dto.TicketFilter;
+import com.entri.tickets.dto.TicketResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -34,6 +36,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -671,6 +674,19 @@ public interface EventApi {
                     content = @Content(mediaType = "application/problem+json", schema = @Schema(implementation = ProblemDetail.class))
             )
     })
+    @Operation(summary = "Get tickets for an event", description = "Returns a paginated list of tickets for the given event. Organizers can only access their own events.")
+    @ApiResponse(responseCode = "200", description = "Tickets retrieved successfully")
+    @PreAuthorize("hasAnyAuthority('ORGANIZER', 'ADMIN')")
+    @GetMapping("/{eventExternalId}/tickets")
+    PaginationResponse<TicketResponse> getEventTickets(
+            @Parameter(description = "The unique external identifier of the event", required = true)
+            @PathVariable String eventExternalId,
+
+            @Valid @ModelAttribute TicketFilter filter,
+
+            @Parameter(hidden = true) @AuthenticationPrincipal UserPrincipal requestingUser
+    );
+
     @PreAuthorize("hasAnyAuthority('ORGANIZER', 'ADMIN')")
     @GetMapping("/{eventExternalId}/check-in-stats")
     EventCheckInStatsResponse getCheckInStats(
