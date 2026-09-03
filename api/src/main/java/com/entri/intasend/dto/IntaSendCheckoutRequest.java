@@ -32,7 +32,6 @@ public record IntaSendCheckoutRequest(
         @JsonProperty("wallet_id")
         String walletId,
 
-        // TODO: verify these field names against IntaSend API docs — "tarrif" may be a vendor-side misspelling
         @JsonProperty("card_tarrif")
         String cardTariff,
 
