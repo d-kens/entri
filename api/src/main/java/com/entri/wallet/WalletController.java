@@ -34,8 +34,7 @@ public class WalletController implements WalletApi {
     }
 
     @Override
-    public WithdrawalResponse withdraw(final String organizerExternalKey, final WithdrawalRequest request, final UserPrincipal requestingUser) {
-        requestingUser.assertCanManage(organizerExternalKey);
-        return walletService.withdraw(organizerExternalKey, request);
+    public WithdrawalResponse withdraw(final String walletId, final WithdrawalRequest request, final UserPrincipal requestingUser) {
+        return walletService.withdraw(walletId, request, requestingUser);
     }
 }

@@ -12,6 +12,8 @@ import java.util.Optional;
 
 public interface WalletRepository extends JpaRepository<Wallet, Long> {
 
+    Optional<Wallet> findByExternalId(String externalId);
+
     Optional<Wallet> findByOrganizerExternalKey(String organizerExternalKey);
 
     Optional<Wallet> findByWalletType(WalletType walletType);
