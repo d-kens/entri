@@ -1,13 +1,16 @@
 package com.entri.wallet;
 
+import com.entri.common.dto.PaginationResponse;
 import com.entri.exception.ResourceNotFoundException;
 import com.entri.users.repository.UserRepository;
 import com.entri.wallet.dto.WalletResponse;
+import com.entri.wallet.dto.WalletTransactionResponse;
 import com.entri.wallet.entity.Wallet;
 import com.entri.wallet.entity.WalletTransaction;
 import com.entri.wallet.repository.WalletRepository;
 import com.entri.wallet.repository.WalletTransactionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,6 +44,34 @@ public class WalletService {
         var balance = walletTransactionRepository.calculateBalance(organizerExternalKey, WalletTransactionStatus.COMPLETED);
 
         return new WalletResponse(wallet.getExternalId(), balance);
+    }
+
+    @Transactional(readOnly = true)
+    public PaginationResponse<WalletTransactionResponse> getTransactions(String organizerExternalKey, Pageable pageable) {
+        var page = walletTransactionRepository.findByWalletOrganizerExternalKey(organizerExternalKey, pageable)
+                .map(this::toResponse);
+
+        return new PaginationResponse<>(
+                page.getContent(),
+                page.getNumber(),
+                page.getSize(),
+                page.getTotalElements(),
+                page.getTotalPages(),
+                page.isFirst(),
+                page.isLast()
+        );
+    }
+
+    private WalletTransactionResponse toResponse(WalletTransaction t) {
+        return new WalletTransactionResponse(
+                t.getExternalId(),
+                t.getType(),
+                t.getAmount(),
+                t.getCurrency(),
+                t.getReferenceId(),
+                t.getStatus(),
+                t.getDateCreated()
+        );
     }
 
     @Transactional
