@@ -1,4 +1,4 @@
-package com.entri.checkout;
+package com.entri.payment;
 
 import com.entri.rabbitmq.PaymentQueueConfig;
 import lombok.RequiredArgsConstructor;
@@ -7,14 +7,14 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class CheckoutEventPublisher {
+public class PaymentEventPublisher {
 
     private final RabbitTemplate rabbitTemplate;
 
-    public void publishWebhookResult(CheckoutResultMessage message) {
+    public void publishWebhookResult(PaymentResultEvent event) {
         rabbitTemplate.convertAndSend(
                 PaymentQueueConfig.WEBHOOK_EXCHANGE,
                 PaymentQueueConfig.WEBHOOK_ROUTING_KEY,
-                message);
+                event);
     }
 }

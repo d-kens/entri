@@ -4,7 +4,7 @@ import com.entri.notification.NotificationType;
 
 import java.util.Map;
 
-public record NotificationMessage(
+public record NotificationEvent(
         NotificationType type,
         String subscriberId,
         Map<String, Object> payload

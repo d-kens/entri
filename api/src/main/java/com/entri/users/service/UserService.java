@@ -11,8 +11,8 @@ import com.entri.users.dto.CreateUserRequest;
 import com.entri.users.dto.UserResponse;
 import com.entri.users.entity.Role;
 import com.entri.users.entity.User;
-import com.entri.users.dto.UserCreatedMessage;
-import com.entri.users.dto.UserUpdatedMessage;
+import com.entri.users.dto.UserCreatedEvent;
+import com.entri.users.dto.UserUpdatedEvent;
 import com.entri.users.exception.EmailAlreadyExistsException;
 import com.entri.users.mapper.UserMapper;
 import com.entri.users.repository.UserRepository;
@@ -46,7 +46,7 @@ public class UserService {
                 .role(Role.valueOf(userDto.role().toUpperCase()))
                 .build();
         userRepository.save(user);
-        userEventPublisher.publishUserCreated(new UserCreatedMessage(
+        userEventPublisher.publishUserCreated(new UserCreatedEvent(
                 user.getExternalKey().toString(),
                 user.getFirstName(),
                 user.getLastName(),
@@ -109,7 +109,7 @@ public class UserService {
         user.setLastName(updateUserRequest.lastName());
         user.setPhoneNumber(PhoneNumberUtils.normalize(updateUserRequest.phoneNumber()));
 
-        userEventPublisher.publishUserUpdated(new UserUpdatedMessage(
+        userEventPublisher.publishUserUpdated(new UserUpdatedEvent(
                 user.getExternalKey().toString(),
                 user.getFirstName(),
                 user.getLastName(),
