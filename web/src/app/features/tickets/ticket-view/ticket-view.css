@@ -27,8 +27,8 @@
   margin-bottom: 1.5rem;
 }
 .sk-qr {
-  width: 200px;
-  height: 200px;
+  width: min(280px, 80vw);
+  height: min(280px, 80vw);
   margin: 0 auto 1.25rem;
   border-radius: 12px;
 }
@@ -175,8 +175,8 @@
 
 .qr-img {
   display: block;
-  width: 200px;
-  height: 200px;
+  width: min(280px, 80vw);
+  height: min(280px, 80vw);
   background: #f4f4f5;
   border-radius: 4px;
 }
