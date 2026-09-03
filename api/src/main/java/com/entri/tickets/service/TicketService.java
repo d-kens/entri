@@ -156,6 +156,7 @@ public class TicketService {
         String ticketsUrl = appBaseUrl.stripTrailing() + "/tickets/" + reservation.getExternalId();
         var payload = new HashMap<String, Object>();
         payload.put("firstName", reservation.getFirstName());
+        payload.put("eventName", reservation.getEvent().getTitle());
         payload.put("ticketsUrl", ticketsUrl);
 
         notificationEventPublisher.publish(new NotificationEvent(
