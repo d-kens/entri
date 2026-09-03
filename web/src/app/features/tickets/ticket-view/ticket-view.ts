@@ -38,7 +38,7 @@ export class TicketView implements OnInit {
   }
 
   qrUrl(ticketCode: string): string {
-    return `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${ticketCode}&qzone=1`;
+    return `https://api.qrserver.com/v1/create-qr-code/?size=560x560&data=${ticketCode}&qzone=1`;
   }
 
   formatCode(code: string): string {

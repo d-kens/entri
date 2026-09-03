@@ -36,41 +36,39 @@
 <!-- ── Tickets ────────────────────────────────────────────────── -->
 @if (!loading() && !error() && tickets().length > 0) {
   <div class="page-wrap">
-    <div class="tickets-header">
-      <h1 class="page-title">Your Tickets</h1>
-      <p class="page-subtitle">{{ tickets()[0].eventTitle }}</p>
+    <!-- ── Event info (shown once) ── -->
+    <div class="event-banner">
+      <div class="event-banner-top">
+        <h1 class="event-title">{{ tickets()[0].eventTitle }}</h1>
+        <span class="ticket-count-badge">
+          {{ tickets().length }} {{ tickets().length === 1 ? 'ticket' : 'tickets' }}
+        </span>
+      </div>
+      <div class="event-meta">
+        <span class="event-meta-item">
+          <mat-icon>calendar_today</mat-icon>
+          {{ tickets()[0].eventStartTime | date: 'EEE, d MMM yyyy' }}
+        </span>
+        <span class="event-meta-item">
+          <mat-icon>schedule</mat-icon>
+          {{ tickets()[0].eventStartTime | date: 'HH:mm' }} –
+          {{ tickets()[0].eventEndTime | date: 'HH:mm' }}
+        </span>
+        <span class="event-meta-item">
+          <mat-icon>location_on</mat-icon>
+          {{ tickets()[0].venueName }}, {{ tickets()[0].venueCity }}
+        </span>
+      </div>
     </div>
 
-    @for (ticket of tickets(); track ticket.ticketCode) {
-      <a
-        [routerLink]="['/ticket', ticket.ticketExternalId]"
-        class="ticket-card"
-        [class.ticket-card--used]="ticket.status === 'USED'"
-      >
-        <div class="ticket-body">
-          <div class="ticket-info">
-            <p class="ticket-type">{{ ticket.ticketTypeName }}</p>
-            <p class="ticket-holder">{{ holderName(ticket) }}</p>
-            <div class="ticket-meta">
-              <span class="ticket-meta-item">
-                <mat-icon>calendar_today</mat-icon>
-                {{ ticket.eventStartTime | date: 'EEE, d MMM yyyy' }}
-              </span>
-              <span class="ticket-meta-item">
-                <mat-icon>schedule</mat-icon>
-                {{ ticket.eventStartTime | date: 'HH:mm' }} –
-                {{ ticket.eventEndTime | date: 'HH:mm' }}
-              </span>
-              <span class="ticket-meta-item">
-                <mat-icon>location_on</mat-icon>
-                {{ ticket.venueName }}, {{ ticket.venueCity }}
-              </span>
-              <span class="ticket-meta-item">
-                <mat-icon>sell</mat-icon>
-                {{ ticket.currency }} {{ ticket.ticketPrice | number: '1.2-2' }}
-              </span>
-            </div>
-            <span class="ticket-status-badge" [class.badge--used]="ticket.status === 'USED'">
+    <!-- ── Ticket cards ── -->
+    @for (ticket of tickets(); track ticket.ticketCode; let i = $index) {
+      <div class="tc-card" [class.tc-card--used]="ticket.status === 'USED'">
+        <!-- ── Header ── -->
+        <div class="tc-header">
+          <div class="tc-header-top">
+            <span class="tc-counter">Ticket {{ i + 1 }} of {{ tickets().length }}</span>
+            <span class="tc-status" [class.tc-status--used]="ticket.status === 'USED'">
               @if (ticket.status === 'VALID') {
                 <mat-icon>check_circle</mat-icon>
                 Valid
@@ -80,18 +78,49 @@
               }
             </span>
           </div>
-          <img [src]="qrUrl(ticket.ticketCode)" alt="Ticket QR code" class="ticket-qr" />
+          <h2 class="tc-type">{{ ticket.ticketTypeName }}</h2>
+          <p class="tc-holder">{{ holderName(ticket) }}</p>
         </div>
-        <div class="ticket-code-row">
-          <span class="ticket-code">{{ formatCode(ticket.ticketCode) }}</span>
+
+        <!-- ── Tear ── -->
+        <div class="tc-tear"></div>
+
+        <!-- ── Body ── -->
+        <div class="tc-body">
+          <div class="tc-details">
+            <div class="tc-detail">
+              <span class="tc-label">Holder</span>
+              <span class="tc-value">{{ holderName(ticket) }}</span>
+            </div>
+            <div class="tc-detail">
+              <span class="tc-label">Price</span>
+              <span class="tc-value">
+                {{ ticket.currency }} {{ ticket.ticketPrice | number: '1.2-2' }}
+              </span>
+            </div>
+          </div>
+
+          <a
+            [routerLink]="['/ticket', ticket.ticketExternalId]"
+            class="tc-qr-wrap"
+            title="Tap to enlarge"
+          >
+            <img [src]="qrUrl(ticket.ticketCode)" alt="Ticket QR code" class="tc-qr" />
+            <span class="tc-qr-hint">
+              <mat-icon>open_in_full</mat-icon>
+              Tap to enlarge
+            </span>
+          </a>
         </div>
+
+        <!-- ── Checked-in footer ── -->
         @if (ticket.status === 'USED' && ticket.checkedInAt) {
-          <p class="checked-in-at">
+          <div class="tc-checked-in">
             <mat-icon>event_available</mat-icon>
             Checked in {{ ticket.checkedInAt | date: 'EEE, d MMM · HH:mm' }}
-          </p>
+          </div>
         }
-      </a>
+      </div>
     }
   </div>
 }
