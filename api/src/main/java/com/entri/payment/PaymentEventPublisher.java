@@ -17,4 +17,11 @@ public class PaymentEventPublisher {
                 PaymentQueueConfig.WEBHOOK_ROUTING_KEY,
                 event);
     }
+
+    public void publishPayoutResult(PayoutResultEvent event) {
+        rabbitTemplate.convertAndSend(
+                PaymentQueueConfig.PAYOUT_EXCHANGE,
+                PaymentQueueConfig.PAYOUT_ROUTING_KEY,
+                event);
+    }
 }

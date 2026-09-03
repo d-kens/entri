@@ -569,5 +569,19 @@
                 referencedColumnNames="id"/>
     </changeSet>
 
+    <changeSet id="202609030003" author="d-kens">
+        <addColumn tableName="wallet_transactions">
+            <column name="tracking_reference" type="VARCHAR(100)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="202609030004" author="d-kens">
+        <addColumn tableName="wallets">
+            <column name="balance" type="DECIMAL(10,2)" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 
 </databaseChangeLog>

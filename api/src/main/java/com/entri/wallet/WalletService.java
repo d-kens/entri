@@ -1,10 +1,16 @@
 package com.entri.wallet;
 
 import com.entri.common.dto.PaginationResponse;
+import com.entri.exception.BadRequestException;
 import com.entri.exception.ResourceNotFoundException;
+import com.entri.payment.PaymentGateway;
+import com.entri.payment.PayoutStatus;
+import com.entri.payment.dto.PayoutRequest;
 import com.entri.users.repository.UserRepository;
 import com.entri.wallet.dto.WalletResponse;
 import com.entri.wallet.dto.WalletTransactionResponse;
+import com.entri.wallet.dto.WithdrawalRequest;
+import com.entri.wallet.dto.WithdrawalResponse;
 import com.entri.wallet.entity.Wallet;
 import com.entri.wallet.entity.WalletTransaction;
 import com.entri.wallet.repository.WalletRepository;
@@ -15,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +30,7 @@ public class WalletService {
     private final WalletRepository walletRepository;
     private final WalletTransactionRepository walletTransactionRepository;
     private final UserRepository userRepository;
+    private final PaymentGateway paymentGateway;
 
     @Transactional
     public void createWallet(String organizerExternalKey) {
@@ -41,9 +49,7 @@ public class WalletService {
         var wallet = walletRepository.findByOrganizerExternalKey(organizerExternalKey)
                 .orElseThrow(() -> new ResourceNotFoundException("Wallet not found for organizer: " + organizerExternalKey));
 
-        var balance = walletTransactionRepository.calculateBalance(organizerExternalKey, WalletTransactionStatus.COMPLETED);
-
-        return new WalletResponse(wallet.getExternalId(), balance);
+        return new WalletResponse(wallet.getExternalId(), wallet.getBalance());
     }
 
     @Transactional(readOnly = true)
@@ -60,6 +66,59 @@ public class WalletService {
                 page.isFirst(),
                 page.isLast()
         );
+    }
+
+    @Transactional
+    public WithdrawalResponse withdraw(String organizerExternalKey, WithdrawalRequest request) {
+        var wallet = walletRepository.findByOrganizerExternalKey(organizerExternalKey)
+                .orElseThrow(() -> new ResourceNotFoundException("Wallet not found for organizer: " + organizerExternalKey));
+
+        int updated = walletRepository.decrementBalance(wallet.getId(), request.amount());
+        if (updated == 0) {
+            throw new BadRequestException("Insufficient wallet balance");
+        }
+
+        var transaction = WalletTransaction.builder()
+                .wallet(wallet)
+                .type(WalletTransactionType.DEBIT)
+                .amount(request.amount())
+                .currency("KES")
+                .referenceId(UUID.randomUUID().toString())
+                .status(WalletTransactionStatus.PENDING)
+                .build();
+
+        walletTransactionRepository.save(transaction);
+
+        var payoutRequest = new PayoutRequest(
+                request.name(),
+                request.account(),
+                request.accountType(),
+                request.accountReference(),
+                request.bankCode(),
+                request.amount(),
+                "KES",
+                request.narrative(),
+                transaction.getExternalId()
+        );
+
+        var trackingId = paymentGateway.payout(payoutRequest);
+        transaction.setTrackingReference(trackingId);
+        walletTransactionRepository.save(transaction);
+
+        return new WithdrawalResponse(transaction.getExternalId(), transaction.getStatus());
+    }
+
+    @Transactional
+    public void applyPayoutResult(String trackingId, PayoutStatus payoutStatus) {
+        walletTransactionRepository.findByTrackingReference(trackingId).ifPresent(transaction -> {
+            if (payoutStatus == PayoutStatus.COMPLETED) {
+                transaction.setStatus(WalletTransactionStatus.COMPLETED);
+            } else {
+                transaction.setStatus(WalletTransactionStatus.FAILED);
+                walletRepository.incrementBalance(transaction.getWallet().getId(), transaction.getAmount());
+            }
+            walletTransactionRepository.save(transaction);
+        });
     }
 
     private WalletTransactionResponse toResponse(WalletTransaction t) {
@@ -93,5 +152,6 @@ public class WalletService {
                 .build();
 
         walletTransactionRepository.save(transaction);
+        walletRepository.incrementBalance(wallet.getId(), amount);
     }
 }
