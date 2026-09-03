@@ -1,3 +1,10 @@
+## [1.7.1](https://github.com/d-kens/entri/compare/web-v1.7.0...web-v1.7.1) (2026-09-03)
+
+### Bug Fixes
+
+- **test:** remove stale platformProperties injection from reservation service test ([3218fac](https://github.com/d-kens/entri/commit/3218fac86944d9ad917aa5e1e68da439ad0619c2))
+- **ui:** standardise sidenav page spacing and fix button icon alignment ([bfc374a](https://github.com/d-kens/entri/commit/bfc374a3104a96976e2d7498eb5af13d951887e2))
+
 # [1.7.0](https://github.com/d-kens/entri/compare/web-v1.6.0...web-v1.7.0) (2026-09-03)
 
 ### Bug Fixes
