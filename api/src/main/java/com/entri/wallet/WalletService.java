@@ -3,10 +3,12 @@ package com.entri.wallet;
 import com.entri.common.PlatformProperties;
 import com.entri.common.dto.PaginationResponse;
 import com.entri.exception.BadRequestException;
+import com.entri.exception.ForbiddenException;
 import com.entri.exception.ResourceNotFoundException;
 import com.entri.payment.PaymentGateway;
 import com.entri.payment.enums.PayoutStatus;
 import com.entri.payment.dto.PayoutRequest;
+import com.entri.security.UserPrincipal;
 import com.entri.users.repository.UserRepository;
 import com.entri.wallet.dto.WalletResponse;
 import com.entri.wallet.dto.WalletTransactionResponse;
@@ -80,13 +82,21 @@ public class WalletService {
         );
     }
 
-    public WithdrawalResponse withdraw(String organizerExternalKey, WithdrawalRequest request) {
+    public WithdrawalResponse withdraw(String walletId, WithdrawalRequest request, UserPrincipal requestingUser) {
         var template = new TransactionTemplate(transactionManager);
 
         // Phase 1: debit balance and record a PENDING debit — commits before HTTP call
         WalletTransaction transaction = template.execute(s -> {
-            var wallet = walletRepository.findByOrganizerExternalKey(organizerExternalKey)
-                    .orElseThrow(() -> new ResourceNotFoundException("Wallet not found for organizer: " + organizerExternalKey));
+            var wallet = walletRepository.findByExternalId(walletId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Wallet not found: " + walletId));
+
+            if (wallet.getWalletType() == WalletType.PLATFORM) {
+                if (!requestingUser.isAdmin()) {
+                    throw new ForbiddenException("Only admins can withdraw from the platform wallet");
+                }
+            } else if (!requestingUser.getExternalKey().equals(wallet.getOrganizer().getExternalKey())) {
+                throw new ForbiddenException("You are not authorized to withdraw from this wallet");
+            }
 
             if (walletRepository.decrementBalance(wallet.getId(), request.amount()) == 0) {
                 throw new BadRequestException("Insufficient wallet balance");

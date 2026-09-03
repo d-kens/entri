@@ -143,11 +143,11 @@ public interface WalletApi {
             )
     })
     @SecurityRequirement(name = "bearerAuth")
-    @PreAuthorize("hasAuthority('ORGANIZER')")
-    @PostMapping("/{organizerExternalKey}/withdraw")
+    @PreAuthorize("hasAnyAuthority('ORGANIZER', 'ADMIN')")
+    @PostMapping("/{walletId}/withdraw")
     WithdrawalResponse withdraw(
-            @Parameter(description = "The external key of the organizer", required = true)
-            @PathVariable String organizerExternalKey,
+            @Parameter(description = "The external ID of the wallet", required = true)
+            @PathVariable String walletId,
             @Valid @RequestBody WithdrawalRequest request,
             @Parameter(hidden = true) @AuthenticationPrincipal UserPrincipal requestingUser
     );
