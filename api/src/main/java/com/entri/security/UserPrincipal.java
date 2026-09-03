@@ -1,6 +1,6 @@
 package com.entri.security;
 
-import com.entri.exception.UnauthorizedException;
+import com.entri.exception.ForbiddenException;
 import com.entri.users.entity.Role;
 import com.entri.users.entity.User;
 import org.springframework.security.core.GrantedAuthority;
@@ -31,7 +31,7 @@ public class UserPrincipal implements UserDetails {
 
     public void assertCanManage(String ownerExternalKey) {
         if (!isAdmin() && !getExternalKey().equals(ownerExternalKey)) {
-            throw new UnauthorizedException("You are not authorized to perform this action");
+            throw new ForbiddenException("You are not authorized to perform this action");
         }
     }
 
