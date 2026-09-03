@@ -1,3 +1,22 @@
+# [1.7.0](https://github.com/d-kens/entri/compare/web-v1.6.0...web-v1.7.0) (2026-09-03)
+
+### Bug Fixes
+
+- separate 401 and 403 error responses correctly ([a26011d](https://github.com/d-kens/entri/commit/a26011d4deccf04059ead2485ec67a550ff4c243))
+
+### Features
+
+- add GET /wallet/{organizerExternalKey} endpoint ([4f50887](https://github.com/d-kens/entri/commit/4f50887d2272ee24748cc93a2abf8e34b9356ea8))
+- add GET /wallet/{organizerExternalKey}/transactions endpoint ([4634664](https://github.com/d-kens/entri/commit/4634664ccce97a89b851a732404164638f09b93a))
+- add platform wallet, simplify analytics, and harden payment webhook handling ([2263422](https://github.com/d-kens/entri/commit/2263422dc7a0a2aa9cbf8b9013c28f50aa04fd68))
+- add RBAC to wallet endpoints ([c60860a](https://github.com/d-kens/entri/commit/c60860a1b268ca4a6d6e2034c1072c54acf51be7))
+- add wallet balance card to organizer dashboard ([6974979](https://github.com/d-kens/entri/commit/697497983b41d129982a5cd2c33888eb5545b1b6))
+- add wallet feature to frontend ([a911a4e](https://github.com/d-kens/entri/commit/a911a4efe90ccc417bae72a89a898173108f05d3))
+- add withdrawal API with atomic balance management and payout webhook handling ([535112a](https://github.com/d-kens/entri/commit/535112a42d3c728b4f9e8e45d1b88bf9d608fb8f))
+- load bank codes from IntaSend when adding bank payout account ([54adb2e](https://github.com/d-kens/entri/commit/54adb2ea2c90fbb45b7414462aae5ad10177b09f))
+- remove payout and payout account features from FE and BE ([00f5de9](https://github.com/d-kens/entri/commit/00f5de995232b2eac6f5d8a10a824e47d899d395))
+- scaffold wallet module with organizer top-up on reservation confirmed ([d034a2b](https://github.com/d-kens/entri/commit/d034a2b83d7b2cfa433260f622113d994ef2a5fd))
+
 # [1.6.0](https://github.com/d-kens/entri/compare/web-v1.5.0...web-v1.6.0) (2026-09-02)
 
 ### Bug Fixes
