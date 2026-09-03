@@ -43,20 +43,25 @@ public class WalletService {
 
     private static final String CURRENCY = "KES";
 
-    @Transactional
-    public void createWallet(String organizerExternalKey) {
-        var organizer = userRepository.findByExternalKeyAndDeletedFalse(organizerExternalKey)
-                .orElseThrow(() -> new IllegalArgumentException("User not found: " + organizerExternalKey));
-
-        walletRepository.save(Wallet.builder().organizer(organizer).build());
+    @Transactional(readOnly = true)
+    public WalletResponse getPlatformWallet() {
+        var wallet = walletRepository.findByWalletType(WalletType.PLATFORM)
+                .orElseThrow(() -> new ResourceNotFoundException("Platform wallet not found"));
+        return new WalletResponse(wallet.getExternalId(), wallet.getBalance());
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public WalletResponse getWallet(String organizerExternalKey) {
         var wallet = walletRepository.findByOrganizerExternalKey(organizerExternalKey)
-                .orElseThrow(() -> new ResourceNotFoundException("Wallet not found for organizer: " + organizerExternalKey));
+                .orElseGet(() -> createWallet(organizerExternalKey));
 
         return new WalletResponse(wallet.getExternalId(), wallet.getBalance());
+    }
+
+    private Wallet createWallet(String organizerExternalKey) {
+        var organizer = userRepository.findByExternalKeyAndDeletedFalse(organizerExternalKey)
+                .orElseThrow(() -> new ResourceNotFoundException("Organizer not found: " + organizerExternalKey));
+        return walletRepository.save(Wallet.builder().organizer(organizer).build());
     }
 
     @Transactional(readOnly = true)

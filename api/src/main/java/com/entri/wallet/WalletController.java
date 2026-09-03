@@ -17,6 +17,11 @@ public class WalletController implements WalletApi {
     private final WalletService walletService;
 
     @Override
+    public WalletResponse getPlatformWallet() {
+        return walletService.getPlatformWallet();
+    }
+
+    @Override
     public WalletResponse getWallet(final String organizerExternalKey, final UserPrincipal requestingUser) {
         requestingUser.assertCanManage(organizerExternalKey);
         return walletService.getWallet(organizerExternalKey);
