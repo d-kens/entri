@@ -2,6 +2,7 @@ package com.entri.wallet;
 
 import com.entri.exception.ResourceNotFoundException;
 import com.entri.users.repository.UserRepository;
+import com.entri.wallet.dto.WalletResponse;
 import com.entri.wallet.entity.Wallet;
 import com.entri.wallet.entity.WalletTransaction;
 import com.entri.wallet.repository.WalletRepository;
@@ -30,6 +31,16 @@ public class WalletService {
                 .build();
 
         walletRepository.save(wallet);
+    }
+
+    @Transactional(readOnly = true)
+    public WalletResponse getWallet(String organizerExternalKey) {
+        var wallet = walletRepository.findByOrganizerExternalKey(organizerExternalKey)
+                .orElseThrow(() -> new ResourceNotFoundException("Wallet not found for organizer: " + organizerExternalKey));
+
+        var balance = walletTransactionRepository.calculateBalance(organizerExternalKey, WalletTransactionStatus.COMPLETED);
+
+        return new WalletResponse(wallet.getExternalId(), balance);
     }
 
     @Transactional
