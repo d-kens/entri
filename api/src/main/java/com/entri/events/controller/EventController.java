@@ -16,6 +16,8 @@ import com.entri.events.service.EventService;
 import com.entri.events.service.EventTicketReservationService;
 import com.entri.events.service.TicketTypeService;
 import com.entri.tickets.dto.CheckInCodeResponse;
+import com.entri.tickets.dto.TicketFilter;
+import com.entri.tickets.dto.TicketResponse;
 import com.entri.tickets.service.CheckInCodeService;
 import com.entri.tickets.service.TicketService;
 import com.entri.ratelimit.RateLimited;
@@ -135,6 +137,15 @@ public class EventController implements EventApi {
             final UserPrincipal requestingUser
     ) {
         return eventTicketReservationService.listEventReservations(eventExternalId, page, size, requestingUser);
+    }
+
+    @Override
+    public PaginationResponse<TicketResponse> getEventTickets(
+            final String eventExternalId,
+            final TicketFilter filter,
+            final UserPrincipal requestingUser
+    ) {
+        return ticketService.getTickets(eventExternalId, filter, requestingUser);
     }
 
     @Override

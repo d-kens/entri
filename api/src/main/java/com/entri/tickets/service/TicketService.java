@@ -11,9 +11,11 @@ import com.entri.notification.NotificationEventPublisher;
 import com.entri.notification.NotificationType;
 import com.entri.notification.dto.NotificationEvent;
 import com.entri.security.UserPrincipal;
+import com.entri.common.dto.PaginationResponse;
 import com.entri.tickets.dto.CheckInRequest;
 import com.entri.tickets.dto.CheckInResponse;
 import com.entri.tickets.dto.CheckInResult;
+import com.entri.tickets.dto.TicketFilter;
 import com.entri.tickets.dto.TicketResponse;
 import com.entri.tickets.entity.Ticket;
 import com.entri.tickets.entity.TicketStatus;
@@ -22,6 +24,7 @@ import com.entri.tickets.repository.EventCheckInCodeRepository;
 import com.entri.tickets.repository.TicketRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,6 +50,26 @@ public class TicketService {
 
     @Value("${app.base-url}")
     private String appBaseUrl;
+
+    @Transactional(readOnly = true)
+    public PaginationResponse<TicketResponse> getTickets(String eventExternalId, TicketFilter filter, UserPrincipal requestingUser) {
+        var event = eventRepository.findByExternalId(eventExternalId)
+                .orElseThrow(() -> new ResourceNotFoundException("Event with ID " + eventExternalId + " not found"));
+
+        requestingUser.assertCanManage(event.getOrganizer().getExternalKey());
+
+        var pageable = PageRequest.of(filter.page(), filter.size());
+        Page<Ticket> page = ticketRepository.findByEventExternalId(eventExternalId, pageable);
+        return new PaginationResponse<>(
+                page.getContent().stream().map(ticketMapper::toResponse).toList(),
+                page.getNumber(),
+                page.getSize(),
+                page.getTotalElements(),
+                page.getTotalPages(),
+                page.isFirst(),
+                page.isLast()
+        );
+    }
 
     @Transactional(readOnly = true)
     public EventCheckInStatsResponse getCheckInStats(String eventExternalId, UserPrincipal requestingUser) {
