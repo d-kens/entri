@@ -1,6 +1,6 @@
 package com.entri.payment.dto;
 
-import com.entri.payment.AccountType;
+import com.entri.payment.enums.AccountType;
 
 import java.math.BigDecimal;
 

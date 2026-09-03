@@ -489,13 +489,6 @@
         <modifyDataType tableName="tickets" columnName="ticket_code" newDataType="VARCHAR(12)"/>
     </changeSet>
 
-    <changeSet id="202609020004" author="d-kens">
-        <addColumn tableName="event_ticket_reservations">
-            <column name="platform_fee" type="DECIMAL(10,2)"/>
-            <column name="organizer_amount" type="DECIMAL(10,2)"/>
-        </addColumn>
-    </changeSet>
-
     <changeSet id="202609030001" author="d-kens">
         <createTable tableName="wallets">
             <column name="id" type="BIGINT" autoIncrement="true">
@@ -504,8 +497,11 @@
             <column name="external_id" type="VARCHAR(36)">
                 <constraints nullable="false" unique="true"/>
             </column>
+            <column name="wallet_type" type="VARCHAR(20)" defaultValue="ORGANIZER">
+                <constraints nullable="false"/>
+            </column>
             <column name="organizer_id" type="BIGINT">
-                <constraints nullable="false" unique="true"/>
+                <constraints unique="true"/>
             </column>
             <column name="date_created" type="DATETIME">
                 <constraints nullable="false"/>
@@ -577,10 +573,30 @@
 
     <changeSet id="202609030004" author="d-kens">
         <addColumn tableName="wallets">
-            <column name="balance" type="DECIMAL(10,2)" defaultValueNumeric="0">
+            <column name="balance" type="DECIMAL(19,2)" defaultValueNumeric="0">
                 <constraints nullable="false"/>
             </column>
         </addColumn>
+    </changeSet>
+
+    <changeSet id="202609030005" author="d-kens">
+        <addUniqueConstraint tableName="wallet_transactions"
+                             columnNames="wallet_id,reference_id,type"
+                             constraintName="uq_wallet_tx_wallet_reference_type"/>
+    </changeSet>
+
+    <changeSet id="202609030006" author="d-kens">
+        <modifyDataType tableName="wallet_transactions" columnName="amount" newDataType="DECIMAL(19,2)"/>
+    </changeSet>
+
+    <changeSet id="202609030007" author="d-kens">
+        <insert tableName="wallets">
+            <column name="external_id" value="00000000-0000-0000-0000-000000000001"/>
+            <column name="wallet_type" value="PLATFORM"/>
+            <column name="balance" valueNumeric="0.00"/>
+            <column name="date_created" valueDate="now()"/>
+            <column name="created_by" value="system"/>
+        </insert>
     </changeSet>
 
 

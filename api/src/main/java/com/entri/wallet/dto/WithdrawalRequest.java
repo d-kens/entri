@@ -1,6 +1,6 @@
 package com.entri.wallet.dto;
 
-import com.entri.payment.AccountType;
+import com.entri.payment.enums.AccountType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;

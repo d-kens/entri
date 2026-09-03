@@ -1,11 +1,15 @@
 package com.entri.payment;
 
+import com.entri.exception.PaymentGatewayException;
 import com.entri.payment.dto.WebhookRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PaymentService {
@@ -16,12 +20,29 @@ public class PaymentService {
     public void handleWebhook(final Map<String, String> headers, final String payload) {
         var webhookRequest = new WebhookRequest(headers, payload);
 
-        paymentGateway.parseCheckoutWebhook(webhookRequest)
-                .map(result -> new PaymentResultEvent(result.referenceId(), result.status()))
-                .ifPresent(paymentEventPublisher::publishWebhookResult);
+        Optional<PaymentResultEvent> checkoutEvent = Optional.empty();
+        Optional<PayoutResultEvent> payoutEvent = Optional.empty();
 
-        paymentGateway.parsePayoutWebhook(webhookRequest)
-                .map(result -> new PayoutResultEvent(result.trackingId(), result.status()))
-                .ifPresent(paymentEventPublisher::publishPayoutResult);
+        try {
+            checkoutEvent = paymentGateway.parseCheckoutWebhook(webhookRequest)
+                    .map(r -> new PaymentResultEvent(r.referenceId(), r.status()));
+        } catch (PaymentGatewayException e) {
+            log.warn("Checkout webhook processing failed: {}", e.getMessage());
+        }
+
+        try {
+            payoutEvent = paymentGateway.parsePayoutWebhook(webhookRequest)
+                    .map(r -> new PayoutResultEvent(r.trackingId(), r.status()));
+        } catch (PaymentGatewayException e) {
+            log.warn("Payout webhook processing failed: {}", e.getMessage());
+        }
+
+        checkoutEvent.ifPresent(paymentEventPublisher::publishWebhookResult);
+        payoutEvent.ifPresent(paymentEventPublisher::publishPayoutResult);
+
+        if (checkoutEvent.isEmpty() && payoutEvent.isEmpty()) {
+            log.info("Unrecognized webhook payload: {}",
+                    payload.substring(0, Math.min(payload.length(), 200)));
+        }
     }
 }

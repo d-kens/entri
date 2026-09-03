@@ -84,7 +84,7 @@ public interface WalletApi {
     PaginationResponse<WalletTransactionResponse> getTransactions(
             @Parameter(description = "The external key of the organizer", required = true)
             @PathVariable String organizerExternalKey,
-            @PageableDefault(size = 20, sort = "id") Pageable pageable,
+            @PageableDefault(size = 20, sort = "dateCreated", direction = org.springframework.data.domain.Sort.Direction.DESC) Pageable pageable,
             @Parameter(hidden = true) @AuthenticationPrincipal UserPrincipal requestingUser
     );
 

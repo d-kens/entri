@@ -1,6 +1,6 @@
 package com.entri.payment.dto;
 
-import com.entri.payment.PaymentStatus;
+import com.entri.payment.enums.PaymentStatus;
 
 public record PaymentResult(
         String referenceId,

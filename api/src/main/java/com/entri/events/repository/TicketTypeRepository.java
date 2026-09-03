@@ -18,8 +18,6 @@ public interface TicketTypeRepository extends JpaRepository<TicketType, Long> {
     """)
     long sumSoldQuantityByOrganizer(@Param("organizerKey") String organizerKey);
 
-    @Query("SELECT COALESCE(SUM(tt.soldQuantity), 0) FROM TicketType tt")
-    long sumSoldQuantityPlatform();
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("""
         SELECT t

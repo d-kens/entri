@@ -1,5 +1,6 @@
 package com.entri.wallet.repository;
 
+import com.entri.wallet.WalletType;
 import com.entri.wallet.entity.Wallet;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -12,6 +13,8 @@ import java.util.Optional;
 public interface WalletRepository extends JpaRepository<Wallet, Long> {
 
     Optional<Wallet> findByOrganizerExternalKey(String organizerExternalKey);
+
+    Optional<Wallet> findByWalletType(WalletType walletType);
 
     @Modifying
     @Query("UPDATE Wallet w SET w.balance = w.balance + :amount WHERE w.id = :id")

@@ -1,10 +1,11 @@
 package com.entri.wallet;
 
+import com.entri.common.PlatformProperties;
 import com.entri.common.dto.PaginationResponse;
 import com.entri.exception.BadRequestException;
 import com.entri.exception.ResourceNotFoundException;
 import com.entri.payment.PaymentGateway;
-import com.entri.payment.PayoutStatus;
+import com.entri.payment.enums.PayoutStatus;
 import com.entri.payment.dto.PayoutRequest;
 import com.entri.users.repository.UserRepository;
 import com.entri.wallet.dto.WalletResponse;
@@ -16,13 +17,19 @@ import com.entri.wallet.entity.WalletTransaction;
 import com.entri.wallet.repository.WalletRepository;
 import com.entri.wallet.repository.WalletTransactionRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class WalletService {
@@ -31,17 +38,17 @@ public class WalletService {
     private final WalletTransactionRepository walletTransactionRepository;
     private final UserRepository userRepository;
     private final PaymentGateway paymentGateway;
+    private final PlatformTransactionManager transactionManager;
+    private final PlatformProperties platformProperties;
+
+    private static final String CURRENCY = "KES";
 
     @Transactional
     public void createWallet(String organizerExternalKey) {
         var organizer = userRepository.findByExternalKeyAndDeletedFalse(organizerExternalKey)
                 .orElseThrow(() -> new IllegalArgumentException("User not found: " + organizerExternalKey));
 
-        var wallet = Wallet.builder()
-                .organizer(organizer)
-                .build();
-
-        walletRepository.save(wallet);
+        walletRepository.save(Wallet.builder().organizer(organizer).build());
     }
 
     @Transactional(readOnly = true)
@@ -68,57 +75,128 @@ public class WalletService {
         );
     }
 
-    @Transactional
     public WithdrawalResponse withdraw(String organizerExternalKey, WithdrawalRequest request) {
-        var wallet = walletRepository.findByOrganizerExternalKey(organizerExternalKey)
-                .orElseThrow(() -> new ResourceNotFoundException("Wallet not found for organizer: " + organizerExternalKey));
+        var template = new TransactionTemplate(transactionManager);
 
-        int updated = walletRepository.decrementBalance(wallet.getId(), request.amount());
-        if (updated == 0) {
-            throw new BadRequestException("Insufficient wallet balance");
+        // Phase 1: debit balance and record a PENDING debit — commits before HTTP call
+        WalletTransaction transaction = template.execute(s -> {
+            var wallet = walletRepository.findByOrganizerExternalKey(organizerExternalKey)
+                    .orElseThrow(() -> new ResourceNotFoundException("Wallet not found for organizer: " + organizerExternalKey));
+
+            if (walletRepository.decrementBalance(wallet.getId(), request.amount()) == 0) {
+                throw new BadRequestException("Insufficient wallet balance");
+            }
+
+            return walletTransactionRepository.save(WalletTransaction.builder()
+                    .wallet(wallet)
+                    .type(WalletTransactionType.DEBIT)
+                    .amount(request.amount())
+                    .currency(CURRENCY)
+                    .referenceId(UUID.randomUUID().toString())
+                    .status(WalletTransactionStatus.PENDING)
+                    .build());
+        });
+
+        // Phase 2: call IntaSend — outside any transaction, no DB connection held
+        String trackingId;
+        try {
+            trackingId = paymentGateway.payout(new PayoutRequest(
+                    request.name(),
+                    request.account(),
+                    request.accountType(),
+                    request.accountReference(),
+                    request.bankCode(),
+                    request.amount(),
+                    CURRENCY,
+                    request.narrative(),
+                    transaction.getExternalId()
+            ));
+        } catch (RuntimeException e) {
+            // Phase 3a: payout call failed — mark FAILED and refund balance
+            template.execute(s -> {
+                transaction.setStatus(WalletTransactionStatus.FAILED);
+                walletTransactionRepository.save(transaction);
+                walletRepository.incrementBalance(transaction.getWallet().getId(), transaction.getAmount());
+                return null;
+            });
+            throw e;
         }
 
-        var transaction = WalletTransaction.builder()
-                .wallet(wallet)
-                .type(WalletTransactionType.DEBIT)
-                .amount(request.amount())
-                .currency("KES")
-                .referenceId(UUID.randomUUID().toString())
-                .status(WalletTransactionStatus.PENDING)
-                .build();
-
-        walletTransactionRepository.save(transaction);
-
-        var payoutRequest = new PayoutRequest(
-                request.name(),
-                request.account(),
-                request.accountType(),
-                request.accountReference(),
-                request.bankCode(),
-                request.amount(),
-                "KES",
-                request.narrative(),
-                transaction.getExternalId()
-        );
-
-        var trackingId = paymentGateway.payout(payoutRequest);
-        transaction.setTrackingReference(trackingId);
-        walletTransactionRepository.save(transaction);
+        // Phase 3b: attach tracking id so the webhook can reconcile
+        template.execute(s -> {
+            transaction.setTrackingReference(trackingId);
+            walletTransactionRepository.save(transaction);
+            return null;
+        });
 
         return new WithdrawalResponse(transaction.getExternalId(), transaction.getStatus());
     }
 
     @Transactional
     public void applyPayoutResult(String trackingId, PayoutStatus payoutStatus) {
-        walletTransactionRepository.findByTrackingReference(trackingId).ifPresent(transaction -> {
-            if (payoutStatus == PayoutStatus.COMPLETED) {
-                transaction.setStatus(WalletTransactionStatus.COMPLETED);
-            } else {
-                transaction.setStatus(WalletTransactionStatus.FAILED);
-                walletRepository.incrementBalance(transaction.getWallet().getId(), transaction.getAmount());
-            }
-            walletTransactionRepository.save(transaction);
-        });
+        var transaction = walletTransactionRepository.findByTrackingReference(trackingId).orElse(null);
+        if (transaction == null) {
+            log.warn("Payout webhook received for unknown tracking id={}. Ignoring.", trackingId);
+            return;
+        }
+        if (transaction.getStatus() != WalletTransactionStatus.PENDING) {
+            return;
+        }
+        if (payoutStatus == PayoutStatus.COMPLETED) {
+            transaction.setStatus(WalletTransactionStatus.COMPLETED);
+        } else {
+            transaction.setStatus(WalletTransactionStatus.FAILED);
+            walletRepository.incrementBalance(transaction.getWallet().getId(), transaction.getAmount());
+        }
+        walletTransactionRepository.save(transaction);
+    }
+
+    public void creditReservation(String organizerExternalKey, BigDecimal totalAmount, String currency, String referenceId) {
+        BigDecimal platformFee = totalAmount
+                .multiply(platformProperties.serviceFeeRate())
+                .setScale(2, RoundingMode.HALF_UP);
+        BigDecimal organizerAmount = totalAmount.subtract(platformFee);
+
+        credit(organizerExternalKey, organizerAmount, currency, referenceId);
+        creditPlatform(platformFee, currency, referenceId);
+    }
+
+    public void credit(String organizerExternalKey, BigDecimal amount, String currency, String referenceId) {
+        try {
+            new TransactionTemplate(transactionManager).execute(s -> {
+                var wallet = walletRepository.findByOrganizerExternalKey(organizerExternalKey)
+                        .orElseThrow(() -> new ResourceNotFoundException("Wallet not found for organizer: " + organizerExternalKey));
+                creditWallet(wallet, amount, currency, referenceId);
+                return null;
+            });
+        } catch (DataIntegrityViolationException ignored) {
+            // duplicate delivery — already credited
+        }
+    }
+
+    public void creditPlatform(BigDecimal amount, String currency, String referenceId) {
+        try {
+            new TransactionTemplate(transactionManager).execute(s -> {
+                var wallet = walletRepository.findByWalletType(WalletType.PLATFORM)
+                        .orElseThrow(() -> new IllegalStateException("Platform wallet not found"));
+                creditWallet(wallet, amount, currency, referenceId);
+                return null;
+            });
+        } catch (DataIntegrityViolationException ignored) {
+            // duplicate delivery — already credited
+        }
+    }
+
+    private void creditWallet(Wallet wallet, BigDecimal amount, String currency, String referenceId) {
+        walletTransactionRepository.save(WalletTransaction.builder()
+                .wallet(wallet)
+                .type(WalletTransactionType.CREDIT)
+                .amount(amount)
+                .currency(currency)
+                .referenceId(referenceId)
+                .status(WalletTransactionStatus.COMPLETED)
+                .build());
+        walletRepository.incrementBalance(wallet.getId(), amount);
     }
 
     private WalletTransactionResponse toResponse(WalletTransaction t) {
@@ -131,27 +209,5 @@ public class WalletService {
                 t.getStatus(),
                 t.getDateCreated()
         );
-    }
-
-    @Transactional
-    public void credit(String organizerExternalKey, BigDecimal amount, String currency, String referenceId) {
-        if (walletTransactionRepository.existsByReferenceIdAndType(referenceId, WalletTransactionType.CREDIT)) {
-            return;
-        }
-
-        var wallet = walletRepository.findByOrganizerExternalKey(organizerExternalKey)
-                .orElseThrow(() -> new ResourceNotFoundException("Wallet not found for organizer: " + organizerExternalKey));
-
-        var transaction = WalletTransaction.builder()
-                .wallet(wallet)
-                .type(WalletTransactionType.CREDIT)
-                .amount(amount)
-                .currency(currency)
-                .referenceId(referenceId)
-                .status(WalletTransactionStatus.COMPLETED)
-                .build();
-
-        walletTransactionRepository.save(transaction);
-        walletRepository.incrementBalance(wallet.getId(), amount);
     }
 }

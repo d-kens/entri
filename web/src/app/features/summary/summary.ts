@@ -3,12 +3,11 @@ import { DecimalPipe } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { AnalyticsService } from './analytics-service';
 import { OrganizerSummaryMetrics } from './models/analytics.models';
-import { SalesTrendChart } from '@shared/components/sales-trend-chart/sales-trend-chart';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [DecimalPipe, SalesTrendChart, MatIconModule],
+  imports: [DecimalPipe, MatIconModule],
   templateUrl: './summary.html',
   styleUrl: './summary.css',
 })
@@ -18,8 +17,6 @@ export class Summary implements OnInit {
   metrics = signal<OrganizerSummaryMetrics | null>(null);
   metricsLoading = signal(true);
   metricsError = signal(false);
-
-  readonly trendLoader = (period: string) => this.analyticsService.getOrganizerSalesTrend(period);
 
   ngOnInit(): void {
     this.loadMetrics();

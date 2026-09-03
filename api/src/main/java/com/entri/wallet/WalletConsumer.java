@@ -6,6 +6,7 @@ import com.entri.rabbitmq.ReservationConfirmedQueueConfig;
 import com.entri.rabbitmq.UserEventConfig;
 import com.entri.tickets.dto.ReservationConfirmedEvent;
 import com.entri.users.dto.UserCreatedEvent;
+import com.entri.users.entity.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
@@ -18,7 +19,7 @@ public class WalletConsumer {
 
     @RabbitListener(queues = UserEventConfig.USER_CREATED_WALLET_QUEUE)
     public void onUserCreated(UserCreatedEvent event) {
-        if (!"ORGANIZER".equals(event.role())) {
+        if (!Role.ORGANIZER.name().equals(event.role())) {
             return;
         }
         walletService.createWallet(event.externalKey());
@@ -26,9 +27,9 @@ public class WalletConsumer {
 
     @RabbitListener(queues = ReservationConfirmedQueueConfig.WALLET_CREDIT_QUEUE)
     public void onReservationConfirmed(ReservationConfirmedEvent event) {
-        walletService.credit(
+        walletService.creditReservation(
                 event.organizerExternalKey(),
-                event.organizerAmount(),
+                event.totalAmount(),
                 event.currency(),
                 event.reservationExternalId()
         );
