@@ -91,6 +91,19 @@
   pointer-events: none;
 }
 
+.content {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.content ::ng-deep mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+}
+
 :host(.btn-loading) .content {
   visibility: hidden;
 }
