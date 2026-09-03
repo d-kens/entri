@@ -35,12 +35,9 @@ export class WalletService {
     );
   }
 
-  withdraw(
-    organizerExternalKey: string,
-    request: WithdrawalRequest,
-  ): Observable<WithdrawalResponse> {
+  withdraw(walletId: string, request: WithdrawalRequest): Observable<WithdrawalResponse> {
     return this.http.post<WithdrawalResponse>(
-      `${environment.apiBaseUrl}/wallet/${organizerExternalKey}/withdraw`,
+      `${environment.apiBaseUrl}/wallet/${walletId}/withdraw`,
       request,
     );
   }

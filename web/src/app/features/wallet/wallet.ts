@@ -101,7 +101,7 @@ export class Wallet implements OnInit {
     this.withdrawLoading.set(true);
 
     this.walletService
-      .withdraw(this.externalKey, {
+      .withdraw(this.wallet()!.externalId, {
         amount: v.amount!,
         accountType: v.accountType!,
         name: v.name!,
