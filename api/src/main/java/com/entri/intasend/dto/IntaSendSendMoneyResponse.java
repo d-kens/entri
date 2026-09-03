@@ -1,11 +1,10 @@
 package com.entri.intasend.dto;
 
-import java.math.BigDecimal;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public record IntaSendSendMoneyResponse(
-        String id,
-        String status,
-        String currency,
-        BigDecimal total
+        @JsonProperty("file_id") String fileId,
+        @JsonProperty("tracking_id") String trackingId,
+        String status
 ) {
 }

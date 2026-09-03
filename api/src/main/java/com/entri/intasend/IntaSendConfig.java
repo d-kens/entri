@@ -13,14 +13,19 @@ public class IntaSendConfig {
     ) {
         return RestClient.builder()
                 .baseUrl(properties.baseUrl())
-                .defaultHeader(
-                        "X-IntaSend-Public-API-Key",
-                        properties.publishableKey()
-                )
-                .defaultHeader(
-                        "Content-Type",
-                        "application/json"
-                )
+                .defaultHeader("X-IntaSend-Public-API-Key", properties.publishableKey())
+                .defaultHeader("Content-Type", "application/json")
+                .build();
+    }
+
+    @Bean
+    public RestClient intaSendSendMoneyRestClient(
+            final IntaSendProperties properties
+    ) {
+        return RestClient.builder()
+                .baseUrl(properties.baseUrl())
+                .defaultHeader("Authorization", "Token " + properties.secretKey())
+                .defaultHeader("Content-Type", "application/json")
                 .build();
     }
 }

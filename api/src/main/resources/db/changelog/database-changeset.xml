@@ -489,93 +489,62 @@
         <modifyDataType tableName="tickets" columnName="ticket_code" newDataType="VARCHAR(12)"/>
     </changeSet>
 
-    <changeSet id="202609020004" author="d-kens">
-        <addColumn tableName="event_ticket_reservations">
-            <column name="platform_fee" type="DECIMAL(10,2)"/>
-            <column name="organizer_amount" type="DECIMAL(10,2)"/>
-        </addColumn>
-    </changeSet>
-
-    <changeSet id="202609020005" author="d-kens">
-        <createTable tableName="payouts">
-            <column name="id" type="BIGINT" autoIncrement="true">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="idempotency_key" type="VARCHAR(36)">
-                <constraints nullable="false" unique="true"/>
-            </column>
-            <column name="reservation_id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="payout_method" type="VARCHAR(20)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="payout_recipient_name" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="payout_account" type="VARCHAR(100)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="payout_account_reference" type="VARCHAR(100)"/>
-            <column name="payout_bank_code" type="VARCHAR(20)"/>
-            <column name="amount" type="DECIMAL(10,2)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="currency" type="VARCHAR(10)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="status" type="VARCHAR(20)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="attempts" type="INT" defaultValueNumeric="0">
-                <constraints nullable="false"/>
-            </column>
-            <column name="last_attempted_at" type="DATETIME(6)"/>
-            <column name="date_created" type="DATETIME">
-                <constraints nullable="false"/>
-            </column>
-            <column name="created_by" type="VARCHAR(100)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="date_modified" type="DATETIME"/>
-            <column name="modified_by" type="VARCHAR(100)"/>
-        </createTable>
-
-        <addForeignKeyConstraint
-                baseTableName="payouts"
-                baseColumnNames="reservation_id"
-                referencedTableName="event_ticket_reservations"
-                referencedColumnNames="id"
-                constraintName="fk__payouts__reservation"/>
-
-        <createIndex tableName="payouts" indexName="idx__payouts__status">
-            <column name="status"/>
-        </createIndex>
-    </changeSet>
-
-    <changeSet id="202609020007" author="d-kens">
-        <createTable tableName="organizer_payout_accounts">
+    <changeSet id="202609030001" author="d-kens">
+        <createTable tableName="wallets">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="external_id" type="VARCHAR(36)">
                 <constraints nullable="false" unique="true"/>
             </column>
+            <column name="wallet_type" type="VARCHAR(20)" defaultValue="ORGANIZER">
+                <constraints nullable="false"/>
+            </column>
             <column name="organizer_id" type="BIGINT">
+                <constraints unique="true"/>
+            </column>
+            <column name="date_created" type="DATETIME">
                 <constraints nullable="false"/>
             </column>
-            <column name="method" type="VARCHAR(20)">
+            <column name="created_by" type="VARCHAR(100)">
                 <constraints nullable="false"/>
             </column>
-            <column name="recipient_name" type="VARCHAR(255)">
+            <column name="date_modified" type="DATETIME"/>
+            <column name="modified_by" type="VARCHAR(100)"/>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="wallets"
+                baseColumnNames="organizer_id"
+                constraintName="fk_wallets_organizer"
+                referencedTableName="users"
+                referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="202609030002" author="d-kens">
+        <createTable tableName="wallet_transactions">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="external_id" type="VARCHAR(36)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="wallet_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="account" type="VARCHAR(100)">
+            <column name="type" type="VARCHAR(10)">
                 <constraints nullable="false"/>
             </column>
-            <column name="account_reference" type="VARCHAR(100)"/>
-            <column name="bank_code" type="VARCHAR(20)"/>
-            <column name="is_default" type="TINYINT(1)" defaultValueNumeric="0">
+            <column name="amount" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="currency" type="VARCHAR(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reference_id" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(10)">
                 <constraints nullable="false"/>
             </column>
             <column name="date_created" type="DATETIME">
@@ -587,15 +556,48 @@
             <column name="date_modified" type="DATETIME"/>
             <column name="modified_by" type="VARCHAR(100)"/>
         </createTable>
+
         <addForeignKeyConstraint
-                baseTableName="organizer_payout_accounts"
-                baseColumnNames="organizer_id"
-                referencedTableName="users"
-                referencedColumnNames="id"
-                constraintName="fk__payout_accounts__organizer"/>
-        <createIndex tableName="organizer_payout_accounts" indexName="idx__payout_accounts__organizer">
-            <column name="organizer_id"/>
-        </createIndex>
+                baseTableName="wallet_transactions"
+                baseColumnNames="wallet_id"
+                constraintName="fk_wallet_transactions_wallet"
+                referencedTableName="wallets"
+                referencedColumnNames="id"/>
     </changeSet>
+
+    <changeSet id="202609030003" author="d-kens">
+        <addColumn tableName="wallet_transactions">
+            <column name="tracking_reference" type="VARCHAR(100)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="202609030004" author="d-kens">
+        <addColumn tableName="wallets">
+            <column name="balance" type="DECIMAL(19,2)" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="202609030005" author="d-kens">
+        <addUniqueConstraint tableName="wallet_transactions"
+                             columnNames="wallet_id,reference_id,type"
+                             constraintName="uq_wallet_tx_wallet_reference_type"/>
+    </changeSet>
+
+    <changeSet id="202609030006" author="d-kens">
+        <modifyDataType tableName="wallet_transactions" columnName="amount" newDataType="DECIMAL(19,2)"/>
+    </changeSet>
+
+    <changeSet id="202609030007" author="d-kens">
+        <insert tableName="wallets">
+            <column name="external_id" value="00000000-0000-0000-0000-000000000001"/>
+            <column name="wallet_type" value="PLATFORM"/>
+            <column name="balance" valueNumeric="0.00"/>
+            <column name="date_created" valueDate="now()"/>
+            <column name="created_by" value="system"/>
+        </insert>
+    </changeSet>
+
 
 </databaseChangeLog>

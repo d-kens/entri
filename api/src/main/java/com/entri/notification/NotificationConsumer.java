@@ -1,6 +1,6 @@
 package com.entri.notification;
 
-import com.entri.notification.dto.NotificationMessage;
+import com.entri.notification.dto.NotificationEvent;
 import com.entri.notification.novu.NovuClient;
 import com.entri.notification.novu.WorkflowType;
 import com.entri.rabbitmq.NotificationQueueConfig;
@@ -15,7 +15,7 @@ public class NotificationConsumer {
     private final NovuClient novuClient;
 
     @RabbitListener(queues = NotificationQueueConfig.NOTIFICATION_SEND_QUEUE)
-    public void handle(NotificationMessage message) {
+    public void handle(NotificationEvent message) {
         novuClient.triggerWorkflow(toWorkflowType(message.type()), message.subscriberId(), message.payload());
     }
 

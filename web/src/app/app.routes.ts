@@ -85,29 +85,16 @@ export const routes: Routes = [
         loadComponent: () => import('@features/payments/payments').then((m) => m.Payments),
       },
       {
-        path: 'reports',
+        path: 'wallet',
         canActivate: [roleGuard],
-        data: { roles: ['ADMIN'] },
-        loadComponent: () => import('@features/reports/reports').then((m) => m.Reports),
+        data: { roles: ['ORGANIZER'] },
+        loadComponent: () => import('@features/wallet/wallet').then((m) => m.Wallet),
       },
       {
         path: 'tickets',
         canActivate: [roleGuard],
         data: { roles: ['ORGANIZER'] },
         loadComponent: () => import('@features/tickets/tickets').then((m) => m.Tickets),
-      },
-      {
-        path: 'attendees',
-        canActivate: [roleGuard],
-        data: { roles: ['ORGANIZER'] },
-        loadComponent: () => import('@features/attendees/attendees').then((m) => m.Attendees),
-      },
-      {
-        path: 'payout-settings',
-        canActivate: [roleGuard],
-        data: { roles: ['ORGANIZER'] },
-        loadComponent: () =>
-          import('@features/payouts/payout-settings/payout-settings').then((m) => m.PayoutSettings),
       },
       {
         path: 'profile',

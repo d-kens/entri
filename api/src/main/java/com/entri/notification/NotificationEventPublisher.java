@@ -1,6 +1,6 @@
 package com.entri.notification;
 
-import com.entri.notification.dto.NotificationMessage;
+import com.entri.notification.dto.NotificationEvent;
 import com.entri.rabbitmq.NotificationQueueConfig;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -16,12 +16,12 @@ public class NotificationEventPublisher {
     private final RabbitTemplate rabbitTemplate;
     private final ApplicationEventPublisher applicationEventPublisher;
 
-    public void publish(NotificationMessage message) {
+    public void publish(NotificationEvent message) {
         applicationEventPublisher.publishEvent(message);
     }
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT, fallbackExecution = true)
-    public void onNotification(NotificationMessage message) {
+    public void onNotification(NotificationEvent message) {
         rabbitTemplate.convertAndSend(
                 NotificationQueueConfig.NOTIFICATION_EXCHANGE,
                 NotificationQueueConfig.NOTIFICATION_ROUTING_KEY,

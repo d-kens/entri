@@ -3,7 +3,7 @@ package com.entri.modules.service;
 import com.entri.exception.ResourceNotFoundException;
 import com.entri.exception.UnauthorizedException;
 import com.entri.notification.NotificationEventPublisher;
-import com.entri.notification.dto.NotificationMessage;
+import com.entri.notification.dto.NotificationEvent;
 import com.entri.auth.dto.ResetPasswordRequest;
 import com.entri.auth.entity.PasswordResetToken;
 import com.entri.users.entity.User;
@@ -58,7 +58,7 @@ class PasswordResetServiceTest {
         passwordResetService.forgotPassword("john@example.com");
 
         verify(passwordResetTokenRepository).save(any(PasswordResetToken.class));
-        verify(notificationPublisher).publish(any(NotificationMessage.class));
+        verify(notificationPublisher).publish(any(NotificationEvent.class));
     }
 
     @Test
@@ -103,7 +103,7 @@ class PasswordResetServiceTest {
         verify(userService).changeUserPassword(user, "NewPassword123!");
         assertThat(token.isUsed()).isTrue();
         verify(passwordResetTokenRepository).save(token);
-        verify(notificationPublisher).publish(any(NotificationMessage.class));
+        verify(notificationPublisher).publish(any(NotificationEvent.class));
     }
 
     @Test

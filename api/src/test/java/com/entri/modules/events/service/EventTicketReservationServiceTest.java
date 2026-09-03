@@ -1,5 +1,6 @@
 package com.entri.modules.events.service;
 
+import com.entri.common.PlatformProperties;
 import com.entri.events.exception.EventNotOnSaleException;
 import com.entri.events.exception.InsufficientTicketsException;
 import com.entri.events.exception.MaxTicketsPerOrderExceededException;
@@ -48,6 +49,7 @@ class EventTicketReservationServiceTest {
     @BeforeEach
     void setUp() {
         ReflectionTestUtils.setField(eventTicketReservationService, "holdDuration", Duration.ofMinutes(10));
+        ReflectionTestUtils.setField(eventTicketReservationService, "platformProperties", new PlatformProperties(BigDecimal.ZERO));
     }
 
     private Event buildEvent(Long id) {

@@ -2,8 +2,6 @@ package com.entri.analytics.controller;
 
 import com.entri.analytics.controller.api.AnalyticsApi;
 import com.entri.analytics.dto.OrganizerSummaryMetricsResponse;
-import com.entri.analytics.dto.PlatformSummaryMetricsResponse;
-import com.entri.analytics.dto.SalesTrendResponse;
 import com.entri.analytics.service.AnalyticsService;
 import com.entri.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
@@ -20,18 +18,4 @@ public class AnalyticsController implements AnalyticsApi {
         return analyticsService.getOrganizerSummaryMetrics(requestingUser.getExternalKey());
     }
 
-    @Override
-    public SalesTrendResponse getOrganizerSalesTrend(String period, UserPrincipal requestingUser) {
-        return analyticsService.getOrganizerSalesTrend(requestingUser.getExternalKey(), period);
-    }
-
-    @Override
-    public PlatformSummaryMetricsResponse getPlatformSummaryMetrics() {
-        return analyticsService.getPlatformSummaryMetrics();
-    }
-
-    @Override
-    public SalesTrendResponse getPlatformSalesTrend(String period) {
-        return analyticsService.getPlatformSalesTrend(period);
-    }
 }

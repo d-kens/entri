@@ -1,25 +1,6 @@
 <div class="p-6 space-y-6">
   <h1 class="text-2xl font-semibold text-gray-800">Dashboard</h1>
 
-  @if (!hasPayoutAccount()) {
-    <div class="flex items-start gap-3 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3">
-      <mat-icon class="text-amber-500 mt-0.5 flex-shrink-0">warning_amber</mat-icon>
-      <div class="flex-1 min-w-0">
-        <p class="text-sm font-medium text-amber-900">Payout account required</p>
-        <p class="text-sm text-amber-700 mt-0.5">
-          You need to set up a payout account before you can publish events and receive payments.
-        </p>
-      </div>
-      <a
-        mat-stroked-button
-        [routerLink]="['/dashboard/payout-settings']"
-        class="flex-shrink-0 !text-amber-700 !border-amber-400"
-      >
-        Set up now
-      </a>
-    </div>
-  }
-
   <!-- KPI Cards -->
   @if (metricsLoading()) {
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -51,5 +32,22 @@
     </div>
   }
 
-  <app-sales-trend-chart [trendLoader]="trendLoader" title="Revenue Trend" />
+  <!-- Wallet balance -->
+  <a
+    [routerLink]="['/dashboard/wallet']"
+    class="flex items-center justify-between bg-white rounded-xl p-5 shadow-sm border-l-4 border-blue-400 hover:shadow-md transition-shadow no-underline"
+  >
+    <div>
+      <p class="text-xs text-gray-500 uppercase tracking-wide">Wallet Balance</p>
+      @if (walletLoading()) {
+        <div class="h-7 w-28 bg-gray-100 rounded animate-pulse mt-1"></div>
+      } @else {
+        <p class="text-2xl font-bold text-gray-800 mt-1">
+          {{ walletBalance() | number: '1.2-2' }}
+          <span class="text-sm font-normal text-gray-400">KES</span>
+        </p>
+      }
+    </div>
+    <mat-icon class="text-blue-400">arrow_forward</mat-icon>
+  </a>
 </div>

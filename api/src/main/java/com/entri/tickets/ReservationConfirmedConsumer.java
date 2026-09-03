@@ -1,7 +1,7 @@
 package com.entri.tickets;
 
 import com.entri.rabbitmq.ReservationConfirmedQueueConfig;
-import com.entri.tickets.dto.ReservationConfirmedMessage;
+import com.entri.tickets.dto.ReservationConfirmedEvent;
 import com.entri.tickets.service.TicketService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -14,7 +14,7 @@ public class ReservationConfirmedConsumer {
     private final TicketService ticketService;
 
     @RabbitListener(queues = ReservationConfirmedQueueConfig.TICKET_GENERATION_QUEUE)
-    public void handle(ReservationConfirmedMessage message) {
+    public void handle(ReservationConfirmedEvent message) {
         ticketService.generateTickets(message.reservationExternalId());
     }
 }

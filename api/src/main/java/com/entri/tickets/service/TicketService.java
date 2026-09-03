@@ -9,7 +9,7 @@ import com.entri.exception.BadRequestException;
 import com.entri.exception.ResourceNotFoundException;
 import com.entri.notification.NotificationEventPublisher;
 import com.entri.notification.NotificationType;
-import com.entri.notification.dto.NotificationMessage;
+import com.entri.notification.dto.NotificationEvent;
 import com.entri.security.UserPrincipal;
 import com.entri.tickets.dto.CheckInRequest;
 import com.entri.tickets.dto.CheckInResponse;
@@ -158,7 +158,7 @@ public class TicketService {
         payload.put("firstName", reservation.getFirstName());
         payload.put("ticketsUrl", ticketsUrl);
 
-        notificationEventPublisher.publish(new NotificationMessage(
+        notificationEventPublisher.publish(new NotificationEvent(
                 NotificationType.TICKET_CONFIRMATION,
                 reservation.getExternalId(),
                 payload

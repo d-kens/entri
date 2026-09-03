@@ -1,7 +1,6 @@
 package com.entri.events.repository;
 
 import com.entri.events.entity.Event;
-import com.entri.events.entity.EventStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -30,14 +29,4 @@ public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecific
     """)
     long countLiveEvents(@Param("organizerKey") String organizerKey, @Param("now") Instant now);
 
-    @Query("SELECT COUNT(e) FROM Event e WHERE e.status = :status")
-    long countByStatus(@Param("status") EventStatus status);
-
-    @Query("""
-        SELECT COUNT(e) FROM Event e
-        WHERE e.status = com.entri.events.entity.EventStatus.PUBLISHED
-          AND e.startTime <= :now
-          AND e.endTime >= :now
-    """)
-    long countLiveEventsPlatform(@Param("now") Instant now);
 }

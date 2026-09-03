@@ -96,7 +96,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UnauthorizedException.class)
     public ProblemDetail handleUnauthorizedException(final UnauthorizedException exception, final HttpServletRequest request) {
-        return createProblemDetail(HttpStatus.FORBIDDEN, "Unauthorized", exception.getMessage(), request);
+        return createProblemDetail(HttpStatus.UNAUTHORIZED, "Unauthorized", exception.getMessage(), request);
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public ProblemDetail handleForbiddenException(final ForbiddenException exception, final HttpServletRequest request) {
+        return createProblemDetail(HttpStatus.FORBIDDEN, "Forbidden", exception.getMessage(), request);
     }
 
     @ExceptionHandler(TooManyRequestsException.class)

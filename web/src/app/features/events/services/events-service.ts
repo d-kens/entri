@@ -154,6 +154,13 @@ export class EventsService {
       .pipe(catchError(this.toDisplayError('Checkout failed. Please try again.')));
   }
 
+  getManagedTickets(page = 0, size = 10): Observable<PageResponse<TicketResponse>> {
+    const params = new HttpParams().set('page', page).set('size', size);
+    return this.http.get<PageResponse<TicketResponse>>(`${environment.apiBaseUrl}/tickets/manage`, {
+      params,
+    });
+  }
+
   getTicketsByReservation(reservationId: string): Observable<TicketResponse[]> {
     return this.http.get<TicketResponse[]>(
       `${environment.apiBaseUrl}/reservations/${reservationId}/tickets`,
