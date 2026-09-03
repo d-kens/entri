@@ -60,4 +60,7 @@ public class WalletTransaction extends AbstractAuditableEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private WalletTransactionStatus status;
+
+    @Column(name = "tracking_reference", length = 100)
+    private String trackingReference;
 }

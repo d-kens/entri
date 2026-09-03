@@ -1,5 +1,7 @@
 package com.entri.wallet;
 
+import com.entri.payment.PayoutResultEvent;
+import com.entri.rabbitmq.PaymentQueueConfig;
 import com.entri.rabbitmq.ReservationConfirmedQueueConfig;
 import com.entri.rabbitmq.UserEventConfig;
 import com.entri.tickets.dto.ReservationConfirmedEvent;
@@ -30,5 +32,10 @@ public class WalletConsumer {
                 event.currency(),
                 event.reservationExternalId()
         );
+    }
+
+    @RabbitListener(queues = PaymentQueueConfig.PAYOUT_PROCESS_QUEUE)
+    public void onPayoutResult(PayoutResultEvent event) {
+        walletService.applyPayoutResult(event.trackingId(), event.status());
     }
 }
