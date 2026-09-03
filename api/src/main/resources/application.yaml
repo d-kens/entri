@@ -31,6 +31,7 @@ jwt:
 
 app:
   base-url: ${APP_BASE_URL}
+  api-url: ${APP_API_URL}
   cors:
     allowed-origin: ${APP_CORS_ALLOWED_ORIGIN}
   password-reset:
