@@ -29,21 +29,19 @@
   @if (showWithdrawForm()) {
     <div class="bg-white rounded-xl p-6 shadow-sm">
       <h2 class="text-base font-semibold text-gray-800 mb-4">Withdraw Funds</h2>
-      <form [formGroup]="withdrawForm" class="flex flex-col gap-4">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <form (submit)="onSubmit($event)" class="flex flex-col gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
           <mat-form-field appearance="outline" subscriptSizing="dynamic">
             <mat-label>Amount (KES)</mat-label>
-            <input matInput type="number" formControlName="amount" min="1" />
-            @if (withdrawForm.get('amount')?.hasError('required')) {
-              <mat-error>Required</mat-error>
-            } @else if (withdrawForm.get('amount')?.hasError('min')) {
-              <mat-error>Must be greater than 0</mat-error>
+            <input matInput type="number" [formField]="withdrawForm.amount" />
+            @for (error of withdrawForm.amount().errors(); track error.message) {
+              <mat-error>{{ error.message }}</mat-error>
             }
           </mat-form-field>
 
           <mat-form-field appearance="outline" subscriptSizing="dynamic">
             <mat-label>Account Type</mat-label>
-            <mat-select formControlName="accountType">
+            <mat-select [formField]="withdrawForm.accountType">
               <mat-option value="PAYBILL">Paybill</mat-option>
               <mat-option value="TILL_NUMBER">Till Number</mat-option>
               <mat-option value="BANK">Bank</mat-option>
@@ -60,39 +58,45 @@
                 Paybill Number
               }
             </mat-label>
-            <input matInput type="text" formControlName="account" />
-            @if (withdrawForm.get('account')?.hasError('required')) {
-              <mat-error>Required</mat-error>
+            <input matInput type="text" [formField]="withdrawForm.account" />
+            @for (error of withdrawForm.account().errors(); track error.message) {
+              <mat-error>{{ error.message }}</mat-error>
             }
           </mat-form-field>
 
           <mat-form-field appearance="outline" subscriptSizing="dynamic">
             <mat-label>Recipient Name</mat-label>
-            <input matInput type="text" formControlName="name" />
-            @if (withdrawForm.get('name')?.hasError('required')) {
-              <mat-error>Required</mat-error>
+            <input matInput type="text" [formField]="withdrawForm.name" />
+            @for (error of withdrawForm.name().errors(); track error.message) {
+              <mat-error>{{ error.message }}</mat-error>
             }
           </mat-form-field>
 
           <mat-form-field appearance="outline" subscriptSizing="dynamic">
             <mat-label>Narrative</mat-label>
-            <input matInput type="text" formControlName="narrative" />
-            @if (withdrawForm.get('narrative')?.hasError('required')) {
-              <mat-error>Required</mat-error>
+            <input matInput type="text" [formField]="withdrawForm.narrative" />
+            @for (error of withdrawForm.narrative().errors(); track error.message) {
+              <mat-error>{{ error.message }}</mat-error>
             }
           </mat-form-field>
 
-          @if (accountType() === 'PAYBILL') {
+          @if (!withdrawForm.accountReference().hidden()) {
             <mat-form-field appearance="outline" subscriptSizing="dynamic">
               <mat-label>Account Reference</mat-label>
-              <input matInput type="text" formControlName="accountReference" />
+              <input matInput type="text" [formField]="withdrawForm.accountReference" />
+              @for (error of withdrawForm.accountReference().errors(); track error.message) {
+                <mat-error>{{ error.message }}</mat-error>
+              }
             </mat-form-field>
           }
 
-          @if (accountType() === 'BANK') {
+          @if (!withdrawForm.bankCode().hidden()) {
             <mat-form-field appearance="outline" subscriptSizing="dynamic">
               <mat-label>Bank Code</mat-label>
-              <input matInput type="text" formControlName="bankCode" />
+              <input matInput type="text" [formField]="withdrawForm.bankCode" />
+              @for (error of withdrawForm.bankCode().errors(); track error.message) {
+                <mat-error>{{ error.message }}</mat-error>
+              }
             </mat-form-field>
           }
         </div>
@@ -101,9 +105,7 @@
           <button appButton variant="ghost" type="button" (click)="toggleWithdrawForm()">
             Cancel
           </button>
-          <button appButton type="button" [loading]="withdrawLoading()" (click)="submit()">
-            Submit
-          </button>
+          <button appButton type="submit" [loading]="withdrawLoading()">Submit</button>
         </div>
       </form>
     </div>

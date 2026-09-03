@@ -1,6 +1,14 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { DatePipe, DecimalPipe, TitleCasePipe } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import {
+  form,
+  FormField,
+  hidden,
+  required,
+  submit as submitForm,
+  validate,
+} from '@angular/forms/signals';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -15,6 +23,28 @@ import { PageResponse } from '@shared/models/common.model';
 import { WalletService } from './wallet-service';
 import { WalletResponse, WalletTransaction } from './models/wallet.models';
 
+type AccountType = 'PAYBILL' | 'TILL_NUMBER' | 'BANK';
+
+interface WithdrawData {
+  amount: number | null;
+  accountType: AccountType;
+  name: string;
+  account: string;
+  narrative: string;
+  accountReference: string;
+  bankCode: string;
+}
+
+const DEFAULT_WITHDRAW: WithdrawData = {
+  amount: null,
+  accountType: 'PAYBILL',
+  name: '',
+  account: '',
+  narrative: '',
+  accountReference: '',
+  bankCode: '',
+};
+
 @Component({
   selector: 'app-wallet',
   standalone: true,
@@ -23,6 +53,7 @@ import { WalletResponse, WalletTransaction } from './models/wallet.models';
     DecimalPipe,
     TitleCasePipe,
     ReactiveFormsModule,
+    FormField,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
@@ -38,7 +69,6 @@ export class Wallet implements OnInit {
   private walletService = inject(WalletService);
   private authService = inject(AuthService);
   private snackbarService = inject(SnackbarService);
-  private fb = inject(FormBuilder);
 
   wallet = signal<WalletResponse | null>(null);
   walletLoading = signal(true);
@@ -60,16 +90,25 @@ export class Wallet implements OnInit {
 
   readonly columns = ['date', 'type', 'amount', 'status'];
 
-  readonly accountType = computed(() => this.withdrawForm.get('accountType')?.value);
+  private withdrawData = signal<WithdrawData>({ ...DEFAULT_WITHDRAW });
 
-  withdrawForm = this.fb.group({
-    amount: [null as number | null, [Validators.required, Validators.min(1)]],
-    accountType: ['PAYBILL' as 'PAYBILL' | 'TILL_NUMBER' | 'BANK', Validators.required],
-    name: ['', Validators.required],
-    account: ['', Validators.required],
-    narrative: ['', Validators.required],
-    accountReference: [''],
-    bankCode: [''],
+  readonly accountType = computed(() => this.withdrawData().accountType);
+
+  withdrawForm = form(this.withdrawData, (fields) => {
+    validate(fields.amount, (ctx) => {
+      const v = ctx.value();
+      if (v === null || v === undefined) return { kind: 'required', message: 'Required' };
+      if (Number(v) < 1) return { kind: 'min', message: 'Must be greater than 0' };
+      return null;
+    });
+    required(fields.accountType, { message: 'Required' });
+    required(fields.name, { message: 'Required' });
+    required(fields.account, { message: 'Required' });
+    required(fields.narrative, { message: 'Required' });
+    hidden(fields.accountReference, () => this.withdrawData().accountType !== 'PAYBILL');
+    required(fields.accountReference, { message: 'Required' });
+    hidden(fields.bankCode, () => this.withdrawData().accountType !== 'BANK');
+    required(fields.bankCode, { message: 'Required' });
   });
 
   private externalKey = '';
@@ -83,7 +122,7 @@ export class Wallet implements OnInit {
   toggleWithdrawForm(): void {
     this.showWithdrawForm.update((v) => !v);
     if (!this.showWithdrawForm()) {
-      this.withdrawForm.reset({ accountType: 'PAYBILL' });
+      this.withdrawData.set({ ...DEFAULT_WITHDRAW });
     }
   }
 
@@ -91,40 +130,37 @@ export class Wallet implements OnInit {
     this.loadTransactions(event.pageIndex, event.pageSize);
   }
 
-  submit(): void {
-    if (this.withdrawForm.invalid) {
-      this.withdrawForm.markAllAsTouched();
-      return;
-    }
-
-    const v = this.withdrawForm.value;
-    this.withdrawLoading.set(true);
-
-    this.walletService
-      .withdraw(this.wallet()!.externalId, {
-        amount: v.amount!,
-        accountType: v.accountType!,
-        name: v.name!,
-        account: v.account!,
-        narrative: v.narrative!,
-        accountReference: v.accountReference || undefined,
-        bankCode: v.bankCode || undefined,
-      })
-      .subscribe({
-        next: () => {
-          this.snackbarService.showSuccess('Withdrawal initiated successfully');
-          this.withdrawLoading.set(false);
-          this.showWithdrawForm.set(false);
-          this.withdrawForm.reset({ accountType: 'PAYBILL' });
-          this.loadWallet();
-          this.loadTransactions(0, 20);
-        },
-        error: (err) => {
-          const msg = err?.error?.detail || 'Withdrawal failed. Please try again.';
-          this.snackbarService.showError(msg);
-          this.withdrawLoading.set(false);
-        },
-      });
+  async onSubmit(event: Event): Promise<void> {
+    event.preventDefault();
+    await submitForm(this.withdrawForm, async () => {
+      const v = this.withdrawData();
+      this.withdrawLoading.set(true);
+      this.walletService
+        .withdraw(this.wallet()!.externalId, {
+          amount: v.amount!,
+          accountType: v.accountType,
+          name: v.name,
+          account: v.account,
+          narrative: v.narrative,
+          accountReference: v.accountReference || undefined,
+          bankCode: v.bankCode || undefined,
+        })
+        .subscribe({
+          next: () => {
+            this.snackbarService.showSuccess('Withdrawal initiated successfully');
+            this.withdrawLoading.set(false);
+            this.showWithdrawForm.set(false);
+            this.withdrawData.set({ ...DEFAULT_WITHDRAW });
+            this.loadWallet();
+            this.loadTransactions(0, 20);
+          },
+          error: (err) => {
+            const msg = err?.error?.detail || 'Withdrawal failed. Please try again.';
+            this.snackbarService.showError(msg);
+            this.withdrawLoading.set(false);
+          },
+        });
+    });
   }
 
   private loadWallet(): void {
