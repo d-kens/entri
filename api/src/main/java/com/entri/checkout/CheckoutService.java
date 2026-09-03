@@ -6,8 +6,11 @@ import com.entri.payment.dto.CheckoutRequest;
 import com.entri.payment.PaymentGateway;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
 
 @Service
 @RequiredArgsConstructor
@@ -15,6 +18,10 @@ public class CheckoutService {
 
     @Value("${app.base-url}")
     private String appBaseUrl;
+
+    @Value("${app.checkout.amount-override:#{null}}")
+    @Nullable
+    private BigDecimal checkoutAmountOverride;
 
     private final EventTicketReservationService eventTicketReservationService;
     private final PaymentGateway paymentGateway;
@@ -28,6 +35,8 @@ public class CheckoutService {
         reservation.setEmail(details.email());
         reservation.setPhoneNumber(details.phoneNumber());
 
+        var amount = checkoutAmountOverride != null ? checkoutAmountOverride : reservation.getTotalAmount();
+
         var paymentRequest = new CheckoutRequest(
                 reservation.getFirstName(),
                 reservation.getLastName(),
@@ -35,7 +44,7 @@ public class CheckoutService {
                 reservation.getEmail(),
                 reservation.getExternalId(),
                 appBaseUrl.stripTrailing() + "/tickets/" + reservation.getExternalId(),
-                reservation.getTotalAmount(),
+                amount,
                 reservation.getEvent().getCurrency()
         );
 
