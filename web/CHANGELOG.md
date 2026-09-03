@@ -1,3 +1,19 @@
+# [1.8.0](https://github.com/d-kens/entri/compare/web-v1.7.1...web-v1.8.0) (2026-09-03)
+
+### Bug Fixes
+
+- **checkout:** rename response field url to checkoutUrl to match frontend model ([0a07c0a](https://github.com/d-kens/entri/commit/0a07c0a60070d8616e66104e3a103212962a9f93))
+- **payment:** use app.api-url as payout callback URL ([b4132d6](https://github.com/d-kens/entri/commit/b4132d681e23ccb752dbd6ba1716d1684f51d84d))
+
+### Features
+
+- **checkout:** show failed payment state on checkout page ([8880711](https://github.com/d-kens/entri/commit/88807119c35bf03be29f02c5e5933589d62f6b36))
+- **checkout:** support amount override for dev sandbox testing ([fbdf51a](https://github.com/d-kens/entri/commit/fbdf51aa25bba015707b982d1ebc83dc6b564738))
+- **security:** permit unauthenticated access to checkout endpoint ([dd967de](https://github.com/d-kens/entri/commit/dd967deb9c08916adb5d3d21d520234a52502df2))
+- **wallet:** accept walletId on withdraw endpoint to support platform wallet ([1bb6877](https://github.com/d-kens/entri/commit/1bb68772e0c9d63cfaa1925f7fd84e31539bc927))
+- **wallet:** lazy-create organizer wallet on fetch, add platform wallet endpoint ([1803e8b](https://github.com/d-kens/entri/commit/1803e8b70fb57048615319dd9f37df47b14c0822))
+- **wallet:** update withdraw call to use walletId instead of organizerExternalKey ([32562ad](https://github.com/d-kens/entri/commit/32562addea26f48424351e808efc9c3720e43aef))
+
 ## [1.7.1](https://github.com/d-kens/entri/compare/web-v1.7.0...web-v1.7.1) (2026-09-03)
 
 ### Bug Fixes
