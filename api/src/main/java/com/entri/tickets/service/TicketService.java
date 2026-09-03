@@ -112,7 +112,6 @@ public class TicketService {
         }
 
         ticketRepository.saveAll(tickets);
-        createAttendeeSubscriber(reservation);
         sendConfirmationEmail(reservation);
     }
 
