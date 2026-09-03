@@ -131,7 +131,13 @@ export interface TicketResponse {
   reservationExternalId: string;
   eventExternalId: string;
   eventTitle: string;
+  eventStartTime: string;
+  eventEndTime: string;
+  venueName: string;
+  venueCity: string;
+  currency: string;
   ticketTypeName: string;
+  ticketPrice: number;
   status: TicketStatus;
   holderFirstName: string;
   holderLastName: string;

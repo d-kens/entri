@@ -1,6 +1,6 @@
 import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { DatePipe } from '@angular/common';
+import { DatePipe, DecimalPipe } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { first, interval, Subscription, switchMap } from 'rxjs';
 import { EventsService } from '@features/events/services/events-service';
@@ -9,7 +9,7 @@ import { TicketResponse } from '@features/events/models/event.models';
 @Component({
   selector: 'app-reservation-tickets',
   standalone: true,
-  imports: [DatePipe, MatIconModule, RouterLink],
+  imports: [DatePipe, DecimalPipe, MatIconModule, RouterLink],
   templateUrl: './reservation-tickets.html',
   styleUrl: './reservation-tickets.css',
 })
