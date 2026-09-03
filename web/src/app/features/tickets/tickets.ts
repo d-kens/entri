@@ -1,8 +1,10 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatButtonModule } from '@angular/material/button';
 import { EventsService } from '@features/events/services/events-service';
 import { TicketResponse } from '@features/events/models/event.models';
 import { PageResponse } from '@shared/models/common.model';
@@ -11,12 +13,23 @@ import { DataTable } from '@shared/components/data-table/data-table';
 @Component({
   selector: 'app-tickets',
   standalone: true,
-  imports: [DatePipe, MatIconModule, MatTableModule, MatPaginatorModule, DataTable],
+  imports: [
+    DatePipe,
+    MatIconModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatButtonModule,
+    RouterLink,
+    DataTable,
+  ],
   templateUrl: './tickets.html',
   styleUrl: './tickets.css',
 })
 export class Tickets implements OnInit {
   private eventsService = inject(EventsService);
+  private route = inject(ActivatedRoute);
+
+  readonly eventExternalId = this.route.snapshot.paramMap.get('eventExternalId')!;
 
   loading = signal(true);
   error = signal(false);
@@ -30,7 +43,7 @@ export class Tickets implements OnInit {
     last: true,
   });
 
-  readonly columns = ['holder', 'event', 'ticketType', 'status', 'checkedInAt'];
+  readonly columns = ['holder', 'ticketType', 'status', 'checkedInAt'];
 
   ngOnInit(): void {
     this.load(0, 10);
@@ -47,7 +60,7 @@ export class Tickets implements OnInit {
   private load(pageNumber: number, pageSize: number): void {
     this.loading.set(true);
     this.error.set(false);
-    this.eventsService.getManagedTickets(pageNumber, pageSize).subscribe({
+    this.eventsService.getEventTickets(this.eventExternalId, pageNumber, pageSize).subscribe({
       next: (res) => {
         this.page.set(res);
         this.loading.set(false);
