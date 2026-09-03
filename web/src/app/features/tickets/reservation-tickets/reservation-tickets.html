@@ -51,6 +51,25 @@
           <div class="ticket-info">
             <p class="ticket-type">{{ ticket.ticketTypeName }}</p>
             <p class="ticket-holder">{{ holderName(ticket) }}</p>
+            <div class="ticket-meta">
+              <span class="ticket-meta-item">
+                <mat-icon>calendar_today</mat-icon>
+                {{ ticket.eventStartTime | date: 'EEE, d MMM yyyy' }}
+              </span>
+              <span class="ticket-meta-item">
+                <mat-icon>schedule</mat-icon>
+                {{ ticket.eventStartTime | date: 'HH:mm' }} –
+                {{ ticket.eventEndTime | date: 'HH:mm' }}
+              </span>
+              <span class="ticket-meta-item">
+                <mat-icon>location_on</mat-icon>
+                {{ ticket.venueName }}, {{ ticket.venueCity }}
+              </span>
+              <span class="ticket-meta-item">
+                <mat-icon>sell</mat-icon>
+                {{ ticket.currency }} {{ ticket.ticketPrice | number: '1.2-2' }}
+              </span>
+            </div>
             <span class="ticket-status-badge" [class.badge--used]="ticket.status === 'USED'">
               @if (ticket.status === 'VALID') {
                 <mat-icon>check_circle</mat-icon>
