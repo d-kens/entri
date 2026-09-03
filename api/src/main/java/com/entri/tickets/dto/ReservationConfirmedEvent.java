@@ -5,6 +5,6 @@ import java.math.BigDecimal;
 public record ReservationConfirmedEvent(
         String reservationExternalId,
         String organizerExternalKey,
-        BigDecimal organizerAmount,
+        BigDecimal totalAmount,
         String currency
 ) {}

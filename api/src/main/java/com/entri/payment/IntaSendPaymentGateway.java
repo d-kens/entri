@@ -13,7 +13,11 @@ import com.entri.payment.dto.PaymentResult;
 import com.entri.payment.dto.PayoutRequest;
 import com.entri.payment.dto.WebhookRequest;
 
+import com.entri.payment.enums.AccountType;
+import com.entri.payment.enums.PaymentStatus;
+import com.entri.payment.enums.PayoutStatus;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,6 +33,9 @@ public class IntaSendPaymentGateway implements PaymentGateway {
     private final IntaSendClient intaSendClient;
     private final IntaSendProperties intaSendProperties;
     private final ObjectMapper objectMapper;
+
+    private static final String CURRENCY = "KES";
+    private static final String COUNTRY = "KE";
 
     @Value("${app.base-url}")
     private String appBaseUrl;
@@ -70,7 +77,7 @@ public class IntaSendPaymentGateway implements PaymentGateway {
         var sendMoneyRequest = new IntaSendSendMoneyRequest(
                 request.currency(),
                 toIntaSendProvider(request.accountType()),
-                "KE",
+                COUNTRY,
                 "NO",
                 callbackUrl,
                 List.of(transaction)
@@ -81,19 +88,26 @@ public class IntaSendPaymentGateway implements PaymentGateway {
 
     @Override
     public Optional<PaymentResult> parseCheckoutWebhook(WebhookRequest webhookRequest) {
-        if (webhookRequest.payload().contains("tracking_id")) {
+        JsonNode root;
+        try {
+            root = objectMapper.readTree(webhookRequest.payload());
+        } catch (JsonProcessingException e) {
+            throw new PaymentGatewayException("Failed to parse IntaSend webhook payload", e);
+        }
+
+        if (!root.has("api_ref")) {
             return Optional.empty();
         }
 
         IntaSendWebhookPayload payload;
         try {
-            payload = objectMapper.readValue(webhookRequest.payload(), IntaSendWebhookPayload.class);
+            payload = objectMapper.treeToValue(root, IntaSendWebhookPayload.class);
         } catch (JsonProcessingException e) {
             throw new PaymentGatewayException("Failed to parse IntaSend checkout webhook payload", e);
         }
 
         if (!intaSendProperties.webhookChallenge().equals(payload.challenge())) {
-            throw new PaymentGatewayException("Invalid IntaSend webhook challenge", null);
+            throw new PaymentGatewayException("Invalid IntaSend webhook challenge");
         }
 
         PaymentStatus status = switch (payload.state()) {
@@ -111,17 +125,29 @@ public class IntaSendPaymentGateway implements PaymentGateway {
 
     @Override
     public Optional<PayoutResult> parsePayoutWebhook(WebhookRequest webhookRequest) {
-        if (!webhookRequest.payload().contains("tracking_id")) {
+        JsonNode root;
+        try {
+            root = objectMapper.readTree(webhookRequest.payload());
+        } catch (JsonProcessingException e) {
+            throw new PaymentGatewayException("Failed to parse IntaSend webhook payload", e);
+        }
+
+        if (!root.has("tracking_id")) {
             return Optional.empty();
         }
 
         IntaSendPayoutWebhookPayload payload;
         try {
-            payload = objectMapper.readValue(webhookRequest.payload(), IntaSendPayoutWebhookPayload.class);
+            payload = objectMapper.treeToValue(root, IntaSendPayoutWebhookPayload.class);
         } catch (JsonProcessingException e) {
             throw new PaymentGatewayException("Failed to parse IntaSend payout webhook payload", e);
         }
 
+        if (!intaSendProperties.webhookChallenge().equals(payload.challenge())) {
+            throw new PaymentGatewayException("Invalid IntaSend payout webhook challenge");
+        }
+
+        // Each withdrawal sends exactly one transaction. If batched payouts are added, this mapping must be revisited.
         PayoutStatus status = switch (payload.status()) {
             case "Completed" -> {
                 boolean allSuccessful = payload.transactions().stream()
@@ -140,6 +166,7 @@ public class IntaSendPaymentGateway implements PaymentGateway {
     }
 
     private String toIntaSendAccountType(AccountType type) {
+        // BANK returns null — IntaSendSendMoneyTransaction is @JsonInclude(NON_NULL) so the field is omitted for bank payouts
         return switch (type) {
             case PAYBILL -> "PayBill";
             case TILL_NUMBER -> "TillNumber";

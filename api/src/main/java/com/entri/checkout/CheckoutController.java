@@ -1,6 +1,5 @@
 package com.entri.checkout;
 
-
 import com.entri.checkout.dto.CheckoutDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;

@@ -62,12 +62,6 @@ public class EventTicketReservation extends AbstractAuditableEntity {
     @Column(name = "total_amount", nullable = false, precision = 10, scale = 2)
     private BigDecimal totalAmount;
 
-    @Column(name = "platform_fee", precision = 10, scale = 2)
-    private BigDecimal platformFee;
-
-    @Column(name = "organizer_amount", precision = 10, scale = 2)
-    private BigDecimal organizerAmount;
-
     @Column(name = "expires_at", nullable = false)
     private Instant expiresAt;
 

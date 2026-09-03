@@ -1,8 +1,7 @@
 package com.entri.events.service;
 
-import com.entri.common.PlatformProperties;
 import com.entri.payment.dto.PaymentResult;
-import com.entri.payment.PaymentStatus;
+import com.entri.payment.enums.PaymentStatus;
 import com.entri.common.dto.PaginationResponse;
 import com.entri.events.dto.EventReservationSummaryResponse;
 import com.entri.events.exception.EventNotOnSaleException;
@@ -37,7 +36,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.Instant;
 import java.time.Duration;
 import java.util.HashSet;
@@ -54,7 +52,6 @@ public class EventTicketReservationService {
     private final TicketTypeRepository ticketTypeRepository;
     private final EventTicketReservationRepository eventTicketReservationRepository;
     private final ReservationConfirmedEventPublisher reservationConfirmedPublisher;
-    private final PlatformProperties platformProperties;
 
     @Value("${events.reservation.hold-duration:PT10M}")
     private Duration holdDuration;
@@ -114,7 +111,7 @@ public class EventTicketReservationService {
                     new ReservationConfirmedEvent(
                             reservation.getExternalId(),
                             reservation.getEvent().getOrganizer().getExternalKey(),
-                            reservation.getOrganizerAmount(),
+                            reservation.getTotalAmount(),
                             reservation.getEvent().getCurrency()
                     )
             );
@@ -362,12 +359,6 @@ public class EventTicketReservationService {
         }
 
         reservation.setTotalAmount(totalAmount);
-
-        BigDecimal platformFee = totalAmount
-                .multiply(platformProperties.serviceFeeRate())
-                .setScale(2, RoundingMode.HALF_UP);
-        reservation.setPlatformFee(platformFee);
-        reservation.setOrganizerAmount(totalAmount.subtract(platformFee));
 
         return reservation;
     }
