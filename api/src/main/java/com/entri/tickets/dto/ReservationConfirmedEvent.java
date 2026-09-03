@@ -1,3 +1,10 @@
 package com.entri.tickets.dto;
 
-public record ReservationConfirmedEvent(String reservationExternalId) {}
+import java.math.BigDecimal;
+
+public record ReservationConfirmedEvent(
+        String reservationExternalId,
+        String organizerExternalKey,
+        BigDecimal organizerAmount,
+        String currency
+) {}

@@ -111,7 +111,12 @@ public class EventTicketReservationService {
 
         if (newStatus == EventTicketReservationStatus.CONFIRMED) {
             reservationConfirmedPublisher.publishReservationConfirmed(
-                    new ReservationConfirmedEvent(reservation.getExternalId())
+                    new ReservationConfirmedEvent(
+                            reservation.getExternalId(),
+                            reservation.getEvent().getOrganizer().getExternalKey(),
+                            reservation.getOrganizerAmount(),
+                            reservation.getEvent().getCurrency()
+                    )
             );
         }
     }
