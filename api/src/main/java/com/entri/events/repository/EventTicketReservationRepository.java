@@ -9,19 +9,11 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
 public interface EventTicketReservationRepository extends JpaRepository<EventTicketReservation, Long> {
-
-    @Query("""
-        SELECT COALESCE(SUM(r.totalAmount), 0) FROM EventTicketReservation r
-        WHERE r.event.organizer.externalKey = :organizerKey
-          AND r.status = com.entri.events.entity.EventTicketReservationStatus.CONFIRMED
-    """)
-    BigDecimal sumRevenueByOrganizer(@Param("organizerKey") String organizerKey);
 
     @Query("""
         SELECT r FROM EventTicketReservation r

@@ -16,7 +16,7 @@ public class NotificationConsumer {
 
     @RabbitListener(queues = NotificationQueueConfig.NOTIFICATION_SEND_QUEUE)
     public void handle(NotificationEvent message) {
-        novuClient.triggerWorkflow(toWorkflowType(message.type()), message.subscriberId(), message.payload());
+        novuClient.triggerWorkflow(toWorkflowType(message.type()), message.recipientId(), message.payload(), message.recipient());
     }
 
     private WorkflowType toWorkflowType(NotificationType type) {
