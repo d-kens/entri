@@ -7,7 +7,7 @@ import com.entri.intasend.dto.IntaSendCheckoutRequest;
 import com.entri.intasend.dto.IntaSendPayoutWebhookPayload;
 import com.entri.intasend.dto.IntaSendSendMoneyRequest;
 import com.entri.intasend.dto.IntaSendSendMoneyTransaction;
-import com.entri.intasend.dto.IntaSendWebhookPayload;
+import com.entri.intasend.dto.IntaSendCollectionWebhookPayload;
 import com.entri.payment.dto.CheckoutRequest;
 import com.entri.payment.dto.PaymentResult;
 import com.entri.payment.dto.PayoutRequest;
@@ -102,14 +102,14 @@ public class IntaSendPaymentGateway implements PaymentGateway {
             return Optional.empty();
         }
 
-        IntaSendWebhookPayload payload;
+        IntaSendCollectionWebhookPayload payload;
         try {
-            payload = objectMapper.treeToValue(root, IntaSendWebhookPayload.class);
+            payload = objectMapper.treeToValue(root, IntaSendCollectionWebhookPayload.class);
         } catch (JsonProcessingException e) {
             throw new PaymentGatewayException("Failed to parse IntaSend checkout webhook payload", e);
         }
 
-        if (!intaSendProperties.webhookChallenge().equals(payload.challenge())) {
+        if (payload.challenge() != null && !intaSendProperties.webhookChallenge().equals(payload.challenge())) {
             throw new PaymentGatewayException("Invalid IntaSend webhook challenge");
         }
 
@@ -146,7 +146,7 @@ public class IntaSendPaymentGateway implements PaymentGateway {
             throw new PaymentGatewayException("Failed to parse IntaSend payout webhook payload", e);
         }
 
-        if (!intaSendProperties.webhookChallenge().equals(payload.challenge())) {
+        if (payload.challenge() != null && !intaSendProperties.webhookChallenge().equals(payload.challenge())) {
             throw new PaymentGatewayException("Invalid IntaSend payout webhook challenge");
         }
 
