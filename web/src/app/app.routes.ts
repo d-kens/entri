@@ -85,6 +85,12 @@ export const routes: Routes = [
         loadComponent: () => import('@features/payments/payments').then((m) => m.Payments),
       },
       {
+        path: 'wallet',
+        canActivate: [roleGuard],
+        data: { roles: ['ORGANIZER'] },
+        loadComponent: () => import('@features/wallet/wallet').then((m) => m.Wallet),
+      },
+      {
         path: 'tickets',
         canActivate: [roleGuard],
         data: { roles: ['ORGANIZER'] },
