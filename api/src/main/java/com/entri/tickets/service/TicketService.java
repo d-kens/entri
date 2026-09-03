@@ -10,6 +10,7 @@ import com.entri.exception.ResourceNotFoundException;
 import com.entri.notification.NotificationEventPublisher;
 import com.entri.notification.NotificationType;
 import com.entri.notification.dto.NotificationEvent;
+import com.entri.notification.dto.NotificationRecipient;
 import com.entri.security.UserPrincipal;
 import com.entri.common.dto.PaginationResponse;
 import com.entri.tickets.dto.CheckInRequest;
@@ -111,6 +112,7 @@ public class TicketService {
         }
 
         ticketRepository.saveAll(tickets);
+        createAttendeeSubscriber(reservation);
         sendConfirmationEmail(reservation);
     }
 
@@ -185,7 +187,14 @@ public class TicketService {
         notificationEventPublisher.publish(new NotificationEvent(
                 NotificationType.TICKET_CONFIRMATION,
                 reservation.getExternalId(),
-                payload
+                payload,
+                new NotificationRecipient(
+                        reservation.getExternalId(),
+                        reservation.getFirstName(),
+                        reservation.getLastName(),
+                        reservation.getEmail(),
+                        reservation.getPhoneNumber()
+                )
         ));
     }
 }

@@ -6,6 +6,7 @@ import com.entri.auth.repository.PasswordResetTokenRepository;
 import com.entri.notification.NotificationEventPublisher;
 import com.entri.notification.NotificationType;
 import com.entri.notification.dto.NotificationEvent;
+import com.entri.notification.dto.NotificationRecipient;
 import com.entri.exception.ResourceNotFoundException;
 import com.entri.exception.UnauthorizedException;
 import com.entri.users.entity.User;
@@ -63,7 +64,8 @@ public class PasswordResetService {
                         "resetUrl", resetUrl,
                         "firstName", user.getFirstName(),
                         "expiryMinutes", expiryMinutes
-                )
+                ),
+                new NotificationRecipient(user.getExternalKey().toString(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getPhoneNumber())
         ));
     }
 
@@ -81,7 +83,8 @@ public class PasswordResetService {
         notificationPublisher.publish(new NotificationEvent(
                 NotificationType.UPDATED_PASSWORD,
                 user.getExternalKey().toString(),
-                Map.of("firstName", user.getFirstName())
+                Map.of("firstName", user.getFirstName()),
+                new NotificationRecipient(user.getExternalKey().toString(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getPhoneNumber())
         ));
     }
 

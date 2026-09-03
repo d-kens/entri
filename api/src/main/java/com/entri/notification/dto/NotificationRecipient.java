@@ -1,10 +1,9 @@
-package com.entri.users.dto;
+package com.entri.notification.dto;
 
-public record UserUpdatedEvent(
-        String externalKey,
+public record NotificationRecipient(
+        String id,
         String firstName,
         String lastName,
         String email,
         String phoneNumber
-) {
-}
+) {}

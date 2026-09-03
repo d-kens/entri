@@ -6,7 +6,11 @@ import java.util.Map;
 
 public record NotificationEvent(
         NotificationType type,
-        String subscriberId,
-        Map<String, Object> payload
+        String recipientId,
+        Map<String, Object> payload,
+        NotificationRecipient recipient
 ) {
+    public NotificationEvent(NotificationType type, String recipientId, Map<String, Object> payload) {
+        this(type, recipientId, payload, null);
+    }
 }

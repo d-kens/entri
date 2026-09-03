@@ -11,12 +11,9 @@ import com.entri.users.dto.CreateUserRequest;
 import com.entri.users.dto.UserResponse;
 import com.entri.users.entity.Role;
 import com.entri.users.entity.User;
-import com.entri.users.dto.UserCreatedEvent;
-import com.entri.users.dto.UserUpdatedEvent;
 import com.entri.users.exception.EmailAlreadyExistsException;
 import com.entri.users.mapper.UserMapper;
 import com.entri.users.repository.UserRepository;
-import com.entri.users.UserEventPublisher;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final UserEventPublisher userEventPublisher;
     private final UserMapper userMapper;
 
     @Transactional
@@ -46,14 +42,6 @@ public class UserService {
                 .role(Role.valueOf(userDto.role().toUpperCase()))
                 .build();
         userRepository.save(user);
-        userEventPublisher.publishUserCreated(new UserCreatedEvent(
-                user.getExternalKey().toString(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getEmail(),
-                user.getPhoneNumber(),
-                user.getRole().name()
-        ));
         return userMapper.toResponse(user);
     }
 
@@ -109,13 +97,6 @@ public class UserService {
         user.setLastName(updateUserRequest.lastName());
         user.setPhoneNumber(PhoneNumberUtils.normalize(updateUserRequest.phoneNumber()));
 
-        userEventPublisher.publishUserUpdated(new UserUpdatedEvent(
-                user.getExternalKey().toString(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getEmail(),
-                user.getPhoneNumber()
-        ));
         return userMapper.toResponse(user);
     }
 
