@@ -1,3 +1,18 @@
+# [1.9.0](https://github.com/d-kens/entri/compare/web-v1.8.0...web-v1.9.0) (2026-09-03)
+
+### Bug Fixes
+
+- **tickets:** make tickets table full width ([e3df61c](https://github.com/d-kens/entri/commit/e3df61c70d63583e5498f9e2091cdafd857f2fe2))
+- **wallet:** fix withdrawal auth, min amount, and payout webhook parsing ([b2eaad1](https://github.com/d-kens/entri/commit/b2eaad1d4ec3104a142da33164320003cbcc13d2))
+
+### Features
+
+- **notifications:** include event name in ticket confirmation payload ([584cd7d](https://github.com/d-kens/entri/commit/584cd7d564261a34c9d5f73f7468b4fba82fdcd5))
+- **tickets:** add paginated GET /events/{eventExternalId}/tickets endpoint ([f26e942](https://github.com/d-kens/entri/commit/f26e942fbe6db92cfe59c3d1fa4002f7ff9d05bc))
+- **tickets:** add TicketFilter DTO for paginated ticket listing ([78a17c2](https://github.com/d-kens/entri/commit/78a17c2516281cdbd82c30363c663b2022dff91a))
+- **tickets:** scope tickets to event, remove from sidenav, add view tickets buttons ([5f52784](https://github.com/d-kens/entri/commit/5f5278426b695ce91bb8789bf596fac35ca6749b))
+- **wallet:** rewrite withdraw form with signal forms for reactive field visibility ([09dda6e](https://github.com/d-kens/entri/commit/09dda6ef2787c54f13e34acc0d803731a6cc8452))
+
 # [1.8.0](https://github.com/d-kens/entri/compare/web-v1.7.1...web-v1.8.0) (2026-09-03)
 
 ### Bug Fixes
