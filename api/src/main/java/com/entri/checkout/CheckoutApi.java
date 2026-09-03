@@ -11,13 +11,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import org.springframework.http.ProblemDetail;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.Map;
 
 @RequestMapping("/checkout")
 @Tag(
@@ -79,18 +75,6 @@ public interface CheckoutApi {
             @Valid
             @org.springframework.web.bind.annotation.RequestBody
             final CheckoutDetails checkoutDetails
-    );
-
-    @Operation(
-            operationId = "HandleWebhook",
-            summary = "Receive a payment gateway webhook",
-            description = "Receives and processes payment status notifications from the payment gateway."
-    )
-    @ApiResponse(responseCode = "200", description = "Webhook received and processed")
-    @PostMapping("/webhook")
-    ResponseEntity<Void> handleWebhook(
-            @RequestHeader Map<String, String> headers,
-            @org.springframework.web.bind.annotation.RequestBody String payload
     );
 
 }

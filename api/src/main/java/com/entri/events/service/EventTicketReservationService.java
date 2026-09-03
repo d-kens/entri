@@ -28,7 +28,7 @@ import com.entri.events.repository.EventTicketReservationRepository;
 import com.entri.events.repository.TicketTypeRepository;
 import com.entri.security.UserPrincipal;
 import com.entri.tickets.ReservationConfirmedEventPublisher;
-import com.entri.tickets.dto.ReservationConfirmedMessage;
+import com.entri.tickets.dto.ReservationConfirmedEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -111,7 +111,7 @@ public class EventTicketReservationService {
 
         if (newStatus == EventTicketReservationStatus.CONFIRMED) {
             reservationConfirmedPublisher.publishReservationConfirmed(
-                    new ReservationConfirmedMessage(reservation.getExternalId())
+                    new ReservationConfirmedEvent(reservation.getExternalId())
             );
         }
     }

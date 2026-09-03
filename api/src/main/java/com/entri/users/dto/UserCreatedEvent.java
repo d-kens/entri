@@ -1,6 +1,6 @@
 package com.entri.users.dto;
 
-public record UserCreatedMessage(
+public record UserCreatedEvent(
         String externalKey,
         String firstName,
         String lastName,
