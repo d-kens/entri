@@ -1,3 +1,14 @@
+# [1.10.0](https://github.com/d-kens/entri/compare/web-v1.9.0...web-v1.10.0) (2026-09-04)
+
+### Bug Fixes
+
+- **checkout:** fix form field error overlap with floating labels ([6b506d8](https://github.com/d-kens/entri/commit/6b506d832ff00e084d1279b54665e7be0811983f))
+
+### Features
+
+- **tickets:** redesign ticket cards with event banner and QR enlarge flow ([761758e](https://github.com/d-kens/entri/commit/761758e760219c60794c8a5962b08e7935d48b7e))
+- **tickets:** show event date, venue and price on ticket cards ([e665789](https://github.com/d-kens/entri/commit/e665789afcfd4d4ee52e6ddd955048c77e3e552b))
+
 # [1.9.0](https://github.com/d-kens/entri/compare/web-v1.8.0...web-v1.9.0) (2026-09-03)
 
 ### Bug Fixes
