@@ -37,8 +37,6 @@ src/app/features/
 npm start          # Dev server with live reload   → :4200
 npm run build      # Production build              → dist/
 npm test           # Unit tests
-npm run cy:open    # Cypress interactive
-npm run cy:run     # Cypress headless (CI)
 ```
 
 ---
