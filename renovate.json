@@ -13,7 +13,15 @@
     },
     {
       "matchUpdateTypes": ["major"],
-      "enabled": false
+      "dependencyDashboardApproval": true
+    },
+    {
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true,
+      "platformAutomerge": true,
+      "minimumReleaseAge": "3 days"
     }
-  ]
+  ],
+  "prConcurrentLimit": 10,
+  "prHourlyLimit": 2
 }
