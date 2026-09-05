@@ -1,3 +1,5 @@
+## [1.10.1](https://github.com/d-kens/entri/compare/web-v1.10.0...web-v1.10.1) (2026-09-05)
+
 # [1.10.0](https://github.com/d-kens/entri/compare/web-v1.9.0...web-v1.10.0) (2026-09-04)
 
 ### Bug Fixes
