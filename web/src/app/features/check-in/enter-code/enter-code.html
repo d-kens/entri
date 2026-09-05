@@ -1,0 +1,27 @@
+<div class="page-content">
+  <div class="icon-wrapper">
+    <mat-icon>qr_code_scanner</mat-icon>
+  </div>
+
+  <h2>Staff Check-In</h2>
+  <p class="subtitle">Enter the check-in code provided by your event organiser</p>
+
+  <div class="form-section">
+    @if (error(); as e) {
+      <p class="error-msg">{{ e }}</p>
+    }
+    <input
+      [(ngModel)]="code"
+      type="text"
+      placeholder="Event code"
+      autocomplete="off"
+      autocorrect="off"
+      autocapitalize="characters"
+      [disabled]="loading()"
+      (keyup.enter)="submit()"
+    />
+    <button class="submit-btn" (click)="submit()" [disabled]="!code.trim() || loading()">
+      {{ loading() ? 'Verifying...' : 'Continue' }}
+    </button>
+  </div>
+</div>

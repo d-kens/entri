@@ -1,0 +1,24 @@
+<div class="dialog-container">
+  <div class="icon-wrap">
+    <mat-icon class="icon">vpn_key</mat-icon>
+  </div>
+
+  <div class="dialog-body">
+    <h2 class="dialog-title">Check-in Code Generated</h2>
+    <p class="dialog-message">
+      Share this code with your door staff — they'll enter it at the start of their shift to unlock
+      the ticket scanner.
+    </p>
+  </div>
+
+  <button class="code-box" (click)="copyCode()">
+    <span class="code">{{ data.code }}</span>
+    <mat-icon>content_copy</mat-icon>
+  </button>
+
+  <p class="expiry">Expires {{ data.expiresAt | date: 'medium' }}</p>
+
+  <div class="dialog-actions">
+    <button appButton variant="primary" (click)="close()">Done</button>
+  </div>
+</div>

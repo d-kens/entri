@@ -15,6 +15,7 @@ import { EntriButton } from '@shared/components/button/entri-button.component';
 import { PageError } from '@shared/components/page-error/page-error';
 import { SnackbarService } from '@shared/services/snackbar-service';
 import { ConfirmDialog } from '@shared/components/confirm-dialog/confirm-dialog';
+import { CheckInCodeDialog } from '@shared/components/check-in-code-dialog/check-in-code-dialog';
 import {
   EventResponse,
   TicketTypeResponse,
@@ -119,6 +120,17 @@ export class EventDetails implements OnInit {
       next: (event) => {
         this.event.set(event);
         this.snackbarService.showSuccess('Event cancelled');
+      },
+      error: (err: Error) => {
+        this.snackbarService.showError(err.message);
+      },
+    });
+  }
+
+  generateCheckInCode(externalId: string): void {
+    this.eventsService.generateCheckInCode(externalId).subscribe({
+      next: (response) => {
+        this.dialog.open(CheckInCodeDialog, { data: response });
       },
       error: (err: Error) => {
         this.snackbarService.showError(err.message);

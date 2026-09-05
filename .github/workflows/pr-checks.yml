@@ -33,7 +33,6 @@ jobs:
     outputs:
       web: ${{ steps.filter.outputs.web }}
       api: ${{ steps.filter.outputs.api }}
-      mobile: ${{ steps.filter.outputs.mobile }}
 
     steps:
       - uses: actions/checkout@v4
@@ -46,8 +45,6 @@ jobs:
               - 'web/**'
             api:
               - 'api/**'
-            mobile:
-              - 'mobile/**'
 
   test-web:
     name: Test web
@@ -104,27 +101,3 @@ jobs:
       - name: Build
         working-directory: ./api
         run: ./gradlew assemble --no-daemon
-
-  test-mobile:
-    name: Test mobile
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    needs: changes
-    if: needs.changes.outputs.mobile == 'true'
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
-          cache-dependency-path: mobile/package-lock.json
-
-      - name: Install dependencies
-        working-directory: ./mobile
-        run: npm ci
-
-      - name: Build
-        working-directory: ./mobile
-        run: npx ng build

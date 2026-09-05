@@ -43,6 +43,11 @@ export const routes: Routes = [
         path: 'support',
         loadComponent: () => import('@features/support/support').then((m) => m.Support),
       },
+      {
+        path: 'check-in',
+        loadChildren: () =>
+          import('@features/check-in/check-in.routes').then((m) => m.CHECK_IN_ROUTES),
+      },
     ],
   },
   {
