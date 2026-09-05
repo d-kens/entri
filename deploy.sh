@@ -67,24 +67,32 @@ INTASEND_WEBHOOK_CHALLENGE=$(secret intasend-webhook-challenge)
 EOF
 chmod 600 .env
 
+
+# nginx/ (including its snippets/) is synced on every deploy regardless of which
+# service was targeted (see the CI workflow), but nothing else ever picked up
+# those changes — validate and apply them here, before touching the target
+# service, so a bad config fails loudly up front instead of surfacing only
+# after traffic is already flowing to the newly-deployed container.
+#
+# `compose run` builds a fresh, throwaway container from the *current*
+# docker-compose.yml (picking up any new bind mounts, e.g. snippets/) rather
+# than exec-ing into the already-running nginx container, which may still be
+# on the old container definition and missing a mount the new config needs.
+echo "==> Validating nginx config"
+if ! docker compose run --rm --no-deps --entrypoint nginx nginx -t; then
+  echo "==> nginx config test failed — not applying" >&2
+  exit 1
+fi
+
+echo "==> Applying nginx config"
+docker compose up -d nginx
+docker compose exec -T nginx nginx -s reload
+
 echo "==> Pulling ${SERVICE}:${TAG}"
 docker compose pull "$SERVICE"
 
 echo "==> Restarting ${SERVICE}"
 docker compose up -d "$SERVICE"
-
-# nginx.conf is synced on every deploy regardless of which service was targeted
-# (see the CI workflow), but nothing else ever reloads it — validate and reload
-# it here so config changes actually take effect, and a bad config fails loudly
-# instead of silently sitting until some unrelated nginx restart takes prod down.
-echo "==> Validating nginx config"
-if ! docker compose exec -T nginx nginx -t; then
-  echo "==> nginx config test failed — not reloading" >&2
-  exit 1
-fi
-
-echo "==> Reloading nginx"
-docker compose exec -T nginx nginx -s reload
 
 echo "==> Waiting for ${SERVICE} to become healthy"
 for _ in $(seq 1 30); do
