@@ -1,3 +1,9 @@
+## [1.11.1](https://github.com/d-kens/entri/compare/web-v1.11.0...web-v1.11.1) (2026-09-05)
+
+### Bug Fixes
+
+- **ci:** serialize api/web release jobs to prevent stale-checkout race ([f7394d4](https://github.com/d-kens/entri/commit/f7394d40fb1b30aee4d640d082154849bdcf3ffb))
+
 # [1.11.0](https://github.com/d-kens/entri/compare/web-v1.10.1...web-v1.11.0) (2026-09-05)
 
 ### Bug Fixes
