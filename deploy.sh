@@ -28,7 +28,7 @@ gcloud auth configure-docker africa-south1-docker.pkg.dev --quiet
 echo "==> Writing Firebase service account"
 sudo mkdir -p /etc/entri
 secret firebase-service-account | sudo tee /etc/entri/firebase.json >/dev/null
-sudo chmod 600 /etc/entri/firebase.json
+sudo chmod 644 /etc/entri/firebase.json
 
 # Keep whichever service isn't being deployed on its currently running image —
 # only the target service's tag actually changes.
