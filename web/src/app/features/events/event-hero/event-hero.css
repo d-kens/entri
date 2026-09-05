@@ -177,6 +177,17 @@
     position: static;
     padding: 12px 0;
     justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .hero-actions ::ng-deep .mat-mdc-button-touch-target {
+    width: auto;
+  }
+
+  .hero-actions ::ng-deep a,
+  .hero-actions ::ng-deep button {
+    flex: 1 1 auto;
+    white-space: nowrap;
   }
 
   .info-strip-divider {
