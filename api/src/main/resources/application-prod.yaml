@@ -1,0 +1,12 @@
+jwt:
+  access-token-expiration: 900
+  refresh-token-expiration: 604800
+
+cookie:
+  secure: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info"

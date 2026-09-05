@@ -143,3 +143,9 @@ export interface TicketResponse {
   holderLastName: string;
   checkedInAt?: string;
 }
+
+export interface CheckInCodeResponse {
+  code: string;
+  eventExternalId: string;
+  expiresAt: string;
+}
