@@ -246,23 +246,6 @@
   color: #14532d;
 }
 
-/* Failed state */
-.status-strip--failed {
-  background: #fff1f2;
-}
-
-.status-strip--failed mat-icon {
-  color: #e11d48;
-}
-
-.status-strip--failed .status-title {
-  color: #881337;
-}
-
-.status-strip--failed .status-hint {
-  color: #881337;
-}
-
 /* Expired state */
 .status-strip--expired {
   background: var(--mat-sys-error-container);
