@@ -599,5 +599,12 @@
         </insert>
     </changeSet>
 
+    <changeSet id="202609050001" author="d-kens">
+        <update tableName="event_ticket_reservations">
+            <column name="status" value="EXPIRED"/>
+            <where>status = 'FAILED'</where>
+        </update>
+    </changeSet>
+
 
 </databaseChangeLog>

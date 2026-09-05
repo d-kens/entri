@@ -84,6 +84,10 @@ public class EventTicketReservationService {
             return;
         }
 
+        if (result.status() != PaymentStatus.PAID) {
+            return;
+        }
+
         var ticketTypeIds = reservation.getItems().stream()
                 .map(item -> item.getTicketType().getId())
                 .sorted()
@@ -96,26 +100,19 @@ public class EventTicketReservationService {
         for (var item : reservation.getItems()) {
             var ticketType = ticketTypesById.get(item.getTicketType().getId());
             ticketType.setReservedQuantity(ticketType.getReservedQuantity() - item.getQuantity());
-            if (result.status() == PaymentStatus.PAID) {
-                ticketType.setSoldQuantity(ticketType.getSoldQuantity() + item.getQuantity());
-            }
+            ticketType.setSoldQuantity(ticketType.getSoldQuantity() + item.getQuantity());
         }
 
-        var newStatus = result.status() == PaymentStatus.PAID
-                ? EventTicketReservationStatus.CONFIRMED
-                : EventTicketReservationStatus.FAILED;
-        reservation.setStatus(newStatus);
+        reservation.setStatus(EventTicketReservationStatus.CONFIRMED);
 
-        if (newStatus == EventTicketReservationStatus.CONFIRMED) {
-            reservationConfirmedPublisher.publishReservationConfirmed(
-                    new ReservationConfirmedEvent(
-                            reservation.getExternalId(),
-                            reservation.getEvent().getOrganizer().getExternalKey(),
-                            reservation.getTotalAmount(),
-                            reservation.getEvent().getCurrency()
-                    )
-            );
-        }
+        reservationConfirmedPublisher.publishReservationConfirmed(
+                new ReservationConfirmedEvent(
+                        reservation.getExternalId(),
+                        reservation.getEvent().getOrganizer().getExternalKey(),
+                        reservation.getTotalAmount(),
+                        reservation.getEvent().getCurrency()
+                )
+        );
     }
 
     @Transactional(readOnly = true)
