@@ -47,6 +47,13 @@ public class PasswordResetService {
         } catch (ResourceNotFoundException e) {
             return;
         }
+
+        // A per-IP rate limit at the proxy can be bypassed with a proxy pool; this
+        // per-account check can't — only one outstanding reset link per user at a time.
+        if (passwordResetTokenRepository.existsByUserAndUsedFalseAndExpiresAtAfter(user, Instant.now())) {
+            return;
+        }
+
         String rawToken = generate();
         String tokenHash = hash(rawToken);
         PasswordResetToken token = PasswordResetToken.builder()
