@@ -36,6 +36,7 @@ app:
     allowed-origin: ${APP_CORS_ALLOWED_ORIGIN}
   password-reset:
     expiry-minutes: 15
+    resend-cooldown-seconds: 60
 
 firebase:
   service-account-path: ${FIREBASE_SERVICE_ACCOUNT_PATH:oro-web-app-firebase-adminsdk-fbsvc-8f2ea245fd.json}

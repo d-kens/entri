@@ -38,6 +38,9 @@ public class PasswordResetService {
     @Value("${app.password-reset.expiry-minutes}")
     private long expiryMinutes;
 
+    @Value("${app.password-reset.resend-cooldown-seconds}")
+    private long resendCooldownSeconds;
+
     private static final SecureRandom secureRandom = new SecureRandom();
 
     public void forgotPassword(final String email) {
@@ -49,9 +52,16 @@ public class PasswordResetService {
         }
 
         // A per-IP rate limit at the proxy can be bypassed with a proxy pool; this
-        // per-account check can't — only one outstanding reset link per user at a time.
-        if (passwordResetTokenRepository.existsByUserAndUsedFalseAndExpiresAtAfter(user, Instant.now())) {
-            return;
+        // per-account check can't. There's no createdAt column — derive it from
+        // expiresAt (createdAt = expiresAt - expiryMinutes) rather than adding one.
+        // A short cooldown, not the full token TTL: a legitimate user whose email
+        // is delayed/filtered should be able to ask again well before 15 minutes.
+        var latestUnused = passwordResetTokenRepository.findFirstByUserAndUsedFalseOrderByExpiresAtDesc(user);
+        if (latestUnused.isPresent()) {
+            Instant lastIssuedAt = latestUnused.get().getExpiresAt().minus(Duration.ofMinutes(expiryMinutes));
+            if (Instant.now().isBefore(lastIssuedAt.plus(Duration.ofSeconds(resendCooldownSeconds)))) {
+                return;
+            }
         }
 
         String rawToken = generate();
