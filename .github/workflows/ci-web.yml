@@ -23,6 +23,12 @@ jobs:
       issues: write
       pull-requests: write
       id-token: write
+    # ci-api.yml's release-and-publish job shares this group so the two
+    # never push release commits to master at the same time - whichever
+    # starts first runs to completion before the other's release step begins.
+    concurrency:
+      group: release-master
+      cancel-in-progress: false
 
     steps:
       - name: Checkout
@@ -40,6 +46,15 @@ jobs:
       - name: Install dependencies
         working-directory: ./web
         run: npm ci
+
+      # ci-api.yml can run concurrently on the same push (e.g. a merge that
+      # touches both api/** and web/**) and pushes its own release commit to
+      # master. Re-sync right before releasing so semantic-release doesn't
+      # fail against a checkout that went stale mid-run.
+      - name: Sync with latest master
+        run: |
+          git fetch origin master
+          git reset --hard origin/master
 
       - name: Release
         working-directory: ./web

@@ -28,6 +28,12 @@ jobs:
     permissions:
       contents: write
       id-token: write
+    # ci-web.yml's release-and-publish job shares this group so the two
+    # never push release commits to master at the same time - whichever
+    # starts first runs to completion before the other's release step begins.
+    concurrency:
+      group: release-master
+      cancel-in-progress: false
 
     steps:
       - name: Checkout
@@ -46,6 +52,15 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      # ci-web.yml can run concurrently on the same push (e.g. a merge that
+      # touches both api/** and web/**) and pushes its own release commit to
+      # master. Re-sync right before releasing so this job doesn't fail
+      # checkUpdateNeeded against a checkout that went stale mid-run.
+      - name: Sync with latest master
+        run: |
+          git fetch origin master
+          git reset --hard origin/master
 
       - name: Release
         working-directory: ./api
