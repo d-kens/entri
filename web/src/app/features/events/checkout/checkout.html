@@ -185,11 +185,7 @@
       }
 
       <div class="pay-block">
-        <button
-          class="pay-btn"
-          [disabled]="loading() || expired() || paying()"
-          (click)="pay()"
-        >
+        <button class="pay-btn" [disabled]="loading() || expired() || paying()" (click)="pay()">
           @if (loading() || paying()) {
             <span class="spinner"></span>
             Processing…
