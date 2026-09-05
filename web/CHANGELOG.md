@@ -1,3 +1,11 @@
+## [1.11.2](https://github.com/d-kens/entri/compare/web-v1.11.1...web-v1.11.2) (2026-09-05)
+
+### Bug Fixes
+
+- **api:** remove IP-based rate limiter, harden RabbitMQ reliability ([87c4abe](https://github.com/d-kens/entri/commit/87c4abebacc0f4829975f726655c39f8554207c6))
+- **checkout:** allow retrying payment after a cancelled/failed webhook ([d51c2af](https://github.com/d-kens/entri/commit/d51c2afbed383da4c7e7be4c13495fbcafa13b59))
+- **web:** prevent hero action buttons from squeezing on small screens ([f88e145](https://github.com/d-kens/entri/commit/f88e1456692c1a0cfadf3099ec60ed72855662ba))
+
 ## [1.11.1](https://github.com/d-kens/entri/compare/web-v1.11.0...web-v1.11.1) (2026-09-05)
 
 ### Bug Fixes
