@@ -26,8 +26,6 @@ server:
 
 jwt:
   secret: ${JWT_SECRET}
-  accessTokenExpiration: 900
-  refreshTokenExpiration: 604800
 
 app:
   base-url: ${APP_BASE_URL}
@@ -36,9 +34,6 @@ app:
     allowed-origin: ${APP_CORS_ALLOWED_ORIGIN}
   password-reset:
     expiry-minutes: 15
-
-cookie:
-  secure: true
 
 firebase:
   service-account-path: ${FIREBASE_SERVICE_ACCOUNT_PATH:oro-web-app-firebase-adminsdk-fbsvc-8f2ea245fd.json}
@@ -70,10 +65,6 @@ rate-limit:
     refill-period-seconds: 60
 
 management:
-  endpoints:
-    web:
-      exposure:
-        include: "health,info"
   info:
     build:
       enabled: true
