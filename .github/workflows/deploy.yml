@@ -58,8 +58,8 @@ jobs:
         run: |
           scp -o StrictHostKeyChecking=no -i ~/.ssh/entri_ci -P 2222 \
             docker-compose.yml deploy.sh ubuntu@localhost:~/entri/
-          scp -o StrictHostKeyChecking=no -i ~/.ssh/entri_ci -P 2222 \
-            nginx/nginx.conf ubuntu@localhost:~/entri/nginx/nginx.conf
+          scp -o StrictHostKeyChecking=no -i ~/.ssh/entri_ci -P 2222 -r \
+            nginx ubuntu@localhost:~/entri/
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/entri_ci -p 2222 ubuntu@localhost \
             "chmod +x ~/entri/deploy.sh"
 
