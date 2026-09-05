@@ -6,6 +6,8 @@ spring:
     port: ${RABBITMQ_PORT}
     username: ${RABBITMQ_USERNAME}
     password: ${RABBITMQ_PASSWORD}
+    publisher-confirm-type: correlated
+    publisher-returns: true
   servlet:
     multipart:
       max-file-size: 10MB
@@ -55,14 +57,6 @@ intasend:
 
 platform:
   service-fee-rate: ${PLATFORM_SERVICE_FEE_RATE:0.05}
-
-rate-limit:
-  redis:
-    host: ${REDIS_HOST:localhost}
-    port: ${REDIS_PORT:6379}
-  reservation:
-    capacity: 5
-    refill-period-seconds: 60
 
 management:
   info:
