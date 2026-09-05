@@ -44,7 +44,11 @@ services:
     expose:
       - "80"
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:80"]
+      # 127.0.0.1, not localhost — this image's nginx only listens on IPv4
+      # (the entrypoint's IPv6-auto-listen script skips custom configs), and
+      # if localhost resolves to ::1 first, wget fails with connection refused
+      # even though the app is perfectly healthy on IPv4.
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:80"]
       interval: 15s
       timeout: 5s
       retries: 5

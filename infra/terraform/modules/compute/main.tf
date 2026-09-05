@@ -68,4 +68,5 @@ resource "google_compute_instance" "vm" {
   }
 
   allow_stopping_for_update = true
+  desired_status            = "RUNNING"
 }

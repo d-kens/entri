@@ -29,6 +29,9 @@ jobs:
       id-token: write
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Authenticate to GCP
         uses: google-github-actions/auth@v2
         with:
@@ -50,6 +53,15 @@ jobs:
             --zone=africa-south1-a \
             --project=entri-prod &
           sleep 5
+
+      - name: Sync compose/nginx/deploy files
+        run: |
+          scp -o StrictHostKeyChecking=no -i ~/.ssh/entri_ci -P 2222 \
+            docker-compose.yml deploy.sh ubuntu@localhost:~/entri/
+          scp -o StrictHostKeyChecking=no -i ~/.ssh/entri_ci -P 2222 \
+            nginx/nginx.conf ubuntu@localhost:~/entri/nginx/nginx.conf
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/entri_ci -p 2222 ubuntu@localhost \
+            "chmod +x ~/entri/deploy.sh"
 
       - name: Deploy
         run: |
