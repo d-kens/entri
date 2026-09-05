@@ -39,6 +39,14 @@
           </button>
         }
         @if (ev.status === 'PUBLISHED') {
+          <button
+            mat-stroked-button
+            class="hero-btn-outline"
+            (click)="generateCheckInCode(ev.externalId)"
+          >
+            <mat-icon>vpn_key</mat-icon>
+            Check-in Code
+          </button>
           <button mat-flat-button class="hero-btn-cancel" (click)="cancelEvent(ev.externalId)">
             <mat-icon>cancel</mat-icon>
             Cancel Event

@@ -16,6 +16,7 @@ import {
   EventTicketReservationRequest,
   EventTicketReservationResponse,
   EventTicketReservationDetailResponse,
+  CheckInCodeResponse,
 } from '@features/events/models/event.models';
 import { ApiError, PageResponse } from '@shared/models/common.model';
 
@@ -82,6 +83,15 @@ export class EventsService {
     return this.http
       .patch<EventResponse>(`${environment.apiBaseUrl}/events/${eventExternalId}/cancel`, {})
       .pipe(catchError(this.toDisplayError('Failed to cancel event')));
+  }
+
+  generateCheckInCode(eventExternalId: string): Observable<CheckInCodeResponse> {
+    return this.http
+      .post<CheckInCodeResponse>(
+        `${environment.apiBaseUrl}/events/${eventExternalId}/check-in-code`,
+        {},
+      )
+      .pipe(catchError(this.toDisplayError('Failed to generate check-in code')));
   }
 
   getManagedEvents(

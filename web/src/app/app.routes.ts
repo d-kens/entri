@@ -43,6 +43,11 @@ export const routes: Routes = [
         path: 'support',
         loadComponent: () => import('@features/support/support').then((m) => m.Support),
       },
+      {
+        path: 'check-in',
+        loadChildren: () =>
+          import('@features/check-in/check-in.routes').then((m) => m.CHECK_IN_ROUTES),
+      },
     ],
   },
   {
@@ -100,5 +105,9 @@ export const routes: Routes = [
           import('@features/profile/change-password/change-password').then((m) => m.ChangePassword),
       },
     ],
+  },
+  {
+    path: '**',
+    loadComponent: () => import('@features/not-found/not-found').then((m) => m.NotFound),
   },
 ];
