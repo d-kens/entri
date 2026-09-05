@@ -58,8 +58,14 @@ jobs:
         run: |
           scp -o StrictHostKeyChecking=no -i ~/.ssh/entri_ci -P 2222 \
             docker-compose.yml deploy.sh ubuntu@localhost:~/entri/
-          scp -o StrictHostKeyChecking=no -i ~/.ssh/entri_ci -P 2222 -r \
-            nginx ubuntu@localhost:~/entri/
+          # rsync (not scp -r) — scp -r's nesting behavior when the destination
+          # directory already exists varies across implementations, which risks
+          # copies landing at ~/entri/nginx/nginx/ instead of ~/entri/nginx/.
+          # Trailing slashes on both sides make "copy contents of nginx/ into
+          # ~/entri/nginx/" unambiguous, and --delete keeps removed files (e.g.
+          # a deleted snippet) from lingering on the VM.
+          rsync -az --delete -e "ssh -o StrictHostKeyChecking=no -i ~/.ssh/entri_ci -p 2222" \
+            nginx/ ubuntu@localhost:~/entri/nginx/
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/entri_ci -p 2222 ubuntu@localhost \
             "chmod +x ~/entri/deploy.sh"
 
