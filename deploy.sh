@@ -69,24 +69,32 @@ chmod 600 .env
 
 
 # nginx/ (including its snippets/) is synced on every deploy regardless of which
-# service was targeted (see the CI workflow), but nothing else ever picked up
-# those changes — validate and apply them here, before touching the target
-# service, so a bad config fails loudly up front instead of surfacing only
-# after traffic is already flowing to the newly-deployed container.
-#
-# `compose run` builds a fresh, throwaway container from the *current*
-# docker-compose.yml (picking up any new bind mounts, e.g. snippets/) rather
-# than exec-ing into the already-running nginx container, which may still be
-# on the old container definition and missing a mount the new config needs.
-echo "==> Validating nginx config"
-if ! docker compose run --rm --no-deps --entrypoint nginx nginx -t; then
-  echo "==> nginx config test failed — not applying" >&2
-  exit 1
-fi
+# service was targeted (see the CI workflow), but that's just files landing on
+# disk — nothing reloads nginx to pick them up, and touching nginx on every
+# routine api/web deploy (most of which don't change it at all) would add an
+# unrelated failure mode to deploys that have nothing to do with nginx. Only
+# validate/apply when the synced files actually changed since the last deploy.
+NGINX_HASH_FILE=".nginx-hash"
+NGINX_HASH=$(find nginx -type f -exec sha256sum {} \; | sort | sha256sum | awk '{print $1}')
 
-echo "==> Applying nginx config"
-docker compose up -d nginx
-docker compose exec -T nginx nginx -s reload
+if [ ! -f "$NGINX_HASH_FILE" ] || [ "$(cat "$NGINX_HASH_FILE")" != "$NGINX_HASH" ]; then
+  echo "==> nginx config changed — validating"
+  # `compose run` builds a fresh, throwaway container from the *current*
+  # docker-compose.yml (picking up any new bind mounts, e.g. snippets/) rather
+  # than exec-ing into the already-running nginx container, which may still be
+  # on the old container definition and missing a mount the new config needs.
+  if ! docker compose run --rm --no-deps --entrypoint nginx nginx -t; then
+    echo "==> nginx config test failed — not applying" >&2
+    exit 1
+  fi
+
+  echo "==> Applying nginx config"
+  docker compose up -d nginx
+  docker compose exec -T nginx nginx -s reload
+  echo "$NGINX_HASH" > "$NGINX_HASH_FILE"
+else
+  echo "==> nginx config unchanged — skipping reload"
+fi
 
 echo "==> Pulling ${SERVICE}:${TAG}"
 docker compose pull "$SERVICE"
