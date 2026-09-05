@@ -73,6 +73,19 @@ docker compose pull "$SERVICE"
 echo "==> Restarting ${SERVICE}"
 docker compose up -d "$SERVICE"
 
+# nginx.conf is synced on every deploy regardless of which service was targeted
+# (see the CI workflow), but nothing else ever reloads it — validate and reload
+# it here so config changes actually take effect, and a bad config fails loudly
+# instead of silently sitting until some unrelated nginx restart takes prod down.
+echo "==> Validating nginx config"
+if ! docker compose exec -T nginx nginx -t; then
+  echo "==> nginx config test failed — not reloading" >&2
+  exit 1
+fi
+
+echo "==> Reloading nginx"
+docker compose exec -T nginx nginx -s reload
+
 echo "==> Waiting for ${SERVICE} to become healthy"
 for _ in $(seq 1 30); do
   cid=$(docker compose ps -q "$SERVICE")
