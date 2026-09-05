@@ -20,7 +20,6 @@ import com.entri.tickets.dto.TicketFilter;
 import com.entri.tickets.dto.TicketResponse;
 import com.entri.tickets.service.CheckInCodeService;
 import com.entri.tickets.service.TicketService;
-import com.entri.ratelimit.RateLimited;
 import com.entri.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -95,7 +94,6 @@ public class EventController implements EventApi {
         return eventService.listOrganizerEvents(filter, userKey);
     }
 
-    @RateLimited
     @Override
     public ResponseEntity<EventTicketReservationResponse> reserveEventTickets(
             UriComponentsBuilder uriComponentsBuilder,

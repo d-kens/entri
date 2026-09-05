@@ -8,8 +8,13 @@ import org.springframework.amqp.core.QueueBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.time.Duration;
+
 @Configuration
 public class PaymentQueueConfig {
+
+    private static final long QUEUE_TTL_MS = Duration.ofHours(24).toMillis();
+    private static final int QUEUE_MAX_LENGTH = 10_000;
 
     public static final String WEBHOOK_EXCHANGE = "payment.webhook";
     public static final String WEBHOOK_ROUTING_KEY = "payment.result";
@@ -46,6 +51,8 @@ public class PaymentQueueConfig {
         return QueueBuilder.durable(WEBHOOK_PROCESS_QUEUE)
                 .withArgument("x-dead-letter-exchange", WEBHOOK_DLX)
                 .withArgument("x-dead-letter-routing-key", WEBHOOK_FAILED_QUEUE)
+                .withArgument("x-message-ttl", QUEUE_TTL_MS)
+                .withArgument("x-max-length", QUEUE_MAX_LENGTH)
                 .build();
     }
 
@@ -74,6 +81,8 @@ public class PaymentQueueConfig {
         return QueueBuilder.durable(PAYOUT_PROCESS_QUEUE)
                 .withArgument("x-dead-letter-exchange", WEBHOOK_DLX)
                 .withArgument("x-dead-letter-routing-key", PAYOUT_FAILED_QUEUE)
+                .withArgument("x-message-ttl", QUEUE_TTL_MS)
+                .withArgument("x-max-length", QUEUE_MAX_LENGTH)
                 .build();
     }
 

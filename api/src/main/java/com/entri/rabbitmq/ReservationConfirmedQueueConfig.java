@@ -8,8 +8,13 @@ import org.springframework.amqp.core.QueueBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.time.Duration;
+
 @Configuration
 public class ReservationConfirmedQueueConfig {
+
+    private static final long QUEUE_TTL_MS = Duration.ofHours(24).toMillis();
+    private static final int QUEUE_MAX_LENGTH = 10_000;
 
     public static final String RESERVATION_CONFIRMED_EXCHANGE = "reservation.confirmed";
     public static final String RESERVATION_CONFIRMED_ROUTING_KEY = "reservation.confirmed";
@@ -46,6 +51,8 @@ public class ReservationConfirmedQueueConfig {
         return QueueBuilder.durable(TICKET_GENERATION_QUEUE)
                 .withArgument("x-dead-letter-exchange", RESERVATION_CONFIRMED_DLX)
                 .withArgument("x-dead-letter-routing-key", TICKET_GENERATION_FAILED_QUEUE)
+                .withArgument("x-message-ttl", QUEUE_TTL_MS)
+                .withArgument("x-max-length", QUEUE_MAX_LENGTH)
                 .build();
     }
 
@@ -73,6 +80,8 @@ public class ReservationConfirmedQueueConfig {
         return QueueBuilder.durable(WALLET_CREDIT_QUEUE)
                 .withArgument("x-dead-letter-exchange", RESERVATION_CONFIRMED_DLX)
                 .withArgument("x-dead-letter-routing-key", WALLET_CREDIT_FAILED_QUEUE)
+                .withArgument("x-message-ttl", QUEUE_TTL_MS)
+                .withArgument("x-max-length", QUEUE_MAX_LENGTH)
                 .build();
     }
 
