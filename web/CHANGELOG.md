@@ -1,3 +1,18 @@
+# [1.11.0](https://github.com/d-kens/entri/compare/web-v1.10.1...web-v1.11.0) (2026-09-05)
+
+### Bug Fixes
+
+- **ci:** grant contents:read to the changes job in pr-checks ([73a1311](https://github.com/d-kens/entri/commit/73a1311cb9a41dfc72e51016065884ccd1af08d8))
+- **ci:** merge release and publish into one job ([e659237](https://github.com/d-kens/entri/commit/e6592370c9d38d40baae45c1c072441902e0a8c3))
+- **ci:** merge release/publish jobs and fix WIF access token ([92c89e8](https://github.com/d-kens/entri/commit/92c89e85b2b29839d4b538d7ac9ae5741c47940b))
+- **deploy:** make Firebase secret file readable by the app container ([fdf00bb](https://github.com/d-kens/entri/commit/fdf00bb6cbc141bb705aadf2c28ce991caacc8c7))
+- resize VM to e2-standard-2, fix web healthcheck, auto-sync deploy files ([3d89094](https://github.com/d-kens/entri/commit/3d890947436dbd0e4ae76ca0dc0b31fa5c9d93cf))
+
+### Features
+
+- migrate check-in/scanner from mobile to web, retire mobile app ([4e873d8](https://github.com/d-kens/entri/commit/4e873d862ae0b4a82bfed2cf71102aeb2976462f))
+- **web:** add a 404 not-found page and catch-all route ([ee7ba62](https://github.com/d-kens/entri/commit/ee7ba622cf826b66aaa0686068091632a4d59e97))
+
 ## [1.10.1](https://github.com/d-kens/entri/compare/web-v1.10.0...web-v1.10.1) (2026-09-05)
 
 # [1.10.0](https://github.com/d-kens/entri/compare/web-v1.9.0...web-v1.10.0) (2026-09-04)
