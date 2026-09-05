@@ -89,7 +89,7 @@ if [ ! -f "$NGINX_HASH_FILE" ] || [ "$(cat "$NGINX_HASH_FILE")" != "$NGINX_HASH"
   fi
 
   echo "==> Applying nginx config"
-  docker compose up -d nginx
+  docker compose up -d --no-deps nginx
   docker compose exec -T nginx nginx -s reload
   echo "$NGINX_HASH" > "$NGINX_HASH_FILE"
 else
