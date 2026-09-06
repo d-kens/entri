@@ -1,0 +1,69 @@
+name: Deploy Nginx
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "nginx/**"
+  workflow_dispatch:
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy nginx config
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: projects/316572518098/locations/global/workloadIdentityPools/github-actions/providers/github
+          service_account: github-actions-deploy@entri-prod.iam.gserviceaccount.com
+
+      - name: Set up gcloud
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Write SSH key
+        run: |
+          install -m 600 -D /dev/null ~/.ssh/entri_ci
+          echo "${{ secrets.ENTRI_CI_SSH_PRIVATE_KEY }}" > ~/.ssh/entri_ci
+
+      - name: Start IAP tunnel
+        run: |
+          gcloud compute start-iap-tunnel entri-vm 22 \
+            --local-host-port=localhost:2222 \
+            --zone=africa-south1-a \
+            --project=entri-prod &
+          sleep 5
+
+      - name: Sync nginx files
+        run: |
+          # docker-compose.yml is synced here too, not just from deploy.yml —
+          # nginx's own service definition (image tag, volume mounts) can change
+          # alongside nginx.conf and needs to land together, not wait for the
+          # next unrelated api/web deploy.
+          scp -o StrictHostKeyChecking=no -i ~/.ssh/entri_ci -P 2222 \
+            docker-compose.yml deploy-nginx.sh ubuntu@localhost:~/entri/
+          # "nginx/." (not "nginx") — copies the directory's contents rather than
+          # the directory itself, avoiding nesting since ~/entri/nginx/ already
+          # exists on the VM from previous deploys.
+          scp -o StrictHostKeyChecking=no -i ~/.ssh/entri_ci -P 2222 -r \
+            nginx/. ubuntu@localhost:~/entri/nginx/
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/entri_ci -p 2222 ubuntu@localhost \
+            "chmod +x ~/entri/deploy-nginx.sh"
+
+      - name: Deploy nginx config
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/entri_ci -p 2222 ubuntu@localhost \
+            "cd ~/entri && ./deploy-nginx.sh"
