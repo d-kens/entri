@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
 # Run this on the VM: ./deploy-rabbitmq.sh
 # Applies whatever rabbitmq/definitions.json currently contains, live, via
-# the management HTTP API — no broker restart needed. Triggered by
+# `rabbitmqctl import_definitions` — no broker restart needed. Triggered by
 # deploy-rabbitmq.yml only when rabbitmq/** (or docker-compose.yml) changes.
 #
-# Definitions are NOT loaded at boot. RabbitMQ's `load_definitions` runs
-# before the default vhost "/" exists on a node that's booting fresh, and
-# fails hard with "Please create virtual host / prior to importing
-# definitions" (crash-looped prod on 2026-09-06). Importing live via the API
-# runs after the broker already reports healthy, when the vhost always
-# exists, so it can't hit that race.
+# Definitions are NOT loaded at boot. RabbitMQ's `management.load_definitions`
+# runs before the default vhost "/" exists on a node booting fresh, and fails
+# hard with "Please create virtual host / prior to importing definitions"
+# (crash-looped prod on 2026-09-06). `rabbitmqctl import_definitions` runs
+# against the already-running node over the local Erlang connection inside
+# the container, so — unlike a curl against the management API — it needs no
+# network path to the container's internal IP and no credentials.
 set -euo pipefail
 
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -24,13 +25,7 @@ fi
 echo "==> Ensuring rabbitmq is up"
 docker compose up -d --no-deps --wait --wait-timeout 60 rabbitmq
 
-source .env
-RMQ_IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' "$(docker compose ps -q rabbitmq)")
-
 echo "==> Importing definitions"
-curl -sf -u "$RABBITMQ_USERNAME:$RABBITMQ_PASSWORD" \
-  -H "Content-Type: application/json" \
-  -X POST "http://$RMQ_IP:15672/api/definitions" \
-  --data-binary @rabbitmq/definitions.json
+docker compose exec -T rabbitmq rabbitmqctl import_definitions /etc/rabbitmq/definitions.json
 
 echo "==> rabbitmq definitions applied"
