@@ -6,6 +6,7 @@ COPY gradle ./gradle
 
 RUN gradle dependencies --no-daemon
 
+COPY gradle.properties ./
 COPY src ./src
 RUN gradle clean bootJar --no-daemon
 

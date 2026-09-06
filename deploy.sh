@@ -3,6 +3,7 @@
 # Pulls the given image tag from Artifact Registry and restarts only that
 # one service. Also refreshes .env from Secret Manager every run, so a
 # secret rotation takes effect on the next deploy of either service.
+# nginx config is deployed independently — see deploy-nginx.sh / deploy-nginx.yml.
 set -euo pipefail
 
 SERVICE="${1:-}"
@@ -71,19 +72,13 @@ echo "==> Pulling ${SERVICE}:${TAG}"
 docker compose pull "$SERVICE"
 
 echo "==> Restarting ${SERVICE}"
-docker compose up -d "$SERVICE"
+# --wait blocks until the service's healthcheck reports healthy (or the
+# timeout expires), replacing a hand-rolled poll loop with Compose's own
+# health-aware wait (Compose CLI v2.17+).
+if ! docker compose up -d --wait --wait-timeout 60 "$SERVICE"; then
+  echo "==> ${SERVICE} did not become healthy in time" >&2
+  docker compose logs --tail=50 "$SERVICE" >&2
+  exit 1
+fi
 
-echo "==> Waiting for ${SERVICE} to become healthy"
-for _ in $(seq 1 30); do
-  cid=$(docker compose ps -q "$SERVICE")
-  status=$(docker inspect --format '{{.State.Health.Status}}' "$cid" 2>/dev/null || echo "unknown")
-  if [ "$status" = "healthy" ]; then
-    echo "==> ${SERVICE} is healthy"
-    exit 0
-  fi
-  sleep 2
-done
-
-echo "==> ${SERVICE} did not become healthy in time" >&2
-docker compose logs --tail=50 "$SERVICE" >&2
-exit 1
+echo "==> ${SERVICE} is healthy"
