@@ -66,6 +66,7 @@ dependencies {
     implementation("com.google.firebase:firebase-admin:9.10.0")
 
     implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("io.micrometer:micrometer-registry-prometheus")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.3")
 
     implementation("net.javacrumbs.shedlock:shedlock-spring:6.9.0")
