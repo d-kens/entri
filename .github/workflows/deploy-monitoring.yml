@@ -1,11 +1,11 @@
-name: Deploy RabbitMQ
+name: Deploy Monitoring
 
 on:
   push:
     branches:
       - master
     paths:
-      - "rabbitmq/**"
+      - "monitoring/**"
       - "docker-compose.yml"
   workflow_dispatch:
 
@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   deploy:
-    name: Deploy rabbitmq config
+    name: Deploy monitoring config
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -48,26 +48,26 @@ jobs:
             --project=entri-prod &
           sleep 5
 
-      - name: Sync rabbitmq files
+      - name: Sync monitoring files
         run: |
           # docker-compose.yml is synced here too, not just from deploy.yml —
-          # rabbitmq's own service definition (volume mounts) can change
-          # alongside definitions.json and needs to land together, not wait
-          # for the next unrelated api/web deploy.
+          # prometheus/grafana's own service definitions (image tags, volume
+          # mounts) can change alongside monitoring/** and need to land
+          # together, not wait for the next unrelated api/web deploy.
           scp -o StrictHostKeyChecking=no -i ~/.ssh/entri_ci -P 2222 \
-            docker-compose.yml deploy-rabbitmq.sh ubuntu@localhost:~/entri/
-          # "rabbitmq/." (not "rabbitmq") — copies the directory's contents
-          # rather than the directory itself, avoiding nesting. mkdir -p first
-          # since, unlike ~/entri/nginx/, this directory doesn't already exist
-          # on the VM from a prior manual setup.
+            docker-compose.yml deploy-monitoring.sh ubuntu@localhost:~/entri/
+          # "monitoring/." (not "monitoring") — copies the directory's
+          # contents rather than the directory itself, avoiding nesting.
+          # mkdir -p first since this directory doesn't already exist on the
+          # VM from any prior manual setup.
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/entri_ci -p 2222 ubuntu@localhost \
-            "mkdir -p ~/entri/rabbitmq"
+            "mkdir -p ~/entri/monitoring"
           scp -o StrictHostKeyChecking=no -i ~/.ssh/entri_ci -P 2222 -r \
-            rabbitmq/. ubuntu@localhost:~/entri/rabbitmq/
+            monitoring/. ubuntu@localhost:~/entri/monitoring/
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/entri_ci -p 2222 ubuntu@localhost \
-            "chmod +x ~/entri/deploy-rabbitmq.sh"
+            "chmod +x ~/entri/deploy-monitoring.sh"
 
-      - name: Deploy rabbitmq config
+      - name: Deploy monitoring config
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/entri_ci -p 2222 ubuntu@localhost \
-            "cd ~/entri && ./deploy-rabbitmq.sh"
+            "cd ~/entri && ./deploy-monitoring.sh"
