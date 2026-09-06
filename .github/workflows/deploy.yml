@@ -54,17 +54,12 @@ jobs:
             --project=entri-prod &
           sleep 5
 
-      - name: Sync compose/nginx/deploy files
+      - name: Sync compose/deploy files
         run: |
+          # nginx/ is synced independently by deploy-nginx.yml, triggered on
+          # nginx/** changes — not this workflow's concern.
           scp -o StrictHostKeyChecking=no -i ~/.ssh/entri_ci -P 2222 \
             docker-compose.yml deploy.sh ubuntu@localhost:~/entri/
-          # "nginx/." (not "nginx") — scp -r's nesting behavior when the destination
-          # directory already exists varies across implementations, which risks
-          # copies landing at ~/entri/nginx/nginx/ instead of ~/entri/nginx/. The
-          # trailing /. copies the directory's contents rather than the directory
-          # itself, which is unambiguous either way.
-          scp -o StrictHostKeyChecking=no -i ~/.ssh/entri_ci -P 2222 -r \
-            nginx/. ubuntu@localhost:~/entri/nginx/
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/entri_ci -p 2222 ubuntu@localhost \
             "chmod +x ~/entri/deploy.sh"
 
