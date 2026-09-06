@@ -1,19 +1,12 @@
-name: Deploy
+name: Deploy Nginx
 
 on:
+  push:
+    branches:
+      - master
+    paths:
+      - "nginx/**"
   workflow_dispatch:
-    inputs:
-      service:
-        description: Service to deploy
-        type: choice
-        options:
-          - api
-          - web
-        required: true
-      tag:
-        description: Image tag to deploy (e.g. api-v1.2.3 or web-v2.0.0)
-        type: string
-        required: true
 
 concurrency:
   group: deploy
@@ -21,9 +14,9 @@ concurrency:
 
 jobs:
   deploy:
-    name: Deploy
+    name: Deploy nginx config
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 10
     permissions:
       contents: read
       id-token: write
@@ -54,16 +47,23 @@ jobs:
             --project=entri-prod &
           sleep 5
 
-      - name: Sync compose/deploy files
+      - name: Sync nginx files
         run: |
-          # nginx/ is synced independently by deploy-nginx.yml, triggered on
-          # nginx/** changes — not this workflow's concern.
+          # docker-compose.yml is synced here too, not just from deploy.yml —
+          # nginx's own service definition (image tag, volume mounts) can change
+          # alongside nginx.conf and needs to land together, not wait for the
+          # next unrelated api/web deploy.
           scp -o StrictHostKeyChecking=no -i ~/.ssh/entri_ci -P 2222 \
-            docker-compose.yml deploy.sh ubuntu@localhost:~/entri/
+            docker-compose.yml deploy-nginx.sh ubuntu@localhost:~/entri/
+          # "nginx/." (not "nginx") — copies the directory's contents rather than
+          # the directory itself, avoiding nesting since ~/entri/nginx/ already
+          # exists on the VM from previous deploys.
+          scp -o StrictHostKeyChecking=no -i ~/.ssh/entri_ci -P 2222 -r \
+            nginx/. ubuntu@localhost:~/entri/nginx/
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/entri_ci -p 2222 ubuntu@localhost \
-            "chmod +x ~/entri/deploy.sh"
+            "chmod +x ~/entri/deploy-nginx.sh"
 
-      - name: Deploy
+      - name: Deploy nginx config
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/entri_ci -p 2222 ubuntu@localhost \
-            "cd ~/entri && ./deploy.sh ${{ inputs.service }} ${{ inputs.tag }}"
+            "cd ~/entri && ./deploy-nginx.sh"
