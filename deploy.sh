@@ -4,6 +4,8 @@
 # one service. Also refreshes .env from Secret Manager every run, so a
 # secret rotation takes effect on the next deploy of either service.
 # nginx config is deployed independently — see deploy-nginx.sh / deploy-nginx.yml.
+# rabbitmq config (queue policy definitions) is deployed independently too —
+# see deploy-rabbitmq.sh / deploy-rabbitmq.yml.
 set -euo pipefail
 
 SERVICE="${1:-}"

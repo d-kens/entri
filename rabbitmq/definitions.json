@@ -1,0 +1,69 @@
+{
+  "policies": [
+    {
+      "vhost": "/",
+      "name": "notification.send",
+      "pattern": "^notification\\.send$",
+      "apply-to": "queues",
+      "priority": 0,
+      "definition": {
+        "message-ttl": 86400000,
+        "max-length": 10000,
+        "dead-letter-exchange": "notification.dlx",
+        "dead-letter-routing-key": "notification.failed"
+      }
+    },
+    {
+      "vhost": "/",
+      "name": "payment.webhook.process",
+      "pattern": "^payment\\.webhook\\.process$",
+      "apply-to": "queues",
+      "priority": 0,
+      "definition": {
+        "message-ttl": 86400000,
+        "max-length": 10000,
+        "dead-letter-exchange": "payment.dlx",
+        "dead-letter-routing-key": "payment.webhook.failed"
+      }
+    },
+    {
+      "vhost": "/",
+      "name": "payment.payout.process",
+      "pattern": "^payment\\.payout\\.process$",
+      "apply-to": "queues",
+      "priority": 0,
+      "definition": {
+        "message-ttl": 86400000,
+        "max-length": 10000,
+        "dead-letter-exchange": "payment.dlx",
+        "dead-letter-routing-key": "payment.payout.failed"
+      }
+    },
+    {
+      "vhost": "/",
+      "name": "reservation.confirmed.ticket-generation",
+      "pattern": "^reservation\\.confirmed\\.ticket-generation$",
+      "apply-to": "queues",
+      "priority": 0,
+      "definition": {
+        "message-ttl": 86400000,
+        "max-length": 10000,
+        "dead-letter-exchange": "reservation.confirmed.dlx",
+        "dead-letter-routing-key": "reservation.confirmed.ticket-generation.failed"
+      }
+    },
+    {
+      "vhost": "/",
+      "name": "reservation.confirmed.wallet-credit",
+      "pattern": "^reservation\\.confirmed\\.wallet-credit$",
+      "apply-to": "queues",
+      "priority": 0,
+      "definition": {
+        "message-ttl": 86400000,
+        "max-length": 10000,
+        "dead-letter-exchange": "reservation.confirmed.dlx",
+        "dead-letter-routing-key": "reservation.confirmed.wallet-credit.failed"
+      }
+    }
+  ]
+}

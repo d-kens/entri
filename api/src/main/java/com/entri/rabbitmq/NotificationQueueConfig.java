@@ -8,13 +8,8 @@ import org.springframework.amqp.core.QueueBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.time.Duration;
-
 @Configuration
 public class NotificationQueueConfig {
-
-    private static final long QUEUE_TTL_MS = Duration.ofHours(24).toMillis();
-    private static final int QUEUE_MAX_LENGTH = 10_000;
 
     public static final String NOTIFICATION_EXCHANGE = "notification";
     public static final String NOTIFICATION_ROUTING_KEY = "notification";
@@ -42,14 +37,13 @@ public class NotificationQueueConfig {
         return BindingBuilder.bind(notificationFailedQueue()).to(notificationDeadLetterExchange()).with(NOTIFICATION_FAILED_QUEUE);
     }
 
+    // TTL, max-length and DLX routing are set via a RabbitMQ policy
+    // (rabbitmq/definitions.json), not declared here — a queue argument is
+    // immutable once the queue exists, so changing it in code breaks
+    // redeploys with PRECONDITION_FAILED. A policy can be changed anytime.
     @Bean
     public Queue notificationSendQueue() {
-        return QueueBuilder.durable(NOTIFICATION_SEND_QUEUE)
-                .withArgument("x-dead-letter-exchange", NOTIFICATION_DLX)
-                .withArgument("x-dead-letter-routing-key", NOTIFICATION_FAILED_QUEUE)
-                .withArgument("x-message-ttl", QUEUE_TTL_MS)
-                .withArgument("x-max-length", QUEUE_MAX_LENGTH)
-                .build();
+        return QueueBuilder.durable(NOTIFICATION_SEND_QUEUE).build();
     }
 
     @Bean
