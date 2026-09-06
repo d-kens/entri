@@ -18,4 +18,16 @@ fi
 echo "==> Applying monitoring stack"
 docker compose up -d --no-deps --wait --wait-timeout 60 prometheus grafana
 
+# `up -d` only recreates a container when its service definition changes
+# (image, env, volume list) — not when a bind-mounted file's *contents*
+# change, which is exactly what a prometheus.yml/dashboard JSON edit is. Both
+# already-running containers would otherwise keep serving their stale
+# in-memory config from before this deploy. Prometheus reloads its config
+# on SIGHUP with no extra flags needed; Grafana's file-based provisioning
+# has no such signal, so it's a full restart instead.
+echo "==> Reloading prometheus config"
+docker compose exec -T prometheus kill -HUP 1
+echo "==> Restarting grafana to pick up provisioning changes"
+docker compose restart grafana
+
 echo "==> monitoring stack applied"
