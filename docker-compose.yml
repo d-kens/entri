@@ -57,10 +57,12 @@ services:
 
   rabbitmq:
     image: rabbitmq:3-management-alpine
+    # Pinned so the node identity (rabbit@<hostname>) stays stable across
+    # recreates — without this, RabbitMQ orphans /mnt/rabbitmq-data under a
+    # new random node name on every recreate and boots as if brand new.
+    hostname: rabbitmq
     volumes:
       - /mnt/rabbitmq-data:/var/lib/rabbitmq
-      - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
-      - ./rabbitmq/definitions.json:/etc/rabbitmq/definitions.json:ro
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
