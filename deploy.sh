@@ -3,6 +3,7 @@
 # Pulls the given image tag from Artifact Registry and restarts only that
 # one service. Also refreshes .env from Secret Manager every run, so a
 # secret rotation takes effect on the next deploy of either service.
+# nginx config is deployed independently — see deploy-nginx.sh / deploy-nginx.yml.
 set -euo pipefail
 
 SERVICE="${1:-}"
@@ -67,52 +68,17 @@ INTASEND_WEBHOOK_CHALLENGE=$(secret intasend-webhook-challenge)
 EOF
 chmod 600 .env
 
-
-# nginx/ (including its snippets/) is synced on every deploy regardless of which
-# service was targeted (see the CI workflow), but that's just files landing on
-# disk — nothing reloads nginx to pick them up, and touching nginx on every
-# routine api/web deploy (most of which don't change it at all) would add an
-# unrelated failure mode to deploys that have nothing to do with nginx. Only
-# validate/apply when the synced files actually changed since the last deploy.
-NGINX_HASH_FILE=".nginx-hash"
-NGINX_HASH=$(find nginx -type f -exec sha256sum {} \; | sort | sha256sum | awk '{print $1}')
-
-if [ ! -f "$NGINX_HASH_FILE" ] || [ "$(cat "$NGINX_HASH_FILE")" != "$NGINX_HASH" ]; then
-  echo "==> nginx config changed — validating"
-  # `compose run` builds a fresh, throwaway container from the *current*
-  # docker-compose.yml (picking up any new bind mounts, e.g. snippets/) rather
-  # than exec-ing into the already-running nginx container, which may still be
-  # on the old container definition and missing a mount the new config needs.
-  if ! docker compose run --rm --no-deps --entrypoint nginx nginx -t; then
-    echo "==> nginx config test failed — not applying" >&2
-    exit 1
-  fi
-
-  echo "==> Applying nginx config"
-  docker compose up -d --no-deps nginx
-  docker compose exec -T nginx nginx -s reload
-  echo "$NGINX_HASH" > "$NGINX_HASH_FILE"
-else
-  echo "==> nginx config unchanged — skipping reload"
-fi
-
 echo "==> Pulling ${SERVICE}:${TAG}"
 docker compose pull "$SERVICE"
 
 echo "==> Restarting ${SERVICE}"
-docker compose up -d "$SERVICE"
+# --wait blocks until the service's healthcheck reports healthy (or the
+# timeout expires), replacing a hand-rolled poll loop with Compose's own
+# health-aware wait (Compose CLI v2.17+).
+if ! docker compose up -d --wait --wait-timeout 60 "$SERVICE"; then
+  echo "==> ${SERVICE} did not become healthy in time" >&2
+  docker compose logs --tail=50 "$SERVICE" >&2
+  exit 1
+fi
 
-echo "==> Waiting for ${SERVICE} to become healthy"
-for _ in $(seq 1 30); do
-  cid=$(docker compose ps -q "$SERVICE")
-  status=$(docker inspect --format '{{.State.Health.Status}}' "$cid" 2>/dev/null || echo "unknown")
-  if [ "$status" = "healthy" ]; then
-    echo "==> ${SERVICE} is healthy"
-    exit 0
-  fi
-  sleep 2
-done
-
-echo "==> ${SERVICE} did not become healthy in time" >&2
-docker compose logs --tail=50 "$SERVICE" >&2
-exit 1
+echo "==> ${SERVICE} is healthy"
