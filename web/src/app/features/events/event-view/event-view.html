@@ -177,7 +177,11 @@
                     }
                     <div class="ticket-price-row">
                       <p class="ticket-price">
-                        {{ currency() }} {{ ticket.price | number: '1.2-2' }}
+                        @if (ticket.price === 0) {
+                          Free
+                        } @else {
+                          {{ currency() }} {{ ticket.price | number: '1.2-2' }}
+                        }
                       </p>
                       @if (qty(ticket.id) > 0) {
                         <span class="ticket-qty-tag">×{{ qty(ticket.id) }}</span>
@@ -230,7 +234,11 @@
                     {{ totalTickets() }} ticket{{ totalTickets() !== 1 ? 's' : '' }}
                   </span>
                   <span class="panel-total-price">
-                    {{ currency() }} {{ totalPrice() | number: '1.2-2' }}
+                    @if (totalPrice() === 0) {
+                      Free
+                    } @else {
+                      {{ currency() }} {{ totalPrice() | number: '1.2-2' }}
+                    }
                   </span>
                 </div>
                 <button class="checkout-btn" [disabled]="loading()" (click)="buyTickets()">
