@@ -1,3 +1,9 @@
+## [1.12.1](https://github.com/d-kens/entri/compare/web-v1.12.0...web-v1.12.1) (2026-09-07)
+
+### Bug Fixes
+
+- **check-in:** improve QR scan reliability with continuous autofocus ([0dff969](https://github.com/d-kens/entri/commit/0dff96925a01e8ca7a186c31f54040db9f9bcf3a))
+
 # [1.12.0](https://github.com/d-kens/entri/compare/web-v1.11.2...web-v1.12.0) (2026-09-07)
 
 ### Bug Fixes
