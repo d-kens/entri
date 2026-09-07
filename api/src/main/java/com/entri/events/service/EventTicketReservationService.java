@@ -88,6 +88,15 @@ public class EventTicketReservationService {
             return;
         }
 
+        confirmReservation(reservation);
+    }
+
+    @Transactional
+    public void confirmFreeReservation(EventTicketReservation reservation) {
+        confirmReservation(reservation);
+    }
+
+    private void confirmReservation(EventTicketReservation reservation) {
         var ticketTypeIds = reservation.getItems().stream()
                 .map(item -> item.getTicketType().getId())
                 .sorted()

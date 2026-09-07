@@ -1,10 +1,12 @@
 package com.entri.checkout;
 
 import com.entri.checkout.dto.CheckoutDetails;
+import com.entri.events.entity.EventTicketReservation;
 import com.entri.events.service.EventTicketReservationService;
 import com.entri.payment.dto.CheckoutRequest;
 import com.entri.payment.PaymentGateway;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
@@ -35,6 +37,18 @@ public class CheckoutService {
         reservation.setEmail(details.email());
         reservation.setPhoneNumber(details.phoneNumber());
 
+        if (reservation.getTotalAmount().compareTo(BigDecimal.ZERO) == 0) {
+            eventTicketReservationService.confirmFreeReservation(reservation);
+            var redirectUrl = appBaseUrl.stripTrailing() + "/tickets/" + reservation.getExternalId();
+            return new CheckoutResponse(redirectUrl);
+        }
+
+        var checkoutRequest = getCheckoutRequest(reservation);
+
+        return new CheckoutResponse(paymentGateway.checkout(checkoutRequest));
+    }
+
+    private @NonNull CheckoutRequest getCheckoutRequest(EventTicketReservation reservation) {
         var amount = checkoutAmountOverride != null ? checkoutAmountOverride : reservation.getTotalAmount();
 
         var paymentRequest = new CheckoutRequest(
@@ -47,7 +61,6 @@ public class CheckoutService {
                 amount,
                 reservation.getEvent().getCurrency()
         );
-
-        return new CheckoutResponse(paymentGateway.checkout(paymentRequest));
+        return paymentRequest;
     }
 }
