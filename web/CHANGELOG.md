@@ -1,3 +1,36 @@
+# [1.12.0](https://github.com/d-kens/entri/compare/web-v1.11.2...web-v1.12.0) (2026-09-07)
+
+### Bug Fixes
+
+- **api:** copy gradle.properties into Docker build stage ([e0a0c32](https://github.com/d-kens/entri/commit/e0a0c3212c6d3609855e1843ad39c21243fdaeb6))
+- **api:** disable springdoc/swagger endpoints in prod ([5785ca3](https://github.com/d-kens/entri/commit/5785ca3030fa0a162e6e83fb57d8467b27bb61be))
+- **api:** stop gradle.properties from busting the dependency cache layer ([1dc6389](https://github.com/d-kens/entri/commit/1dc63898c8afc5031a459ef7fe098c5dd6e9f853))
+- **auth:** add per-account cooldown to password reset ([2cc62a7](https://github.com/d-kens/entri/commit/2cc62a7c2b97022aa8741c2ad501476973c900a2))
+- **auth:** use a short resend cooldown instead of blocking for the full token TTL ([9f4715e](https://github.com/d-kens/entri/commit/9f4715e7151aec7f72eb1161307705f5bbe71003))
+- **deploy:** add --no-deps to nginx's up -d call ([c69b3d6](https://github.com/d-kens/entri/commit/c69b3d6fc1605c36b9ccf35f03c36dbac664c6e7))
+- **deploy:** mkdir rabbitmq dir on VM before first sync ([8d45967](https://github.com/d-kens/entri/commit/8d45967c6dd138e47de35cba360368b001ce0765))
+- **deploy:** only touch nginx when its config actually changed ([0f28088](https://github.com/d-kens/entri/commit/0f28088486c1fc1a8ddf9b25ace66162c5cd48a3))
+- **deploy:** reload prometheus and restart grafana on every apply ([7b6587f](https://github.com/d-kens/entri/commit/7b6587fe44159b9b0b70064ceb41271838ff7a6b))
+- **deploy:** sync nginx/ with rsync instead of scp -r ([c53b548](https://github.com/d-kens/entri/commit/c53b548bb99dd87f137634feb0052c0bd20d7fc0))
+- **deploy:** validate and reload nginx on every deploy ([8a35c2b](https://github.com/d-kens/entri/commit/8a35c2b411fe2e277b4f672134dcfbea1c55434b))
+- **deploy:** validate/apply nginx against current compose definition, not a stale exec ([2a0c355](https://github.com/d-kens/entri/commit/2a0c355dff6d26152b2f047c9f343fe77402493a))
+- **nginx:** address rate-limit review findings ([b66bed9](https://github.com/d-kens/entri/commit/b66bed905dae6966ad15a525d1c8551ad4a79c15))
+- **nginx:** preserve security headers and add Retry-After on 429s ([651bbb9](https://github.com/d-kens/entri/commit/651bbb902e7e974a7568bfb90ac70fb78a857f7a))
+- **nginx:** rate limit password reset and ticket reservation endpoints ([ddcf334](https://github.com/d-kens/entri/commit/ddcf334795e06c886b63390ff914617dabf20658))
+- **nginx:** resolve grafana upstream through a variable, not a literal ([71841a3](https://github.com/d-kens/entri/commit/71841a349c1bfeee56db029f58b7168c91ab76aa))
+- **rabbitmq:** import definitions via rabbitmqctl, not the management API ([aca91d5](https://github.com/d-kens/entri/commit/aca91d5c8a3f27189d1b0fc91cc3aa5ea181d2f0))
+- **rabbitmq:** move queue TTL/max-length/DLX args to a policy, add deploy pipeline ([84b7b47](https://github.com/d-kens/entri/commit/84b7b47d67fd0cc8c164f024261f58e7a6fe7955))
+- **rabbitmq:** pin node hostname, import definitions live instead of at boot ([c1ef31c](https://github.com/d-kens/entri/commit/c1ef31c2e763df18f58a196abdf7428140530c57))
+- **security:** permit /actuator/prometheus, block it at nginx ([0f2def5](https://github.com/d-kens/entri/commit/0f2def5c651478d562d8ea49037405f3d8951697))
+
+### Features
+
+- **deploy:** split nginx deploys into their own pipeline ([e671489](https://github.com/d-kens/entri/commit/e67148968be865a9a6c18f03d35d3676ee1c721f))
+- **events:** support free (price=0) ticket events ([d64d0a2](https://github.com/d-kens/entri/commit/d64d0a20ccc65f8bda1c57de9ab09b751a601bec))
+- **events:** support free (price=0) ticket events ([9f48482](https://github.com/d-kens/entri/commit/9f4848212b1ef8d893427ddcde8d2c62aa27ae16))
+- **monitoring:** add Prometheus + Grafana, expose Grafana via nginx ([0cf3d14](https://github.com/d-kens/entri/commit/0cf3d144ccacaa856dba04317b23bb1f9e891f09))
+- **monitoring:** provision an API Overview dashboard in Grafana ([4f3d091](https://github.com/d-kens/entri/commit/4f3d09120c3c92dca0ec8038a1457677dd5559b0))
+
 ## [1.11.2](https://github.com/d-kens/entri/compare/web-v1.11.1...web-v1.11.2) (2026-09-05)
 
 ### Bug Fixes
