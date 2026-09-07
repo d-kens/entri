@@ -92,7 +92,19 @@ public class EventTicketReservationService {
     }
 
     @Transactional
-    public void confirmFreeReservation(EventTicketReservation reservation) {
+    public void confirmFreeReservation(final EventTicketReservation reservation) {
+        if (reservation.getStatus() != EventTicketReservationStatus.PENDING) {
+            throw new InvalidReservationStatusException(
+                    "Reservation " + reservation.getExternalId() + " is not pending and cannot be confirmed"
+            );
+        }
+        if (reservation.getTotalAmount().compareTo(BigDecimal.ZERO) != 0) {
+            throw new BadRequestException(
+                    "Reservation " + reservation.getExternalId() + " has a non-zero total ("
+                            + reservation.getTotalAmount() + ") and requires payment"
+            );
+        }
+
         confirmReservation(reservation);
     }
 

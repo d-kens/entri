@@ -6,7 +6,6 @@ import com.entri.events.service.EventTicketReservationService;
 import com.entri.payment.dto.CheckoutRequest;
 import com.entri.payment.PaymentGateway;
 import lombok.RequiredArgsConstructor;
-import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
@@ -39,28 +38,28 @@ public class CheckoutService {
 
         if (reservation.getTotalAmount().compareTo(BigDecimal.ZERO) == 0) {
             eventTicketReservationService.confirmFreeReservation(reservation);
-            var redirectUrl = appBaseUrl.stripTrailing() + "/tickets/" + reservation.getExternalId();
-            return new CheckoutResponse(redirectUrl);
+            return new CheckoutResponse(ticketsUrl(reservation));
         }
 
-        var checkoutRequest = getCheckoutRequest(reservation);
-
-        return new CheckoutResponse(paymentGateway.checkout(checkoutRequest));
+        return new CheckoutResponse(paymentGateway.checkout(buildCheckoutRequest(reservation)));
     }
 
-    private @NonNull CheckoutRequest getCheckoutRequest(EventTicketReservation reservation) {
+    private CheckoutRequest buildCheckoutRequest(final EventTicketReservation reservation) {
         var amount = checkoutAmountOverride != null ? checkoutAmountOverride : reservation.getTotalAmount();
 
-        var paymentRequest = new CheckoutRequest(
+        return new CheckoutRequest(
                 reservation.getFirstName(),
                 reservation.getLastName(),
                 reservation.getPhoneNumber(),
                 reservation.getEmail(),
                 reservation.getExternalId(),
-                appBaseUrl.stripTrailing() + "/tickets/" + reservation.getExternalId(),
+                ticketsUrl(reservation),
                 amount,
                 reservation.getEvent().getCurrency()
         );
-        return paymentRequest;
+    }
+
+    private String ticketsUrl(final EventTicketReservation reservation) {
+        return appBaseUrl.stripTrailing() + "/tickets/" + reservation.getExternalId();
     }
 }
