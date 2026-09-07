@@ -88,6 +88,27 @@ public class EventTicketReservationService {
             return;
         }
 
+        confirmReservation(reservation);
+    }
+
+    @Transactional
+    public void confirmFreeReservation(final EventTicketReservation reservation) {
+        if (reservation.getStatus() != EventTicketReservationStatus.PENDING) {
+            throw new InvalidReservationStatusException(
+                    "Reservation " + reservation.getExternalId() + " is not pending and cannot be confirmed"
+            );
+        }
+        if (reservation.getTotalAmount().compareTo(BigDecimal.ZERO) != 0) {
+            throw new BadRequestException(
+                    "Reservation " + reservation.getExternalId() + " has a non-zero total ("
+                            + reservation.getTotalAmount() + ") and requires payment"
+            );
+        }
+
+        confirmReservation(reservation);
+    }
+
+    private void confirmReservation(EventTicketReservation reservation) {
         var ticketTypeIds = reservation.getItems().stream()
                 .map(item -> item.getTicketType().getId())
                 .sorted()

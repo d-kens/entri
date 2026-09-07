@@ -69,6 +69,7 @@ export class Checkout implements OnInit, OnDestroy {
   totalTickets = computed(
     () => this.reservation()?.reservationItems.reduce((sum, item) => sum + item.quantity, 0) ?? 0,
   );
+  isFree = computed(() => this.reservation()?.totalAmount === 0);
 
   private timerSub?: Subscription;
 
