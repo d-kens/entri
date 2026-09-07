@@ -74,7 +74,12 @@ export class Scanner implements OnInit, OnDestroy {
     try {
       this.cameraError = false;
       this.stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'environment' },
+        video: {
+          facingMode: 'environment',
+          width: { ideal: 1280 },
+          height: { ideal: 720 },
+          advanced: [{ focusMode: 'continuous' } as MediaTrackConstraintSet],
+        },
       });
       const video = this.videoRef.nativeElement;
       video.srcObject = this.stream;
@@ -102,7 +107,7 @@ export class Scanner implements OnInit, OnDestroy {
     if (video.readyState === video.HAVE_ENOUGH_DATA && this.resultState() === 'none') {
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
-      const ctx = canvas.getContext('2d')!;
+      const ctx = canvas.getContext('2d', { willReadFrequently: true })!;
       ctx.drawImage(video, 0, 0);
       const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
       const code = jsQR(imageData.data, imageData.width, imageData.height);
