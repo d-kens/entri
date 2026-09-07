@@ -1,6 +1,7 @@
 package com.entri.checkout;
 
 import com.entri.checkout.dto.CheckoutDetails;
+import com.entri.events.entity.EventTicketReservation;
 import com.entri.events.service.EventTicketReservationService;
 import com.entri.payment.dto.CheckoutRequest;
 import com.entri.payment.PaymentGateway;
@@ -35,19 +36,30 @@ public class CheckoutService {
         reservation.setEmail(details.email());
         reservation.setPhoneNumber(details.phoneNumber());
 
+        if (reservation.getTotalAmount().compareTo(BigDecimal.ZERO) == 0) {
+            eventTicketReservationService.confirmFreeReservation(reservation);
+            return new CheckoutResponse(ticketsUrl(reservation));
+        }
+
+        return new CheckoutResponse(paymentGateway.checkout(buildCheckoutRequest(reservation)));
+    }
+
+    private CheckoutRequest buildCheckoutRequest(final EventTicketReservation reservation) {
         var amount = checkoutAmountOverride != null ? checkoutAmountOverride : reservation.getTotalAmount();
 
-        var paymentRequest = new CheckoutRequest(
+        return new CheckoutRequest(
                 reservation.getFirstName(),
                 reservation.getLastName(),
                 reservation.getPhoneNumber(),
                 reservation.getEmail(),
                 reservation.getExternalId(),
-                appBaseUrl.stripTrailing() + "/tickets/" + reservation.getExternalId(),
+                ticketsUrl(reservation),
                 amount,
                 reservation.getEvent().getCurrency()
         );
+    }
 
-        return new CheckoutResponse(paymentGateway.checkout(paymentRequest));
+    private String ticketsUrl(final EventTicketReservation reservation) {
+        return appBaseUrl.stripTrailing() + "/tickets/" + reservation.getExternalId();
     }
 }

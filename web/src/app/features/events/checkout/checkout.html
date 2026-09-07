@@ -107,7 +107,11 @@
               </p>
             </div>
             <p class="item-subtotal">
-              {{ event()?.currency }} {{ item.totalAmount | number: '1.2-2' }}
+              @if (item.totalAmount === 0) {
+                Free
+              } @else {
+                {{ event()?.currency }} {{ item.totalAmount | number: '1.2-2' }}
+              }
             </p>
           </li>
         }
@@ -116,7 +120,11 @@
       <div class="total-row">
         <span class="total-label">Total</span>
         <span class="total-value">
-          {{ event()?.currency }} {{ res.totalAmount | number: '1.2-2' }}
+          @if (isFree()) {
+            Free
+          } @else {
+            {{ event()?.currency }} {{ res.totalAmount | number: '1.2-2' }}
+          }
         </span>
       </div>
     </section>
@@ -191,6 +199,8 @@
             Processing…
           } @else if (expired()) {
             Reservation expired
+          } @else if (isFree()) {
+            Get tickets
           } @else {
             Pay {{ event()?.currency }} {{ res.totalAmount | number: '1.2-2' }}
           }
