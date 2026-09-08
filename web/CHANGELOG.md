@@ -1,3 +1,16 @@
+# [1.13.0](https://github.com/d-kens/entri/compare/web-v1.12.1...web-v1.13.0) (2026-09-08)
+
+### Bug Fixes
+
+- **api:** remove checkout amount-override, gate CI releases on tests, add catch-all exception handler ([d64de26](https://github.com/d-kens/entri/commit/d64de262ad95ee6d825dbcee1bf385eae1216209))
+- **web:** add per-page titles, favicon, and social share metadata ([e5e80d2](https://github.com/d-kens/entri/commit/e5e80d2f78ba6401da45d4e9c1e87105fc4cccfa))
+- **web:** remove mobile nav menu, show auth links inline on all screens ([613f92c](https://github.com/d-kens/entri/commit/613f92cea0a14826b5ce7f71cf6efb40e929e260))
+- **web:** revert browse events to original layout, add sort and results count ([85d0f95](https://github.com/d-kens/entri/commit/85d0f954e8f75d07c05d2c49ed0e2063de357ab0))
+
+### Features
+
+- **web:** redesign browse events page with cinematic hero and unified filters ([4da63ba](https://github.com/d-kens/entri/commit/4da63ba2e67514222ca3a851f13dcef366871152))
+
 ## [1.12.1](https://github.com/d-kens/entri/compare/web-v1.12.0...web-v1.12.1) (2026-09-07)
 
 ### Bug Fixes
