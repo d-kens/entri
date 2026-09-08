@@ -1,7 +1,7 @@
 <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-black/[0.06]">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
     <!-- Logo -->
-    <a [routerLink]="['/']" (click)="closeMenu()" class="flex items-center gap-1.5 flex-shrink-0">
+    <a [routerLink]="['/']" class="flex items-center gap-1.5 flex-shrink-0">
       <span
         class="font-display text-2xl font-black tracking-tight text-black leading-none select-none"
         >entri</span
@@ -9,18 +9,16 @@
       <span class="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0 mb-0.5"></span>
     </a>
 
-    <!-- Desktop nav + actions -->
-    <nav class="hidden md:flex items-center gap-7">
+    <!-- Nav + actions -->
+    <nav class="flex items-center gap-3 sm:gap-7">
       <!-- Primary links -->
       <a
         [routerLink]="['/']"
         routerLinkActive="nav-link-active"
         [routerLinkActiveOptions]="{ exact: true }"
-        class="nav-link"
+        class="nav-link hidden sm:inline-block"
         >Events</a
       >
-      <!-- Divider -->
-      <span class="nav-divider" aria-hidden="true"></span>
 
       <!-- Auth actions -->
       <a [routerLink]="['/auth/login']" routerLinkActive="nav-link-active" class="nav-link"
@@ -30,70 +28,5 @@
         >Sign Up</a
       >
     </nav>
-
-    <!-- Mobile hamburger -->
-    <button
-      class="md:hidden p-2 text-primary cursor-pointer"
-      (click)="toggleMenu()"
-      aria-label="Toggle menu"
-    >
-      <mat-icon>{{ menuOpen() ? 'close' : 'menu' }}</mat-icon>
-    </button>
   </div>
 </header>
-
-<!-- Mobile full-page menu -->
-@if (menuOpen()) {
-  <div class="mobile-fullscreen md:hidden" [class.is-closing]="menuClosing()">
-    <!-- Header: logo + close -->
-    <div class="mobile-fs-header">
-      <a [routerLink]="['/']" (click)="closeMenu()" class="flex items-center gap-1.5">
-        <span
-          class="font-display text-2xl font-black tracking-tight text-black leading-none select-none"
-          >entri</span
-        >
-        <span class="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0 mb-0.5"></span>
-      </a>
-      <button (click)="closeMenu()" class="mobile-close-btn" aria-label="Close menu">
-        <mat-icon>close</mat-icon>
-      </button>
-    </div>
-
-    <!-- Top: tagline + primary nav links -->
-    <div class="mobile-top">
-      <p class="mobile-tagline">Join events near you</p>
-      <nav class="mobile-nav">
-        <a
-          [routerLink]="['/']"
-          routerLinkActive="mobile-nav-active"
-          [routerLinkActiveOptions]="{ exact: true }"
-          (click)="closeMenu()"
-          class="mobile-nav-link"
-          style="--i: 0"
-          >Events</a
-        >
-      </nav>
-    </div>
-
-    <!-- Bottom CTA: auth actions -->
-    <div class="mobile-cta" style="--i: 3">
-      <div class="mobile-cta-buttons">
-        <a
-          [routerLink]="['/auth/login']"
-          routerLinkActive="mobile-signin-active"
-          (click)="closeMenu()"
-          class="mobile-btn-signin"
-          >Sign In</a
-        >
-        <a
-          [routerLink]="['/auth/register']"
-          routerLinkActive="mobile-signup-active"
-          (click)="closeMenu()"
-          class="mobile-btn-signup"
-          >Sign Up</a
-        >
-      </div>
-      <p class="mobile-cta-note">Sign in is for organizers</p>
-    </div>
-  </div>
-}
