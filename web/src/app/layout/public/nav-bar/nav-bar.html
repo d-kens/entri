@@ -19,9 +19,6 @@
         class="nav-link"
         >Events</a
       >
-      <a [routerLink]="['/about']" routerLinkActive="nav-link-active" class="nav-link">About Us</a>
-      <a [routerLink]="['/support']" routerLinkActive="nav-link-active" class="nav-link">Support</a>
-
       <!-- Divider -->
       <span class="nav-divider" aria-hidden="true"></span>
 
@@ -74,22 +71,6 @@
           class="mobile-nav-link"
           style="--i: 0"
           >Events</a
-        >
-        <a
-          [routerLink]="['/about']"
-          routerLinkActive="mobile-nav-active"
-          (click)="closeMenu()"
-          class="mobile-nav-link"
-          style="--i: 1"
-          >About Us</a
-        >
-        <a
-          [routerLink]="['/support']"
-          routerLinkActive="mobile-nav-active"
-          (click)="closeMenu()"
-          class="mobile-nav-link"
-          style="--i: 2"
-          >Support</a
         >
       </nav>
     </div>
