@@ -1,6 +1,20 @@
-<!-- ── Hero ─────────────────────────────────────────────────────── -->
-<section class="hero-section">
+<!-- ── Cinematic hero ───────────────────────────────────────────── -->
+<section class="hero-section" [class.hero-with-image]="heroEvent()?.bannerUrl">
+  @if (heroEvent()?.bannerUrl; as bannerUrl) {
+    <div class="hero-media">
+      <img class="hero-media-img" [src]="bannerUrl" [alt]="heroEvent()!.title" />
+      <div class="hero-media-overlay"></div>
+    </div>
+  }
+
   <div class="hero-inner">
+    @if (heroEvent(); as next) {
+      <p class="hero-eyebrow">
+        <mat-icon>bolt</mat-icon>
+        Next up · {{ dayOfWeek(next.startTime) }} {{ dayNum(next.startTime) }}
+        {{ monthName(next.startTime) }} · {{ next.venueCity }}
+      </p>
+    }
     <h1 class="hero-title">Discover Events</h1>
     <p class="hero-subtitle">
       @if (loading()) {
@@ -12,47 +26,81 @@
       }
     </p>
 
-    @if (loading() || hasFilters() || totalEvents() > 0) {
-      <!-- Search -->
-      <div class="search-bar">
-        <mat-icon class="search-icon">search</mat-icon>
-        <input
-          class="search-input"
-          type="text"
-          placeholder="Search events, artists, venues..."
-          [value]="searchQuery()"
-          (input)="onSearch($event)"
-          autocomplete="off"
-        />
-      </div>
+    <div class="search-bar hero-search-bar">
+      <mat-icon class="search-icon">search</mat-icon>
+      <input
+        class="search-input"
+        type="text"
+        placeholder="Search events, artists, venues..."
+        [value]="searchQuery()"
+        (input)="onSearch($event)"
+        autocomplete="off"
+      />
+    </div>
+  </div>
+</section>
 
-      <!-- Category pills -->
-      <div class="category-row no-scrollbar">
+<!-- ── Unified filter bar ──────────────────────────────────────────
+     One control surface for both mobile and desktop - no hidden
+     drawer, no duplicated markup between breakpoints. -->
+<section class="filter-bar-section">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="filter-bar">
+      <div class="filter-row category-row">
         <button
-          class="cat-pill"
+          class="filter-chip"
           [class.active]="activeCategoryId() === null"
           (click)="setCategory(null)"
         >
+          <mat-icon>apps</mat-icon>
           All
         </button>
-
         @for (cat of categories(); track cat.id) {
           <button
-            class="cat-pill"
+            class="filter-chip"
             [class.active]="activeCategoryId() === cat.id"
             (click)="setCategory(cat.id)"
           >
+            <mat-icon>{{ categoryIcon(cat.name) }}</mat-icon>
             {{ cat.name }}
           </button>
         }
       </div>
-    }
+
+      <div class="filter-row date-row">
+        @for (range of dateRanges; track range) {
+          <button
+            class="filter-chip filter-chip--date"
+            [class.active]="dateRange() === range"
+            (click)="setDateRange(range)"
+          >
+            {{ dateRangeLabels[range] }}
+          </button>
+        }
+
+        @if (hasFilters()) {
+          <button class="clear-filters-link" (click)="clearFilters()">
+            <mat-icon>close</mat-icon>
+            Clear
+          </button>
+        }
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- ── Events grid ──────────────────────────────────────────────── -->
-<section class="events-section">
+<!-- ── Results ──────────────────────────────────────────────────── -->
+<section class="results-section">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    @if (!loading() && !error()) {
+      <div class="results-header">
+        <h2 class="results-title">{{ resultsTitle() }}</h2>
+        <span class="results-count">
+          {{ totalEvents() }} event{{ totalEvents() !== 1 ? 's' : '' }}
+        </span>
+      </div>
+    }
+
     <!-- Loading skeletons -->
     @if (loading()) {
       <div class="events-grid">
