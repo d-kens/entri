@@ -1,6 +1,7 @@
 import { ApplicationConfig, ErrorHandler, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { GlobalErrorHandler } from '@shared/services/global-error-handler';
-import { provideRouter, withInMemoryScrolling } from '@angular/router';
+import { EntriTitleStrategy } from '@shared/services/entri-title-strategy';
+import { provideRouter, TitleStrategy, withInMemoryScrolling } from '@angular/router';
 
 import { routes } from './app.routes';
 import { authInterceptor } from '@features/auth/interceptors/auth-interceptor';
@@ -15,6 +16,7 @@ export const appConfig: ApplicationConfig = {
     ),
     provideBrowserGlobalErrorListeners(),
     { provide: ErrorHandler, useClass: GlobalErrorHandler },
+    { provide: TitleStrategy, useClass: EntriTitleStrategy },
     provideNativeDateAdapter(),
     provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
   ],

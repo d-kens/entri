@@ -13,10 +13,10 @@ export const AUTH_ROUTES: Routes = [
     canActivate: [noAuthGuard],
     children: [
       { path: '', redirectTo: 'login', pathMatch: 'full' },
-      { path: 'login', component: Login },
-      { path: 'register', component: Register },
-      { path: 'forgot-password', component: ForgotPassword },
-      { path: 'reset-password', component: ResetPassword },
+      { path: 'login', component: Login, title: 'Sign In' },
+      { path: 'register', component: Register, title: 'Create Account' },
+      { path: 'forgot-password', component: ForgotPassword, title: 'Forgot Password' },
+      { path: 'reset-password', component: ResetPassword, title: 'Reset Password' },
     ],
   },
 ];
