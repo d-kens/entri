@@ -125,6 +125,12 @@ public class GlobalExceptionHandler {
         return createProblemDetail(HttpStatus.METHOD_NOT_ALLOWED, "Method Not Allowed", exception.getMessage(), request);
     }
 
+    @ExceptionHandler(Exception.class)
+    public ProblemDetail handleUnexpectedException(final Exception exception, final HttpServletRequest request) {
+        log.error("Unhandled exception processing request {}", request.getRequestURI(), exception);
+        return createProblemDetail(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error", "An unexpected error occurred. Please try again later.", request);
+    }
+
     private ProblemDetail createProblemDetail(HttpStatus status, String title, String detail, HttpServletRequest request) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(status, detail);
         problemDetail.setTitle(title);
