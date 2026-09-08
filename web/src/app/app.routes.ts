@@ -36,14 +36,6 @@ export const routes: Routes = [
           import('@features/tickets/ticket-view/ticket-view').then((m) => m.TicketView),
       },
       {
-        path: 'about',
-        loadComponent: () => import('@features/about/about').then((m) => m.About),
-      },
-      {
-        path: 'support',
-        loadComponent: () => import('@features/support/support').then((m) => m.Support),
-      },
-      {
         path: 'check-in',
         loadChildren: () =>
           import('@features/check-in/check-in.routes').then((m) => m.CHECK_IN_ROUTES),
