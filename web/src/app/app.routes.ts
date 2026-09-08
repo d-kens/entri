@@ -11,20 +11,24 @@ export const routes: Routes = [
     children: [
       {
         path: '',
+        title: 'Discover Events',
         loadComponent: () =>
           import('@features/events/browse-events/browse-events').then((m) => m.BrowseEvents),
       },
       {
         path: 'events/:externalId',
+        title: 'Event Details',
         loadComponent: () =>
           import('@features/events/event-view/event-view').then((m) => m.EventView),
       },
       {
         path: 'events/:externalId/checkout/:reservationId',
+        title: 'Checkout',
         loadComponent: () => import('@features/events/checkout/checkout').then((m) => m.Checkout),
       },
       {
         path: 'tickets/:reservationId',
+        title: 'Your Tickets',
         loadComponent: () =>
           import('@features/tickets/reservation-tickets/reservation-tickets').then(
             (m) => m.ReservationTickets,
@@ -32,6 +36,7 @@ export const routes: Routes = [
       },
       {
         path: 'ticket/:externalId',
+        title: 'Ticket',
         loadComponent: () =>
           import('@features/tickets/ticket-view/ticket-view').then((m) => m.TicketView),
       },
@@ -53,6 +58,7 @@ export const routes: Routes = [
     children: [
       {
         path: 'summary',
+        title: 'Summary',
         canActivate: [roleGuard],
         data: { roles: ['ORGANIZER'] },
         loadComponent: () => import('@features/summary/summary').then((m) => m.Summary),
@@ -63,6 +69,7 @@ export const routes: Routes = [
       },
       {
         path: 'users',
+        title: 'Manage Users',
         canActivate: [roleGuard],
         data: { roles: ['ADMIN'] },
         loadComponent: () =>
@@ -70,6 +77,7 @@ export const routes: Routes = [
       },
       {
         path: 'categories',
+        title: 'Manage Categories',
         canActivate: [roleGuard],
         data: { roles: ['ADMIN'] },
         loadComponent: () =>
@@ -79,20 +87,24 @@ export const routes: Routes = [
       },
       {
         path: 'payments',
+        title: 'Payments',
         loadComponent: () => import('@features/payments/payments').then((m) => m.Payments),
       },
       {
         path: 'wallet',
+        title: 'Wallet',
         canActivate: [roleGuard],
         data: { roles: ['ORGANIZER'] },
         loadComponent: () => import('@features/wallet/wallet').then((m) => m.Wallet),
       },
       {
         path: 'profile',
+        title: 'Profile',
         loadComponent: () => import('@features/profile/profile').then((m) => m.Profile),
       },
       {
         path: 'change-password',
+        title: 'Change Password',
         loadComponent: () =>
           import('@features/profile/change-password/change-password').then((m) => m.ChangePassword),
       },
@@ -100,6 +112,7 @@ export const routes: Routes = [
   },
   {
     path: '**',
+    title: 'Page Not Found',
     loadComponent: () => import('@features/not-found/not-found').then((m) => m.NotFound),
   },
 ];
