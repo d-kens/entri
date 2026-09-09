@@ -1,15 +1,15 @@
 import { TestBed } from '@angular/core/testing';
 import { CanActivateFn, provideRouter, Router, UrlTree } from '@angular/router';
 
-import { authGuard } from './auth-guard';
+import { noAuthGuard } from './no-auth-guard';
 import { AuthService } from '../auth-service';
 
-describe('authGuard', () => {
+describe('noAuthGuard', () => {
   let authServiceMock: { isAuthenticated: ReturnType<typeof vi.fn> };
   let router: Router;
 
   const executeGuard: CanActivateFn = (...guardParameters) =>
-    TestBed.runInInjectionContext(() => authGuard(...guardParameters));
+    TestBed.runInInjectionContext(() => noAuthGuard(...guardParameters));
 
   beforeEach(() => {
     authServiceMock = { isAuthenticated: vi.fn() };
@@ -23,19 +23,19 @@ describe('authGuard', () => {
     expect(executeGuard).toBeTruthy();
   });
 
-  it('allows activation when the user is authenticated', () => {
-    authServiceMock.isAuthenticated.mockReturnValue(true);
+  it('allows activation when the user is not authenticated', () => {
+    authServiceMock.isAuthenticated.mockReturnValue(false);
 
-    const result = executeGuard({} as any, { url: '/dashboard/events' } as any);
+    const result = executeGuard({} as any, {} as any);
 
     expect(result).toBe(true);
   });
 
-  it('redirects to /auth with the return url when the user is not authenticated', () => {
-    authServiceMock.isAuthenticated.mockReturnValue(false);
+  it('redirects to /dashboard/summary when the user is already authenticated', () => {
+    authServiceMock.isAuthenticated.mockReturnValue(true);
 
-    const result = executeGuard({} as any, { url: '/dashboard/events' } as any) as UrlTree;
+    const result = executeGuard({} as any, {} as any) as UrlTree;
 
-    expect(router.serializeUrl(result)).toBe('/auth?returnUrl=%2Fdashboard%2Fevents');
+    expect(router.serializeUrl(result)).toBe('/dashboard/summary');
   });
 });
