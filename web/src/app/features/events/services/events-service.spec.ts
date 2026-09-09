@@ -37,6 +37,41 @@ describe('EventsService', () => {
     expect(second).toEqual(categories);
   });
 
+  it('should re-fetch categories after a create/update/delete invalidates the cache', () => {
+    service.getCategories().subscribe();
+    httpMock.expectOne(`${environment.apiBaseUrl}/categories`).flush([{ id: 1, name: 'Music' }]);
+
+    service.createCategory({ name: 'Sports' } as never).subscribe();
+    httpMock.expectOne(`${environment.apiBaseUrl}/categories`).flush({ id: 2, name: 'Sports' });
+
+    let categories: unknown;
+    service.getCategories().subscribe((res) => (categories = res));
+    httpMock.expectOne(`${environment.apiBaseUrl}/categories`).flush([
+      { id: 1, name: 'Music' },
+      { id: 2, name: 'Sports' },
+    ]);
+
+    expect(categories).toEqual([
+      { id: 1, name: 'Music' },
+      { id: 2, name: 'Sports' },
+    ]);
+  });
+
+  it('should re-fetch categories on the next call after a failed load', () => {
+    let firstError: unknown;
+    service.getCategories().subscribe({ error: (err) => (firstError = err) });
+    httpMock
+      .expectOne(`${environment.apiBaseUrl}/categories`)
+      .flush('boom', { status: 500, statusText: 'Server Error' });
+    expect(firstError).toBeTruthy();
+
+    let categories: unknown;
+    service.getCategories().subscribe((res) => (categories = res));
+    httpMock.expectOne(`${environment.apiBaseUrl}/categories`).flush([{ id: 1, name: 'Music' }]);
+
+    expect(categories).toEqual([{ id: 1, name: 'Music' }]);
+  });
+
   it('should POST to create a category', () => {
     const request = { name: 'Music' } as never;
     service.createCategory(request).subscribe();
