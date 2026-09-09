@@ -1,4 +1,0 @@
-admin_ssh_cidr    = "x.x.x.x/32" # your current public IP — `curl -s https://api.ipify.org`
-ssh_public_key    = "ubuntu:ssh-ed25519 AAAA... your-comment"
-ci_ssh_public_key = "ubuntu:ssh-ed25519 AAAA... entri-ci-deploy"
-db_password       = "generate-with-openssl-rand--base64-24"
