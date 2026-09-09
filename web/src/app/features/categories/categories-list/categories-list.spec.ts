@@ -79,8 +79,13 @@ describe('CategoriesList', () => {
     expect(req.request.body).toEqual(newCategory);
     req.flush({ id: 2, ...newCategory });
 
+    httpMock
+      .expectOne(`${environment.apiBaseUrl}/categories`)
+      .flush([category, { id: 2, ...newCategory }]);
+
     expect(snackbar.showSuccess).toHaveBeenCalledWith('Category created');
     expect(component.loading()).toBe(false);
+    expect(component.categories()).toEqual([category, { id: 2, ...newCategory }]);
   });
 
   it('should not create a category when the create dialog is cancelled', () => {
@@ -104,8 +109,11 @@ describe('CategoriesList', () => {
     expect(req.request.body).toEqual(updated);
     req.flush({ ...category, ...updated });
 
+    httpMock.expectOne(`${environment.apiBaseUrl}/categories`).flush([{ ...category, ...updated }]);
+
     expect(snackbar.showSuccess).toHaveBeenCalledWith('Category updated');
     expect(component.loading()).toBe(false);
+    expect(component.categories()).toEqual([{ ...category, ...updated }]);
   });
 
   it('should delete a category on dialog confirm and show a success message', () => {
@@ -118,8 +126,11 @@ describe('CategoriesList', () => {
     expect(req.request.method).toBe('DELETE');
     req.flush(null);
 
+    httpMock.expectOne(`${environment.apiBaseUrl}/categories`).flush([]);
+
     expect(snackbar.showSuccess).toHaveBeenCalledWith('Category deleted');
     expect(component.loading()).toBe(false);
+    expect(component.categories()).toEqual([]);
   });
 
   it('should not delete a category when the delete dialog is cancelled', () => {
