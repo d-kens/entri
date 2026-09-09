@@ -155,11 +155,12 @@ describe('CategoriesList', () => {
     expect(snackbar.showError).toHaveBeenCalledWith('Category is in use');
   });
 
-  it('should re-populate categories from cache on retry without a new request', () => {
+  it('should re-fetch categories on retry', () => {
     flushInitialLoad();
     component.categories.set([]);
 
     component.retry();
+    httpMock.expectOne(`${environment.apiBaseUrl}/categories`).flush([category]);
 
     expect(component.categories()).toEqual([category]);
     expect(component.loading()).toBe(false);

@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
-import { Observable, catchError, shareReplay, tap, throwError } from 'rxjs';
+import { Observable, catchError, throwError } from 'rxjs';
 import { environment } from 'environments/environment';
 import {
   CategoryRequest,
@@ -24,44 +24,26 @@ import { ApiError, PageResponse } from '@shared/models/common.model';
 export class EventsService {
   private http = inject(HttpClient);
 
-  private categories$: Observable<CategoryResponse[]> | null = null;
-
   getCategories(): Observable<CategoryResponse[]> {
-    if (!this.categories$) {
-      this.categories$ = this.http
-        .get<CategoryResponse[]>(`${environment.apiBaseUrl}/categories`)
-        .pipe(
-          catchError((err) => {
-            this.categories$ = null;
-            return throwError(() => err);
-          }),
-          shareReplay(1),
-        );
-    }
-    return this.categories$;
+    return this.http.get<CategoryResponse[]>(`${environment.apiBaseUrl}/categories`);
   }
 
   createCategory(request: CategoryRequest): Observable<CategoryResponse> {
-    return this.http.post<CategoryResponse>(`${environment.apiBaseUrl}/categories`, request).pipe(
-      tap(() => (this.categories$ = null)),
-      catchError(this.toDisplayError('Failed to create category')),
-    );
+    return this.http
+      .post<CategoryResponse>(`${environment.apiBaseUrl}/categories`, request)
+      .pipe(catchError(this.toDisplayError('Failed to create category')));
   }
 
   updateCategory(id: number, request: CategoryRequest): Observable<CategoryResponse> {
     return this.http
       .put<CategoryResponse>(`${environment.apiBaseUrl}/categories/${id}`, request)
-      .pipe(
-        tap(() => (this.categories$ = null)),
-        catchError(this.toDisplayError('Failed to update category')),
-      );
+      .pipe(catchError(this.toDisplayError('Failed to update category')));
   }
 
   deleteCategory(id: number): Observable<void> {
-    return this.http.delete<void>(`${environment.apiBaseUrl}/categories/${id}`).pipe(
-      tap(() => (this.categories$ = null)),
-      catchError(this.toDisplayError('Failed to delete category')),
-    );
+    return this.http
+      .delete<void>(`${environment.apiBaseUrl}/categories/${id}`)
+      .pipe(catchError(this.toDisplayError('Failed to delete category')));
   }
 
   createEvent(payload: EventRequest): Observable<EventResponse> {
