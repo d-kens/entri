@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
-import { Observable, catchError, shareReplay, throwError } from 'rxjs';
+import { Observable, catchError, throwError } from 'rxjs';
 import { environment } from 'environments/environment';
 import {
   CategoryRequest,
@@ -24,12 +24,8 @@ import { ApiError, PageResponse } from '@shared/models/common.model';
 export class EventsService {
   private http = inject(HttpClient);
 
-  private categories$ = this.http
-    .get<CategoryResponse[]>(`${environment.apiBaseUrl}/categories`)
-    .pipe(shareReplay(1));
-
   getCategories(): Observable<CategoryResponse[]> {
-    return this.categories$;
+    return this.http.get<CategoryResponse[]>(`${environment.apiBaseUrl}/categories`);
   }
 
   createCategory(request: CategoryRequest): Observable<CategoryResponse> {

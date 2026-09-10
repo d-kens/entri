@@ -21,4 +21,11 @@ describe('Auth', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should render a router outlet for nested auth routes', () => {
+    fixture.detectChanges();
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    expect(compiled.querySelector('router-outlet')).toBeTruthy();
+  });
 });
