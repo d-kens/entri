@@ -28,7 +28,7 @@ The app reads configuration from environment variables. Defaults for local devel
 ./gradlew bootRun
 ```
 
-Starts the server on `http://localhost:8080`.
+Starts the server on `http://localhost:9096`.
 
 ### Test
 
@@ -50,16 +50,6 @@ Starts the server on `http://localhost:8080`.
 ```
 
 Output jar: `build/libs/*.jar`
-
-### Docker
-
-```bash
-# Build image
-docker build -t entri-api .
-
-# Run container
-docker run -p 8080:8080 entri-api
-```
 
 ## Tech Stack
 
