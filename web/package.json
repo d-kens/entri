@@ -121,7 +121,7 @@
   "devDependencies": {
     "@angular-devkit/build-angular": "^21.0.6",
     "@angular/build": "^21.0.2",
-    "@angular/cli": "^21.1.4",
+    "@angular/cli": "^22.2.3",
     "@angular/compiler-cli": "^21.2.22",
     "@angular/platform-browser-dynamic": "^21.2.22",
     "@semantic-release/changelog": "^6.0.3",
