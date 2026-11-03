@@ -9,7 +9,6 @@ public record IntaSendSendMoneyRequest(
         String provider,
         String country,
         @JsonProperty("requires_approval") String requiresApproval,
-        @JsonProperty("callback_url") String callbackUrl,
         List<IntaSendSendMoneyTransaction> transactions
 ) {
 }
