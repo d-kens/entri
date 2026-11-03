@@ -3,6 +3,7 @@ package com.entri.intasend;
 import com.entri.exception.PaymentGatewayException;
 import com.entri.intasend.dto.IntaSendCheckoutRequest;
 import com.entri.intasend.dto.IntaSendCheckoutResponse;
+import com.entri.intasend.dto.IntaSendPaymentStatusResponse;
 import com.entri.intasend.dto.IntaSendSendMoneyRequest;
 import com.entri.intasend.dto.IntaSendSendMoneyResponse;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
+
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +34,22 @@ public class IntaSendClient {
                     .body(IntaSendCheckoutResponse.class);
         } catch (RestClientException e) {
             throw new PaymentGatewayException("IntaSend checkout failed: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Looks up a collection's status directly from IntaSend (authenticated with the secret key),
+     * so webhook contents never have to be trusted on their own.
+     */
+    public IntaSendPaymentStatusResponse getPaymentStatus(String invoiceId) {
+        try {
+            return intaSendSendMoneyRestClient.post()
+                    .uri("/api/v1/payment/status/")
+                    .body(Map.of("invoice_id", invoiceId))
+                    .retrieve()
+                    .body(IntaSendPaymentStatusResponse.class);
+        } catch (RestClientException e) {
+            throw new PaymentGatewayException("IntaSend payment status lookup failed: " + e.getMessage(), e);
         }
     }
 

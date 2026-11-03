@@ -1,6 +1,5 @@
 package com.entri.payment;
 
-import com.entri.exception.PaymentGatewayException;
 import com.entri.payment.dto.WebhookRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,25 +16,19 @@ public class PaymentService {
     private final PaymentGateway paymentGateway;
     private final PaymentEventPublisher paymentEventPublisher;
 
+    /**
+     * Verification failures (bad challenge, status lookup failed or disagrees) propagate as
+     * PaymentGatewayException → 502, so a forged webhook is rejected and a genuine one that
+     * couldn't be verified (e.g. IntaSend API briefly down) is retried by IntaSend rather than dropped.
+     */
     public void handleWebhook(final Map<String, String> headers, final String payload) {
         var webhookRequest = new WebhookRequest(headers, payload);
 
-        Optional<PaymentResultEvent> checkoutEvent = Optional.empty();
-        Optional<PayoutResultEvent> payoutEvent = Optional.empty();
+        Optional<PaymentResultEvent> checkoutEvent = paymentGateway.parseCheckoutWebhook(webhookRequest)
+                .map(r -> new PaymentResultEvent(r.referenceId(), r.status(), r.amount(), r.currency()));
 
-        try {
-            checkoutEvent = paymentGateway.parseCheckoutWebhook(webhookRequest)
-                    .map(r -> new PaymentResultEvent(r.referenceId(), r.status()));
-        } catch (PaymentGatewayException e) {
-            log.warn("Checkout webhook processing failed: {}", e.getMessage());
-        }
-
-        try {
-            payoutEvent = paymentGateway.parsePayoutWebhook(webhookRequest)
-                    .map(r -> new PayoutResultEvent(r.trackingId(), r.status()));
-        } catch (PaymentGatewayException e) {
-            log.warn("Payout webhook processing failed: {}", e.getMessage());
-        }
+        Optional<PayoutResultEvent> payoutEvent = paymentGateway.parsePayoutWebhook(webhookRequest)
+                .map(r -> new PayoutResultEvent(r.trackingId(), r.status()));
 
         checkoutEvent.ifPresent(paymentEventPublisher::publishWebhookResult);
         payoutEvent.ifPresent(paymentEventPublisher::publishPayoutResult);

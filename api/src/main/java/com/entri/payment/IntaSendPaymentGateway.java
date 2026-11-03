@@ -23,6 +23,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,9 +42,6 @@ public class IntaSendPaymentGateway implements PaymentGateway {
 
     @Value("${app.base-url}")
     private String appBaseUrl;
-
-    @Value("${app.api-url}")
-    private String appApiUrl;
 
     @Override
     public String checkout(CheckoutRequest request) {
@@ -75,14 +75,11 @@ public class IntaSendPaymentGateway implements PaymentGateway {
                 request.narrative()
         );
 
-        var callbackUrl = appApiUrl.stripTrailing() + "/api/payment/webhook";
-
         var sendMoneyRequest = new IntaSendSendMoneyRequest(
                 request.currency(),
                 toIntaSendProvider(request.accountType()),
                 COUNTRY,
                 "NO",
-                callbackUrl,
                 List.of(transaction)
         );
 
@@ -109,21 +106,58 @@ public class IntaSendPaymentGateway implements PaymentGateway {
             throw new PaymentGatewayException("Failed to parse IntaSend checkout webhook payload", e);
         }
 
-        if (payload.challenge() != null && !intaSendProperties.webhookChallenge().equals(payload.challenge())) {
-            throw new PaymentGatewayException("Invalid IntaSend webhook challenge");
-        }
+        verifyChallenge(payload.challenge());
 
-        PaymentStatus status = switch (payload.state()) {
-            case "COMPLETE" -> PaymentStatus.PAID;
-            case "FAILED" -> PaymentStatus.FAILED;
-            default -> null;
+        return switch (payload.state()) {
+            case "COMPLETE" -> Optional.of(verifyCompletedPayment(payload));
+            case "FAILED" -> Optional.of(new PaymentResult(payload.apiRef(), PaymentStatus.FAILED, null, null));
+            default -> Optional.empty();
         };
+    }
 
-        if (status == null) {
-            return Optional.empty();
+    /**
+     * Never trust a "COMPLETE" webhook on its own: confirm with IntaSend (secret-key authenticated)
+     * and take the reference, amount and currency from IntaSend's answer, not from the webhook body.
+     */
+    private PaymentResult verifyCompletedPayment(IntaSendCollectionWebhookPayload payload) {
+        if (payload.invoiceId() == null || payload.invoiceId().isBlank()) {
+            throw new PaymentGatewayException("IntaSend checkout webhook is missing invoice_id");
         }
 
-        return Optional.of(new PaymentResult(payload.apiRef(), status));
+        var response = intaSendClient.getPaymentStatus(payload.invoiceId());
+        var invoice = response == null ? null : response.invoice();
+        if (invoice == null) {
+            throw new PaymentGatewayException("IntaSend returned no invoice for " + payload.invoiceId());
+        }
+
+        if (!"COMPLETE".equals(invoice.state())) {
+            throw new PaymentGatewayException("Webhook claims invoice " + payload.invoiceId()
+                    + " is COMPLETE but IntaSend reports " + invoice.state());
+        }
+        if (invoice.apiRef() == null || !invoice.apiRef().equals(payload.apiRef())) {
+            throw new PaymentGatewayException("Webhook api_ref does not match IntaSend invoice " + payload.invoiceId());
+        }
+
+        BigDecimal amount;
+        try {
+            amount = new BigDecimal(invoice.value());
+        } catch (NumberFormatException | NullPointerException e) {
+            throw new PaymentGatewayException("IntaSend invoice " + payload.invoiceId() + " has an invalid value", e);
+        }
+
+        return new PaymentResult(invoice.apiRef(), PaymentStatus.PAID, amount, invoice.currency());
+    }
+
+    private void verifyChallenge(String challenge) {
+        var expected = intaSendProperties.webhookChallenge();
+        if (expected == null || expected.isBlank()) {
+            throw new IllegalStateException("intasend.webhook-challenge is not configured");
+        }
+        if (challenge == null || !MessageDigest.isEqual(
+                expected.getBytes(StandardCharsets.UTF_8),
+                challenge.getBytes(StandardCharsets.UTF_8))) {
+            throw new PaymentGatewayException("Missing or invalid IntaSend webhook challenge");
+        }
     }
 
     @Override
@@ -146,9 +180,7 @@ public class IntaSendPaymentGateway implements PaymentGateway {
             throw new PaymentGatewayException("Failed to parse IntaSend payout webhook payload", e);
         }
 
-        if (payload.challenge() != null && !intaSendProperties.webhookChallenge().equals(payload.challenge())) {
-            throw new PaymentGatewayException("Invalid IntaSend payout webhook challenge");
-        }
+        verifyChallenge(payload.challenge());
 
         // Each withdrawal sends exactly one transaction. If batched payouts are added, this mapping must be revisited.
         PayoutStatus status = switch (payload.status()) {
