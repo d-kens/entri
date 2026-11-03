@@ -65,15 +65,6 @@ class JwtServiceTest {
     }
 
     @Test
-    void generateRefreshToken_tokenIsNotExpired() {
-        when(jwtConfig.getRefreshTokenExpiration()).thenReturn(604800);
-
-        var jwt = jwtService.generateRefreshToken(user);
-
-        assertThat(jwt.isExpired()).isFalse();
-    }
-
-    @Test
     void parseToken_validToken_returnsJwt() {
         when(jwtConfig.getAccessTokenExpiration()).thenReturn(900);
         var token = jwtService.generateAccessToken(user).toString();

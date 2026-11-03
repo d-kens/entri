@@ -16,12 +16,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Base64;
 import java.util.Map;
 
 @Service
@@ -40,8 +36,6 @@ public class PasswordResetService {
 
     @Value("${app.password-reset.resend-cooldown-seconds}")
     private long resendCooldownSeconds;
-
-    private static final SecureRandom secureRandom = new SecureRandom();
 
     public void forgotPassword(final String email) {
         User user;
@@ -64,8 +58,8 @@ public class PasswordResetService {
             }
         }
 
-        String rawToken = generate();
-        String tokenHash = hash(rawToken);
+        String rawToken = OpaqueTokens.generate();
+        String tokenHash = OpaqueTokens.hash(rawToken);
         PasswordResetToken token = PasswordResetToken.builder()
                 .tokenHash(tokenHash)
                 .user(user)
@@ -87,7 +81,7 @@ public class PasswordResetService {
     }
 
     public void resetPassword(ResetPasswordRequest request) {
-        String tokenHash = hash(request.token());
+        String tokenHash = OpaqueTokens.hash(request.token());
         PasswordResetToken token = passwordResetTokenRepository.findByTokenHash(tokenHash)
                 .orElseThrow(() -> new UnauthorizedException("Invalid password reset token"));
         if (!token.isValid()) {
@@ -105,23 +99,4 @@ public class PasswordResetService {
         ));
     }
 
-    private String hash(String token) {
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] hashed = digest.digest(token.getBytes(StandardCharsets.UTF_8));
-            StringBuilder sb = new StringBuilder();
-            for (byte b : hashed) {
-                sb.append(String.format("%02x", b));
-            }
-            return sb.toString();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private String generate() {
-        byte[] bytes = new byte[32];
-        secureRandom.nextBytes(bytes);
-        return Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
-    }
 }

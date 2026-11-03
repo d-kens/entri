@@ -69,7 +69,9 @@ public class AuthController implements AuthApi {
             HttpServletResponse response,
             String refreshToken
     ) {
-        return authService.refreshToken(refreshToken);
+        var result = authService.refreshToken(refreshToken);
+        setRefreshTokenCookie(response, result.refreshToken(), result.refreshTokenMaxAgeSeconds());
+        return result.accessToken();
     }
 
     @Override
@@ -78,8 +80,10 @@ public class AuthController implements AuthApi {
             Arrays.stream(request.getCookies())
                     .filter(c -> c.getName().equals("refresh_token"))
                     .findFirst()
-                    .ifPresent(c -> setRefreshTokenCookie(response, "", 0));
+                    .ifPresent(c -> authService.logout(c.getValue()));
         }
+        // Always clear the cookie, even if it was missing or already invalid.
+        setRefreshTokenCookie(response, "", 0);
         return ResponseEntity.noContent().build();
     }
 

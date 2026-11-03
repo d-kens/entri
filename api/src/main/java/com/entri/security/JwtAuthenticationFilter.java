@@ -33,7 +33,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-        var principal = new UserPrincipal(userService.findEntityByExternalKey(jwt.getUserExternalKey()));
+        var user = userService.findActiveByExternalKey(jwt.getUserExternalKey()).orElse(null);
+        if (user == null) {
+            // Deleted or disabled since the token was issued: treat the request as unauthenticated.
+            filterChain.doFilter(request, response);
+            return;
+        }
+        var principal = new UserPrincipal(user);
         var authentication = new UsernamePasswordAuthenticationToken(
                 principal,
                 null,

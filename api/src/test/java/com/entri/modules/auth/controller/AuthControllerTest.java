@@ -2,6 +2,7 @@ package com.entri.modules.auth.controller;
 
 import com.entri.auth.controller.AuthController;
 import com.entri.auth.dto.AccessToken;
+import com.entri.auth.dto.RefreshResult;
 import com.entri.auth.dto.ForgotPasswordRequest;
 import com.entri.auth.dto.LoginRequest;
 import com.entri.auth.dto.LoginResponse;
@@ -151,12 +152,14 @@ class AuthControllerTest {
 
     @Test
     void refreshToken_validCookie_returnsNewAccessToken() throws Exception {
-        when(authService.refreshToken("valid-refresh-token")).thenReturn(new AccessToken("new-access-token", 900));
+        when(authService.refreshToken("valid-refresh-token"))
+                .thenReturn(new RefreshResult(new AccessToken("new-access-token", 900), "rotated-refresh-token", 3600));
 
         mockMvc.perform(post("/auth/refresh-token")
                         .cookie(new jakarta.servlet.http.Cookie("refresh_token", "valid-refresh-token")))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.token").value("new-access-token"));
+                .andExpect(jsonPath("$.token").value("new-access-token"))
+                .andExpect(cookie().value("refresh_token", "rotated-refresh-token"));
     }
 
     @Test
