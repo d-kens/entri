@@ -73,6 +73,13 @@ public class EventTicketReservationService {
             );
         }
 
+        // The expiry job only runs periodically, so a PENDING reservation can already be past its hold.
+        if (!reservation.getExpiresAt().isAfter(Instant.now())) {
+            throw new InvalidReservationStatusException(
+                    "Reservation with ID " + reservationId + " has expired. Please select tickets again."
+            );
+        }
+
         return reservation;
     }
 
@@ -82,14 +89,18 @@ public class EventTicketReservationService {
                 .findByExternalIdForUpdate(result.referenceId())
                 .orElse(null);
 
-        if (reservation == null || reservation.getStatus() != EventTicketReservationStatus.PENDING) {
+        if (reservation == null || result.status() != PaymentStatus.PAID) {
             return;
         }
 
-        if (result.status() != PaymentStatus.PAID) {
-            return;
+        switch (reservation.getStatus()) {
+            case PENDING -> applyPaymentToPendingReservation(reservation, result);
+            case EXPIRED -> applyLatePayment(reservation, result);
+            default -> { /* already settled; duplicate webhook */ }
         }
+    }
 
+    private void applyPaymentToPendingReservation(final EventTicketReservation reservation, final PaymentResult result) {
         if (!paymentCoversReservation(result, reservation)) {
             log.error("Payment for reservation {} does not match: paid {} {}, expected {} {}. Not confirming.",
                     reservation.getExternalId(), result.amount(), result.currency(),
@@ -98,6 +109,62 @@ public class EventTicketReservationService {
         }
 
         confirmReservation(reservation);
+    }
+
+    /**
+     * The buyer paid, but the hold expired first and its tickets went back into stock.
+     * Issue the tickets if they are still available; otherwise flag the payment for a refund.
+     */
+    private void applyLatePayment(final EventTicketReservation reservation, final PaymentResult result) {
+        if (!paymentCoversReservation(result, reservation)) {
+            flagForRefund(reservation, result, "payment does not match reservation total");
+            return;
+        }
+
+        if (reservation.getEvent().getStatus() != EventStatus.PUBLISHED) {
+            flagForRefund(reservation, result, "event is " + reservation.getEvent().getStatus());
+            return;
+        }
+
+        var ticketTypesById = lockTicketTypes(reservation);
+
+        boolean stockAvailable = reservation.getItems().stream().allMatch(item -> {
+            var ticketType = ticketTypesById.get(item.getTicketType().getId());
+            int available = ticketType.getQuantity() - ticketType.getSoldQuantity() - ticketType.getReservedQuantity();
+            return item.getQuantity() <= available;
+        });
+
+        if (!stockAvailable) {
+            flagForRefund(reservation, result, "tickets sold out after reservation expired");
+            return;
+        }
+
+        // Expiry already released the hold, so take the tickets straight from available stock.
+        for (var item : reservation.getItems()) {
+            var ticketType = ticketTypesById.get(item.getTicketType().getId());
+            ticketType.setSoldQuantity(ticketType.getSoldQuantity() + item.getQuantity());
+        }
+
+        log.info("Confirmed reservation {} from a payment received after expiry", reservation.getExternalId());
+        markConfirmed(reservation);
+    }
+
+    private void flagForRefund(final EventTicketReservation reservation, final PaymentResult result, final String reason) {
+        reservation.setStatus(EventTicketReservationStatus.REFUND_REQUIRED);
+        log.error("REFUND REQUIRED for reservation {}: received {} {} after expiry but cannot issue tickets ({}).",
+                reservation.getExternalId(), result.amount(), result.currency(), reason);
+    }
+
+    private Map<Long, TicketType> lockTicketTypes(final EventTicketReservation reservation) {
+        var ticketTypeIds = reservation.getItems().stream()
+                .map(item -> item.getTicketType().getId())
+                .distinct()
+                .sorted()
+                .toList();
+
+        return ticketTypeRepository.findAllForUpdate(ticketTypeIds)
+                .stream()
+                .collect(Collectors.toMap(TicketType::getId, Function.identity()));
     }
 
     private boolean paymentCoversReservation(final PaymentResult result, final EventTicketReservation reservation) {
@@ -124,14 +191,7 @@ public class EventTicketReservationService {
     }
 
     private void confirmReservation(EventTicketReservation reservation) {
-        var ticketTypeIds = reservation.getItems().stream()
-                .map(item -> item.getTicketType().getId())
-                .sorted()
-                .toList();
-
-        var ticketTypesById = ticketTypeRepository.findAllForUpdate(ticketTypeIds)
-                .stream()
-                .collect(Collectors.toMap(TicketType::getId, Function.identity()));
+        var ticketTypesById = lockTicketTypes(reservation);
 
         for (var item : reservation.getItems()) {
             var ticketType = ticketTypesById.get(item.getTicketType().getId());
@@ -139,6 +199,10 @@ public class EventTicketReservationService {
             ticketType.setSoldQuantity(ticketType.getSoldQuantity() + item.getQuantity());
         }
 
+        markConfirmed(reservation);
+    }
+
+    private void markConfirmed(EventTicketReservation reservation) {
         reservation.setStatus(EventTicketReservationStatus.CONFIRMED);
 
         reservationConfirmedPublisher.publishReservationConfirmed(

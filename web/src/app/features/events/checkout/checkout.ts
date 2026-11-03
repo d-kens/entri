@@ -56,7 +56,10 @@ export class Checkout implements OnInit, OnDestroy {
   private timerExpired = signal(false);
   private remainingMs = signal(0);
 
-  expired = computed(() => this.reservation()?.status === 'EXPIRED' || this.timerExpired());
+  refundPending = computed(() => this.reservation()?.status === 'REFUND_REQUIRED');
+  expired = computed(
+    () => this.reservation()?.status === 'EXPIRED' || this.refundPending() || this.timerExpired(),
+  );
   confirmed = computed(() => this.reservation()?.status === 'CONFIRMED');
   timeLeft = computed(() => {
     const r = this.remainingMs();

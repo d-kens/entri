@@ -101,7 +101,7 @@ export interface EventTicketReservationItemResponse {
   totalAmount: number;
 }
 
-export type ReservationStatus = 'PENDING' | 'CONFIRMED' | 'EXPIRED';
+export type ReservationStatus = 'PENDING' | 'CONFIRMED' | 'EXPIRED' | 'REFUND_REQUIRED';
 
 export interface EventTicketReservationDetailResponse {
   expiresAt: string;
