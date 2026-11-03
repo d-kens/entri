@@ -37,7 +37,7 @@ describe('Sidenav', () => {
     fixture.detectChanges();
 
     const labels = component.menuItem().map((item) => item.label);
-    expect(labels).toEqual(['Users', 'Events', 'Categories', 'Payments', 'Profile']);
+    expect(labels).toEqual(['Users', 'Events', 'Categories', 'Profile']);
   });
 
   it('should show the organizer menu for an ORGANIZER user', () => {

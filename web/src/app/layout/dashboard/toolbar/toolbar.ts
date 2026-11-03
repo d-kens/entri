@@ -14,7 +14,6 @@ const ROUTE_TITLES: Record<string, string> = {
   summary: 'Dashboard',
   events: 'Events',
   properties: 'Properties',
-  payments: 'Payments',
   profile: 'Profile',
 };
 
