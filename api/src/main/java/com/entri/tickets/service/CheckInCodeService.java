@@ -1,5 +1,6 @@
 package com.entri.tickets.service;
 
+import com.entri.security.UserPrincipal;
 import com.entri.events.repository.EventRepository;
 import com.entri.exception.BadRequestException;
 import com.entri.exception.ResourceNotFoundException;
@@ -23,9 +24,10 @@ public class CheckInCodeService {
     private final EventRepository eventRepository;
 
     @Transactional
-    public CheckInCodeResponse generateCode(String eventExternalId, String organizerExternalKey) {
+    public CheckInCodeResponse generateCode(String eventExternalId, UserPrincipal requestingUser) {
         var event = eventRepository.findByExternalId(eventExternalId)
                 .orElseThrow(() -> new ResourceNotFoundException("Event not found: " + eventExternalId));
+        requestingUser.assertCanManage(event.getOrganizer().getExternalKey());
 
         if (event.getEndTime().isBefore(Instant.now())) {
             throw new BadRequestException("Cannot generate a check-in code for an event that has already ended");
@@ -37,7 +39,7 @@ public class CheckInCodeService {
                 .code(code)
                 .event(event)
                 .expiresAt(event.getEndTime())
-                .createdBy(organizerExternalKey)
+                .createdBy(requestingUser.getExternalKey())
                 .build());
 
         return new CheckInCodeResponse(code, eventExternalId, event.getEndTime());

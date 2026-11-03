@@ -213,7 +213,7 @@ class EventServiceTest {
 
         assertThatThrownBy(() -> eventService.publishEvent(EVENT_EXTERNAL_ID, principal))
                 .isInstanceOf(BadRequestException.class)
-                .hasMessageContaining("status is not DRAFT or CANCELLED");
+                .hasMessageContaining("status is not DRAFT");
     }
 
     @Test
@@ -248,19 +248,16 @@ class EventServiceTest {
     }
 
     @Test
-    void publishEvent_validCancelledEvent_setsPublishedStatus() {
+    void publishEvent_cancelledEvent_throwsBadRequestException() {
         var organizer = buildUser("org-key", Role.ORGANIZER);
         var event = buildEvent(1L, organizer, EventStatus.CANCELLED);
         event.setTicketTypes(List.of(TicketType.builder().id(1L).event(event).build()));
         when(eventRepository.findByExternalId(EVENT_EXTERNAL_ID)).thenReturn(Optional.of(event));
         var principal = new UserPrincipal(organizer);
-        when(eventMapper.toEventResponse(event)).thenReturn(
-                new EventResponse(EVENT_EXTERNAL_ID, "Title", "Description", "Music", 1L, "Venue", "City", "Country", null, null, "banner.png", "USD", EventStatus.PUBLISHED, Instant.now(), null)
-        );
 
-        eventService.publishEvent(EVENT_EXTERNAL_ID, principal);
-
-        assertThat(event.getStatus()).isEqualTo(EventStatus.PUBLISHED);
+        assertThatThrownBy(() -> eventService.publishEvent(EVENT_EXTERNAL_ID, principal))
+                .isInstanceOf(BadRequestException.class);
+        assertThat(event.getStatus()).isEqualTo(EventStatus.CANCELLED);
     }
 
     @Test

@@ -1,5 +1,7 @@
 package com.entri.modules.media.service;
 
+import com.entri.security.UserPrincipal;
+import com.entri.users.entity.User;
 import com.entri.media.exception.FileUploadException;
 import com.entri.media.exception.InvalidFileTypeException;
 import com.entri.media.service.MediaService;
@@ -29,11 +31,13 @@ class MediaServiceTest {
 
     @InjectMocks MediaService mediaService;
 
+    private final UserPrincipal owner = new UserPrincipal(User.builder().externalKey("owner-key").build());
+
     @Test
     void upload_disallowedContentType_throwsInvalidFileTypeException() {
         var file = new MockMultipartFile("file", "malware.exe", "application/octet-stream", "content".getBytes());
 
-        assertThatThrownBy(() -> mediaService.upload(file))
+        assertThatThrownBy(() -> mediaService.upload(file, "owner-key"))
                 .isInstanceOf(InvalidFileTypeException.class);
     }
 
@@ -41,7 +45,7 @@ class MediaServiceTest {
     void upload_missingContentType_throwsInvalidFileTypeException() {
         var file = new MockMultipartFile("file", "photo.jpg", null, "content".getBytes());
 
-        assertThatThrownBy(() -> mediaService.upload(file))
+        assertThatThrownBy(() -> mediaService.upload(file, "owner-key"))
                 .isInstanceOf(InvalidFileTypeException.class);
     }
 
@@ -50,7 +54,7 @@ class MediaServiceTest {
         var file = new MockMultipartFile("file", "photo.jpg", "image/jpeg", "content".getBytes());
         when(bucket.getName()).thenReturn("my-bucket");
 
-        var url = mediaService.upload(file);
+        var url = mediaService.upload(file, "owner-key");
 
         assertThat(url).startsWith("https://storage.googleapis.com/my-bucket/");
         assertThat(url).contains("photo.jpg");
@@ -61,7 +65,7 @@ class MediaServiceTest {
         var file = new MockMultipartFile("file", "my photo.png", "image/png", "content".getBytes());
         when(bucket.getName()).thenReturn("my-bucket");
 
-        var url = mediaService.upload(file);
+        var url = mediaService.upload(file, "owner-key");
 
         assertThat(url).contains("my_photo.png");
         assertThat(url).doesNotContain(" ");
@@ -80,7 +84,7 @@ class MediaServiceTest {
             @Override public void transferTo(java.io.File dest) { }
         };
 
-        assertThatThrownBy(() -> mediaService.upload(file))
+        assertThatThrownBy(() -> mediaService.upload(file, "owner-key"))
                 .isInstanceOf(FileUploadException.class)
                 .hasMessage("Image upload failed.");
     }
@@ -89,16 +93,16 @@ class MediaServiceTest {
     void delete_urlNotMatchingBucket_throwsIllegalArgumentException() {
         when(bucket.getName()).thenReturn("my-bucket");
 
-        assertThatThrownBy(() -> mediaService.delete("https://storage.googleapis.com/other-bucket/file.jpg"))
+        assertThatThrownBy(() -> mediaService.delete("https://storage.googleapis.com/other-bucket/owner-key_file.jpg", owner))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void delete_blobExists_deletesBlob() {
         when(bucket.getName()).thenReturn("my-bucket");
-        when(bucket.get("file.jpg")).thenReturn(blob);
+        when(bucket.get("owner-key_file.jpg")).thenReturn(blob);
 
-        mediaService.delete("https://storage.googleapis.com/my-bucket/file.jpg");
+        mediaService.delete("https://storage.googleapis.com/my-bucket/owner-key_file.jpg", owner);
 
         verify(blob).delete();
     }
@@ -106,9 +110,9 @@ class MediaServiceTest {
     @Test
     void delete_blobDoesNotExist_doesNothing() {
         when(bucket.getName()).thenReturn("my-bucket");
-        when(bucket.get("file.jpg")).thenReturn(null);
+        when(bucket.get("owner-key_file.jpg")).thenReturn(null);
 
-        mediaService.delete("https://storage.googleapis.com/my-bucket/file.jpg");
+        mediaService.delete("https://storage.googleapis.com/my-bucket/owner-key_file.jpg", owner);
 
         verify(blob, never()).delete();
     }

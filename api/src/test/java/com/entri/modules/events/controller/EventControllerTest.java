@@ -227,7 +227,7 @@ class EventControllerTest {
     @Test
     void generateCheckInCode_validEvent_returnsCode() throws Exception {
         var response = new CheckInCodeResponse("123456", "event-ext-id", Instant.now().plusSeconds(3600));
-        when(checkInCodeService.generateCode(eq("event-ext-id"), eq("organizer-key"))).thenReturn(response);
+        when(checkInCodeService.generateCode(eq("event-ext-id"), any())).thenReturn(response);
 
         mockMvc.perform(post("/events/{eventExternalId}/check-in-code", "event-ext-id"))
                 .andExpect(status().isOk())

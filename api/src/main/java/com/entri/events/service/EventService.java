@@ -108,10 +108,10 @@ public class EventService {
             );
         }
 
-        if (event.getStatus() != EventStatus.DRAFT &&
-                event.getStatus() != EventStatus.CANCELLED) {
+        // Cancellation is final: buyers are told the event is off and are owed refunds.
+        if (event.getStatus() != EventStatus.DRAFT) {
             throw new BadRequestException(
-                    "Event cannot be published because its status is not DRAFT or CANCELLED"
+                    "Event cannot be published because its status is not DRAFT"
             );
         }
 
@@ -148,6 +148,14 @@ public class EventService {
         var event = getAuthorizedEvent(externalId, requestingUser);
 
         validateEventDates(request, false);
+
+        boolean currencyChanged = request.currency() != null && !request.currency().equalsIgnoreCase(event.getCurrency());
+        if (currencyChanged && hasSalesActivity(event)) {
+            throw new BadRequestException(
+                    "Currency cannot be changed after tickets have been sold or reserved"
+            );
+        }
+
         var category = eventCategoryService.findById(request.categoryId());
 
         event.setTitle(request.title());
@@ -163,6 +171,11 @@ public class EventService {
 
         eventRepository.save(event);
         return eventMapper.toEventResponse(event);
+    }
+
+    private boolean hasSalesActivity(final Event event) {
+        return event.getTicketTypes().stream()
+                .anyMatch(t -> t.getSoldQuantity() > 0 || t.getReservedQuantity() > 0);
     }
 
     private Event getAuthorizedEvent(final String externalId, final UserPrincipal requestingUser) {

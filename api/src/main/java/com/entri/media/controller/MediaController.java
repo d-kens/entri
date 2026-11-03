@@ -1,5 +1,6 @@
 package com.entri.media.controller;
 
+import com.entri.security.UserPrincipal;
 import com.entri.media.controller.api.MediaApi;
 import com.entri.media.dto.MediaUploadResponse;
 import com.entri.media.service.MediaService;
@@ -17,14 +18,14 @@ public class MediaController implements MediaApi {
     private final MediaService fileUploadService;
 
     @Override
-    public ResponseEntity<MediaUploadResponse> upload(MultipartFile file) {
-        String url = fileUploadService.upload(file);
+    public ResponseEntity<MediaUploadResponse> upload(MultipartFile file, UserPrincipal requestingUser) {
+        String url = fileUploadService.upload(file, requestingUser.getExternalKey());
         return ResponseEntity.ok(new MediaUploadResponse(url));
     }
 
     @Override
-    public ResponseEntity<Void> delete(String fileUrl) {
-        fileUploadService.delete(fileUrl);
+    public ResponseEntity<Void> delete(String fileUrl, UserPrincipal requestingUser) {
+        fileUploadService.delete(fileUrl, requestingUser);
         return ResponseEntity.noContent().build();
     }
 }
