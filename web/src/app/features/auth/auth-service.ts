@@ -2,7 +2,7 @@ import { inject, Injectable, signal, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { catchError, finalize, Observable, tap, throwError } from 'rxjs';
+import { catchError, finalize, Observable, shareReplay, tap, throwError } from 'rxjs';
 import {
   AuthResponse,
   AccessTokenResponse,
@@ -21,6 +21,9 @@ export class AuthService {
   private readonly ACCESS_TOKEN_KEY = 'access_token';
 
   private authStatusSignal = signal(!!this.getToken());
+
+  // Refresh tokens rotate on every use, so concurrent 401s must share a single refresh call.
+  private refreshInFlight$: Observable<AccessTokenResponse> | null = null;
 
   constructor() {}
 
@@ -78,7 +81,7 @@ export class AuthService {
   }
 
   refreshToken(): Observable<AccessTokenResponse> {
-    return this.http
+    this.refreshInFlight$ ??= this.http
       .post<AccessTokenResponse>(
         `${environment.apiBaseUrl}/auth/refresh-token`,
         {},
@@ -89,7 +92,10 @@ export class AuthService {
           localStorage.setItem(this.ACCESS_TOKEN_KEY, response.token);
           this.authStatusSignal.set(true);
         }),
+        finalize(() => (this.refreshInFlight$ = null)),
+        shareReplay(1),
       );
+    return this.refreshInFlight$;
   }
 
   clearSession(): void {

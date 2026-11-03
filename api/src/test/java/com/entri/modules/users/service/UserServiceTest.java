@@ -13,6 +13,7 @@ import com.entri.users.entity.User;
 import com.entri.users.exception.EmailAlreadyExistsException;
 import com.entri.users.mapper.UserMapper;
 import com.entri.users.repository.UserRepository;
+import com.entri.auth.service.RefreshTokenService;
 import com.entri.users.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,6 +42,8 @@ class UserServiceTest {
     @Mock UserRepository userRepository;
     @Mock PasswordEncoder passwordEncoder;
     @Mock UserMapper userMapper;
+
+    @Mock RefreshTokenService refreshTokenService;
 
     @InjectMocks UserService userService;
 

@@ -1,5 +1,7 @@
 package com.entri.media.controller.api;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import com.entri.security.UserPrincipal;
 import com.entri.media.dto.MediaUploadResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -53,7 +55,8 @@ public interface MediaApi {
     @PostMapping(value = "/upload", consumes = "multipart/form-data")
     ResponseEntity<MediaUploadResponse> upload(
             @Parameter(description = "The file to upload", required = true)
-            @RequestParam("file") MultipartFile file
+            @RequestParam("file") MultipartFile file,
+            @Parameter(hidden = true) @AuthenticationPrincipal UserPrincipal requestingUser
     );
 
     @Operation(
@@ -88,6 +91,7 @@ public interface MediaApi {
     @DeleteMapping
     ResponseEntity<Void> delete(
             @Parameter(description = "The URL of the file to delete", required = true)
-            @NotBlank @RequestParam("url") String fileUrl
+            @NotBlank @RequestParam("url") String fileUrl,
+            @Parameter(hidden = true) @AuthenticationPrincipal UserPrincipal requestingUser
     );
 }

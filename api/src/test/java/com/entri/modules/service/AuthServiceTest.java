@@ -9,6 +9,7 @@ import com.entri.users.dto.UserResponse;
 import com.entri.security.Jwt;
 import com.entri.users.entity.User;
 import com.entri.auth.service.AuthService;
+import com.entri.auth.service.RefreshTokenService;
 import com.entri.security.JwtService;
 import com.entri.users.service.UserService;
 import com.entri.users.mapper.UserMapper;
@@ -35,6 +36,7 @@ class AuthServiceTest {
     @Mock JwtService jwtService;
     @Mock UserService userService;
     @Mock AuthenticationManager authenticationManager;
+    @Mock RefreshTokenService refreshTokenService;
 
     @InjectMocks AuthService authService;
 
@@ -56,15 +58,13 @@ class AuthServiceTest {
         var user = User.builder().email("john@example.com").build();
         var userResponse = new UserResponse("ORGANIZER", "john@example.com", "Doe", "John", "0712345678", "ext-key", true);
         var accessJwt = mock(Jwt.class);
-        var refreshJwt = mock(Jwt.class);
 
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
                 .thenReturn(mock(org.springframework.security.core.Authentication.class));
         when(userService.findByEmail("john@example.com")).thenReturn(user);
         when(jwtService.generateAccessToken(user)).thenReturn(accessJwt);
-        when(jwtService.generateRefreshToken(user)).thenReturn(refreshJwt);
+        when(refreshTokenService.issue(user)).thenReturn("refresh-token");
         when(accessJwt.toString()).thenReturn("access-token");
-        when(refreshJwt.toString()).thenReturn("refresh-token");
         when(userMapper.toResponse(user)).thenReturn(userResponse);
         when(jwtConfig.getAccessTokenExpiration()).thenReturn(900);
 
@@ -79,39 +79,27 @@ class AuthServiceTest {
     @Test
     void refreshToken_validToken_returnsNewAccessToken() {
         var user = User.builder().email("john@example.com").build();
-        var refreshJwt = mock(Jwt.class);
         var newAccessJwt = mock(Jwt.class);
 
-        when(jwtService.parseToken("valid-refresh-token")).thenReturn(refreshJwt);
-        when(refreshJwt.isExpired()).thenReturn(false);
-        when(refreshJwt.getUserExternalKey()).thenReturn("ext-key");
-        when(userService.findEntityByExternalKey("ext-key")).thenReturn(user);
+        when(refreshTokenService.rotate("valid-refresh-token"))
+                .thenReturn(new RefreshTokenService.Rotation(user, "rotated-refresh-token", java.time.Instant.now().plusSeconds(3600)));
         when(jwtService.generateAccessToken(user)).thenReturn(newAccessJwt);
         when(newAccessJwt.toString()).thenReturn("new-access-token");
         when(jwtConfig.getAccessTokenExpiration()).thenReturn(900);
 
-        AccessToken result = authService.refreshToken("valid-refresh-token");
+        var result = authService.refreshToken("valid-refresh-token");
 
-        assertThat(result.token()).isEqualTo("new-access-token");
-        assertThat(result.expiresIn()).isEqualTo(900);
+        assertThat(result.accessToken().token()).isEqualTo("new-access-token");
+        assertThat(result.accessToken().expiresIn()).isEqualTo(900);
+        assertThat(result.refreshToken()).isEqualTo("rotated-refresh-token");
     }
 
     @Test
-    void refreshToken_nullToken_throwsUnauthorizedException() {
-        when(jwtService.parseToken("invalid-token")).thenReturn(null);
+    void refreshToken_invalidToken_throwsUnauthorizedException() {
+        when(refreshTokenService.rotate("invalid-token"))
+                .thenThrow(new UnauthorizedException("Invalid or expired refresh token"));
 
         assertThatThrownBy(() -> authService.refreshToken("invalid-token"))
-                .isInstanceOf(UnauthorizedException.class)
-                .hasMessage("Invalid or expired refresh token");
-    }
-
-    @Test
-    void refreshToken_expiredToken_throwsUnauthorizedException() {
-        var expiredJwt = mock(Jwt.class);
-        when(jwtService.parseToken("expired-token")).thenReturn(expiredJwt);
-        when(expiredJwt.isExpired()).thenReturn(true);
-
-        assertThatThrownBy(() -> authService.refreshToken("expired-token"))
                 .isInstanceOf(UnauthorizedException.class)
                 .hasMessage("Invalid or expired refresh token");
     }

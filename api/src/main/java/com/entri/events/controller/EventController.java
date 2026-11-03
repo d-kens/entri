@@ -116,7 +116,7 @@ public class EventController implements EventApi {
 
     @Override
     public CheckInCodeResponse generateCheckInCode(String eventExternalId, UserPrincipal requestingUser) {
-        return checkInCodeService.generateCode(eventExternalId, requestingUser.getExternalKey());
+        return checkInCodeService.generateCode(eventExternalId, requestingUser);
     }
 
     @Override

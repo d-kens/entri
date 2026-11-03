@@ -1,5 +1,6 @@
 package com.entri.users.service;
 
+import com.entri.auth.service.RefreshTokenService;
 import com.entri.common.dto.PaginationResponse;
 import com.entri.exception.ResourceNotFoundException;
 import com.entri.exception.UnauthorizedException;
@@ -27,6 +28,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
+    private final RefreshTokenService refreshTokenService;
 
     @Transactional
     public UserResponse create(final CreateUserRequest userDto) {
@@ -50,6 +52,12 @@ public class UserService {
         var user = findEntityByExternalKey(externalKey);
         requestingUser.assertCanManage(externalKey);
         return userMapper.toResponse(user);
+    }
+
+    /** The user if they exist, are not deleted and are enabled; used to authenticate requests. */
+    @Transactional(readOnly = true)
+    public java.util.Optional<User> findActiveByExternalKey(final String externalKey) {
+        return userRepository.findByExternalKeyAndDeletedFalse(externalKey).filter(User::isEnabled);
     }
 
     @Transactional(readOnly = true)
@@ -79,6 +87,7 @@ public class UserService {
         String passwordHash = passwordEncoder.encode(newPassword);
         user.setPasswordHash(passwordHash);
         userRepository.save(user);
+        refreshTokenService.revokeAllForUser(user);
     }
 
     @Transactional
@@ -120,6 +129,7 @@ public class UserService {
         var user = findEntityByExternalKey(externalKey);
         user.setDeleted(true);
         userRepository.save(user);
+        refreshTokenService.revokeAllForUser(user);
     }
 
     @Transactional
@@ -127,6 +137,9 @@ public class UserService {
         var user = findEntityByExternalKey(externalKey);
         user.setEnabled(enabled);
         userRepository.save(user);
+        if (!enabled) {
+            refreshTokenService.revokeAllForUser(user);
+        }
     }
 
 

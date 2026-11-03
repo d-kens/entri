@@ -1,5 +1,7 @@
 package com.entri.media.service;
 
+import com.entri.exception.ForbiddenException;
+import com.entri.security.UserPrincipal;
 import com.entri.media.exception.FileUploadException;
 import com.entri.media.exception.InvalidFileTypeException;
 import com.google.cloud.storage.Blob;
@@ -26,7 +28,7 @@ public class MediaService {
 
     private final Bucket bucket;
 
-    public String upload(MultipartFile file) {
+    public String upload(MultipartFile file, String ownerExternalKey) {
         String contentType = file.getContentType();
         if (contentType == null || !ALLOWED_CONTENT_TYPES.contains(contentType)) {
             throw new InvalidFileTypeException(
@@ -38,7 +40,7 @@ public class MediaService {
             String originalFilename = file.getOriginalFilename() != null
                     ? file.getOriginalFilename().replaceAll("\\s+", "_")
                     : "file";
-            String fileName = UUID.randomUUID() + "_" + originalFilename;
+            String fileName = ownerExternalKey + "_" + UUID.randomUUID() + "_" + originalFilename;
 
             bucket.create(
                     fileName,
@@ -58,13 +60,17 @@ public class MediaService {
         }
     }
 
-    public void delete(String fileUrl) {
+    /** Organizers may only delete files they uploaded (object name starts with their key); admins may delete any. */
+    public void delete(String fileUrl, UserPrincipal requestingUser) {
         String baseUrl = "https://storage.googleapis.com/" + bucket.getName() + "/";
         if (!fileUrl.startsWith(baseUrl)) {
             throw new IllegalArgumentException("Invalid file URL");
         }
         String encodedFileName = fileUrl.substring(baseUrl.length());
         String fileName = URLDecoder.decode(encodedFileName, StandardCharsets.UTF_8);
+        if (!requestingUser.isAdmin() && !fileName.startsWith(requestingUser.getExternalKey() + "_")) {
+            throw new ForbiddenException("You are not authorized to delete this file");
+        }
         Blob blob = bucket.get(fileName);
         if (blob != null) {
             blob.delete();

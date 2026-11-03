@@ -1,5 +1,7 @@
 package com.entri.modules.tickets.service;
 
+import com.entri.security.UserPrincipal;
+import com.entri.users.entity.User;
 import com.entri.events.entity.Event;
 import com.entri.events.repository.EventRepository;
 import com.entri.exception.BadRequestException;
@@ -37,12 +39,16 @@ class CheckInCodeServiceTest {
 
     @InjectMocks CheckInCodeService checkInCodeService;
 
+    private final User organizerUser = User.builder().externalKey("organizer-key").build();
+    private final UserPrincipal organizer = new UserPrincipal(organizerUser);
+
     private Event buildEvent(Instant endTime) {
         return Event.builder()
                 .id(1L)
                 .externalId(EVENT_EXTERNAL_ID)
                 .title("Some Event")
                 .endTime(endTime)
+                .organizer(organizerUser)
                 .build();
     }
 
@@ -50,7 +56,7 @@ class CheckInCodeServiceTest {
     void generateCode_eventNotFound_throwsResourceNotFoundException() {
         when(eventRepository.findByExternalId(EVENT_EXTERNAL_ID)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> checkInCodeService.generateCode(EVENT_EXTERNAL_ID, "organizer-key"))
+        assertThatThrownBy(() -> checkInCodeService.generateCode(EVENT_EXTERNAL_ID, organizer))
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessageContaining(EVENT_EXTERNAL_ID);
     }
@@ -60,7 +66,7 @@ class CheckInCodeServiceTest {
         var event = buildEvent(Instant.now().minus(1, ChronoUnit.DAYS));
         when(eventRepository.findByExternalId(EVENT_EXTERNAL_ID)).thenReturn(Optional.of(event));
 
-        assertThatThrownBy(() -> checkInCodeService.generateCode(EVENT_EXTERNAL_ID, "organizer-key"))
+        assertThatThrownBy(() -> checkInCodeService.generateCode(EVENT_EXTERNAL_ID, organizer))
                 .isInstanceOf(BadRequestException.class)
                 .hasMessageContaining("already ended");
     }
@@ -71,7 +77,7 @@ class CheckInCodeServiceTest {
         var event = buildEvent(endTime);
         when(eventRepository.findByExternalId(EVENT_EXTERNAL_ID)).thenReturn(Optional.of(event));
 
-        var response = checkInCodeService.generateCode(EVENT_EXTERNAL_ID, "organizer-key");
+        var response = checkInCodeService.generateCode(EVENT_EXTERNAL_ID, organizer);
 
         assertThat(response.code()).hasSize(8).isUpperCase();
         assertThat(response.eventExternalId()).isEqualTo(EVENT_EXTERNAL_ID);
@@ -84,7 +90,7 @@ class CheckInCodeServiceTest {
         var event = buildEvent(endTime);
         when(eventRepository.findByExternalId(EVENT_EXTERNAL_ID)).thenReturn(Optional.of(event));
 
-        checkInCodeService.generateCode(EVENT_EXTERNAL_ID, "organizer-key");
+        checkInCodeService.generateCode(EVENT_EXTERNAL_ID, organizer);
 
         var captor = ArgumentCaptor.forClass(EventCheckInCode.class);
         verify(checkInCodeRepository).save(captor.capture());
