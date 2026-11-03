@@ -68,6 +68,16 @@
         <mat-icon>confirmation_number</mat-icon>
         View your tickets
       </a>
+    } @else if (refundPending()) {
+      <div class="status-strip status-strip--expired">
+        <mat-icon>currency_exchange</mat-icon>
+        <div>
+          <p class="status-title">Payment received too late</p>
+          <p class="status-hint">
+            Your reservation expired and the tickets were no longer available. You will be refunded.
+          </p>
+        </div>
+      </div>
     } @else if (expired()) {
       <div class="status-strip status-strip--expired">
         <mat-icon>timer_off</mat-icon>
