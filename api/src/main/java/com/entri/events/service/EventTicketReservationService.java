@@ -29,6 +29,7 @@ import com.entri.security.UserPrincipal;
 import com.entri.tickets.ReservationConfirmedEventPublisher;
 import com.entri.tickets.dto.ReservationConfirmedEvent;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -44,6 +45,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class EventTicketReservationService {
@@ -88,7 +90,20 @@ public class EventTicketReservationService {
             return;
         }
 
+        if (!paymentCoversReservation(result, reservation)) {
+            log.error("Payment for reservation {} does not match: paid {} {}, expected {} {}. Not confirming.",
+                    reservation.getExternalId(), result.amount(), result.currency(),
+                    reservation.getTotalAmount(), reservation.getEvent().getCurrency());
+            return;
+        }
+
         confirmReservation(reservation);
+    }
+
+    private boolean paymentCoversReservation(final PaymentResult result, final EventTicketReservation reservation) {
+        return result.amount() != null
+                && result.amount().compareTo(reservation.getTotalAmount()) >= 0
+                && reservation.getEvent().getCurrency().equalsIgnoreCase(result.currency());
     }
 
     @Transactional

@@ -24,7 +24,7 @@ class CheckoutResultConsumerTest {
 
     @Test
     void handle_mapsPaymentResultEventAndDelegatesToReservationService() {
-        var message = new PaymentResultEvent("ref-123", PaymentStatus.PAID);
+        var message = new PaymentResultEvent("ref-123", PaymentStatus.PAID, new java.math.BigDecimal("100.00"), "KES");
 
         checkoutResultConsumer.handle(message);
 

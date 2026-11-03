@@ -27,7 +27,7 @@ class PaymentEventPublisherTest {
 
     @Test
     void publishWebhookResult_publishesSpringApplicationEventWithoutTouchingRabbit() {
-        var event = new PaymentResultEvent("ref-123", PaymentStatus.PAID);
+        var event = new PaymentResultEvent("ref-123", PaymentStatus.PAID, new java.math.BigDecimal("100.00"), "KES");
 
         paymentEventPublisher.publishWebhookResult(event);
 
@@ -47,7 +47,7 @@ class PaymentEventPublisherTest {
 
     @Test
     void onWebhookResult_sendsMessageToWebhookExchange() {
-        var event = new PaymentResultEvent("ref-123", PaymentStatus.PAID);
+        var event = new PaymentResultEvent("ref-123", PaymentStatus.PAID, new java.math.BigDecimal("100.00"), "KES");
 
         paymentEventPublisher.onWebhookResult(event);
 
